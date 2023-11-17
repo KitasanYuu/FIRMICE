@@ -51,8 +51,11 @@ namespace StarterAssets
 		[Tooltip("How far in degrees can you move the camera down")]
 		public float BottomClamp = -90.0f;
 
-		// cinemachine
-		private float _cinemachineTargetPitch;
+        // 在类的顶部声明 _lastMoveDirection 字段，但不要赋值
+        private Vector3 _lastMoveDirection = Vector3.zero;
+
+        // cinemachine
+        private float _cinemachineTargetPitch;
 
 		// player
 		private float _speed;
@@ -71,6 +74,7 @@ namespace StarterAssets
         private int _animIDJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
+
 
 #if ENABLE_INPUT_SYSTEM
 		private PlayerInput _playerInput;
@@ -109,6 +113,7 @@ namespace StarterAssets
 			_controller = GetComponent<CharacterController>();
 			_input = GetComponent<StarterAssetsInputs>();
             _hasAnimator = TryGetComponent(out _animator);
+            _lastMoveDirection = Vector3.zero; // 或者根据需要初始化其他值
 #if ENABLE_INPUT_SYSTEM
 			_playerInput = GetComponent<PlayerInput>();
 #else
@@ -131,7 +136,8 @@ namespace StarterAssets
 			Move();
 		}
 
-		private void LateUpdate()
+
+        private void LateUpdate()
 		{
 			CameraRotation();
 		}
@@ -179,14 +185,17 @@ namespace StarterAssets
 			}
 		}
 
-		private void Move()
+        private bool isMove; // 在类的作用域内声明 isMove 变量
+
+        private void Move()
 		{
-			// set target speed based on move speed, sprint speed and if sprint is pressed
-			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+			if(Grounded) {
+				// set target speed based on move speed, sprint speed and if sprint is pressed
+				float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 
-			// a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
+				// a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
-			// note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
+				// note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
 			// if there is no input, set the target speed to 0
 			if (_input.move == Vector2.zero) targetSpeed = 0.0f;
 
@@ -217,38 +226,76 @@ namespace StarterAssets
             // normalise input direction
             Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
 
-			// note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
-			// if there is a move input rotate player when the player is moving
-			if (_input.move != Vector2.zero)
+                //Debug.LogWarning("Moving: " + inputDirection);
+
+                // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
+                // if there is a move input rotate player when the player is moving
+                if (_input.move != Vector2.zero)
 			{
 				// move
 				inputDirection = transform.right * _input.move.x + transform.forward * _input.move.y;
-			}
+				
+                }
 
 			// move the player
 			_controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 
-			// update animator if using character
-			if (_hasAnimator)
-			{
-				if (Grounded)
-				{
-					_animator.SetFloat(_animIDSpeed, _animationBlend);
-					_animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
-				}
-				else
-				{
-					_animator.SetFloat(_animIDSpeed, 0f); // 设置为 0 或其他适当的值
-					_animator.SetFloat(_animIDMotionSpeed, 0f); // 设置为 0 或其他适当的值
+            isMove = _input.move != Vector2.zero;
 
+				;// Vector3 _lastMoveDirection = inputDirection.normalized;
+
+				if (_hasAnimator)
+				{
+					if (Grounded)
+					{
+						_animator.SetFloat(_animIDSpeed, _animationBlend);
+						_animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
+					}
+					else
+					{
+						_animator.SetFloat(_animIDSpeed, 0f); // 设置为 0 或其他适当的值
+						_animator.SetFloat(_animIDMotionSpeed, 0f); // 设置为 0 或其他适当的值
+
+					}
 				}
 			}
 
         }
 
-		private void JumpAndGravity()
+        // 在适当的时候更新 _lastMoveDirection
+        private void UpdateLastMoveDirection()
+        {
+            Vector3 previousMoveDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
+
+            // 在需要存储最近移动方向的地方更新 _lastMoveDirection
+            if (previousMoveDirection != Vector3.zero)
+            {
+                _lastMoveDirection = previousMoveDirection;
+                //Debug.LogError("Jumping: " + _lastMoveDirection);
+                if (_input.move != Vector2.zero)
+                {
+                    // move
+                    _lastMoveDirection = transform.right * _input.move.x + transform.forward * _input.move.y;
+
+                }
+            }
+            else
+            {
+                Debug.LogError("空");
+            }
+        }
+
+
+        private void JumpAndGravity()
 		{
-			if (Grounded)
+            if (Input.GetKeyDown(KeyCode.Space))
+			{
+				//Debug.LogError("空格按下");
+				UpdateLastMoveDirection();
+
+            }
+
+                if (Grounded)
 			{
 				// reset the fall timeout timer
 				_fallTimeoutDelta = FallTimeout;
@@ -272,12 +319,12 @@ namespace StarterAssets
 					// the square root of H * -2 * G = how much velocity needed to reach desired height
 					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 
-                    // update animator if using character
-                    //if (_hasAnimator)
-                    //{
-                    //    _animator.SetBool(_animIDJump, true);
-                    //}
-                }
+					// update animator if using character
+					//if (_hasAnimator)
+					//{
+					//	_animator.SetBool(_animIDJump, true);
+					//}
+				}
 
 				// jump timeout
 				if (_jumpTimeoutDelta >= 0.0f)
@@ -304,6 +351,10 @@ namespace StarterAssets
                     }
                 }
 
+
+                _controller.Move(_lastMoveDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+
+               // Debug.LogWarning("Normalized Input DirectionA: " + inputDirectionA.normalized);
                 // if we are not grounded, do not jump
                 _input.jump = false;
 			}
@@ -312,8 +363,11 @@ namespace StarterAssets
 			if (_verticalVelocity < _terminalVelocity)
 			{
 				_verticalVelocity += Gravity * Time.deltaTime;
-			}
-		}
+
+            }
+
+
+        }
 
 		private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
 		{
