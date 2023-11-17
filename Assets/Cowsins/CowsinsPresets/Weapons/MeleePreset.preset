@@ -1,0 +1,407 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!181963792 &2655988077585873504
+Preset:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MeleePreset
+  m_TargetType:
+    m_NativeTypeID: 114
+    m_ManagedTypePPtr: {fileID: 11500000, guid: d01ed731769af95429c32ba164942b3e, type: 3}
+    m_ManagedTypeFallback: 
+  m_Properties:
+  - target: {fileID: 0}
+    propertyPath: m_Enabled
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorHideFlags
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorClassIdentifier
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: weaponID
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: _name
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: pickUpGraphics
+    value: 
+    objectReference: {fileID: 2969565961401655156, guid: 76dc61213aa4c1a4caa595cb92dd6ad3, type: 3}
+  - target: {fileID: 0}
+    propertyPath: icon
+    value: 
+    objectReference: {fileID: 21300000, guid: 2cfc27dcd7d4fce45833bf08af181caa, type: 3}
+  - target: {fileID: 0}
+    propertyPath: shootStyle
+    value: 2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: shootMethod
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: holdProgressSpeed
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: reloadStyle
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: projectile
+    value: 
+    objectReference: {fileID: 1524923703965971472, guid: 0c78e1b153c7edc4381fa619064969b4, type: 3}
+  - target: {fileID: 0}
+    propertyPath: projectileUsesGravity
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: bulletDuration
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: speed
+    value: 40
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: explosionOnHit
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: hurtsPlayer
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: explosionRadius
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: explosionForce
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: explosionVFX
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: fireRate
+    value: 0.3
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: reloadTime
+    value: 1.2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: infiniteBullets
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: magazineSize
+    value: 17
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: bulletsPerFire
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: ammoCostPerFire
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: bulletRange
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: timeBetweenShots
+    value: 0.1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: penetrationAmount
+    value: 1.39
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: penetrationDamageReduction
+    value: 0.579
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: allowAim
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: aimingPosition.x
+    value: -1.5
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: aimingPosition.y
+    value: 0.4
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: aimingPosition.z
+    value: -1.2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: aimingRotation.x
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: aimingRotation.y
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: aimingRotation.z
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: aimingSpeed
+    value: 20
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: aimingFOV
+    value: 45
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: movementSpeedWhileAiming
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: setMovementSpeedWhileAiming
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: crosshairResize
+    value: 40
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: crosshairPreset
+    value: 
+    objectReference: {fileID: 2655988077585873504, guid: 339dc1e687484c544b2b203166ea9a5f, type: 2}
+  - target: {fileID: 0}
+    propertyPath: applyBulletSpread
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: applyWeight
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: spreadAmount
+    value: 0.02
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: aimSpreadAmount
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: weightMultiplier
+    value: 1.1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: applyRecoil
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_Curve.Array.size
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_PreInfinity
+    value: 2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_PostInfinity
+    value: 2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilX.m_RotationOrder
+    value: 4
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_Curve.Array.size
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_PreInfinity
+    value: 2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_PostInfinity
+    value: 2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilY.m_RotationOrder
+    value: 4
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: xRecoilAmount
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: yRecoilAmount
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: recoilRelaxSpeed
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: applyDifferentRecoilOnAiming
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: xRecoilAmountOnAiming
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: yRecoilAmountOnAiming
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: damagePerBullet
+    value: 2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: applyDamageReductionBasedOnDistance
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: minimumDistanceToApplyDamageReduction
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: damageReductionMultiplier
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: criticalDamageMultiplier
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: limitedMagazines
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: totalMagazines
+    value: 2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: showBulletShells
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: bulletHoleImpact.defaultImpact
+    value: 
+    objectReference: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+  - target: {fileID: 0}
+    propertyPath: bulletHoleImpact.groundIMpact
+    value: 
+    objectReference: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+  - target: {fileID: 0}
+    propertyPath: bulletHoleImpact.grassImpact
+    value: 
+    objectReference: {fileID: 2462405574108921655, guid: 96098beba501e3247b9452e9455f6189, type: 3}
+  - target: {fileID: 0}
+    propertyPath: bulletHoleImpact.enemyImpact
+    value: 
+    objectReference: {fileID: 2462405574108921655, guid: 8c95f7225cf58144d86befe4ddc08efb, type: 3}
+  - target: {fileID: 0}
+    propertyPath: bulletHoleImpact.metalImpact
+    value: 
+    objectReference: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+  - target: {fileID: 0}
+    propertyPath: bulletHoleImpact.mudImpact
+    value: 
+    objectReference: {fileID: 2462405574108921655, guid: 4445bafd3b5e24c4eb41ba27f6a44af4, type: 3}
+  - target: {fileID: 0}
+    propertyPath: bulletHoleImpact.woodImpact
+    value: 
+    objectReference: {fileID: 2462405574108921655, guid: 49ec6833820c5774ea4015ac770e6801, type: 3}
+  - target: {fileID: 0}
+    propertyPath: muzzleVFX
+    value: 
+    objectReference: {fileID: 1902492544533172939, guid: 49e43c4a31eeeb64badc54659688e1c4, type: 3}
+  - target: {fileID: 0}
+    propertyPath: bulletGraphics
+    value: 
+    objectReference: {fileID: 1224343634984563145, guid: 7398cf6333f343048878df03af22c20a, type: 3}
+  - target: {fileID: 0}
+    propertyPath: useProceduralShot
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: proceduralShotPattern
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: audioSFX.firing
+    value: 
+    objectReference: {fileID: 8300000, guid: 53fa7ce979edac24dae6e30683b0b561, type: 3}
+  - target: {fileID: 0}
+    propertyPath: audioSFX.holster
+    value: 
+    objectReference: {fileID: 8300000, guid: 9ec1d6550dc04d9478dda7fd8b184a95, type: 3}
+  - target: {fileID: 0}
+    propertyPath: audioSFX.unholster
+    value: 
+    objectReference: {fileID: 8300000, guid: 9ec1d6550dc04d9478dda7fd8b184a95, type: 3}
+  - target: {fileID: 0}
+    propertyPath: audioSFX.reload
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: audioSFX.emptyMag
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: pitchVariationFiringSFX
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: camShakeAmount
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: applyFOVEffectOnShooting
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: FOVValueToSubstract
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: AimingFOVValueToSubstract
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: damagePerHit
+    value: 20
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: attackRate
+    value: 0.5
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: attackRange
+    value: 2
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: dontShowMagazine
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: currentPreset
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: presetName
+    value: MeleePreset
+    objectReference: {fileID: 0}
+  m_ExcludedProperties: []

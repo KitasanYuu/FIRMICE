@@ -610,8 +610,10 @@ Shader "_lil/[Optional] lilToonOutlineOnly"
     {
         Tags {"RenderType" = "Opaque" "Queue" = "Geometry"}
         UsePass "Hidden/ltspass_opaque/FORWARD_OUTLINE"
+        UsePass "Hidden/ltspass_opaque/FORWARD_ADD_OUTLINE"
     }
-    Fallback "Universal Render Pipeline/Unlit"
+    Fallback "Unlit/Texture"
 
     CustomEditor "lilToon.lilToonInspector"
 }
+

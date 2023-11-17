@@ -628,8 +628,10 @@ Shader "_lil/[Optional] lilToonFurOnlyCutout"
     {
         Tags {"RenderType" = "TransparentCutout" "Queue" = "AlphaTest"}
         UsePass "Hidden/lilToonFurCutout/FORWARD_FUR"
+        UsePass "Hidden/lilToonFurCutout/FORWARD_ADD_FUR"
     }
-    Fallback "Universal Render Pipeline/Unlit"
+    Fallback "Unlit/Texture"
 
     CustomEditor "lilToon.lilToonInspector"
 }
+

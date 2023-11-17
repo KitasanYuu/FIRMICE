@@ -5,10 +5,14 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: d1c3109bdb54ad54c8a2b2838528e640
   - enabled: 1
-    path: Assets/Component/StarterAssets/ThirdPersonController/Scenes/Playground.unity
-    guid: e9017d5f96b9f09489b4b37e1d6eb914
-  m_configObjects: {}
+    path: Assets/Cowsins/Demo/MainMenu.unity
+    guid: 8502aafd6d0547a4d88807f1130bbe6d
+  - enabled: 1
+    path: Assets/Cowsins/Demo/MovementShowroom.unity
+    guid: 613fba616958bec418ee718b8e414d39
+  - enabled: 1
+    path: Assets/Cowsins/Demo/Showroom.unity
+    guid: c65d245ca63349e40af89661df799c04
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 33f591010f343104f853b337a1fca25a, type: 2}

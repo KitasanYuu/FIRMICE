@@ -1,0 +1,157 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d01ed731769af95429c32ba164942b3e, type: 3}
+  m_Name: Revolver
+  m_EditorClassIdentifier: 
+  weaponObject: {fileID: 0}
+  _name: Revolver
+  pickUpGraphics: {fileID: 0}
+  icon: {fileID: 0}
+  shootStyle: 0
+  shootMethod: 3
+  holdProgressSpeed: 400
+  reloadStyle: 0
+  projectile: {fileID: 1524923703965971472, guid: 0c78e1b153c7edc4381fa619064969b4, type: 3}
+  projectileUsesGravity: 0
+  bulletDuration: 0
+  speed: 40
+  explosionOnHit: 0
+  hurtsPlayer: 0
+  explosionRadius: 0
+  explosionForce: 0
+  explosionVFX: {fileID: 0}
+  continuousFire: 0
+  fireRate: 0.3
+  reloadTime: 1.2
+  infiniteBullets: 0
+  magazineSize: 6
+  bulletsPerFire: 1
+  ammoCostPerFire: 1
+  bulletRange: 100
+  timeBetweenShots: 0
+  penetrationAmount: 8.81
+  penetrationDamageReduction: 0.579
+  allowAim: 1
+  aimingPosition: {x: -0.175, y: 0.04, z: -0.2}
+  aimingRotation: {x: 0, y: 0, z: 0}
+  aimingSpeed: 14.3
+  aimingFOV: 45
+  movementSpeedWhileAiming: 6
+  setMovementSpeedWhileAiming: 1
+  crosshairResize: 40
+  crosshairPreset: {fileID: 2655988077585873504, guid: 339dc1e687484c544b2b203166ea9a5f, type: 2}
+  applyBulletSpread: 1
+  applyWeight: 1
+  spreadAmount: 0
+  aimSpreadAmount: 0.01
+  weightMultiplier: 1
+  applyRecoil: 1
+  recoilX:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: -0.09486105
+      outSlope: -0.09486105
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.09747935
+    - serializedVersion: 3
+      time: 0.5149679
+      value: 0.061458886
+      inSlope: -0.67275
+      outSlope: -0.67275
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.11124754
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  recoilY:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  xRecoilAmount: 6
+  yRecoilAmount: 10
+  recoilRelaxSpeed: 1.3
+  applyDifferentRecoilOnAiming: 0
+  xRecoilAmountOnAiming: 0
+  yRecoilAmountOnAiming: 0
+  damagePerBullet: 2
+  applyDamageReductionBasedOnDistance: 1
+  minimumDistanceToApplyDamageReduction: 30
+  damageReductionMultiplier: 1
+  criticalDamageMultiplier: 1.5
+  limitedMagazines: 0
+  totalMagazines: 1
+  showBulletShells: 1
+  bulletHoleImpact:
+    defaultImpact: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+    groundIMpact: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+    grassImpact: {fileID: 2462405574108921655, guid: 96098beba501e3247b9452e9455f6189, type: 3}
+    enemyImpact: {fileID: 2462405574108921655, guid: 8c95f7225cf58144d86befe4ddc08efb, type: 3}
+    metalImpact: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+    mudImpact: {fileID: 2462405574108921655, guid: 4445bafd3b5e24c4eb41ba27f6a44af4, type: 3}
+    woodImpact: {fileID: 2462405574108921655, guid: 49ec6833820c5774ea4015ac770e6801, type: 3}
+  muzzleVFX: {fileID: 1336949550903370, guid: 679d294f11bff5d49b2fc3da2db6c3b7, type: 3}
+  bulletGraphics: {fileID: 1224343634984563145, guid: 7398cf6333f343048878df03af22c20a, type: 3}
+  useProceduralShot: 0
+  proceduralShotPattern: {fileID: 0}
+  audioSFX:
+    firing: {fileID: 0}
+    holster: {fileID: 0}
+    unholster: {fileID: 0}
+    reload: {fileID: 0}
+    emptyMag: {fileID: 0}
+  pitchVariationFiringSFX: 0.15
+  camShakeAmount: 0.15
+  applyFOVEffectOnShooting: 1
+  FOVValueToSubstract: 0
+  AimingFOVValueToSubstract: 0
+  damagePerHit: 0
+  attackRate: 0
+  attackRange: 0
+  dontShowMagazine: 0
+  currentPreset: {fileID: 0}
+  presetName: 

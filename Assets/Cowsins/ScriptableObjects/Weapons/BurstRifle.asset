@@ -1,0 +1,189 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d01ed731769af95429c32ba164942b3e, type: 3}
+  m_Name: BurstRifle
+  m_EditorClassIdentifier: 
+  weaponObject: {fileID: 2632495757580171827, guid: 882232f4c72e05c43a67855d0178ec46, type: 3}
+  _name: Burst Rifle
+  pickUpGraphics: {fileID: 2110658204703941248, guid: 0e05b8f4c454a2241b09550b96f00e3d, type: 3}
+  icon: {fileID: 21300000, guid: f5e1e378b9229bd4c987fac540e79680, type: 3}
+  shootStyle: 0
+  shootMethod: 1
+  holdProgressSpeed: 0
+  reloadStyle: 0
+  projectile: {fileID: 1524923703965971472, guid: 0c78e1b153c7edc4381fa619064969b4, type: 3}
+  projectileUsesGravity: 0
+  shootDelay: 0
+  bulletDuration: 0
+  speed: 40
+  explosionOnHit: 0
+  hurtsPlayer: 0
+  explosionRadius: 0
+  explosionForce: 0
+  explosionVFX: {fileID: 0}
+  continuousFire: 0
+  fireRate: 0.8
+  reloadTime: 2.5
+  coolSpeed: 0
+  cooledPercentageAfterOverheat: 0
+  infiniteBullets: 0
+  magazineSize: 15
+  bulletsPerFire: 3
+  ammoCostPerFire: 3
+  bulletRange: 100
+  timeBetweenShots: 0.1
+  penetrationAmount: 10
+  penetrationDamageReduction: 0.579
+  allowAim: 1
+  aimingPosition: {x: -0.28, y: 0.03, z: -0.2}
+  aimingRotation: {x: 0, y: 0, z: 0}
+  aimingSpeed: 30
+  aimingFOV: 38
+  movementSpeedWhileAiming: 6
+  setMovementSpeedWhileAiming: 1
+  crosshairResize: 40
+  crosshairPreset: {fileID: 2655988077585873504, guid: c578889a819b05c4aacc11a6abb692ac, type: 2}
+  applyBulletSpread: 1
+  applyWeight: 1
+  spreadAmount: 0.03
+  aimSpreadAmount: 0
+  weightMultiplier: 1
+  applyRecoil: 1
+  recoilX:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.051014658
+      outSlope: 0.051014658
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.11468378
+      value: 0.0058505535
+      inSlope: -0.0001498049
+      outSlope: -0.0001498049
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.28320652
+      outWeight: 0.28185767
+    - serializedVersion: 3
+      time: 0.3119165
+      value: -0.012769103
+      inSlope: -0.0016482978
+      outSlope: -0.0016482978
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.15423769
+      outWeight: 0.12053423
+    - serializedVersion: 3
+      time: 0.6680661
+      value: 0.009595975
+      inSlope: 0.0056905127
+      outSlope: 0.0056905127
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.09253595
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.028909294
+      outSlope: -0.028909294
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  recoilY:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 5.0545154
+      outSlope: 5.0545154
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.04135407
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.9976196
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.91338575
+      value: 0.99523807
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  xRecoilAmount: 45
+  yRecoilAmount: 8
+  recoilRelaxSpeed: 1
+  applyDifferentRecoilOnAiming: 0
+  xRecoilAmountOnAiming: 0
+  yRecoilAmountOnAiming: 0
+  damagePerBullet: 3
+  applyDamageReductionBasedOnDistance: 0
+  minimumDistanceToApplyDamageReduction: 0
+  damageReductionMultiplier: 0
+  criticalDamageMultiplier: 1.5
+  limitedMagazines: 0
+  totalMagazines: 2
+  showBulletShells: 1
+  bulletHoleImpact:
+    defaultImpact: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+    groundIMpact: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+    grassImpact: {fileID: 2462405574108921655, guid: 96098beba501e3247b9452e9455f6189, type: 3}
+    enemyImpact: {fileID: 2462405574108921655, guid: 8c95f7225cf58144d86befe4ddc08efb, type: 3}
+    metalImpact: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+    mudImpact: {fileID: 2462405574108921655, guid: 4445bafd3b5e24c4eb41ba27f6a44af4, type: 3}
+    woodImpact: {fileID: 2462405574108921655, guid: 49ec6833820c5774ea4015ac770e6801, type: 3}
+  muzzleVFX: {fileID: 1336949550903370, guid: 679d294f11bff5d49b2fc3da2db6c3b7, type: 3}
+  bulletGraphics: {fileID: 1224343634984563145, guid: 7398cf6333f343048878df03af22c20a, type: 3}
+  useProceduralShot: 0
+  proceduralShotPattern: {fileID: 0}
+  audioSFX:
+    firing: {fileID: 8300000, guid: 876fbc1819bf43d42b23009fc2a37876, type: 3}
+    holster: {fileID: 8300000, guid: b2c939ee2ab26a14b81d51fe66235d2f, type: 3}
+    unholster: {fileID: 8300000, guid: b2c939ee2ab26a14b81d51fe66235d2f, type: 3}
+    reload: {fileID: 8300000, guid: 44e0c079ccb28334b8266b9a67c67645, type: 3}
+    emptyMagReload: {fileID: 8300000, guid: 44e0c079ccb28334b8266b9a67c67645, type: 3}
+    emptyMagShoot: {fileID: 8300000, guid: 5959d65463fbfe342a9219287eb7315f, type: 3}
+  pitchVariationFiringSFX: 0.15
+  camShakeAmount: 0.08
+  applyFOVEffectOnShooting: 1
+  FOVValueToSubtract: 0
+  AimingFOVValueToSubtract: 0
+  damagePerHit: 0
+  attackRate: 0
+  hitDelay: 0
+  attackRange: 0
+  dontShowMagazine: 0
+  currentPreset: {fileID: 0}
+  presetName: BurstRiflePreset

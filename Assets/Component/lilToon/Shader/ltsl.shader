@@ -155,14 +155,12 @@ Shader "Hidden/lilToonLite"
     {
         Tags {"RenderType" = "Opaque" "Queue" = "Geometry"}
         UsePass "Hidden/ltspass_lite_opaque/FORWARD"
+        UsePass "Hidden/ltspass_lite_opaque/FORWARD_ADD"
         UsePass "Hidden/ltspass_lite_opaque/SHADOW_CASTER"
-        UsePass "Hidden/ltspass_lite_opaque/DEPTHONLY"
-        UsePass "Hidden/ltspass_lite_opaque/DEPTHNORMALS"
-        UsePass "Hidden/ltspass_lite_opaque/MOTIONVECTORS"
-        UsePass "Hidden/ltspass_lite_opaque/UNIVERSAL2D"
         UsePass "Hidden/ltspass_lite_opaque/META"
     }
-    Fallback "Universal Render Pipeline/Unlit"
+    Fallback "Unlit/Texture"
 
     CustomEditor "lilToon.lilToonInspector"
 }
+

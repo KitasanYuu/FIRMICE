@@ -1,0 +1,111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d01ed731769af95429c32ba164942b3e, type: 3}
+  m_Name: Grenade_Example
+  m_EditorClassIdentifier: 
+  weaponObject: {fileID: 0}
+  _name: 
+  pickUpGraphics: {fileID: 8081276312376319787, guid: f1eb5ad60d56f124698909ca088a62b7, type: 3}
+  icon: {fileID: 21300000, guid: d0588a1697e054e4f84697d51dd9e024, type: 3}
+  shootStyle: 1
+  shootMethod: 0
+  holdProgressSpeed: 0
+  reloadStyle: 0
+  projectile: {fileID: 925777154138219767, guid: 1bab4947d6553cd49ae08d7665a640dc, type: 3}
+  projectileUsesGravity: 1
+  bulletDuration: 3
+  speed: 50
+  explosionOnHit: 1
+  hurtsPlayer: 1
+  explosionRadius: 10
+  explosionForce: 20
+  explosionVFX: {fileID: 5018994898019192216, guid: 2278c6019b8c4ec4b8f11d7d764c8d57, type: 3}
+  fireRate: 2
+  reloadTime: 1
+  infiniteBullets: 0
+  magazineSize: 1
+  bulletsPerFire: 1
+  ammoCostPerFire: 1
+  bulletRange: 100
+  timeBetweenShots: 0
+  penetrationAmount: 0
+  penetrationDamageReduction: 0
+  allowAim: 0
+  aimingPosition: {x: -1.5, y: 0.5, z: 0}
+  aimingRotation: {x: 0, y: 0, z: 0}
+  aimingSpeed: 0
+  aimingFOV: 0
+  movementSpeedWhileAiming: 0
+  setMovementSpeedWhileAiming: 0
+  crosshairResize: 100
+  crosshairPreset: {fileID: 2655988077585873504, guid: 339dc1e687484c544b2b203166ea9a5f, type: 2}
+  applyBulletSpread: 1
+  applyWeight: 0
+  spreadAmount: 0
+  aimSpreadAmount: 0
+  weightMultiplier: 1
+  applyRecoil: 0
+  recoilX:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  recoilY:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  xRecoilAmount: 0
+  yRecoilAmount: 0
+  recoilRelaxSpeed: 0
+  applyDifferentRecoilOnAiming: 0
+  xRecoilAmountOnAiming: 0
+  yRecoilAmountOnAiming: 0
+  damagePerBullet: 50
+  applyDamageReductionBasedOnDistance: 0
+  minimumDistanceToApplyDamageReduction: 0
+  damageReductionMultiplier: 0
+  criticalDamageMultiplier: 1
+  limitedMagazines: 0
+  totalMagazines: 1
+  showBulletShells: 0
+  bulletHoleImpact:
+    defaultImpact: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+    groundIMpact: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+    grassImpact: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+    enemyImpact: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+    metalImpact: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+    mudImpact: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+    woodImpact: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+  muzzleVFX: {fileID: 0}
+  bulletGraphics: {fileID: 0}
+  useProceduralShot: 0
+  proceduralShotPattern: {fileID: 0}
+  audioSFX:
+    firing: {fileID: 8300000, guid: 53fa7ce979edac24dae6e30683b0b561, type: 3}
+    holster: {fileID: 8300000, guid: 9ec1d6550dc04d9478dda7fd8b184a95, type: 3}
+    unholster: {fileID: 8300000, guid: 9ec1d6550dc04d9478dda7fd8b184a95, type: 3}
+    reload: {fileID: 0}
+    emptyMag: {fileID: 0}
+  pitchVariationFiringSFX: 0.15
+  camShakeAmount: 0
+  applyFOVEffectOnShooting: 0
+  FOVValueToSubstract: 0
+  AimingFOVValueToSubstract: 0
+  damagePerHit: 0
+  attackRate: 0
+  attackRange: 0
+  dontShowMagazine: 0
+  currentPreset: {fileID: 0}
+  presetName: ProjectileWeaponPreset

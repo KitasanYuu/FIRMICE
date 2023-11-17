@@ -1,0 +1,225 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d01ed731769af95429c32ba164942b3e, type: 3}
+  m_Name: Shotgun
+  m_EditorClassIdentifier: 
+  weaponObject: {fileID: 4297088724382527176, guid: f0fc591c242756b4cb8673b7cecc99e3, type: 3}
+  _name: Shotgun
+  pickUpGraphics: {fileID: 5837915818634635919, guid: 1a01c33d5faf7b4438a0790b28bf8cee, type: 3}
+  icon: {fileID: 21300000, guid: d4bc7fce79b652c4593f0d14c16e9308, type: 3}
+  shootStyle: 0
+  shootMethod: 1
+  holdProgressSpeed: 0
+  reloadStyle: 0
+  projectile: {fileID: 1524923703965971472, guid: 0c78e1b153c7edc4381fa619064969b4, type: 3}
+  projectileUsesGravity: 0
+  shootDelay: 0
+  bulletDuration: 0
+  speed: 40
+  explosionOnHit: 0
+  hurtsPlayer: 0
+  explosionRadius: 0
+  explosionForce: 0
+  explosionVFX: {fileID: 0}
+  continuousFire: 0
+  fireRate: 1.4
+  reloadTime: 2.517
+  coolSpeed: 1
+  cooledPercentageAfterOverheat: 0
+  infiniteBullets: 0
+  magazineSize: 4
+  bulletsPerFire: 3
+  ammoCostPerFire: 1
+  bulletRange: 100
+  timeBetweenShots: 0
+  penetrationAmount: 10
+  penetrationDamageReduction: 0.91
+  allowAim: 1
+  aimingPosition: {x: -0.14, y: 0.075, z: -0.2}
+  aimingRotation: {x: 0, y: 0, z: 0}
+  aimingSpeed: 10
+  aimingFOV: 30
+  movementSpeedWhileAiming: 6
+  setMovementSpeedWhileAiming: 1
+  crosshairResize: 40
+  crosshairPreset: {fileID: 2655988077585873504, guid: c578889a819b05c4aacc11a6abb692ac, type: 2}
+  applyBulletSpread: 1
+  applyWeight: 1
+  spreadAmount: 0.06
+  aimSpreadAmount: 0
+  weightMultiplier: 1.3
+  applyRecoil: 0
+  recoilX:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: -0.07648395
+      outSlope: -0.07648395
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.47126475
+      value: -0.036044188
+      inSlope: -0.0041566864
+      outSlope: -0.0041566864
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0.06817058
+      outSlope: 0.06817058
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  recoilY:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 12.398543
+      outSlope: 12.398543
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.07381806
+      value: 0.9152364
+      inSlope: -0.36987326
+      outSlope: -0.36987326
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.076515175
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.578739
+      outSlope: -0.578739
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.09186734
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1.0697343
+      value: 0.9350196
+      inSlope: -0.61847085
+      outSlope: -0.61847085
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.075663775
+    - serializedVersion: 3
+      time: 2.0069935
+      value: 0.1013951
+      inSlope: -0.51304924
+      outSlope: -0.51304924
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.11957938
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 2.0433092
+      value: 0.93551964
+      inSlope: -0.49461997
+      outSlope: -0.49461997
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.12601003
+    - serializedVersion: 3
+      time: 3.001908
+      value: 0.2551587
+      inSlope: -0.6326548
+      outSlope: -0.6326548
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.19429722
+      outWeight: 0
+    - serializedVersion: 3
+      time: 3.0638802
+      value: 0.9660983
+      inSlope: -0.12939645
+      outSlope: -0.12939645
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 4.0058913
+      value: 0.22104496
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  xRecoilAmount: 10
+  yRecoilAmount: 8
+  recoilRelaxSpeed: 0
+  applyDifferentRecoilOnAiming: 0
+  xRecoilAmountOnAiming: 0
+  yRecoilAmountOnAiming: 0
+  damagePerBullet: 5
+  applyDamageReductionBasedOnDistance: 0
+  minimumDistanceToApplyDamageReduction: 0
+  damageReductionMultiplier: 0
+  criticalDamageMultiplier: 1.5
+  limitedMagazines: 0
+  totalMagazines: 1
+  showBulletShells: 1
+  bulletHoleImpact:
+    defaultImpact: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+    groundIMpact: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+    grassImpact: {fileID: 2462405574108921655, guid: 96098beba501e3247b9452e9455f6189, type: 3}
+    enemyImpact: {fileID: 2462405574108921655, guid: 8c95f7225cf58144d86befe4ddc08efb, type: 3}
+    metalImpact: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+    mudImpact: {fileID: 2462405574108921655, guid: e6d36bb0ebdf6cc4dacdeee8b6e8a0ce, type: 3}
+    woodImpact: {fileID: 2462405574108921655, guid: 49ec6833820c5774ea4015ac770e6801, type: 3}
+  muzzleVFX: {fileID: 1336949550903370, guid: 679d294f11bff5d49b2fc3da2db6c3b7, type: 3}
+  bulletGraphics: {fileID: 1224343634984563145, guid: 7398cf6333f343048878df03af22c20a, type: 3}
+  useProceduralShot: 0
+  proceduralShotPattern: {fileID: 0}
+  audioSFX:
+    firing: {fileID: 8300000, guid: 92d8bf4e038bb4a4db9b334c0b07d8cd, type: 3}
+    holster: {fileID: 8300000, guid: b2c939ee2ab26a14b81d51fe66235d2f, type: 3}
+    unholster: {fileID: 8300000, guid: b2c939ee2ab26a14b81d51fe66235d2f, type: 3}
+    reload: {fileID: 8300000, guid: e85428027ef8cf147be78b9e67abcc96, type: 3}
+    emptyMagReload: {fileID: 8300000, guid: e85428027ef8cf147be78b9e67abcc96, type: 3}
+    emptyMagShoot: {fileID: 8300000, guid: 5959d65463fbfe342a9219287eb7315f, type: 3}
+  pitchVariationFiringSFX: 0.15
+  camShakeAmount: 0.21
+  applyFOVEffectOnShooting: 1
+  FOVValueToSubtract: 0
+  AimingFOVValueToSubtract: 0
+  damagePerHit: 0
+  attackRate: 0
+  hitDelay: 0
+  attackRange: 0
+  dontShowMagazine: 0
+  currentPreset: {fileID: 0}
+  presetName: ShotgunPreset

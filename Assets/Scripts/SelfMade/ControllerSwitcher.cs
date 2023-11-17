@@ -19,8 +19,8 @@ public class ControllerSwitcher : MonoBehaviour
         firstPersonController = playerArmature.GetComponent<FirstPersonController>();
 
         // 获取PlayerFollowCamera和FPSCamera的引用
-        playerFollowCamera = playerArmature.transform.Find("RINDO/Geometry/PlayerFollowCamera").gameObject;
-        fpsCamera = playerArmature.transform.Find("RINDO/Geometry/FPSCamera").gameObject;
+        //playerFollowCamera = playerArmature.transform.Find("RINDO/Geometry/PlayerFollowCamera").gameObject;
+        //fpsCamera = playerArmature.transform.Find("RINDO/Geometry/FPSCamera").gameObject;
 
         // 初始状态设置为 Third Person 模式
         EnableThirdPersonMode();
