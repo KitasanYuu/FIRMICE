@@ -35,6 +35,7 @@ namespace StarterAssets
         [Space(10)]
         [Tooltip("The height the player can jump")]
         public float JumpHeight = 1.2f;
+        public float SecondJumpHeight = 1.4f;
 
         [Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
         public float Gravity = -15.0f;
@@ -79,6 +80,13 @@ namespace StarterAssets
         private Vector3 _lastMoveDirection = Vector3.zero;
         private Vector3 targetDr = Vector3.zero;
         private float   _lastMoveDr = 0.0f;
+
+        // 在 PlayerMovement 类中创建一个变量来跟踪跳跃次数
+        public float MaxJumpCount = 2;
+        private int jumpCount;
+        private bool canJump;
+        private float jumpTimer = 0.05f; // 设置二段跳的等待时间
+        private float jumpTimerCurrent = 0.0f;
 
         // cinemachine
         private float _cinemachineTargetYaw;
@@ -165,6 +173,21 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
+        }
+
+        void FixedUpdate()
+        {
+            if (!Grounded)
+            {
+                // 更新计时器
+                jumpTimerCurrent -= Time.fixedDeltaTime;
+            }
+            else
+            {
+                // 在落地时重置计时器
+                jumpTimerCurrent = 0.0f;
+                canJump = true;
+            }
         }
 
         private void LateUpdate()
@@ -329,6 +352,7 @@ namespace StarterAssets
 
             if (Grounded)
             {
+                canJump = true;
                 // reset the fall timeout timer
                 _fallTimeoutDelta = FallTimeout;
 
@@ -356,6 +380,10 @@ namespace StarterAssets
                     {
                         _animator.SetBool(_animIDJump, true);
                     }
+                    canJump = false;
+                    jumpTimerCurrent = jumpTimer;
+                    jumpCount = 1;
+
                 }
 
                 // jump timeout
@@ -366,6 +394,18 @@ namespace StarterAssets
             }
             else
             {
+                if (_input.jump && jumpTimerCurrent <= 0.0f && jumpCount < MaxJumpCount)
+                {
+                    _animator.SetBool(_animIDJump, false);
+                    // 执行第二次跳跃逻辑
+                    _verticalVelocity = 0f; // 或者你可以设置为一个负数，如果希望角色向下运动
+                    _verticalVelocity = Mathf.Sqrt(SecondJumpHeight * -2f * Gravity);
+                    // 增加跳跃次数
+                    jumpTimerCurrent = jumpTimer;
+                    jumpCount++;
+                    _animator.SetBool(_animIDFreeFall, true);
+                }
+
                 // reset the jump timeout timer
                 _jumpTimeoutDelta = JumpTimeout;
 
@@ -386,7 +426,7 @@ namespace StarterAssets
                 _controller.Move(targetDr.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 
 
-                // if we are not grounded, do not jump
+                // if we are not eded, do not jump
                 _input.jump = false;
             }
 

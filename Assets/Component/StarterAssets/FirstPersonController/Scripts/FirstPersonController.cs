@@ -24,7 +24,8 @@ namespace StarterAssets
 		[Space(10)]
 		[Tooltip("The height the player can jump")]
 		public float JumpHeight = 1.2f;
-		[Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
+		public float SecondJumpHeight = 1.4f;
+        [Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
 		public float Gravity = -15.0f;
 
 		[Space(10)]
@@ -43,22 +44,20 @@ namespace StarterAssets
 		[Tooltip("What layers the character uses as ground")]
 		public LayerMask GroundLayers;
 
-		[Header("Cinemachine")]
-		[Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
-		public GameObject CinemachineCameraTarget;
-		[Tooltip("How far in degrees can you move the camera up")]
-		public float TopClamp = 90.0f;
-		[Tooltip("How far in degrees can you move the camera down")]
-		public float BottomClamp = -90.0f;
-
         // 在类的顶部声明 _lastMoveDirection 字段，但不要赋值
         private Vector3 _lastMoveDirection = Vector3.zero;
 
-        // cinemachine
-        private float _cinemachineTargetPitch;
 
-		// player
-		private float _speed;
+        // 在 PlayerMovement 类中创建一个变量来跟踪跳跃次数
+        public float MaxJumpCount = 2;
+        private int jumpCount;
+		private bool canJump = true;
+        private float jumpTimer = 0.05f; // 设置二段跳的等待时间
+        private float jumpTimerCurrent = 0.0f;
+
+
+        // player
+        private float _speed;
         private float _animationBlend;
         private float _rotationVelocity;
 		private float _verticalVelocity;
@@ -130,16 +129,29 @@ namespace StarterAssets
 		private void Update()
 		{
             _hasAnimator = TryGetComponent(out _animator);
-
-            JumpAndGravity();
+                JumpAndGravity();
 			GroundedCheck();
 			Move();
 		}
 
+        void FixedUpdate()
+        {
+            if (!Grounded)
+            {
+                // 更新计时器
+                jumpTimerCurrent -= Time.fixedDeltaTime;
+            }
+            else
+            {
+                // 在落地时重置计时器
+                jumpTimerCurrent = 0.0f;
+                canJump = true;
+            }
+        }
 
         private void LateUpdate()
 		{
-			CameraRotation();
+			
 		}
 
         private void AssignAnimationIDs()
@@ -163,27 +175,6 @@ namespace StarterAssets
             }
         }
 
-		private void CameraRotation()
-		{
-			// if there is an input
-			if (_input.look.sqrMagnitude >= _threshold)
-			{
-				//Don't multiply mouse input by Time.deltaTime
-				float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
-				
-				_cinemachineTargetPitch += _input.look.y * RotationSpeed * deltaTimeMultiplier;
-				_rotationVelocity = _input.look.x * RotationSpeed * deltaTimeMultiplier;
-
-				// clamp our pitch rotation
-				_cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
-
-				// Update Cinemachine camera target pitch
-				CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0.0f, 0.0f);
-
-				// rotate the player left and right
-				transform.Rotate(Vector3.up * _rotationVelocity);
-			}
-		}
 
         private bool isMove; // 在类的作用域内声明 isMove 变量
 
@@ -271,7 +262,6 @@ namespace StarterAssets
             if (previousMoveDirection != Vector3.zero)
             {
                 _lastMoveDirection = previousMoveDirection;
-                //Debug.LogError("Jumping: " + _lastMoveDirection);
                 if (_input.move != Vector2.zero)
                 {
                     // move
@@ -295,10 +285,11 @@ namespace StarterAssets
 
             }
 
-                if (Grounded)
+            if (Grounded)
 			{
-				// reset the fall timeout timer
-				_fallTimeoutDelta = FallTimeout;
+                canJump = true;
+                // reset the fall timeout timer
+                _fallTimeoutDelta = FallTimeout;
 
                 // update animator if using character
                 if (_hasAnimator)
@@ -316,26 +307,40 @@ namespace StarterAssets
 				// Jump
 				if (_input.jump && _jumpTimeoutDelta <= 0.0f)
 				{
-					// the square root of H * -2 * G = how much velocity needed to reach desired height
-					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+						// the square root of H * -2 * G = how much velocity needed to reach desired height
+						_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 
-					// update animator if using character
-					//if (_hasAnimator)
-					//{
-					//	_animator.SetBool(_animIDJump, true);
-					//}
-				}
+                    // update animator if using character
+                    //if (_hasAnimator)
+                    //{
+                    //	_animator.SetBool(_animIDJump, true);
+                    //}
+                    canJump = false;
+                    jumpTimerCurrent = jumpTimer;
+					jumpCount = 1;
+                }
 
-				// jump timeout
-				if (_jumpTimeoutDelta >= 0.0f)
+
+                // jump timeout
+                if (_jumpTimeoutDelta >= 0.0f)
 				{
 					_jumpTimeoutDelta -= Time.deltaTime;
 				}
 			}
 			else
 			{
-				// reset the jump timeout timer
-				_jumpTimeoutDelta = JumpTimeout;
+                if (_input.jump && jumpTimerCurrent <= 0.0f && jumpCount < MaxJumpCount)
+                {
+                    // 执行第二次跳跃逻辑
+                    _verticalVelocity = 0f; // 或者你可以设置为一个负数，如果希望角色向下运动
+                    _verticalVelocity = Mathf.Sqrt(SecondJumpHeight * -2f * Gravity);
+                    jumpTimerCurrent = jumpTimer;
+                    // 增加跳跃次数
+                    jumpCount++;
+                }
+
+                // reset the jump timeout timer
+                _jumpTimeoutDelta = JumpTimeout;
 
 				// fall timeout
 				if (_fallTimeoutDelta >= 0.0f)
@@ -354,7 +359,6 @@ namespace StarterAssets
 
                 _controller.Move(_lastMoveDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 
-               // Debug.LogWarning("Normalized Input DirectionA: " + inputDirectionA.normalized);
                 // if we are not grounded, do not jump
                 _input.jump = false;
 			}
