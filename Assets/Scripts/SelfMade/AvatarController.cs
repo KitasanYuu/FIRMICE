@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 #endif
@@ -88,6 +89,7 @@ namespace StarterAssets
         private bool canJump;
         private float jumpTimer = 0.05f; // 设置二段跳的等待时间
         private float jumpTimerCurrent = 0.0f;
+        private bool Jetted = false;
 
         // cinemachine
         private float _cinemachineTargetYaw;
@@ -101,6 +103,11 @@ namespace StarterAssets
         private float _verticalVelocity;
         private float _terminalVelocity = 53.0f;
 
+        Animator animator;
+
+        private const string JetStatusParam = "JetStatus";
+        private const float ThresholdValue = 1.0f;
+
         // timeout deltatime
         private float _jumpTimeoutDelta;
         private float _fallTimeoutDelta;
@@ -111,6 +118,7 @@ namespace StarterAssets
         private int _animIDJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
+        private int _animIDJetStatus;
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
@@ -149,7 +157,7 @@ namespace StarterAssets
         private void Start()
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-
+            animator = GetComponent<Animator>();
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
@@ -203,6 +211,7 @@ namespace StarterAssets
             _animIDJump = Animator.StringToHash("Jump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+            _animIDJetStatus = Animator.StringToHash("JetStatus");
         }
 
         private void GroundedCheck()
@@ -373,6 +382,7 @@ namespace StarterAssets
 
             if (Grounded)
             {
+                Jetted = false;
                 canJump = true;
                 // reset the fall timeout timer
                 _fallTimeoutDelta = FallTimeout;
@@ -393,6 +403,10 @@ namespace StarterAssets
                 // Jump
                 if (_input.jump && _jumpTimeoutDelta <= 0.0f)
                 {
+                    if (!Jetted)
+                    {
+                        JetON();
+                    }
                     // the square root of H * -2 * G = how much velocity needed to reach desired height
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 
@@ -407,7 +421,6 @@ namespace StarterAssets
                     canJump = false;
                     jumpTimerCurrent = jumpTimer;
                     jumpCount = 1;
-
                 }
 
                 // jump timeout
@@ -420,6 +433,11 @@ namespace StarterAssets
             {
                 if (_input.jump && jumpTimerCurrent <= 0.0f && jumpCount < MaxJumpCount)
                 {
+                    Jetted = false;
+                    if (!Jetted)
+                    {
+                        JetON();
+                    }
                     // 执行第二次跳跃逻辑
                     _verticalVelocity = 0f; // 或者你可以设置为一个负数，如果希望角色向下运动
                     _verticalVelocity = Mathf.Sqrt(SecondJumpHeight * -2f * Gravity);
@@ -427,6 +445,7 @@ namespace StarterAssets
                     jumpTimerCurrent = jumpTimer;
                     jumpCount++;
                 }
+
 
                 // reset the jump timeout timer
                 _jumpTimeoutDelta = JumpTimeout;
@@ -444,7 +463,7 @@ namespace StarterAssets
                         _animator.SetBool(_animIDFreeFall, true);
                     }
                 }
-
+                
                 if (IsTPS)
                 {
                     _controller.Move(targetDr.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
@@ -463,6 +482,28 @@ namespace StarterAssets
             {
                 _verticalVelocity += Gravity * Time.deltaTime;
             }
+        }
+
+
+        private IEnumerator DelayedJetStatus(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            _animator.SetFloat(_animIDJetStatus, 0.0f);
+        }
+
+        private void JetON()
+        {
+            float currentValue = animator.GetFloat(JetStatusParam);
+            if (currentValue == 0)
+            {
+                _animator.SetFloat(_animIDJetStatus, 1.0f);
+                Debug.LogWarning("Done");
+
+                // 启动协程，在 delay 秒后将 JetStatus 设置为 0.0f
+                StartCoroutine(DelayedJetStatus(0.1f));
+            }
+            Jetted = true;
+            Debug.LogError("Done");
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
