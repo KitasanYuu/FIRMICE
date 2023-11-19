@@ -5,8 +5,7 @@ using Cinemachine;
 public class ControllerSwitcher : MonoBehaviour
 {
     public GameObject playerArmature;
-    public ThirdPersonController thirdPersonController;
-    public FirstPersonController firstPersonController;
+    public AvatarController avatarController;
     public GameObject playerFollowCamera;
     public GameObject fpsCamera;
 
@@ -14,16 +13,12 @@ public class ControllerSwitcher : MonoBehaviour
 
     void Start()
     {
-        // 获取引用
-        thirdPersonController = playerArmature.GetComponent<ThirdPersonController>();
-        firstPersonController = playerArmature.GetComponent<FirstPersonController>();
 
         // 获取PlayerFollowCamera和FPSCamera的引用
         //playerFollowCamera = playerArmature.transform.Find("RINDO/Geometry/PlayerFollowCamera").gameObject;
         //fpsCamera = playerArmature.transform.Find("RINDO/Geometry/FPSCamera").gameObject;
 
         // 初始状态设置为 Third Person 模式
-        EnableThirdPersonMode();
     }
 
     void Update()
@@ -41,52 +36,21 @@ public class ControllerSwitcher : MonoBehaviour
         }
     }
 
+
     void SwitchController()
     {
-        if (thirdPersonController != null && firstPersonController != null && playerFollowCamera != null && fpsCamera != null)
+        // 获取引用
+        avatarController = playerArmature.GetComponent<AvatarController>();
+
+
+        if (avatarController != null)
         {
-            if (thirdPersonController.enabled)
-            {
-                // 如果 Third Person Controller 启用，切换到 First Person 模式
-                EnableFirstPersonMode();
-            }
-            else
-            {
-                // 如果 First Person Controller 启用，切换到 Third Person 模式
-                EnableThirdPersonMode();
-            }
+            // 切换 IsTPS 属性值
+            avatarController.IsTPS = !avatarController.IsTPS;
+
+            // 根据 IsTPS 的状态来启用或禁用 FPSCamera
+            fpsCamera.SetActive(!avatarController.IsTPS);
         }
-    }
-
-    void EnableThirdPersonMode()
-    {
-        // 启用 Third Person 模式
-        thirdPersonController.enabled = true;
-        firstPersonController.enabled = false;
-
-        // 启用 Third Person 摄像机，禁用 First Person 摄像机
-        playerFollowCamera.SetActive(true);
-
-        // 禁用 PlayerFollowCamera 下的 CinemachineVirtualCamera 脚本
-        SetCinemachineVirtualCameraState(playerFollowCamera, true);
-        // 启用 Third Person 摄像机，禁用 First Person 摄像机
-        playerFollowCamera.SetActive(true);
-        fpsCamera.SetActive(false);
-    }
-
-    void EnableFirstPersonMode()
-    {
-        // 启用 First Person 模式
-        thirdPersonController.enabled = false;
-        firstPersonController.enabled = true;
-
-        // 启用 First Person 摄像机，禁用 Third Person 摄像机
-        //playerFollowCamera.SetActive(false);
-
-        // 启用 PlayerFollowCamera 下的 CinemachineVirtualCamera 脚本
-        SetCinemachineVirtualCameraState(playerFollowCamera, false);
-
-        fpsCamera.SetActive(true);
     }
 
     void SetCinemachineVirtualCameraState(GameObject cameraObject, bool state)
