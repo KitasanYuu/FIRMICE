@@ -22,6 +22,8 @@ namespace StarterAssets
         public float MoveSpeed = 2.0f;
         [Tooltip("Sprint speed of the character in m/s")]
         public float SprintSpeed = 5.335f;
+        [Tooltip("Crouch speed of the character in m/s")]
+        public float CrouchSpeed = 1.0f;
 
         [Tooltip("How fast the character turns to face movement direction")]
         [Range(0.0f, 0.3f)]
@@ -90,6 +92,13 @@ namespace StarterAssets
         private float jumpTimer = 0.05f; // 设置二段跳的等待时间
         private float jumpTimerCurrent = 0.0f;
         private bool Jetted = false;
+
+        private CharacterController _characterController;
+        private float _defaultHeight;
+        private float _crouchHeight = 0.5f; // 下蹲高度
+        private bool _isCrouching = false;
+        private bool canCrouch = true;
+        private float CrouchCheck = 0;
 
         // cinemachine
         private float _cinemachineTargetYaw;
@@ -179,9 +188,16 @@ namespace StarterAssets
         {
             _hasAnimator = TryGetComponent(out _animator);
 
+            if (canCrouch && _input.crouch)
+            {
+                StartCoroutine(CrouchDelay());
+            }
+
             JumpAndGravity();
             GroundedCheck();
+            MoveStatus();
             Move();
+            CrouchDelay();
         }
 
         void FixedUpdate()
@@ -251,11 +267,49 @@ namespace StarterAssets
         }
 
         private bool isMove; // 在类的作用域内声明 isMove 变量
+        private float targetSpeed;
+
+        IEnumerator CrouchDelay()
+        {
+                canCrouch = false; // 禁用下蹲输入
+                yield return new WaitForSeconds(0.07f); // 等待0.1秒
+                canCrouch = true; // 允许下蹲输入
+                                  // 下蹲状态的逻辑
+            if (Grounded && _input.crouch && canCrouch)
+            {
+                _isCrouching = true;
+                targetSpeed = CrouchSpeed;
+                CrouchCheck++;
+                if (CrouchCheck >= 2)
+                {
+                    targetSpeed = MoveSpeed;
+                    CrouchCheck = 0;
+                    _isCrouching = false;
+                }
+            }
+
+        }
+
+
+        private void MoveStatus()
+        {
+            if(Grounded && _input.sprint && !_input.crouch && !_isCrouching)
+            {
+                targetSpeed = SprintSpeed;
+            }
+
+            if (!_input.crouch && !_input.sprint && !_isCrouching)
+            {
+                targetSpeed = MoveSpeed;
+            }
+
+        }
 
         private void Move()
         {
+            MoveStatus();
             // set target speed based on move speed, sprint speed and if sprint is pressed
-            float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+            //float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -497,13 +551,11 @@ namespace StarterAssets
             if (currentValue == 0)
             {
                 _animator.SetFloat(_animIDJetStatus, 1.0f);
-                Debug.LogWarning("Done");
 
                 // 启动协程，在 delay 秒后将 JetStatus 设置为 0.0f
                 StartCoroutine(DelayedJetStatus(0.1f));
             }
             Jetted = true;
-            Debug.LogError("Done");
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
