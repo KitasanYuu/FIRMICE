@@ -1,0 +1,20 @@
+Release Notes:
+v1.0.1 rev 00:
+* New Features:
+    * Added new Start Screen
+        * Shows useful info and checks if proper dependencies and settings are set
+        * Enabled by default on Unity startup 
+            * Startup option can be set either via Start Screen or Preferences > Amplify Animation Pack
+        * Can be manually opened over Windows > Amplify Animation Pack > Start Screen
+    * Added Ladder mechanics
+        * The character can now climb ladders
+        * Interaction enabled with the LadderObject prefab
+    * Added Plunge attack
+        * Enabled by pressing any attack button during the FallingState
+    * Added movement Leaning
+        * The character now leans according to its movement rotation
+* Fixes:
+    * Fixed input issue on movement axis release being faster than its pressing
+
+v1.0.0 rev 00:
+* First release
