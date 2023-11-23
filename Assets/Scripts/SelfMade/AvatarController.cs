@@ -92,7 +92,9 @@ namespace StarterAssets
         private float jumpTimer = 0.05f; // 设置二段跳的等待时间
         private float jumpTimerCurrent = 0.0f;
         private bool Jetted = false;
+        private float airSpeed;
 
+        //下蹲
         private CharacterController _characterController;
         private float _defaultHeight;
         private float _crouchHeight = 0.5f; // 下蹲高度
@@ -114,6 +116,8 @@ namespace StarterAssets
 
         Animator animator;
 
+        private bool IsSprinting = false;
+
         private const string JetStatusParam = "JetStatus";
         private const float ThresholdValue = 1.0f;
 
@@ -128,6 +132,7 @@ namespace StarterAssets
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
         private int _animIDJetStatus;
+        private int _animIDis_Crouching;
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
@@ -188,16 +193,10 @@ namespace StarterAssets
         {
             _hasAnimator = TryGetComponent(out _animator);
 
-            if (canCrouch && _input.crouch)
-            {
-                StartCoroutine(CrouchDelay());
-            }
-
             JumpAndGravity();
             GroundedCheck();
             MoveStatus();
             Move();
-            CrouchDelay();
         }
 
         void FixedUpdate()
@@ -228,6 +227,7 @@ namespace StarterAssets
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
             _animIDJetStatus = Animator.StringToHash("JetStatus");
+            _animIDis_Crouching = Animator.StringToHash("is_crouching");
         }
 
         private void GroundedCheck()
@@ -269,38 +269,46 @@ namespace StarterAssets
         private bool isMove; // 在类的作用域内声明 isMove 变量
         private float targetSpeed;
 
+        //增加下蹲CD以保证跳跃后不能立马下蹲产生动作bug
         IEnumerator CrouchDelay()
         {
-                canCrouch = false; // 禁用下蹲输入
-                yield return new WaitForSeconds(0.07f); // 等待0.1秒
-                canCrouch = true; // 允许下蹲输入
-                                  // 下蹲状态的逻辑
+            canCrouch = false; // 禁用下蹲输入
+            yield return new WaitForSeconds(0.1f); // 等待0.1秒
+            canCrouch = true; // 允许下蹲输入
+
+        }
+
+        //在各种移动速度中进行判定
+        private void MoveStatus()
+        {
+            if (Grounded && _input.sprint && !_input.crouch && !_isCrouching)
+            {
+                targetSpeed = SprintSpeed;
+                airSpeed = targetSpeed;
+            }
+
             if (Grounded && _input.crouch && canCrouch)
             {
                 _isCrouching = true;
                 targetSpeed = CrouchSpeed;
-                CrouchCheck++;
-                if (CrouchCheck >= 2)
-                {
-                    targetSpeed = MoveSpeed;
-                    CrouchCheck = 0;
-                    _isCrouching = false;
-                }
+                _input.jump = false;
             }
-
-        }
-
-
-        private void MoveStatus()
-        {
-            if(Grounded && _input.sprint && !_input.crouch && !_isCrouching)
+            else
             {
-                targetSpeed = SprintSpeed;
+                _isCrouching = false;
             }
 
-            if (!_input.crouch && !_input.sprint && !_isCrouching)
+            //检测若是在地面且没有输入蹲下，没有输入奔跑，不在蹲下时，将速度调整为步行速度
+            if (Grounded && !_input.crouch && !_input.sprint && !_isCrouching)
             {
                 targetSpeed = MoveSpeed;
+                airSpeed = targetSpeed;
+            }
+
+            //若不在地面，则取上轮if的speed为在空中的速度
+            if (!Grounded)
+            {
+                targetSpeed = airSpeed;
             }
 
         }
@@ -308,13 +316,11 @@ namespace StarterAssets
         private void Move()
         {
             MoveStatus();
-            // set target speed based on move speed, sprint speed and if sprint is pressed
-            //float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+            // 根据移动速度、冲刺速度以及是否按下冲刺键来设置目标速度（集合进MoveStatus()）
+            // float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 
-            // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
-
-            // note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
-            // if there is no input, set the target speed to 0
+            // 注意：Vector2 的 == 运算符使用近似值，因此不容易受到浮点误差的影响，并且比 magnitude 更方便
+            // 如果没有输入，则将目标速度设为 0
             if (_input.move == Vector2.zero) targetSpeed = 0.0f;
 
             // a reference to the players current horizontal velocity
@@ -323,31 +329,34 @@ namespace StarterAssets
             float speedOffset = 0.1f;
             float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
 
-            // accelerate or decelerate to target speed
-            if (currentHorizontalSpeed < targetSpeed - speedOffset ||
+            //检测地面，若不是则按照airspeed规则
+            if (Grounded)
+            {
+                // accelerate or decelerate to target speed
+                if (currentHorizontalSpeed < targetSpeed - speedOffset ||
                 currentHorizontalSpeed > targetSpeed + speedOffset)
-            {
-                // creates curved result rather than a linear one giving a more organic speed change
-                // note T in Lerp is clamped, so we don't need to clamp our speed
-                _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude,
-                    Time.deltaTime * SpeedChangeRate);
+                {
+                    // creates curved result rather than a linear one giving a more organic speed change
+                    // note T in Lerp is clamped, so we don't need to clamp our speed
+                    _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude,
+                        Time.deltaTime * SpeedChangeRate);
 
-                // round speed to 3 decimal places
-                _speed = Mathf.Round(_speed * 1000f) / 1000f;
+                    // round speed to 3 decimal places
+                    _speed = Mathf.Round(_speed * 1000f) / 1000f;
+                }
+                else
+                {
+                    _speed = targetSpeed;
+                }
+
+                _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * SpeedChangeRate);
+                if (_animationBlend < 0.01f) _animationBlend = 0f;
             }
-            else
-            {
-                _speed = targetSpeed;
-            }
 
-            _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * SpeedChangeRate);
-            if (_animationBlend < 0.01f) _animationBlend = 0f;
-
-            // normalise input direction
+            //标准化输入方向
             Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
 
-            // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
-            // if there is a move input rotate player when the player is moving
+            // 如果有移动输入，则在玩家移动时旋转玩家。
             if (_input.move != Vector2.zero)
             {
                 if (IsTPS)
@@ -389,6 +398,14 @@ namespace StarterAssets
                 {
                     _animator.SetFloat(_animIDSpeed, _animationBlend);
                     _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
+                    if (_isCrouching)
+                    {
+                        _animator.SetBool(_animIDis_Crouching, true);
+                    }
+                    else
+                    {
+                        _animator.SetBool(_animIDis_Crouching, false);
+                    }
                 }
             }
         }
@@ -420,7 +437,7 @@ namespace StarterAssets
                     else
                     {
                         _lastMoveDirection = transform.right * _input.move.x + transform.forward * _input.move.y;
-                        targetDr= _lastMoveDirection;
+                        targetDr = _lastMoveDirection;
                     }
                 }
             }
@@ -428,113 +445,117 @@ namespace StarterAssets
 
         private void JumpAndGravity()
         {
-
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (!_isCrouching)
             {
-                UpdateLastMoveDirection();
-            }
-
-            if (Grounded)
-            {
-                Jetted = false;
-                canJump = true;
-                // reset the fall timeout timer
-                _fallTimeoutDelta = FallTimeout;
-
-                // update animator if using character
-                if (_hasAnimator)
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    _animator.SetBool(_animIDJump, false);
-                    _animator.SetBool(_animIDFreeFall, false);
+                    UpdateLastMoveDirection();
                 }
 
-                // stop our velocity dropping infinitely when grounded
-                if (_verticalVelocity < 0.0f)
+                if (Grounded)
                 {
-                    _verticalVelocity = -2f;
-                }
+                    Jetted = false;
+                    canJump = true;
+                    // reset the fall timeout timer
+                    _fallTimeoutDelta = FallTimeout;
 
-                // Jump
-                if (_input.jump && _jumpTimeoutDelta <= 0.0f)
-                {
-                    if (!Jetted)
+                    // update animator if using character
+                    if (_hasAnimator)
                     {
-                        JetON();
+                        _animator.SetBool(_animIDJump, false);
+                        _animator.SetBool(_animIDFreeFall, false);
                     }
-                    // the square root of H * -2 * G = how much velocity needed to reach desired height
-                    _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 
-                    if (IsTPS)
+                    // stop our velocity dropping infinitely when grounded
+                    if (_verticalVelocity < 0.0f)
+                    {
+                        _verticalVelocity = -2f;
+                    }
+
+                    // Jump
+                    if (_input.jump && _jumpTimeoutDelta <= 0.0f)
+                    {
+                        if (!Jetted)
+                        {
+                            JetON();
+                        }
+                        // the square root of H * -2 * G = how much velocity needed to reach desired height
+                        _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+
+                        if (IsTPS)
+                        {
+                            // update animator if using character
+                            if (_hasAnimator)
+                            {
+                                _animator.SetBool(_animIDJump, true);
+                            }
+                        }
+                        canJump = false;
+                        jumpTimerCurrent = jumpTimer;
+                        jumpCount = 1;
+                    }
+
+                    // jump timeout
+                    if (_jumpTimeoutDelta >= 0.0f)
+                    {
+                        _jumpTimeoutDelta -= Time.deltaTime;
+                    }
+                }
+                else
+                {
+                    if (_input.jump && jumpTimerCurrent <= 0.0f && jumpCount < MaxJumpCount)
+                    {
+                        Jetted = false;
+                        if (!Jetted)
+                        {
+                            JetON();
+                        }
+                        // 执行第二次跳跃逻辑
+                        _verticalVelocity = 0f; // 或者你可以设置为一个负数，如果希望角色向下运动
+                        _verticalVelocity = Mathf.Sqrt(SecondJumpHeight * -2f * Gravity);
+                        // 增加跳跃次数
+                        jumpTimerCurrent = jumpTimer;
+                        jumpCount++;
+                    }
+
+
+                    // reset the jump timeout timer
+                    _jumpTimeoutDelta = JumpTimeout;
+
+                    // fall timeout
+                    if (_fallTimeoutDelta >= 0.0f)
+                    {
+                        _fallTimeoutDelta -= Time.deltaTime;
+                    }
+                    else
                     {
                         // update animator if using character
                         if (_hasAnimator)
                         {
-                            _animator.SetBool(_animIDJump, true);
+                            _animator.SetBool(_animIDFreeFall, true);
                         }
                     }
-                    canJump = false;
-                    jumpTimerCurrent = jumpTimer;
-                    jumpCount = 1;
-                }
 
-                // jump timeout
-                if (_jumpTimeoutDelta >= 0.0f)
-                {
-                    _jumpTimeoutDelta -= Time.deltaTime;
-                }
-            }
-            else
-            {
-                if (_input.jump && jumpTimerCurrent <= 0.0f && jumpCount < MaxJumpCount)
-                {
-                    Jetted = false;
-                    if (!Jetted)
+                    if (IsTPS)
                     {
-                        JetON();
+                        _controller.Move(targetDr.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
                     }
-                    // 执行第二次跳跃逻辑
-                    _verticalVelocity = 0f; // 或者你可以设置为一个负数，如果希望角色向下运动
-                    _verticalVelocity = Mathf.Sqrt(SecondJumpHeight * -2f * Gravity);
-                    // 增加跳跃次数
-                    jumpTimerCurrent = jumpTimer;
-                    jumpCount++;
-                }
-
-
-                // reset the jump timeout timer
-                _jumpTimeoutDelta = JumpTimeout;
-
-                // fall timeout
-                if (_fallTimeoutDelta >= 0.0f)
-                {
-                    _fallTimeoutDelta -= Time.deltaTime;
-                }
-                else
-                {
-                    // update animator if using character
-                    if (_hasAnimator)
+                    else
                     {
-                        _animator.SetBool(_animIDFreeFall, true);
+                        _controller.Move(_lastMoveDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
                     }
-                }
-                
-                if (IsTPS)
-                {
-                    _controller.Move(targetDr.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
-                }
-                else
-                {
-                    _controller.Move(_lastMoveDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+
+                    // if we are not eded, do not jump
+                    _input.jump = false;
+                    StartCoroutine(CrouchDelay());
+
                 }
 
-                // if we are not eded, do not jump
-                _input.jump = false;
-            }
-
-            // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
-            if (_verticalVelocity < _terminalVelocity)
-            {
-                _verticalVelocity += Gravity * Time.deltaTime;
+                // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
+                if (_verticalVelocity < _terminalVelocity)
+                {
+                    _verticalVelocity += Gravity * Time.deltaTime;
+                }
             }
         }
 
