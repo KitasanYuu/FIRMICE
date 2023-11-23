@@ -16,6 +16,7 @@ namespace StarterAssets
     public class AvatarController : MonoBehaviour
     {
         [Header("Player")]
+        public GameObject playerAmature; // 对PlayerAmature对象的引用
         [Tooltip("Move speed of the character in m/s")]
         public bool IsTPS = true;
         [Tooltip("Move speed of the character in m/s")]
@@ -88,7 +89,6 @@ namespace StarterAssets
         // 在 PlayerMovement 类中创建一个变量来跟踪跳跃次数
         public float MaxJumpCount = 2;
         private int jumpCount;
-        private bool canJump;
         private float jumpTimer = 0.05f; // 设置二段跳的等待时间
         private float jumpTimerCurrent = 0.0f;
         private bool Jetted = false;
@@ -98,9 +98,9 @@ namespace StarterAssets
         private CharacterController _characterController;
         private float _defaultHeight;
         private float _crouchHeight = 0.5f; // 下蹲高度
-        private bool _isCrouching = false;
+        public bool _isCrouching = false;
         private bool canCrouch = true;
-        private float CrouchCheck = 0;
+        private bool CrouchingDetect = false;//用于头顶障碍物检测
 
         // cinemachine
         private float _cinemachineTargetYaw;
@@ -115,8 +115,6 @@ namespace StarterAssets
         private float _terminalVelocity = 53.0f;
 
         Animator animator;
-
-        private bool IsSprinting = false;
 
         private const string JetStatusParam = "JetStatus";
         private const float ThresholdValue = 1.0f;
@@ -133,6 +131,14 @@ namespace StarterAssets
         private int _animIDMotionSpeed;
         private int _animIDJetStatus;
         private int _animIDis_Crouching;
+
+        //检测蹲下时上方是否有障碍物
+        public LayerMask detectionLayer;
+        public float radius = 0.1f;
+        public Transform sphereCenter; // 公共属性，用于指定球体的中心点
+        private bool isObstructed = false;
+        private bool DetectedResult = false;
+
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
@@ -170,6 +176,7 @@ namespace StarterAssets
 
         private void Start()
         {
+            _characterController = playerAmature.GetComponent<CharacterController>();
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
             animator = GetComponent<Animator>();
             _hasAnimator = TryGetComponent(out _animator);
@@ -197,6 +204,8 @@ namespace StarterAssets
             GroundedCheck();
             MoveStatus();
             Move();
+            ModifyControllerProperties();
+            PerformDetectionAndDrawGizmos();
         }
 
         void FixedUpdate()
@@ -210,7 +219,6 @@ namespace StarterAssets
             {
                 // 在落地时重置计时器
                 jumpTimerCurrent = 0.0f;
-                canJump = true;
             }
         }
 
@@ -275,8 +283,8 @@ namespace StarterAssets
             canCrouch = false; // 禁用下蹲输入
             yield return new WaitForSeconds(0.1f); // 等待0.1秒
             canCrouch = true; // 允许下蹲输入
-
         }
+
 
         //在各种移动速度中进行判定
         private void MoveStatus()
@@ -291,12 +299,39 @@ namespace StarterAssets
             {
                 _isCrouching = true;
                 targetSpeed = CrouchSpeed;
-                _input.jump = false;
+                _input.jump = false;    //下蹲禁用跳跃
+                CrouchingDetect = true; //特征值允许检测下蹲状态
             }
-            else
+
+            //判定是否在下蹲环境中没有人为输入下蹲指令
+            if (Grounded && !_input.crouch)
             {
-                _isCrouching = false;
+                //若是没有检测到碰撞
+                if(!DetectedResult)
+                {
+                    _isCrouching = false;   //退出下蹲状态
+                    CrouchingDetect = false;    //下蹲特征值重置
+                }
+
             }
+            
+            //进行判定是否触发了下蹲
+            if (CrouchingDetect)
+            {
+                if (isObstructed)//遍历后检测到碰撞
+                {
+                    DetectedResult = true;  //设定Reselt为True
+                    _isCrouching = true;    //设置保持下蹲状态
+                    targetSpeed = CrouchSpeed;  //速度切换为下蹲速度
+                }
+                else
+                {
+                    DetectedResult = false; //设定Reselt为False
+                }
+            }
+
+
+
 
             //检测若是在地面且没有输入蹲下，没有输入奔跑，不在蹲下时，将速度调整为步行速度
             if (Grounded && !_input.crouch && !_input.sprint && !_isCrouching)
@@ -455,7 +490,6 @@ namespace StarterAssets
                 if (Grounded)
                 {
                     Jetted = false;
-                    canJump = true;
                     // reset the fall timeout timer
                     _fallTimeoutDelta = FallTimeout;
 
@@ -490,7 +524,6 @@ namespace StarterAssets
                                 _animator.SetBool(_animIDJump, true);
                             }
                         }
-                        canJump = false;
                         jumpTimerCurrent = jumpTimer;
                         jumpCount = 1;
                     }
@@ -579,6 +612,52 @@ namespace StarterAssets
             Jetted = true;
         }
 
+        //下蹲站立时碰撞盒变更大小
+        private void ModifyControllerProperties()
+        {
+            // 检查is_crouching的值，并根据需要修改CharacterController的属性
+            if (_isCrouching)
+            {
+                // 当蹲下时更改CharacterController的属性
+                _characterController.center = new Vector3(_characterController.center.x, 0.4f, _characterController.center.z);
+                _characterController.height = 0.77f;
+            }
+            else
+            {
+                // 当未蹲下时更改CharacterController的属性
+                _characterController.center = new Vector3(_characterController.center.x, 0.7f, _characterController.center.z);
+                _characterController.height = 1.4f;
+            }
+        }
+
+
+        // 在 Scene 视图中显示检测球体
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.red;
+            Vector3 center = sphereCenter != null ? sphereCenter.position : transform.position; // 以指定的物体为球体中心，若未指定则使用当前对象的位置
+            Gizmos.DrawWireSphere(center, radius);
+        }
+        // 检测头上是否有障碍物
+        private bool PerformDetectionAndDrawGizmos()
+        {
+            isObstructed = false;
+
+            Vector3 center = sphereCenter != null ? sphereCenter.position : transform.position; // 以指定的物体为球体中心，若未指定则使用当前对象的位置
+            Collider[] hitColliders = Physics.OverlapSphere(center, radius, detectionLayer); // 检测周围的物体
+
+            // 遍历检测到的碰撞体
+            foreach (Collider collider in hitColliders)
+            {
+                //Debug.Log("Detected object on layer: " + LayerMask.LayerToName(collider.gameObject.layer));
+                isObstructed = true; // 如果有物体被检测到，则记录为遇到障碍物
+                                     // 如果需要执行特定操作，可以在这里添加代码
+            }
+            return isObstructed; // 返回是否遇到障碍物
+        }
+
+
+
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
         {
             if (lfAngle < -360f) lfAngle += 360f;
@@ -586,19 +665,6 @@ namespace StarterAssets
             return Mathf.Clamp(lfAngle, lfMin, lfMax);
         }
 
-        private void OnDrawGizmosSelected()
-        {
-            Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
-            Color transparentRed = new Color(1.0f, 0.0f, 0.0f, 0.35f);
-
-            if (Grounded) Gizmos.color = transparentGreen;
-            else Gizmos.color = transparentRed;
-
-            // when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
-            Gizmos.DrawSphere(
-                new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z),
-                GroundedRadius);
-        }
 
         private void OnFootstep(AnimationEvent animationEvent)
         {
