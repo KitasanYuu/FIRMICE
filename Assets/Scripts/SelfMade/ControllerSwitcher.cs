@@ -9,16 +9,11 @@ public class ControllerSwitcher : MonoBehaviour
     public GameObject playerFollowCamera;
     public GameObject fpsCamera;
 
-    private bool tabPressed = false;
+    private bool tabPressed;
 
     void Start()
     {
 
-        // 获取PlayerFollowCamera和FPSCamera的引用
-        //playerFollowCamera = playerArmature.transform.Find("RINDO/Geometry/PlayerFollowCamera").gameObject;
-        //fpsCamera = playerArmature.transform.Find("RINDO/Geometry/FPSCamera").gameObject;
-
-        // 初始状态设置为 Third Person 模式
     }
 
     void Update()
