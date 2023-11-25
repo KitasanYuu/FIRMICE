@@ -84,23 +84,23 @@ namespace StarterAssets
         public bool LockCameraPosition = false;
 
         // 在类的顶部声明 _lastMoveDirection 字段，但不要赋值
-        private Vector3 _lastMoveDirection = Vector3.zero;
-        private Vector3 targetDr = Vector3.zero;
+        public Vector3 _lastMoveDirection = Vector3.zero;
+        public Vector3 targetDr = Vector3.zero;
+        public Vector3 MovingDirection = Vector3.zero;
         private float _lastMoveDr = 0.0f;
 
         // 在 PlayerMovement 类中创建一个变量来跟踪跳跃次数
         public float MaxJumpCount = 2;
-        private int jumpCount;
+        public int jumpCount;
         private float jumpTimer = 0.05f; // 设置二段跳的等待时间
         private float jumpTimerCurrent = 0.0f;
-        private bool Jetted = false;
+        public bool Jetted = false;
         private float airSpeed;
 
         //下蹲
         private CharacterController _characterController;
-        private float _defaultHeight;
         public bool _isCrouching = false;
-        private bool canCrouch = true;
+        public bool cantCrouchinAir = true;
         private bool CrouchingDetect = false;//用于头顶障碍物检测
 
         // cinemachine
@@ -108,7 +108,7 @@ namespace StarterAssets
         private float _cinemachineTargetPitch;
 
         // player
-        private float _speed;
+        public float _speed;
         private float _animationBlend;
         private float _targetRotation = 0.0f;
         private float _rotationVelocity;
@@ -137,7 +137,7 @@ namespace StarterAssets
         public LayerMask detectionLayer;
         public float Crouchradius = 0.22f;
         public Transform sphereCenter; // 公共属性，用于指定球体的中心点
-        private bool isObstructed = false;
+        public bool isObstructed = false;
         private bool DetectedResult = false;
 
 
@@ -281,9 +281,9 @@ namespace StarterAssets
         //增加下蹲CD以保证跳跃后不能立马下蹲产生动作bug
         IEnumerator CrouchDelay()
         {
-            canCrouch = false; // 禁用下蹲输入
+            cantCrouchinAir = false; // 禁用下蹲输入
             yield return new WaitForSeconds(0.1f); // 等待0.1秒
-            canCrouch = true; // 允许下蹲输入
+            cantCrouchinAir = true; // 允许下蹲输入
         }
 
 
@@ -296,7 +296,7 @@ namespace StarterAssets
                 airSpeed = targetSpeed;
             }
 
-            if (Grounded && _input.crouch && canCrouch)
+            if (Grounded && _input.crouch && cantCrouchinAir)
             {
                 _isCrouching = true;
                 targetSpeed = CrouchSpeed;
@@ -330,9 +330,6 @@ namespace StarterAssets
                     DetectedResult = false; //设定Reselt为False
                 }
             }
-
-
-
 
             //检测若是在地面且没有输入蹲下，没有输入奔跑，不在蹲下时，将速度调整为步行速度
             if (Grounded && !_input.crouch && !_input.sprint && !_isCrouching)
@@ -475,6 +472,11 @@ namespace StarterAssets
                         _lastMoveDirection = transform.right * _input.move.x + transform.forward * _input.move.y;
                         targetDr = _lastMoveDirection;
                     }
+
+                    if(targetDr == _lastMoveDirection)
+                    {
+                        MovingDirection = targetDr;
+                    }
                 }
             }
         }
@@ -490,6 +492,7 @@ namespace StarterAssets
 
                 if (Grounded)
                 {
+                    jumpCount = 0;
                     Jetted = false;
                     // reset the fall timeout timer
                     _fallTimeoutDelta = FallTimeout;
@@ -510,10 +513,11 @@ namespace StarterAssets
                     // Jump
                     if (_input.jump && _jumpTimeoutDelta <= 0.0f)
                     {
-                        if (!Jetted)
-                        {
-                            JetON();
-                        }
+                        //设定第一次跳跃不会触发喷气背包
+                        //if (!Jetted)
+                        //{
+                        //    JetON();
+                        //}
                         // the square root of H * -2 * G = how much velocity needed to reach desired height
                         _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 
@@ -526,7 +530,7 @@ namespace StarterAssets
                             }
                         }
                         jumpTimerCurrent = jumpTimer;
-                        jumpCount = 1;
+                        jumpCount ++;
                     }
 
                     // jump timeout

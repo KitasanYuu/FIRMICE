@@ -22,7 +22,7 @@ public class ControllerGUI : Editor
         GUILayout.Space(10);
 
         // Create tabs as buttons
-        string[] tabNames = new string[] { "Global", "ObjectBind", "MOVE", "Audio Clips" ,"Cinemachine"};
+        string[] tabNames = new string[] { "Global", "ObjectBind", "MOVE", "Audio Clips", "Cinemachine" };
         selectedTab = GUILayout.Toolbar(selectedTab, tabNames);
 
         // Display different content based on selected tab
@@ -62,9 +62,13 @@ public class ControllerGUI : Editor
 
         GUILayout.Space(10); // 用来添加空行
 
-        EditorGUILayout.LabelField("Status Check", EditorStyles.boldLabel);
-
-
+        if (GUILayout.Button("Parameters Check"))
+        {
+            // 打开新的窗口或执行相关操作
+            GUIWindow window = EditorWindow.GetWindow<GUIWindow>("Parameters Check");
+            window.Init(avatarController);
+            window.Show();
+        }
 
         // Add more GUI elements as needed
     }
@@ -87,7 +91,7 @@ public class ControllerGUI : Editor
         avatarController.MoveSpeed = EditorGUILayout.FloatField(new GUIContent("MoveSpeed", "正常移速"), avatarController.MoveSpeed);
         avatarController.SprintSpeed = EditorGUILayout.FloatField(new GUIContent("SprintSpeed", "冲刺移速"), avatarController.SprintSpeed);
         avatarController.SpeedChangeRate = EditorGUILayout.FloatField(new GUIContent("SpeedChangeRate", "加/减速度"), avatarController.SpeedChangeRate);
-        avatarController.RotationSmoothTime = EditorGUILayout.Slider(new GUIContent("RotationSmoothTime","TPS下角色的转向速度 数值越大转向越慢"), avatarController.RotationSmoothTime, 0.0f, 0.3f);
+        avatarController.RotationSmoothTime = EditorGUILayout.Slider(new GUIContent("RotationSmoothTime", "TPS下角色的转向速度 数值越大转向越慢"), avatarController.RotationSmoothTime, 0.0f, 0.3f);
 
 
         GUILayout.Space(10); // 用来添加空行
@@ -97,7 +101,7 @@ public class ControllerGUI : Editor
         GUILayout.Space(10); // 用来添加空行
         avatarController.sphereCenter = EditorGUILayout.ObjectField(new GUIContent("sphereCenter", "下蹲头上阻碍的检测中心"), avatarController.sphereCenter, typeof(Transform), true) as Transform;
         avatarController.Crouchradius = EditorGUILayout.FloatField(new GUIContent("Crouchradius", "检测的球体半径"), avatarController.Crouchradius);
-        avatarController.detectionLayer = EditorGUILayout.MaskField(new GUIContent("detectionLayer", "选择将哪些层级视为头顶阻碍"), avatarController.detectionLayer, UnityEditorInternal.InternalEditorUtility.layers);
+        avatarController.detectionLayer = EditorGUILayout.MaskField(new GUIContent("DetectionLayer", "选择将哪些层级视为头顶阻碍"), avatarController.detectionLayer, UnityEditorInternal.InternalEditorUtility.layers);
 
         GUILayout.Space(10); // 用来添加空行
 
@@ -126,7 +130,7 @@ public class ControllerGUI : Editor
 
     private void DisplayTabContent4(AvatarController avatarController)
     {
-        avatarController.CinemachineCameraTarget = EditorGUILayout.ObjectField(new GUIContent("CinemachineCameraTarget", "Camera target"), avatarController.CinemachineCameraTarget, typeof(GameObject),true) as GameObject;
+        avatarController.CinemachineCameraTarget = EditorGUILayout.ObjectField(new GUIContent("CinemachineCameraTarget", "Camera target"), avatarController.CinemachineCameraTarget, typeof(GameObject), true) as GameObject;
         avatarController.TopClamp = EditorGUILayout.FloatField(new GUIContent("TopClamp", "相机向上移动的最大角度"), avatarController.TopClamp);
         avatarController.BottomClamp = EditorGUILayout.FloatField(new GUIContent("BottomClamp", "相机向下移动的最大角度"), avatarController.BottomClamp);
         avatarController.CameraAngleOverride = EditorGUILayout.FloatField(new GUIContent("CameraAngleOverride", "在相机锁定时，可以使用这个字段对相机位置进行微调"), avatarController.CameraAngleOverride);
