@@ -65,9 +65,17 @@ public class ControllerGUI : Editor
         if (GUILayout.Button("Parameters Check"))
         {
             // 打开新的窗口或执行相关操作
-            GUIWindow window = EditorWindow.GetWindow<GUIWindow>("Parameters Check");
-            window.Init(avatarController);
-            window.Show();
+            GUIParametersCheck ParametersCheck = EditorWindow.GetWindow<GUIParametersCheck>("Parameters Check");
+            ParametersCheck.Init(avatarController);
+            ParametersCheck.Show();
+        }
+
+        if (GUILayout.Button("Status Check"))
+        {
+            // 打开新的窗口或执行相关操作
+            GUIStatusCheck StatusCheck = EditorWindow.GetWindow<GUIStatusCheck>("Status Check");
+            StatusCheck.Init(avatarController);
+            StatusCheck.Show();
         }
 
         // Add more GUI elements as needed

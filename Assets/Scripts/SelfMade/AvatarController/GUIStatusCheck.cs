@@ -3,13 +3,13 @@ using UnityEngine;
 using StarterAssets;
 
 
-public class GUIWindow : EditorWindow
+public class GUIStatusCheck : EditorWindow
 {
     private AvatarController avatarController;
 
-    public void Init(AvatarController script)
+    public void Init(AvatarController Sscript)
     {
-        avatarController = script;
+        avatarController = Sscript;
     }
 
     public void OnGUI()
@@ -20,9 +20,6 @@ public class GUIWindow : EditorWindow
             return;
         }
 
-        ParameterCheck();
-
-        GUILayout.Space(20); // 用来添加空行
 
         StatusCheck();
 
@@ -30,29 +27,8 @@ public class GUIWindow : EditorWindow
         Repaint(); // 实时刷新 Inspector 界面
     }
 
-    private void ParameterCheck()
-    {
-        EditorGUILayout.LabelField("CurrentSpeed", avatarController._speed.ToString());
-        EditorGUILayout.LabelField("jumpCount", avatarController.jumpCount.ToString());
-        GUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("MovingDirection", avatarController.MovingDirection.ToString());
-        GUILayout.BeginVertical();
-        EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.LabelField("_lastMoveDirection", avatarController._lastMoveDirection.ToString());
-        EditorGUILayout.LabelField("targetDr", avatarController.targetDr.ToString());
-        EditorGUI.EndDisabledGroup();
-
-        GUILayout.EndVertical();
-        GUILayout.EndHorizontal();
-
-    }
-
     private void StatusCheck()
     {
-        GUILayout.BeginHorizontal();
-
-        GUILayout.BeginVertical();
-
         EditorGUILayout.LabelField("Global", EditorStyles.boldLabel);
 
         if (avatarController.IsTPS)
@@ -89,9 +65,9 @@ public class GUIWindow : EditorWindow
         {
             EditorGUILayout.LabelField("TPSCamera:NotLocked");
         }
-        GUILayout.EndVertical();
 
-        GUILayout.BeginVertical();
+        GUILayout.Space(20); // 用来添加空行
+
         EditorGUILayout.LabelField("Crouch", EditorStyles.boldLabel);
         if (!avatarController._isCrouching)
         {
@@ -128,29 +104,23 @@ public class GUIWindow : EditorWindow
         {
             EditorGUILayout.LabelField("Head:NotObstructed");
         }
-        GUILayout.EndVertical();
-        GUILayout.EndHorizontal();
 
-        GUILayout.Space(10); // 用来添加空行
+        GUILayout.Space(20); // 用来添加空行
 
-
-        GUILayout.BeginHorizontal();
-        GUILayout.BeginVertical();
         EditorGUILayout.LabelField("Jump", EditorStyles.boldLabel);
 
 
-        if (avatarController.isObstructed)
+        if (!avatarController.Jetted)
         {
             Color originalColor = GUI.color;
             GUI.color = Color.gray;
-            EditorGUILayout.LabelField("Head:Obstructed");
+            EditorGUILayout.LabelField("JetPack:Disabled");
             GUI.color = originalColor;
         }
         else
         {
-            EditorGUILayout.LabelField("Head:NotObstructed");
+            EditorGUILayout.LabelField("JetPack:Enable");
         }
-        GUILayout.EndVertical();
-        GUILayout.EndHorizontal();
+
     }
 }

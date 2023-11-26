@@ -87,15 +87,15 @@ namespace StarterAssets
         public Vector3 _lastMoveDirection = Vector3.zero;
         public Vector3 targetDr = Vector3.zero;
         public Vector3 MovingDirection = Vector3.zero;
-        private float _lastMoveDr = 0.0f;
+        public float _lastMoveDr = 0.0f;
 
         // 在 PlayerMovement 类中创建一个变量来跟踪跳跃次数
         public float MaxJumpCount = 2;
         public int jumpCount;
         private float jumpTimer = 0.05f; // 设置二段跳的等待时间
-        private float jumpTimerCurrent = 0.0f;
+        public float jumpTimerCurrent = 0.0f;
         public bool Jetted = false;
-        private float airSpeed;
+        public float airSpeed;
 
         //下蹲
         private CharacterController _characterController;
@@ -342,6 +342,12 @@ namespace StarterAssets
             if (!Grounded)
             {
                 targetSpeed = airSpeed;
+            }
+
+            if (_speed == 0)
+            {
+                airSpeed = 0;
+                
             }
 
         }
