@@ -7,6 +7,7 @@ public class ControllerGUI : Editor
 {
     SerializedObject serializedObject; // 创建一个SerializedObject来编辑目标脚本的属性
     private int selectedTab = 0;
+    private Texture2D logo;
 
     private void OnEnable()
     {
@@ -15,11 +16,22 @@ public class ControllerGUI : Editor
 
     public override void OnInspectorGUI()
     {
+        // 加载图片
+        logo = EditorGUIUtility.Load("Assets/Scripts/SelfMade/AvatarController/ControllerImage.png") as Texture2D;
+
         serializedObject.Update(); // 更新SerializedObject以便显示最新的属性值
         serializedObject.ApplyModifiedProperties(); // 调用显示属性的方法
         AvatarController avatarController = (AvatarController)target; // 应用修改后的属性到目标脚本
 
-        GUILayout.Space(10);
+        if (logo != null)
+        {
+            float width = EditorGUIUtility.currentViewWidth;
+            float aspect = (float)logo.height / logo.width;
+            Rect rect = GUILayoutUtility.GetRect(width, width * aspect, GUI.skin.box);
+            GUI.DrawTexture(rect, logo, ScaleMode.ScaleToFit);
+        }
+
+            GUILayout.Space(10);
 
         // Create tabs as buttons
         string[] tabNames = new string[] { "Global", "ObjectBind", "MOVE", "Audio Clips", "Cinemachine" };
