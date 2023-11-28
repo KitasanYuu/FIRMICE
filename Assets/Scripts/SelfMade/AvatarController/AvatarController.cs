@@ -141,6 +141,9 @@ namespace StarterAssets
         public bool isObstructed = false;
         private bool DetectedResult = false;
 
+        //瞄准时所用函数
+        public bool _rotationOnMove = true;
+
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
@@ -407,8 +410,11 @@ namespace StarterAssets
                     float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
                         RotationSmoothTime);
 
-                    // rotate to face input direction relative to camera position
-                    transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+                    if (_rotationOnMove)
+                    {
+                        // rotate to face input direction relative to camera position
+                        transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+                    }
                 }
                 else
                 {
@@ -701,6 +707,11 @@ namespace StarterAssets
         public void SetSensitivity(float newSensitivity)
         {
             Sensitivity = newSensitivity;
+        }
+
+        public void SetRotateOnMove(bool newRorareOnMove)
+        {
+            _rotationOnMove = newRorareOnMove;
         }
     }
 }
