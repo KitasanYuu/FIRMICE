@@ -26,6 +26,7 @@ namespace StarterAssets
         public float SprintSpeed = 5.335f;
         [Tooltip("Crouch speed of the character in m/s")]
         public float CrouchSpeed = 1.0f;
+        public float Sensitivity = 1.0f;
 
         [Tooltip("How fast the character turns to face movement direction")]
         [Range(0.0f, 0.3f)]
@@ -139,6 +140,9 @@ namespace StarterAssets
         public Transform sphereCenter; // 公共属性，用于指定球体的中心点
         public bool isObstructed = false;
         private bool DetectedResult = false;
+
+        //瞄准时所用函数
+        public bool _rotationOnMove = true;
 
 
 #if ENABLE_INPUT_SYSTEM 
@@ -262,8 +266,8 @@ namespace StarterAssets
                 //Don't multiply mouse input by Time.deltaTime;
                 float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 
-                _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier;
-                _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
+                _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier * Sensitivity;
+                _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier * Sensitivity;
             }
 
             // clamp our rotations so our values are limited 360 degrees
@@ -406,8 +410,11 @@ namespace StarterAssets
                     float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
                         RotationSmoothTime);
 
-                    // rotate to face input direction relative to camera position
-                    transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+                    if (_rotationOnMove)
+                    {
+                        // rotate to face input direction relative to camera position
+                        transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+                    }
                 }
                 else
                 {
@@ -695,6 +702,16 @@ namespace StarterAssets
             {
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             }
+        }
+
+        public void SetSensitivity(float newSensitivity)
+        {
+            Sensitivity = newSensitivity;
+        }
+
+        public void SetRotateOnMove(bool newRorareOnMove)
+        {
+            _rotationOnMove = newRorareOnMove;
         }
     }
 }
