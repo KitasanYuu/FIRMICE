@@ -4,6 +4,8 @@ using UnityEngine;
 using Cinemachine;
 using StarterAssets;
 using UnityEngine.InputSystem;
+using AimAvoidedL;
+using AimAvoidedR;
 
 public class TPSShootController : MonoBehaviour
 {
@@ -24,7 +26,13 @@ public class TPSShootController : MonoBehaviour
 
     public bool isAiming = false;
 
+    public float cameraside;
+    public float transitionSpeed = 0.5f; // 调整过渡速度的值
+    public bool isChangingSide = false;
+
     // 角色控制器和输入
+    private AimAviodL aimaviodl;
+    private AimAviodR aimaviodr;
     private AvatarController avatarController;
     private StarterAssetsInputs starterAssetsInputs;
 
@@ -34,9 +42,17 @@ public class TPSShootController : MonoBehaviour
         avatarController = GetComponent<AvatarController>();
         starterAssetsInputs = GetComponent<StarterAssetsInputs>();
     }
+    private void Start()
+    {
+        aimaviodl = FindObjectOfType<AimAviodL>(); // 尝试通过FindObjectOfType获取对象引用
+        aimaviodr = FindObjectOfType<AimAviodR>(); // 尝试通过FindObjectOfType获取对象引用
+
+    }
+
 
     private void Update()
     {
+        Debug.LogError(cameraside);
         Vector3 mouseWorldPosition = Vector3.zero;
 
         // 获取鼠标在世界空间中的位置
@@ -55,6 +71,7 @@ public class TPSShootController : MonoBehaviour
             aimVirtualCamera.Priority = 20;
             avatarController.SetSensitivity(aimSensitivity);
             avatarController.SetRotateOnMove(false);
+            ShootSiteChange();
 
             Vector3 worldAimTarget = mouseWorldPosition;
             worldAimTarget.y = transform.position.y;
@@ -90,4 +107,52 @@ public class TPSShootController : MonoBehaviour
             starterAssetsInputs.shoot = false;
         }
     }
+
+    private void ShootSiteChange()
+    {
+        Cinemachine3rdPersonFollow thirdPersonFollow = aimVirtualCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
+
+        if (thirdPersonFollow != null)
+        {
+            float targetCameraSide = cameraside; // 默认值
+
+            // 根据条件调整 targetCameraSide 值
+            if (aimaviodl.isBlockedL)
+            {
+                targetCameraSide = 1;
+
+            }
+            if (aimaviodr.isBlockedR)
+            {
+                targetCameraSide = 0;
+            }
+
+
+            // 射线检测防止穿墙
+            RaycastHit hit;
+            Vector3 cameraPosition = thirdPersonFollow.VirtualCamera.State.FinalPosition; // 获取摄像机位置
+            Vector3 targetPosition = CalculateTargetPosition(targetCameraSide); // 计算目标位置
+
+            // 发射射线检查摄像机与目标位置之间是否有障碍物
+            if (Physics.Linecast(cameraPosition, targetPosition, out hit))
+            {
+                // 平滑地过渡 CameraSide 的值
+                thirdPersonFollow.CameraSide = Mathf.Lerp(thirdPersonFollow.CameraSide, targetCameraSide, transitionSpeed * Time.deltaTime);
+            }
+            else
+            {
+                 // 如果射线与障碍物相交，则不改变 CameraSide 的值
+                Debug.Log("Camera hit something, can't move there!");
+            }
+        }
+    }
+    // 根据 CameraSide 计算目标位置
+private Vector3 CalculateTargetPosition(float cameraSide)
+{
+    // 这里根据 CameraSide 的值计算目标位置，返回一个 Vector3
+    // 请根据你的逻辑实现计算目标位置的方法
+    // 这个方法需要根据摄像机和目标位置的相对位置来返回一个 Vector3 类型的目标位置
+    // 例如：根据摄像机当前位置和方向，加上 CameraSide 偏移量来计算目标位置
+    return Vector3.zero;
+}
 }
