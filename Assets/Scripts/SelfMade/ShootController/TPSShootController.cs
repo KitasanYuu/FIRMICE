@@ -6,6 +6,8 @@ using StarterAssets;
 using UnityEngine.InputSystem;
 using AimAvoidedL;
 using AimAvoidedR;
+using UnityEngine.UI;
+using System.Runtime.CompilerServices;
 
 public class TPSShootController : MonoBehaviour
 {
@@ -25,16 +27,21 @@ public class TPSShootController : MonoBehaviour
     [SerializeField] public float bulletspeed;
 
     public bool isAiming = false;
-
-    public float cameraside;
+    public float targetCameraSide = 1;
     public float transitionSpeed = 0.5f; // 调整过渡速度的值
-    public bool isChangingSide = false;
+    public bool isBlocked = false;
+    public bool swaKeyPressed = false; // 用于跟踪按键状态
+
+    public float CrouchingY = -0.8f;
+    public float OriginY = -0.4f;
 
     // 角色控制器和输入
     private AimAviodL aimaviodl;
     private AimAviodR aimaviodr;
     private AvatarController avatarController;
     private StarterAssetsInputs starterAssetsInputs;
+
+    public GameObject corshair;
 
     private void Awake()
     {
@@ -52,7 +59,9 @@ public class TPSShootController : MonoBehaviour
 
     private void Update()
     {
-        Debug.LogError(cameraside);
+
+
+
         Vector3 mouseWorldPosition = Vector3.zero;
 
         // 获取鼠标在世界空间中的位置
@@ -71,6 +80,7 @@ public class TPSShootController : MonoBehaviour
             aimVirtualCamera.Priority = 20;
             avatarController.SetSensitivity(aimSensitivity);
             avatarController.SetRotateOnMove(false);
+            corshair.SetActive(true);
             ShootSiteChange();
 
             Vector3 worldAimTarget = mouseWorldPosition;
@@ -78,6 +88,17 @@ public class TPSShootController : MonoBehaviour
             Vector3 aimDirection = (worldAimTarget - transform.position).normalized;
 
             transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * 20f);
+
+                float targetShoulderOffsetY = avatarController._isCrouching ? CrouchingY : OriginY;
+                float transitionspeed = 5f; // 调整过渡速度
+
+                // 使用插值逐渐改变 ShoulderOffset.y 的值
+                aimVirtualCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>().ShoulderOffset.y = Mathf.Lerp(
+                    aimVirtualCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>().ShoulderOffset.y,
+                    targetShoulderOffsetY,
+                    Time.deltaTime * transitionspeed
+                );
+
         }
         else
         {
@@ -86,6 +107,7 @@ public class TPSShootController : MonoBehaviour
             aimVirtualCamera.Priority = 5;
             avatarController.SetSensitivity(normalSensitivity);
             avatarController.SetRotateOnMove(newRorareOnMove: true);
+            corshair.SetActive(false);
         }
 
         // 开火
@@ -112,38 +134,50 @@ public class TPSShootController : MonoBehaviour
     {
         Cinemachine3rdPersonFollow thirdPersonFollow = aimVirtualCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
 
+        if (!isBlocked && swaKeyPressed)
+        {
+            swaKeyPressed = false; // 重置按键状态
+        }
+
+        // 检测按键按下事件
+        if (Input.GetKeyDown(KeyCode.Tab)) // 用你想要的按键替换 YourKey
+        {
+            swaKeyPressed = true; // 设置按键状态为 true
+        }
+
         if (thirdPersonFollow != null)
         {
-            float targetCameraSide = cameraside; // 默认值
-
             // 根据条件调整 targetCameraSide 值
             if (aimaviodl.isBlockedL)
             {
                 targetCameraSide = 1;
+                isBlocked = true;
 
             }
             if (aimaviodr.isBlockedR)
             {
                 targetCameraSide = 0;
+                isBlocked = true;
             }
-
-
-            // 射线检测防止穿墙
-            RaycastHit hit;
-            Vector3 cameraPosition = thirdPersonFollow.VirtualCamera.State.FinalPosition; // 获取摄像机位置
-            Vector3 targetPosition = CalculateTargetPosition(targetCameraSide); // 计算目标位置
-
-            // 发射射线检查摄像机与目标位置之间是否有障碍物
-            if (Physics.Linecast(cameraPosition, targetPosition, out hit))
+            if (!aimaviodl.isBlockedL && !aimaviodr.isBlockedR)
             {
-                // 平滑地过渡 CameraSide 的值
-                thirdPersonFollow.CameraSide = Mathf.Lerp(thirdPersonFollow.CameraSide, targetCameraSide, transitionSpeed * Time.deltaTime);
+                isBlocked = false;
             }
-            else
+
+            if (!isBlocked && swaKeyPressed)
             {
-                 // 如果射线与障碍物相交，则不改变 CameraSide 的值
-                Debug.Log("Camera hit something, can't move there!");
+                if (targetCameraSide == 0)
+                {
+                    targetCameraSide = 1;
+                }
+                else
+                {
+                    targetCameraSide = 0;
+                }
             }
+            // 平滑地过渡 CameraSide 的值
+            thirdPersonFollow.CameraSide = Mathf.Lerp(thirdPersonFollow.CameraSide, targetCameraSide, transitionSpeed * Time.deltaTime);
+
         }
     }
     // 根据 CameraSide 计算目标位置

@@ -14,6 +14,7 @@ namespace StarterAssets
 		public bool sprint;
         public bool aim;
         public bool shoot;
+        public bool swa;
 
 
 
@@ -57,6 +58,11 @@ namespace StarterAssets
         {
             ShootInput(value.isPressed);
         }
+
+        public void OnSWA(InputValue value)
+        {
+           SWAInput(value.isPressed);
+        }
 #endif
 
 
@@ -86,6 +92,10 @@ namespace StarterAssets
         public void ShootInput(bool newShootState)
         {
             shoot = newShootState;
+        }
+        public void SWAInput(bool newSWA)
+        {
+            swa = newSWA;
         }
 
         private void OnApplicationFocus(bool hasFocus)
