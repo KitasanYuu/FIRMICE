@@ -1117,9 +1117,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{45AF4B85-A6BE-F781-E49F-8064485DEBD7}</Project>
+      <Name>Assembly-CSharp-firstpass</Name>
+    </ProjectReference>
     <ProjectReference Include="Assembly-CSharp.csproj">
       <Project>{48782D2E-9CD7-C630-0B09-4F50A4BC6EDD}</Project>
       <Name>Assembly-CSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="Assembly-CSharp-Editor-firstpass.csproj">
+      <Project>{008843C0-5901-0592-6693-D811A61C05F3}</Project>
+      <Name>Assembly-CSharp-Editor-firstpass</Name>
     </ProjectReference>
     <ProjectReference Include="lilToon.Editor.csproj">
       <Project>{BE131716-D24F-7904-C5A7-93BE922693D0}</Project>
