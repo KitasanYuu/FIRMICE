@@ -610,10 +610,8 @@ Shader "_lil/[Optional] lilToonOutlineOnlyCutout"
     {
         Tags {"RenderType" = "TransparentCutout" "Queue" = "AlphaTest"}
         UsePass "Hidden/ltspass_cutout/FORWARD_OUTLINE"
-        UsePass "Hidden/ltspass_cutout/FORWARD_ADD_OUTLINE"
     }
-    Fallback "Unlit/Texture"
+    Fallback "Universal Render Pipeline/Unlit"
 
     CustomEditor "lilToon.lilToonInspector"
 }
-

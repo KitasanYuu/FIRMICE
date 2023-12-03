@@ -19,10 +19,7 @@ public class GUIStatusCheck : EditorWindow
             EditorGUILayout.LabelField("No script selected.");
             return;
         }
-
-
         StatusCheck();
-
 
         Repaint(); // 实时刷新 Inspector 界面
     }

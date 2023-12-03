@@ -8,6 +8,7 @@ using AimAvoidedL;
 using AimAvoidedR;
 using UnityEngine.UI;
 using System.Runtime.CompilerServices;
+using RootMotion.FinalIK;
 
 public class TPSShootController : MonoBehaviour
 {
@@ -36,12 +37,20 @@ public class TPSShootController : MonoBehaviour
     public float OriginY = -0.4f;
 
     // 角色控制器和输入
+    private Animator _animator;
     private AimAviodL aimaviodl;
     private AimAviodR aimaviodr;
     private AvatarController avatarController;
     private StarterAssetsInputs starterAssetsInputs;
 
     public GameObject corshair;
+
+    private bool _hasAnimator;
+    // animation IDs
+    private int _animIDEnterAiming;
+
+    float lastShootTime = 0f;
+    public float fireRate = 0.5f; // 0.5秒为例，可以根据需要调整射速
 
     private void Awake()
     {
@@ -51,6 +60,9 @@ public class TPSShootController : MonoBehaviour
     }
     private void Start()
     {
+        _hasAnimator = TryGetComponent(out _animator);
+
+        AssignAnimationIDs();
         aimaviodl = FindObjectOfType<AimAviodL>(); // 尝试通过FindObjectOfType获取对象引用
         aimaviodr = FindObjectOfType<AimAviodR>(); // 尝试通过FindObjectOfType获取对象引用
 
@@ -59,10 +71,9 @@ public class TPSShootController : MonoBehaviour
 
     private void Update()
     {
-
-
-
         Vector3 mouseWorldPosition = Vector3.zero;
+
+        _hasAnimator = TryGetComponent(out _animator);
 
         // 获取鼠标在世界空间中的位置
         Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
@@ -82,6 +93,7 @@ public class TPSShootController : MonoBehaviour
             avatarController.SetRotateOnMove(false);
             corshair.SetActive(true);
             ShootSiteChange();
+            gameObject.GetComponent<AimIK>().enabled = true;
 
             Vector3 worldAimTarget = mouseWorldPosition;
             worldAimTarget.y = transform.position.y;
@@ -99,6 +111,11 @@ public class TPSShootController : MonoBehaviour
                     Time.deltaTime * transitionspeed
                 );
 
+            if(_hasAnimator)
+            {
+                _animator.SetBool(_animIDEnterAiming, true);
+            }
+
         }
         else
         {
@@ -108,26 +125,45 @@ public class TPSShootController : MonoBehaviour
             avatarController.SetSensitivity(normalSensitivity);
             avatarController.SetRotateOnMove(newRorareOnMove: true);
             corshair.SetActive(false);
+            gameObject.GetComponent<AimIK>().enabled = false;
+
+            if (_hasAnimator)
+            {
+                _animator.SetBool(_animIDEnterAiming, false);
+            }
         }
 
         // 开火
         if (starterAssetsInputs.shoot && isAiming)
         {
-            Vector3 aimDir = (mouseWorldPosition - spawnBulletPosition.position).normalized;
-            // 生成子弹实例
-            GameObject bulletInstance = Instantiate(bulletPrefab, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
-            // 获取子弹脚本并设置速度
-            BulletTest bullettest = bulletInstance.GetComponent<BulletTest>();
-            if (bullettest != null)
+            // 获取当前时间
+            float currentTime = Time.time;
+
+            if (currentTime - lastShootTime > fireRate)
             {
-                bullettest.SetBulletSpeed(bulletspeed);
+
+                Vector3 aimDir = (mouseWorldPosition - spawnBulletPosition.position).normalized;
+                // 生成子弹实例
+                GameObject bulletInstance = Instantiate(bulletPrefab, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
+                // 获取子弹脚本并设置速度
+                BulletTest bullettest = bulletInstance.GetComponent<BulletTest>();
+                if (bullettest != null)
+                {
+                    bullettest.SetBulletSpeed(bulletspeed);
+                }
+                else
+                {
+                    Debug.LogError("BulletTest component not found on instantiated object.");
+                }
+                //starterAssetsInputs.shoot = false;
+                lastShootTime = currentTime;
             }
-            else
-            {
-                Debug.LogError("BulletTest component not found on instantiated object.");
-            }
-            starterAssetsInputs.shoot = false;
         }
+    }
+
+    private void AssignAnimationIDs()
+    {
+        _animIDEnterAiming = Animator.StringToHash("EnterAiming");
     }
 
     private void ShootSiteChange()
