@@ -42,7 +42,6 @@ public class TPSShootController : MonoBehaviour
     private AimAviodR aimaviodr;
     private AvatarController avatarController;
     private StarterAssetsInputs starterAssetsInputs;
-
     public GameObject corshair;
 
     private bool _hasAnimator;
@@ -52,25 +51,30 @@ public class TPSShootController : MonoBehaviour
     float lastShootTime = 0f;
     public float fireRate = 0.5f; // 0.5秒为例，可以根据需要调整射速
 
+    public int AimIKParameter;
+
     private void Awake()
     {
         // 获取角色控制器和输入
         avatarController = GetComponent<AvatarController>();
         starterAssetsInputs = GetComponent<StarterAssetsInputs>();
+        aimaviodl = FindObjectOfType<AimAviodL>();
+        aimaviodr = FindObjectOfType<AimAviodR>();
     }
     private void Start()
     {
         _hasAnimator = TryGetComponent(out _animator);
 
         AssignAnimationIDs();
-        aimaviodl = FindObjectOfType<AimAviodL>(); // 尝试通过FindObjectOfType获取对象引用
-        aimaviodr = FindObjectOfType<AimAviodR>(); // 尝试通过FindObjectOfType获取对象引用
+
 
     }
 
 
     private void Update()
     {
+        bool value = AnimationEventReceiver.EnterAim;
+
         Vector3 mouseWorldPosition = Vector3.zero;
 
         _hasAnimator = TryGetComponent(out _animator);
@@ -93,7 +97,6 @@ public class TPSShootController : MonoBehaviour
             avatarController.SetRotateOnMove(false);
             corshair.SetActive(true);
             ShootSiteChange();
-            gameObject.GetComponent<AimIK>().enabled = true;
 
             Vector3 worldAimTarget = mouseWorldPosition;
             worldAimTarget.y = transform.position.y;
@@ -116,6 +119,11 @@ public class TPSShootController : MonoBehaviour
                 _animator.SetBool(_animIDEnterAiming, true);
             }
 
+            if (AimIKParameter == 1)
+            {
+                gameObject.GetComponent<AimIK>().enabled = true;
+                AimIKParameter = 0;
+            }
         }
         else
         {
@@ -217,12 +225,19 @@ public class TPSShootController : MonoBehaviour
         }
     }
     // 根据 CameraSide 计算目标位置
-private Vector3 CalculateTargetPosition(float cameraSide)
-{
-    // 这里根据 CameraSide 的值计算目标位置，返回一个 Vector3
-    // 请根据你的逻辑实现计算目标位置的方法
-    // 这个方法需要根据摄像机和目标位置的相对位置来返回一个 Vector3 类型的目标位置
-    // 例如：根据摄像机当前位置和方向，加上 CameraSide 偏移量来计算目标位置
-    return Vector3.zero;
-}
+
+    private Vector3 CalculateTargetPosition(float cameraSide)
+    {
+        // 这里根据 CameraSide 的值计算目标位置，返回一个 Vector3
+        // 请根据你的逻辑实现计算目标位置的方法
+        // 这个方法需要根据摄像机和目标位置的相对位置来返回一个 Vector3 类型的目标位置
+        // 例如：根据摄像机当前位置和方向，加上 CameraSide 偏移量来计算目标位置
+        return Vector3.zero;
+    }
+    void AimIKStatus(int status)
+    {
+        AimIKParameter = status;
+        Debug.Log(AimIKParameter);
+    }
+
 }
