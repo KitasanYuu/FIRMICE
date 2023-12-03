@@ -9,7 +9,7 @@ public class ControllerSwitcher : MonoBehaviour
     public GameObject playerFollowCamera;
     public GameObject fpsCamera;
 
-    private bool tabPressed;
+    private bool tabPressed = false;
 
     void Start()
     {
