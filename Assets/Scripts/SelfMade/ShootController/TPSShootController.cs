@@ -8,6 +8,7 @@ using AimAvoidedL;
 using AimAvoidedR;
 using UnityEngine.UI;
 using System.Runtime.CompilerServices;
+using RootMotion.FinalIK;
 
 public class TPSShootController : MonoBehaviour
 {
@@ -92,6 +93,7 @@ public class TPSShootController : MonoBehaviour
             avatarController.SetRotateOnMove(false);
             corshair.SetActive(true);
             ShootSiteChange();
+            gameObject.GetComponent<AimIK>().enabled = true;
 
             Vector3 worldAimTarget = mouseWorldPosition;
             worldAimTarget.y = transform.position.y;
@@ -123,6 +125,7 @@ public class TPSShootController : MonoBehaviour
             avatarController.SetSensitivity(normalSensitivity);
             avatarController.SetRotateOnMove(newRorareOnMove: true);
             corshair.SetActive(false);
+            gameObject.GetComponent<AimIK>().enabled = false;
 
             if (_hasAnimator)
             {
