@@ -8,6 +8,7 @@ using AimAvoidedL;
 using AimAvoidedR;
 using UnityEngine.UI;
 using System.Runtime.CompilerServices;
+using RootMotion.FinalIK;
 
 public class TPSShootController : MonoBehaviour
 {
@@ -36,33 +37,47 @@ public class TPSShootController : MonoBehaviour
     public float OriginY = -0.4f;
 
     // 角色控制器和输入
+    private Animator _animator;
     private AimAviodL aimaviodl;
     private AimAviodR aimaviodr;
     private AvatarController avatarController;
     private StarterAssetsInputs starterAssetsInputs;
-
     public GameObject corshair;
+
+    private bool _hasAnimator;
+    // animation IDs
+    private int _animIDEnterAiming;
+
+    float lastShootTime = 0f;
+    public float fireRate = 0.5f; // 0.5秒为例，可以根据需要调整射速
+
+    public int AimIKParameter;
 
     private void Awake()
     {
         // 获取角色控制器和输入
         avatarController = GetComponent<AvatarController>();
         starterAssetsInputs = GetComponent<StarterAssetsInputs>();
+        aimaviodl = FindObjectOfType<AimAviodL>();
+        aimaviodr = FindObjectOfType<AimAviodR>();
     }
     private void Start()
     {
-        aimaviodl = FindObjectOfType<AimAviodL>(); // 尝试通过FindObjectOfType获取对象引用
-        aimaviodr = FindObjectOfType<AimAviodR>(); // 尝试通过FindObjectOfType获取对象引用
+        _hasAnimator = TryGetComponent(out _animator);
+
+        AssignAnimationIDs();
+
 
     }
 
 
     private void Update()
     {
-
-
+        bool value = AnimationEventReceiver.EnterAim;
 
         Vector3 mouseWorldPosition = Vector3.zero;
+
+        _hasAnimator = TryGetComponent(out _animator);
 
         // 获取鼠标在世界空间中的位置
         Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
@@ -99,6 +114,16 @@ public class TPSShootController : MonoBehaviour
                     Time.deltaTime * transitionspeed
                 );
 
+            if(_hasAnimator)
+            {
+                _animator.SetBool(_animIDEnterAiming, true);
+            }
+
+            if (AimIKParameter == 1)
+            {
+                gameObject.GetComponent<AimIK>().enabled = true;
+                AimIKParameter = 0;
+            }
         }
         else
         {
@@ -108,26 +133,45 @@ public class TPSShootController : MonoBehaviour
             avatarController.SetSensitivity(normalSensitivity);
             avatarController.SetRotateOnMove(newRorareOnMove: true);
             corshair.SetActive(false);
+            gameObject.GetComponent<AimIK>().enabled = false;
+
+            if (_hasAnimator)
+            {
+                _animator.SetBool(_animIDEnterAiming, false);
+            }
         }
 
         // 开火
         if (starterAssetsInputs.shoot && isAiming)
         {
-            Vector3 aimDir = (mouseWorldPosition - spawnBulletPosition.position).normalized;
-            // 生成子弹实例
-            GameObject bulletInstance = Instantiate(bulletPrefab, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
-            // 获取子弹脚本并设置速度
-            BulletTest bullettest = bulletInstance.GetComponent<BulletTest>();
-            if (bullettest != null)
+            // 获取当前时间
+            float currentTime = Time.time;
+
+            if (currentTime - lastShootTime > fireRate)
             {
-                bullettest.SetBulletSpeed(bulletspeed);
+
+                Vector3 aimDir = (mouseWorldPosition - spawnBulletPosition.position).normalized;
+                // 生成子弹实例
+                GameObject bulletInstance = Instantiate(bulletPrefab, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
+                // 获取子弹脚本并设置速度
+                BulletTest bullettest = bulletInstance.GetComponent<BulletTest>();
+                if (bullettest != null)
+                {
+                    bullettest.SetBulletSpeed(bulletspeed);
+                }
+                else
+                {
+                    Debug.LogError("BulletTest component not found on instantiated object.");
+                }
+                //starterAssetsInputs.shoot = false;
+                lastShootTime = currentTime;
             }
-            else
-            {
-                Debug.LogError("BulletTest component not found on instantiated object.");
-            }
-            starterAssetsInputs.shoot = false;
         }
+    }
+
+    private void AssignAnimationIDs()
+    {
+        _animIDEnterAiming = Animator.StringToHash("EnterAiming");
     }
 
     private void ShootSiteChange()
@@ -181,12 +225,19 @@ public class TPSShootController : MonoBehaviour
         }
     }
     // 根据 CameraSide 计算目标位置
-private Vector3 CalculateTargetPosition(float cameraSide)
-{
-    // 这里根据 CameraSide 的值计算目标位置，返回一个 Vector3
-    // 请根据你的逻辑实现计算目标位置的方法
-    // 这个方法需要根据摄像机和目标位置的相对位置来返回一个 Vector3 类型的目标位置
-    // 例如：根据摄像机当前位置和方向，加上 CameraSide 偏移量来计算目标位置
-    return Vector3.zero;
-}
+
+    private Vector3 CalculateTargetPosition(float cameraSide)
+    {
+        // 这里根据 CameraSide 的值计算目标位置，返回一个 Vector3
+        // 请根据你的逻辑实现计算目标位置的方法
+        // 这个方法需要根据摄像机和目标位置的相对位置来返回一个 Vector3 类型的目标位置
+        // 例如：根据摄像机当前位置和方向，加上 CameraSide 偏移量来计算目标位置
+        return Vector3.zero;
+    }
+    void AimIKStatus(int status)
+    {
+        AimIKParameter = status;
+        Debug.Log(AimIKParameter);
+    }
+
 }
