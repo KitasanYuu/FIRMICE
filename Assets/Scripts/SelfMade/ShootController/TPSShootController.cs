@@ -73,8 +73,6 @@ public class TPSShootController : MonoBehaviour
 
     private void Update()
     {
-        bool value = AnimationEventReceiver.EnterAim;
-
         Vector3 mouseWorldPosition = Vector3.zero;
 
         _hasAnimator = TryGetComponent(out _animator);
