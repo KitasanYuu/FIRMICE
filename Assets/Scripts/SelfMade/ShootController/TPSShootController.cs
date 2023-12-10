@@ -71,6 +71,7 @@ public class TPSShootController : MonoBehaviour
 
     }
 
+
     private void Update()
     {
         Vector3 mouseWorldPosition = Vector3.zero;
@@ -115,13 +116,14 @@ public class TPSShootController : MonoBehaviour
             if(_hasAnimator)
             {
                 _animator.SetBool(_animIDEnterAiming, true);
-                if(!avatarController._isCrouching)
+                if (!avatarController._isCrouching)
                 {
-                    _animator.SetFloat(_animIDAimStatus,0);
+                    _animator.SetFloat(_animIDAimStatus, 0);
                 }
                 else
                 {
-                    _animator.SetFloat( _animIDAimStatus,1);
+                    _animator.SetFloat(_animIDAimStatus, 1);
+                    //Debug.LogError(_animIDAimStatus);
                 }
             }
 
@@ -241,6 +243,7 @@ public class TPSShootController : MonoBehaviour
         // 例如：根据摄像机当前位置和方向，加上 CameraSide 偏移量来计算目标位置
         return Vector3.zero;
     }
+
     void AimIKStatus(int status)
     {
         AimIKParameter = status;
