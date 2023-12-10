@@ -47,6 +47,7 @@ public class TPSShootController : MonoBehaviour
     private bool _hasAnimator;
     // animation IDs
     private int _animIDEnterAiming;
+    private int _animIDAimStatus;
 
     float lastShootTime = 0f;
     public float fireRate = 0.5f; // 0.5秒为例，可以根据需要调整射速
@@ -69,7 +70,6 @@ public class TPSShootController : MonoBehaviour
 
 
     }
-
 
     private void Update()
     {
@@ -115,6 +115,14 @@ public class TPSShootController : MonoBehaviour
             if(_hasAnimator)
             {
                 _animator.SetBool(_animIDEnterAiming, true);
+                if(!avatarController._isCrouching)
+                {
+                    _animator.SetFloat(_animIDAimStatus,0);
+                }
+                else
+                {
+                    _animator.SetFloat( _animIDAimStatus,1);
+                }
             }
 
             if (AimIKParameter == 1)
@@ -170,6 +178,7 @@ public class TPSShootController : MonoBehaviour
     private void AssignAnimationIDs()
     {
         _animIDEnterAiming = Animator.StringToHash("EnterAiming");
+        _animIDAimStatus = Animator.StringToHash("AimStatus");
     }
 
     private void ShootSiteChange()
