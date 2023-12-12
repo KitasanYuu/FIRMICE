@@ -33,7 +33,7 @@ public class TPSShootController : MonoBehaviour
     public bool isBlocked = false;
     public bool swaKeyPressed = false; // 用于跟踪按键状态
 
-    public float CrouchingY = -0.8f;
+    public float CrouchingY = -0.5f;
     public float OriginY = -0.4f;
 
     // 角色控制器和输入

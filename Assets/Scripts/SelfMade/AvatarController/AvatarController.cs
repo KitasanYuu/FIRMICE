@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 #endif
@@ -99,10 +100,13 @@ namespace StarterAssets
         public float airSpeed;
 
         //下蹲
+        private GameObject PlayerCameraRoot;
         private CharacterController _characterController;
         public bool _isCrouching = false;
         public bool cantCrouchinAir = true;
         private bool CrouchingDetect = false;//用于头顶障碍物检测
+        public float OriginOffset = 1.125f;
+        public float CrouchingOffset = 0.75f;
 
         // cinemachine
         private float _cinemachineTargetYaw;
@@ -144,6 +148,15 @@ namespace StarterAssets
         //瞄准时所用函数
         public bool _rotationOnMove = true;
 
+        public CinemachineVirtualCamera virtualCamera; // 你的Cinemachine虚拟摄像机
+
+        public float minFov = 15f; // 最小FOV
+        public float maxFov = 90f; // 最大FOV
+        public float zoomsensitivity = 10f; // 灵敏度
+        public float zoomSpeed = 5f; // 缩放速度
+
+        private float targetFov;
+
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
@@ -181,6 +194,13 @@ namespace StarterAssets
 
         private void Start()
         {
+            //TPS的CinemachineCamera的平滑处理
+            if (virtualCamera != null)
+            {
+                // 初始化目标FOV为当前摄像机的FOV
+                targetFov = virtualCamera.m_Lens.FieldOfView;
+            }
+
             _characterController = playerAmature.GetComponent<CharacterController>();
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
             animator = GetComponent<Animator>();
@@ -203,6 +223,7 @@ namespace StarterAssets
 
         private void Update()
         {
+            CameraZoom();
             _hasAnimator = TryGetComponent(out _animator);
             JumpAndGravity();
             GroundedCheck();
@@ -255,6 +276,19 @@ namespace StarterAssets
             if (_hasAnimator)
             {
                 _animator.SetBool(_animIDGrounded, Grounded);
+            }
+        }
+
+        private void CameraZoom()
+        {
+            if (virtualCamera != null)
+            {
+                // 根据鼠标滚轮输入更新目标FOV
+                targetFov -= Input.GetAxis("Mouse ScrollWheel") * zoomsensitivity;
+                targetFov = Mathf.Clamp(targetFov, minFov, maxFov);
+
+                // 平滑地插值当前FOV到目标FOV
+                virtualCamera.m_Lens.FieldOfView = Mathf.Lerp(virtualCamera.m_Lens.FieldOfView, targetFov, zoomSpeed * Time.deltaTime);
             }
         }
 
@@ -633,18 +667,21 @@ namespace StarterAssets
         //下蹲站立时碰撞盒变更大小
         private void ModifyControllerProperties()
         {
+            PlayerCameraRoot = GameObject.Find("PlayerCameraRoot");
             // 检查is_crouching的值，并根据需要修改CharacterController的属性
             if (_isCrouching)
             {
                 // 当蹲下时更改CharacterController的属性
                 _characterController.center = new Vector3(_characterController.center.x, 0.4f, _characterController.center.z);
                 _characterController.height = 0.77f;
+                PlayerCameraRoot.transform.position = new Vector3(PlayerCameraRoot.transform.position.x, playerAmature.transform.position.y + CrouchingOffset, PlayerCameraRoot.transform.position.z);
             }
             else
             {
                 // 当未蹲下时更改CharacterController的属性
                 _characterController.center = new Vector3(_characterController.center.x, 0.7f, _characterController.center.z);
                 _characterController.height = 1.4f;
+                PlayerCameraRoot.transform.position = new Vector3(PlayerCameraRoot.transform.position.x, playerAmature.transform.position.y+ OriginOffset, PlayerCameraRoot.transform.position.z);
             }
         }
 
