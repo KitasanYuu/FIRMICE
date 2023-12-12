@@ -5,6 +5,8 @@
 
 ![Unity](https://img.shields.io/badge/Unity-000000.svg?style=flat-square&logo=unity&logoColor=white)
 ![C#](https://img.shields.io/badge/C%20Sharp-512BD4.svg?style=flat-square&logo=csharp&logoColor=white)
+![GLSL](https://img.shields.io/badge/GLSL-5586A4.svg?style=flat-square&logo=opengl&logoColor=white)<br>
+![Unity](https://img.shields.io/badge/Unity-2022.3.13f1-black?style=flat-square&logo=unity)
 </div>
 
 ---
