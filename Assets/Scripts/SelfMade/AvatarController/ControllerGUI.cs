@@ -99,6 +99,7 @@ public class ControllerGUI : Editor
         EditorGUILayout.LabelField("Binding", EditorStyles.boldLabel);
         avatarController.playerAmature = EditorGUILayout.ObjectField(new GUIContent("playerAmature", "玩家主体"), avatarController.playerAmature, typeof(GameObject), true) as GameObject;
         avatarController.sphereCenter = EditorGUILayout.ObjectField(new GUIContent("sphereCenter", "下蹲头上阻碍的检测中心"), avatarController.sphereCenter, typeof(Transform), true) as Transform;
+        avatarController.virtualCamera = EditorGUILayout.ObjectField(new GUIContent("VirtualCamera", tooltip: "第三人称摄像机"), avatarController.virtualCamera, typeof(CinemachineVirtualCamera), allowSceneObjects: true) as CinemachineVirtualCamera;
         avatarController.CinemachineCameraTarget = EditorGUILayout.ObjectField(new GUIContent("CinemachineCameraTarget", "Camera target"), avatarController.CinemachineCameraTarget, typeof(GameObject), true) as GameObject;
 
         // Add more GUI elements as needed
@@ -153,8 +154,10 @@ public class ControllerGUI : Editor
 
     private void DisplayTabContent4(AvatarController avatarController)
     {
+        EditorGUI.BeginDisabledGroup(true); // 开始置灰区域
         avatarController.virtualCamera = EditorGUILayout.ObjectField(new GUIContent("CinemachineCamera", "virtualCamera"), avatarController.virtualCamera, typeof(CinemachineVirtualCamera), true) as CinemachineVirtualCamera;
         avatarController.CinemachineCameraTarget = EditorGUILayout.ObjectField(new GUIContent("CinemachineCameraTarget", "Camera target"), avatarController.CinemachineCameraTarget, typeof(GameObject), true) as GameObject;
+        EditorGUI.EndDisabledGroup(); // 结束置灰区域
         avatarController.minFov = EditorGUILayout.FloatField(new GUIContent("MinFOV", "滚轮缩放的最小FOV"), avatarController.minFov);
         avatarController.maxFov = EditorGUILayout.FloatField(new GUIContent("MaxFOV", "滚轮缩放的最大FOV"), avatarController.maxFov);
         avatarController.zoomSpeed = EditorGUILayout.FloatField(new GUIContent("ZoomSpeed", "缩放速度"), avatarController.zoomSpeed);
