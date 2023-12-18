@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 using Cinemachine;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
@@ -795,7 +794,7 @@ namespace StarterAssets
                 }
                 else
                 {
-                    _animator.SetFloat(_animIDMovingDir, 0);
+                    _animator.SetFloat(_animIDMovingDir, 0);                //没有输入时归零，防止下次使用时初始化阶段出现别的动作
                 }
 
             }
