@@ -85,6 +85,10 @@ namespace StarterAssets
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
+        //这些函数用在角色八项移动
+        public float MovingDirX;
+        public float MovingDirZ;
+
         // 在类的顶部声明 _lastMoveDirection 字段，但不要赋值
         public Vector3 _lastMoveDirection = Vector3.zero;
         public Vector3 targetDr = Vector3.zero;
@@ -432,6 +436,8 @@ namespace StarterAssets
 
             //标准化输入方向
             Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
+            MovingDirX = inputDirection.x;
+            MovingDirZ = inputDirection.z;
 
             // 如果有移动输入，则在玩家移动时旋转玩家。
             if (_input.move != Vector2.zero)
@@ -710,7 +716,6 @@ namespace StarterAssets
             }
             return isObstructed; // 返回是否遇到障碍物
         }
-
 
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)

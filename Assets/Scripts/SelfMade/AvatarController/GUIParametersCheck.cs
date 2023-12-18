@@ -43,6 +43,8 @@ public class GUIParametersCheck : EditorWindow
         EditorGUILayout.LabelField("_lastMoveDirection (TPS)", avatarController._lastMoveDirection.ToString());
         EditorGUILayout.LabelField("targetDr (FPS)", avatarController.targetDr.ToString());
         EditorGUI.EndDisabledGroup();
+        EditorGUILayout.LabelField("MovingDirectionX", avatarController.MovingDirX.ToString());
+        EditorGUILayout.LabelField("MovingDirectionY", avatarController.MovingDirZ.ToString());
 
     }
 
