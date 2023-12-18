@@ -86,8 +86,12 @@ namespace StarterAssets
         public bool LockCameraPosition = false;
 
         //这些函数用在角色八项移动
-        public float MovingDirX;
-        public float MovingDirZ;
+        private float MovingDirX;
+        private float MovingDirZ;
+        private float MovingDirNorX;
+        private float MovingDirNorZ;
+        public Vector3 MovingDir;
+        public Vector3 MovingDirNor;
 
         // 在类的顶部声明 _lastMoveDirection 字段，但不要赋值
         public Vector3 _lastMoveDirection = Vector3.zero;
@@ -227,6 +231,7 @@ namespace StarterAssets
 
         private void Update()
         {
+            MovingDirNormalize();
             CameraZoom();
             _hasAnimator = TryGetComponent(out _animator);
             JumpAndGravity();
@@ -717,6 +722,38 @@ namespace StarterAssets
             return isObstructed; // 返回是否遇到障碍物
         }
 
+        private void MovingDirNormalize()
+        {
+            if (MovingDirX < 1.0f && MovingDirX > 0)
+            {
+                MovingDirNorX = 1;
+            }
+            else if(MovingDirX > -1.0f && MovingDirX < 0)
+            {
+                MovingDirNorX = -1;
+            }
+            else
+            {
+                MovingDirNorX= 0;
+            }
+
+            if (MovingDirZ <= 1.0f && MovingDirZ > 0)
+            {
+                MovingDirNorZ = 1;
+            }
+            else if (MovingDirZ >= -1.0f && MovingDirZ < 0)
+            {
+                MovingDirNorZ = -1;
+            }
+            else
+            {
+                MovingDirNorZ = 0;
+            }
+
+            MovingDir = new Vector3(MovingDirX, 0.0f, MovingDirZ);
+            MovingDirNor = new Vector3(MovingDirNorX, 0.0f, MovingDirNorZ);
+
+        }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
         {
