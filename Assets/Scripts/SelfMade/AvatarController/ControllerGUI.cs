@@ -62,8 +62,13 @@ public class ControllerGUI : Editor
 
     private void DisplayTabContent0(AvatarController avatarController)
     {
+        EditorGUILayout.LabelField("GameMode", EditorStyles.boldLabel);
+        avatarController.IsTPS = EditorGUILayout.Toggle(new GUIContent("TPS", "进行游戏的模式"), avatarController.IsTPS);
+        GUILayout.Space(10); // 用来添加空行
         EditorGUILayout.LabelField("PlayerGrounded", EditorStyles.boldLabel);
+        EditorGUI.BeginDisabledGroup(true); // 开始置灰区域
         avatarController.Grounded = EditorGUILayout.Toggle(new GUIContent("Grounded", "判定是否在地上"), avatarController.Grounded);
+        EditorGUI.EndDisabledGroup();
         avatarController.GroundedOffset = EditorGUILayout.FloatField(new GUIContent("GroundedOffset", "地面检测球体中心相对于角色底部的垂直偏移量"), avatarController.GroundedOffset);
         avatarController.GroundedRadius = EditorGUILayout.FloatField(new GUIContent("GroundedRadius", "地面检测的球体半径"), avatarController.GroundedRadius);
         avatarController.GroundLayers = EditorGUILayout.MaskField(new GUIContent("GroundLayers", "选择将哪些层级视为地面"), avatarController.GroundLayers, UnityEditorInternal.InternalEditorUtility.layers);
