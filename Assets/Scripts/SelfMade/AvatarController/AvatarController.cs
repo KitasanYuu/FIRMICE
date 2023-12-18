@@ -38,7 +38,7 @@ namespace StarterAssets
 
         public AudioClip LandingAudioClip;
         public AudioClip[] FootstepAudioClips;
-        [Range(0, 1)] 
+        [Range(0, 1)]
         public float FootstepAudioVolume = 0.5f;
 
         [Space(10)]
@@ -145,6 +145,7 @@ namespace StarterAssets
         private int _animIDMotionSpeed;
         private int _animIDJetStatus;
         private int _animIDis_Crouching;
+        private int _animIDMovingDir;
 
         //检测蹲下时上方是否有障碍物
         public LayerMask detectionLayer;
@@ -271,6 +272,7 @@ namespace StarterAssets
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
             _animIDJetStatus = Animator.StringToHash("JetStatus");
             _animIDis_Crouching = Animator.StringToHash("is_crouching");
+            _animIDMovingDir = Animator.StringToHash("MovingDir");
         }
 
         private void GroundedCheck()
@@ -355,14 +357,14 @@ namespace StarterAssets
             if (Grounded && !_input.crouch)
             {
                 //若是没有检测到碰撞
-                if(!DetectedResult)
+                if (!DetectedResult)
                 {
                     _isCrouching = false;   //退出下蹲状态
                     CrouchingDetect = false;    //下蹲特征值重置
                 }
 
             }
-            
+
             //进行判定是否触发了下蹲
             if (CrouchingDetect)
             {
@@ -394,7 +396,7 @@ namespace StarterAssets
             if (_speed == 0)
             {
                 airSpeed = 0;
-                
+
             }
 
         }
@@ -531,7 +533,7 @@ namespace StarterAssets
                         targetDr = _lastMoveDirection;
                     }
 
-                    if(targetDr == _lastMoveDirection)
+                    if (targetDr == _lastMoveDirection)
                     {
                         MovingDirection = targetDr;
                     }
@@ -588,7 +590,7 @@ namespace StarterAssets
                             }
                         }
                         jumpTimerCurrent = jumpTimer;
-                        jumpCount ++;
+                        jumpCount++;
                     }
 
                     // jump timeout
@@ -692,7 +694,7 @@ namespace StarterAssets
                 // 当未蹲下时更改CharacterController的属性
                 _characterController.center = new Vector3(_characterController.center.x, 0.7f, _characterController.center.z);
                 _characterController.height = 1.4f;
-                PlayerCameraRoot.transform.position = new Vector3(PlayerCameraRoot.transform.position.x, playerAmature.transform.position.y+ OriginOffset, PlayerCameraRoot.transform.position.z);
+                PlayerCameraRoot.transform.position = new Vector3(PlayerCameraRoot.transform.position.x, playerAmature.transform.position.y + OriginOffset, PlayerCameraRoot.transform.position.z);
             }
         }
 
@@ -724,17 +726,17 @@ namespace StarterAssets
 
         private void MovingDirNormalize()
         {
-            if (MovingDirX < 1.0f && MovingDirX > 0)
+            if (MovingDirX <= 1.0f && MovingDirX > 0)
             {
                 MovingDirNorX = 1;
             }
-            else if(MovingDirX > -1.0f && MovingDirX < 0)
+            else if (MovingDirX >= -1.0f && MovingDirX < 0)
             {
                 MovingDirNorX = -1;
             }
             else
             {
-                MovingDirNorX= 0;
+                MovingDirNorX = 0;
             }
 
             if (MovingDirZ <= 1.0f && MovingDirZ > 0)
@@ -750,8 +752,53 @@ namespace StarterAssets
                 MovingDirNorZ = 0;
             }
 
+            //Debug.Log(MovingDirNorX);
+
             MovingDir = new Vector3(MovingDirX, 0.0f, MovingDirZ);
             MovingDirNor = new Vector3(MovingDirNorX, 0.0f, MovingDirNorZ);
+
+            if (_hasAnimator)
+            {
+                //垂直方向移动
+                if (MovingDirNorX == 0 && MovingDirNorZ == 1)                //前
+                {
+                    _animator.SetFloat(_animIDMovingDir, 1);
+                }
+                else if (MovingDirNorX == 0 && MovingDirNorZ == -1)          //后
+                {
+                    _animator.SetFloat(_animIDMovingDir, 2);
+                }
+                else if (MovingDirNorX == 1 && MovingDirNorZ == 0)          //右
+                {
+                    _animator.SetFloat(_animIDMovingDir, 3);
+                }
+                else if (MovingDirNorX == -1 && MovingDirNorZ == 0)          //左
+                {
+                    _animator.SetFloat(_animIDMovingDir, 4);
+                }
+                //斜方向移动
+                else if (MovingDirNorX == 1 && MovingDirNorZ == 1)           //右前
+                {
+                    _animator.SetFloat(_animIDMovingDir, 5);
+                }
+                else if (MovingDirNorX == 1 && MovingDirNorZ == -1)          //右后
+                {
+                    _animator.SetFloat(_animIDMovingDir, 6);
+                }
+                else if (MovingDirNorX == -1 && MovingDirNorZ == 1)          //左前
+                {
+                    _animator.SetFloat(_animIDMovingDir, 7);
+                }
+                else if (MovingDirNorX == -1 && MovingDirNorZ == -1)         //左后
+                {
+                    _animator.SetFloat(_animIDMovingDir, 8);
+                }
+                else
+                {
+                    _animator.SetFloat(_animIDMovingDir, 0);
+                }
+
+            }
 
         }
 
