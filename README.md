@@ -5,6 +5,8 @@
 
 ![Unity](https://img.shields.io/badge/Unity-000000.svg?style=flat-square&logo=unity&logoColor=white)
 ![C#](https://img.shields.io/badge/C%20Sharp-512BD4.svg?style=flat-square&logo=csharp&logoColor=white)
+![GLSL](https://img.shields.io/badge/GLSL-5586A4.svg?style=flat-square&logo=opengl&logoColor=white)<br>
+![Unity](https://img.shields.io/badge/Unity-2022.3.13f1-black?style=flat-square&logo=unity)
 </div>
 
 ---
@@ -15,6 +17,8 @@
 
 >目前的进度概览<br>
 -->底层代码构建 &emsp;&emsp; 进行中<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->角色行动逻辑 &nbsp;&emsp;&emsp; 进行中<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->敌人AI &nbsp;&emsp;&emsp;&emsp;&emsp;&emsp; 排队中<br>
 -->基础策划&emsp;&emsp;&emsp;&emsp;&nbsp; 排队中  
                 
 

@@ -37,11 +37,15 @@ public class GUIParametersCheck : EditorWindow
         EditorGUI.EndDisabledGroup();
         EditorGUILayout.LabelField("jumpCount", avatarController.jumpCount.ToString());
         EditorGUILayout.LabelField("jumpTimerCurrent", avatarController.jumpTimerCurrent.ToString());
-        EditorGUILayout.LabelField("MovingDirection", avatarController.MovingDirection.ToString());
+        EditorGUILayout.LabelField("JumpDirection", avatarController.MovingDirection.ToString());
         EditorGUI.BeginDisabledGroup(true);
         EditorGUILayout.LabelField("_lastMoveDr (TPS)", avatarController._lastMoveDr.ToString());
         EditorGUILayout.LabelField("_lastMoveDirection (TPS)", avatarController._lastMoveDirection.ToString());
         EditorGUILayout.LabelField("targetDr (FPS)", avatarController.targetDr.ToString());
+        EditorGUI.EndDisabledGroup();
+        EditorGUILayout.LabelField("PlayerMovingDirection", avatarController.MovingDirNor.ToString());
+        EditorGUI.BeginDisabledGroup(true);
+        EditorGUILayout.LabelField("DirectionOrigin", avatarController.MovingDir.ToString());
         EditorGUI.EndDisabledGroup();
 
     }

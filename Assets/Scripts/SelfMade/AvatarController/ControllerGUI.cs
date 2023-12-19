@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 using StarterAssets;
+using Cinemachine;
 
 [CustomEditor(typeof(AvatarController))]
 public class ControllerGUI : Editor
@@ -61,8 +62,13 @@ public class ControllerGUI : Editor
 
     private void DisplayTabContent0(AvatarController avatarController)
     {
+        EditorGUILayout.LabelField("GameMode", EditorStyles.boldLabel);
+        avatarController.IsTPS = EditorGUILayout.Toggle(new GUIContent("TPS", "进行游戏的模式"), avatarController.IsTPS);
+        GUILayout.Space(10); // 用来添加空行
         EditorGUILayout.LabelField("PlayerGrounded", EditorStyles.boldLabel);
+        EditorGUI.BeginDisabledGroup(true); // 开始置灰区域
         avatarController.Grounded = EditorGUILayout.Toggle(new GUIContent("Grounded", "判定是否在地上"), avatarController.Grounded);
+        EditorGUI.EndDisabledGroup();
         avatarController.GroundedOffset = EditorGUILayout.FloatField(new GUIContent("GroundedOffset", "地面检测球体中心相对于角色底部的垂直偏移量"), avatarController.GroundedOffset);
         avatarController.GroundedRadius = EditorGUILayout.FloatField(new GUIContent("GroundedRadius", "地面检测的球体半径"), avatarController.GroundedRadius);
         avatarController.GroundLayers = EditorGUILayout.MaskField(new GUIContent("GroundLayers", "选择将哪些层级视为地面"), avatarController.GroundLayers, UnityEditorInternal.InternalEditorUtility.layers);
@@ -98,6 +104,7 @@ public class ControllerGUI : Editor
         EditorGUILayout.LabelField("Binding", EditorStyles.boldLabel);
         avatarController.playerAmature = EditorGUILayout.ObjectField(new GUIContent("playerAmature", "玩家主体"), avatarController.playerAmature, typeof(GameObject), true) as GameObject;
         avatarController.sphereCenter = EditorGUILayout.ObjectField(new GUIContent("sphereCenter", "下蹲头上阻碍的检测中心"), avatarController.sphereCenter, typeof(Transform), true) as Transform;
+        avatarController.virtualCamera = EditorGUILayout.ObjectField(new GUIContent("VirtualCamera", tooltip: "第三人称摄像机"), avatarController.virtualCamera, typeof(CinemachineVirtualCamera), allowSceneObjects: true) as CinemachineVirtualCamera;
         avatarController.CinemachineCameraTarget = EditorGUILayout.ObjectField(new GUIContent("CinemachineCameraTarget", "Camera target"), avatarController.CinemachineCameraTarget, typeof(GameObject), true) as GameObject;
 
         // Add more GUI elements as needed
@@ -119,6 +126,8 @@ public class ControllerGUI : Editor
         EditorGUILayout.LabelField("Crouch", EditorStyles.boldLabel);
         avatarController._isCrouching = EditorGUILayout.Toggle(new GUIContent("isCrouching", "判断是否蹲下"), avatarController._isCrouching);
         GUILayout.Space(10); // 用来添加空行
+        avatarController.OriginOffset = EditorGUILayout.FloatField(new GUIContent("OriginOffset", "默认状态下CameraRoot与父节点的距离"), avatarController.OriginOffset);
+        avatarController.CrouchingOffset = EditorGUILayout.FloatField(new GUIContent("CrouchingOffset", "下蹲时CameraRoot与父节点的距离"), avatarController.CrouchingOffset);
         avatarController.sphereCenter = EditorGUILayout.ObjectField(new GUIContent("sphereCenter", "下蹲头上阻碍的检测中心"), avatarController.sphereCenter, typeof(Transform), true) as Transform;
         avatarController.Crouchradius = EditorGUILayout.FloatField(new GUIContent("Crouchradius", "检测的球体半径"), avatarController.Crouchradius);
         avatarController.detectionLayer = EditorGUILayout.MaskField(new GUIContent("DetectionLayer", "选择将哪些层级视为头顶阻碍"), avatarController.detectionLayer, UnityEditorInternal.InternalEditorUtility.layers);
@@ -150,7 +159,14 @@ public class ControllerGUI : Editor
 
     private void DisplayTabContent4(AvatarController avatarController)
     {
+        EditorGUI.BeginDisabledGroup(true); // 开始置灰区域
+        avatarController.virtualCamera = EditorGUILayout.ObjectField(new GUIContent("CinemachineCamera", "virtualCamera"), avatarController.virtualCamera, typeof(CinemachineVirtualCamera), true) as CinemachineVirtualCamera;
         avatarController.CinemachineCameraTarget = EditorGUILayout.ObjectField(new GUIContent("CinemachineCameraTarget", "Camera target"), avatarController.CinemachineCameraTarget, typeof(GameObject), true) as GameObject;
+        EditorGUI.EndDisabledGroup(); // 结束置灰区域
+        avatarController.minFov = EditorGUILayout.FloatField(new GUIContent("MinFOV", "滚轮缩放的最小FOV"), avatarController.minFov);
+        avatarController.maxFov = EditorGUILayout.FloatField(new GUIContent("MaxFOV", "滚轮缩放的最大FOV"), avatarController.maxFov);
+        avatarController.zoomSpeed = EditorGUILayout.FloatField(new GUIContent("ZoomSpeed", "缩放速度"), avatarController.zoomSpeed);
+        avatarController.zoomsensitivity = EditorGUILayout.FloatField(new GUIContent("ZoomSensitivity", "滚轮缩放的灵敏度"), avatarController.zoomsensitivity);
         avatarController.TopClamp = EditorGUILayout.FloatField(new GUIContent("TopClamp", "相机向上移动的最大角度"), avatarController.TopClamp);
         avatarController.BottomClamp = EditorGUILayout.FloatField(new GUIContent("BottomClamp", "相机向下移动的最大角度"), avatarController.BottomClamp);
         avatarController.CameraAngleOverride = EditorGUILayout.FloatField(new GUIContent("CameraAngleOverride", "在相机锁定时，可以使用这个字段对相机位置进行微调"), avatarController.CameraAngleOverride);

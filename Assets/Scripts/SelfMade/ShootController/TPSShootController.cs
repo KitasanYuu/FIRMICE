@@ -33,7 +33,7 @@ public class TPSShootController : MonoBehaviour
     public bool isBlocked = false;
     public bool swaKeyPressed = false; // 用于跟踪按键状态
 
-    public float CrouchingY = -0.8f;
+    public float CrouchingY = -0.5f;
     public float OriginY = -0.4f;
 
     // 角色控制器和输入
@@ -70,6 +70,7 @@ public class TPSShootController : MonoBehaviour
 
 
     }
+
 
     private void Update()
     {
@@ -115,13 +116,14 @@ public class TPSShootController : MonoBehaviour
             if(_hasAnimator)
             {
                 _animator.SetBool(_animIDEnterAiming, true);
-                if(!avatarController._isCrouching)
+                if (!avatarController._isCrouching)
                 {
-                    _animator.SetFloat(_animIDAimStatus,0);
+                    _animator.SetFloat(_animIDAimStatus, 0);
                 }
                 else
                 {
-                    _animator.SetFloat( _animIDAimStatus,1);
+                    _animator.SetFloat(_animIDAimStatus, 1);
+                    //Debug.LogError(_animIDAimStatus);
                 }
             }
 
@@ -241,6 +243,7 @@ public class TPSShootController : MonoBehaviour
         // 例如：根据摄像机当前位置和方向，加上 CameraSide 偏移量来计算目标位置
         return Vector3.zero;
     }
+
     void AimIKStatus(int status)
     {
         AimIKParameter = status;

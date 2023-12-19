@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
+using Cinemachine;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 #endif
@@ -37,7 +37,7 @@ namespace StarterAssets
 
         public AudioClip LandingAudioClip;
         public AudioClip[] FootstepAudioClips;
-        [Range(0, 1)] 
+        [Range(0, 1)]
         public float FootstepAudioVolume = 0.5f;
 
         [Space(10)]
@@ -84,6 +84,14 @@ namespace StarterAssets
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
+        //这些函数用在角色八项移动
+        private float MovingDirX;
+        private float MovingDirZ;
+        private float MovingDirNorX;
+        private float MovingDirNorZ;
+        public Vector3 MovingDir;
+        public Vector3 MovingDirNor;
+
         // 在类的顶部声明 _lastMoveDirection 字段，但不要赋值
         public Vector3 _lastMoveDirection = Vector3.zero;
         public Vector3 targetDr = Vector3.zero;
@@ -99,10 +107,13 @@ namespace StarterAssets
         public float airSpeed;
 
         //下蹲
+        private GameObject PlayerCameraRoot;
         private CharacterController _characterController;
         public bool _isCrouching = false;
         public bool cantCrouchinAir = true;
         private bool CrouchingDetect = false;//用于头顶障碍物检测
+        public float OriginOffset = 1.125f;
+        public float CrouchingOffset = 0.75f;
 
         // cinemachine
         private float _cinemachineTargetYaw;
@@ -133,6 +144,7 @@ namespace StarterAssets
         private int _animIDMotionSpeed;
         private int _animIDJetStatus;
         private int _animIDis_Crouching;
+        private int _animIDMovingDir;
 
         //检测蹲下时上方是否有障碍物
         public LayerMask detectionLayer;
@@ -143,6 +155,15 @@ namespace StarterAssets
 
         //瞄准时所用函数
         public bool _rotationOnMove = true;
+
+        public CinemachineVirtualCamera virtualCamera; // 你的Cinemachine虚拟摄像机
+
+        public float minFov = 15f; // 最小FOV
+        public float maxFov = 90f; // 最大FOV
+        public float zoomsensitivity = 10f; // 灵敏度
+        public float zoomSpeed = 5f; // 缩放速度
+
+        private float targetFov;
 
 
 #if ENABLE_INPUT_SYSTEM 
@@ -181,6 +202,13 @@ namespace StarterAssets
 
         private void Start()
         {
+            //TPS的CinemachineCamera的平滑处理
+            if (virtualCamera != null)
+            {
+                // 初始化目标FOV为当前摄像机的FOV
+                targetFov = virtualCamera.m_Lens.FieldOfView;
+            }
+
             _characterController = playerAmature.GetComponent<CharacterController>();
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
             animator = GetComponent<Animator>();
@@ -203,6 +231,8 @@ namespace StarterAssets
 
         private void Update()
         {
+            MovingDirNormalize();
+            CameraZoom();
             _hasAnimator = TryGetComponent(out _animator);
             JumpAndGravity();
             GroundedCheck();
@@ -241,6 +271,7 @@ namespace StarterAssets
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
             _animIDJetStatus = Animator.StringToHash("JetStatus");
             _animIDis_Crouching = Animator.StringToHash("is_crouching");
+            _animIDMovingDir = Animator.StringToHash("MovingDir");
         }
 
         private void GroundedCheck()
@@ -255,6 +286,19 @@ namespace StarterAssets
             if (_hasAnimator)
             {
                 _animator.SetBool(_animIDGrounded, Grounded);
+            }
+        }
+
+        private void CameraZoom()
+        {
+            if (virtualCamera != null)
+            {
+                // 根据鼠标滚轮输入更新目标FOV
+                targetFov -= Input.GetAxis("Mouse ScrollWheel") * zoomsensitivity;
+                targetFov = Mathf.Clamp(targetFov, minFov, maxFov);
+
+                // 平滑地插值当前FOV到目标FOV
+                virtualCamera.m_Lens.FieldOfView = Mathf.Lerp(virtualCamera.m_Lens.FieldOfView, targetFov, zoomSpeed * Time.deltaTime);
             }
         }
 
@@ -312,14 +356,14 @@ namespace StarterAssets
             if (Grounded && !_input.crouch)
             {
                 //若是没有检测到碰撞
-                if(!DetectedResult)
+                if (!DetectedResult)
                 {
                     _isCrouching = false;   //退出下蹲状态
                     CrouchingDetect = false;    //下蹲特征值重置
                 }
 
             }
-            
+
             //进行判定是否触发了下蹲
             if (CrouchingDetect)
             {
@@ -351,7 +395,7 @@ namespace StarterAssets
             if (_speed == 0)
             {
                 airSpeed = 0;
-                
+
             }
 
         }
@@ -398,6 +442,8 @@ namespace StarterAssets
 
             //标准化输入方向
             Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
+            MovingDirX = inputDirection.x;
+            MovingDirZ = inputDirection.z;
 
             // 如果有移动输入，则在玩家移动时旋转玩家。
             if (_input.move != Vector2.zero)
@@ -486,7 +532,7 @@ namespace StarterAssets
                         targetDr = _lastMoveDirection;
                     }
 
-                    if(targetDr == _lastMoveDirection)
+                    if (targetDr == _lastMoveDirection)
                     {
                         MovingDirection = targetDr;
                     }
@@ -543,7 +589,7 @@ namespace StarterAssets
                             }
                         }
                         jumpTimerCurrent = jumpTimer;
-                        jumpCount ++;
+                        jumpCount++;
                     }
 
                     // jump timeout
@@ -633,18 +679,21 @@ namespace StarterAssets
         //下蹲站立时碰撞盒变更大小
         private void ModifyControllerProperties()
         {
+            PlayerCameraRoot = GameObject.Find("PlayerCameraRoot");
             // 检查is_crouching的值，并根据需要修改CharacterController的属性
             if (_isCrouching)
             {
                 // 当蹲下时更改CharacterController的属性
                 _characterController.center = new Vector3(_characterController.center.x, 0.4f, _characterController.center.z);
                 _characterController.height = 0.77f;
+                PlayerCameraRoot.transform.position = new Vector3(PlayerCameraRoot.transform.position.x, playerAmature.transform.position.y + CrouchingOffset, PlayerCameraRoot.transform.position.z);
             }
             else
             {
                 // 当未蹲下时更改CharacterController的属性
                 _characterController.center = new Vector3(_characterController.center.x, 0.7f, _characterController.center.z);
                 _characterController.height = 1.4f;
+                PlayerCameraRoot.transform.position = new Vector3(PlayerCameraRoot.transform.position.x, playerAmature.transform.position.y + OriginOffset, PlayerCameraRoot.transform.position.z);
             }
         }
 
@@ -674,7 +723,83 @@ namespace StarterAssets
             return isObstructed; // 返回是否遇到障碍物
         }
 
+        private void MovingDirNormalize()
+        {
+            if (MovingDirX <= 1.0f && MovingDirX > 0)
+            {
+                MovingDirNorX = 1;
+            }
+            else if (MovingDirX >= -1.0f && MovingDirX < 0)
+            {
+                MovingDirNorX = -1;
+            }
+            else
+            {
+                MovingDirNorX = 0;
+            }
 
+            if (MovingDirZ <= 1.0f && MovingDirZ > 0)
+            {
+                MovingDirNorZ = 1;
+            }
+            else if (MovingDirZ >= -1.0f && MovingDirZ < 0)
+            {
+                MovingDirNorZ = -1;
+            }
+            else
+            {
+                MovingDirNorZ = 0;
+            }
+
+            //Debug.Log(MovingDirNorX);
+
+            MovingDir = new Vector3(MovingDirX, 0.0f, MovingDirZ);
+            MovingDirNor = new Vector3(MovingDirNorX, 0.0f, MovingDirNorZ);
+
+            if (_hasAnimator)
+            {
+                //垂直方向移动
+                if (MovingDirNorX == 0 && MovingDirNorZ == 1)                //前
+                {
+                    _animator.SetFloat(_animIDMovingDir, 1);
+                }
+                else if (MovingDirNorX == 0 && MovingDirNorZ == -1)          //后
+                {
+                    _animator.SetFloat(_animIDMovingDir, 2);
+                }
+                else if (MovingDirNorX == 1 && MovingDirNorZ == 0)          //右
+                {
+                    _animator.SetFloat(_animIDMovingDir, 3);
+                }
+                else if (MovingDirNorX == -1 && MovingDirNorZ == 0)          //左
+                {
+                    _animator.SetFloat(_animIDMovingDir, 4);
+                }
+                //斜方向移动
+                else if (MovingDirNorX == 1 && MovingDirNorZ == 1)           //右前
+                {
+                    _animator.SetFloat(_animIDMovingDir, 5);
+                }
+                else if (MovingDirNorX == 1 && MovingDirNorZ == -1)          //右后
+                {
+                    _animator.SetFloat(_animIDMovingDir, 6);
+                }
+                else if (MovingDirNorX == -1 && MovingDirNorZ == 1)          //左前
+                {
+                    _animator.SetFloat(_animIDMovingDir, 7);
+                }
+                else if (MovingDirNorX == -1 && MovingDirNorZ == -1)         //左后
+                {
+                    _animator.SetFloat(_animIDMovingDir, 8);
+                }
+                else
+                {
+                    _animator.SetFloat(_animIDMovingDir, 0);                //没有输入时归零，防止下次使用时初始化阶段出现别的动作
+                }
+
+            }
+
+        }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
         {
