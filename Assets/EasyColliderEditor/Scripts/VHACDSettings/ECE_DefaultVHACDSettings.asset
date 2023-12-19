@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4787408722c64ab4db0b7df26d9653a7, type: 3}
+  m_Name: ECE_DefaultVHACDSettings
+  m_EditorClassIdentifier: 
+  _vhacdParameters:
+    NormalExtrudeMultiplier: 0
+    IsCalculationForPreview: 0
+    ConvertTo: 0
+    SaveSuffix: _ConvexHull_
+    vhacdResultMethod: 0
+    UseSelectedVertices: 0
+    CurrentMeshFilter: 0
+    SeparateChildMeshes: 0
+    PerMeshAttachOverride: 0
+    MeshFilters:
+    - {fileID: 0}
+    AttachTo: {fileID: 0}
+    SavePath: 
+    concavity: 0.0024999999441206455
+    alpha: 0.05000000074505806
+    beta: 0.05000000074505806
+    minVolumePerCH: 0.00009999999747378752
+    resolution: 10000
+    maxNumVerticesPerConvexHull: 64
+    planeDownsampling: 4
+    convexhullDownSampling: 4
+    maxConvexHulls: 1
+    projectHullVertices: 1
+    fillMode: 0
+    forceUnder256Triangles: 1
