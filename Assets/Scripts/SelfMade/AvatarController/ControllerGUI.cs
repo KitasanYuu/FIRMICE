@@ -117,6 +117,8 @@ public class ControllerGUI : Editor
         avatarController.CrouchSpeed = EditorGUILayout.FloatField(new GUIContent("CrouchSpeed", "下蹲移速"), avatarController.CrouchSpeed);
         avatarController.MoveSpeed = EditorGUILayout.FloatField(new GUIContent("MoveSpeed", "正常移速"), avatarController.MoveSpeed);
         avatarController.SprintSpeed = EditorGUILayout.FloatField(new GUIContent("SprintSpeed", "冲刺移速"), avatarController.SprintSpeed);
+        avatarController.AimSpeed = EditorGUILayout.FloatField(new GUIContent("AimSpeed", "瞄准时的移速"), avatarController.AimSpeed);
+        avatarController.CrouchingAimSpeed = EditorGUILayout.FloatField(new GUIContent("CrouchingAimSpeed", "下蹲瞄准时的移速"), avatarController.CrouchingAimSpeed);
         avatarController.SpeedChangeRate = EditorGUILayout.FloatField(new GUIContent("SpeedChangeRate", "加/减速度"), avatarController.SpeedChangeRate);
         avatarController.RotationSmoothTime = EditorGUILayout.Slider(new GUIContent("RotationSmoothTime", "TPS下角色的转向速度 数值越大转向越慢"), avatarController.RotationSmoothTime, 0.0f, 0.3f);
 
