@@ -1,16 +1,19 @@
 using UnityEditor;
 using UnityEngine;
 using StarterAssets;
-
+using playershooting;
 
 public class GUIStatusCheck : EditorWindow
 {
     private AvatarController avatarController;
+    private TPSShootController tpsshootcontroller;
 
     public void Init(AvatarController Sscript)
     {
         avatarController = Sscript;
     }
+
+    
 
     public void OnGUI()
     {
@@ -117,6 +120,17 @@ public class GUIStatusCheck : EditorWindow
         else
         {
             EditorGUILayout.LabelField("JetPack:Enable");
+        }
+
+        EditorGUILayout.LabelField("Aim Status", EditorStyles.boldLabel);
+
+        if(avatarController.isAiming)
+        {
+            EditorGUILayout.LabelField("Is Aiming");
+        }
+        else
+        {
+            EditorGUILayout.LabelField("Not Aiming");
         }
 
     }
