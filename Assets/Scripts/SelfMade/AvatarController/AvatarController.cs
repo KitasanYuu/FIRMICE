@@ -22,11 +22,15 @@ namespace StarterAssets
         [Tooltip("Move speed of the character in m/s")]
         public bool IsTPS = true;
         [Tooltip("Move speed of the character in m/s")]
-        public float MoveSpeed = 2.0f;
+        public float MoveSpeed = 3.0f;
         [Tooltip("Sprint speed of the character in m/s")]
-        public float SprintSpeed = 5.335f;
+        public float SprintSpeed = 6.0f;
         [Tooltip("Crouch speed of the character in m/s")]
         public float CrouchSpeed = 1.0f;
+        [Tooltip("Aim speed of the character in m/s")]
+        public float AimSpeed = 2.0f;
+        public float CrouchingAimSpeed = 1.0f;
+
         public float Sensitivity = 1.0f;
 
         [Tooltip("How fast the character turns to face movement direction")]
@@ -353,7 +357,12 @@ namespace StarterAssets
         //在各种移动速度中进行判定
         private void MoveStatus()
         {
-            if (Grounded && _input.sprint && !_input.crouch && !_isCrouching)
+            if(isAiming && _input.sprint)
+            {
+                targetSpeed = MoveSpeed;
+            }
+
+            if (Grounded && _input.sprint && !_input.crouch && !_isCrouching && !isAiming)
             {
                 targetSpeed = SprintSpeed;
                 airSpeed = targetSpeed;
@@ -361,8 +370,15 @@ namespace StarterAssets
 
             if (Grounded && _input.crouch && cantCrouchinAir)
             {
+                if (isAiming)
+                {
+                    targetSpeed = CrouchingAimSpeed;
+                }
+                else
+                {
+                    targetSpeed = CrouchSpeed;
+                }
                 _isCrouching = true;
-                targetSpeed = CrouchSpeed;
                 _input.jump = false;    //下蹲禁用跳跃
                 CrouchingDetect = true; //特征值允许检测下蹲状态
             }
@@ -386,7 +402,14 @@ namespace StarterAssets
                 {
                     DetectedResult = true;  //设定Reselt为True
                     _isCrouching = true;    //设置保持下蹲状态
-                    targetSpeed = CrouchSpeed;  //速度切换为下蹲速度
+                    if (isAiming)
+                    {
+                        targetSpeed = CrouchingAimSpeed;
+                    }
+                    else
+                    {
+                        targetSpeed = CrouchSpeed;
+                    }
                 }
                 else
                 {
@@ -397,8 +420,17 @@ namespace StarterAssets
             //检测若是在地面且没有输入蹲下，没有输入奔跑，不在蹲下时，将速度调整为步行速度
             if (Grounded && !_input.crouch && !_input.sprint && !_isCrouching)
             {
-                targetSpeed = MoveSpeed;
-                airSpeed = targetSpeed;
+                if (isAiming)
+                {
+                    targetSpeed = AimSpeed;
+                    airSpeed = targetSpeed;
+                }
+                else
+                {
+                    targetSpeed = MoveSpeed;
+                    airSpeed = targetSpeed;
+                }
+
             }
 
             //若不在地面，则取上轮if的speed为在空中的速度
@@ -777,7 +809,7 @@ namespace StarterAssets
 
                 if (MovingDirNorX == -1 && MovingDirNorZ == 0)           //左
                 {
-                    _TargetMovingDirB = -2;
+                    _TargetMovingDirF = -2;
                     _TargetMovingDir = -1;
                 }
                 else if (MovingDirNorX == -1 && MovingDirNorZ == 1)                //左前
@@ -804,7 +836,7 @@ namespace StarterAssets
 
                 else if (MovingDirNorX == 1 && MovingDirNorZ == 0)            //右
                 {
-                    _TargetMovingDirF = -2;
+                    _TargetMovingDirB = -2;
                     _TargetMovingDir = 1;
                 }
                 else if (MovingDirNorX == 1 && MovingDirNorZ == -1)           //右后
