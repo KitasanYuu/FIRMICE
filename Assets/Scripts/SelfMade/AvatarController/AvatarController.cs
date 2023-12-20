@@ -89,9 +89,12 @@ namespace StarterAssets
         private float MovingDirX;
         private float MovingDirZ;
         private float MovingDirNorX;
-        public float _TempMovingDir;
-        public float _TargetMovingDir;
         private float MovingDirNorZ;
+        public float _TempMovingDirF;
+        public float _TargetMovingDirF;
+        public float _TempMovingDirB;
+        public float _TargetMovingDirB;
+        public float FoB;
         public Vector3 MovingDir;
         public Vector3 MovingDirNor;
         
@@ -148,7 +151,9 @@ namespace StarterAssets
         private int _animIDMotionSpeed;
         private int _animIDJetStatus;
         private int _animIDis_Crouching;
-        private int _animIDMovingDir;
+        private int _animIDMovingDirF;
+        private int _animIDMovingDirB;
+        private int _animIDFoB;
 
         //检测蹲下时上方是否有障碍物
         public LayerMask detectionLayer;
@@ -168,6 +173,7 @@ namespace StarterAssets
         public float zoomSpeed = 5f; // 缩放速度
 
         private float targetFov;
+        public bool isAiming;
 
 
 #if ENABLE_INPUT_SYSTEM 
@@ -237,6 +243,7 @@ namespace StarterAssets
 
         private void Update()
         {
+            AimingStatus();
             WalkSwitcher();
             CameraZoom();
             _hasAnimator = TryGetComponent(out _animator);
@@ -270,6 +277,7 @@ namespace StarterAssets
 
         private void AssignAnimationIDs()
         {
+            _animIDFoB = Animator.StringToHash("FoB");
             _animIDSpeed = Animator.StringToHash("Speed");
             _animIDGrounded = Animator.StringToHash("Grounded");
             _animIDJump = Animator.StringToHash("Jump");
@@ -277,7 +285,8 @@ namespace StarterAssets
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
             _animIDJetStatus = Animator.StringToHash("JetStatus");
             _animIDis_Crouching = Animator.StringToHash("is_crouching");
-            _animIDMovingDir = Animator.StringToHash("MovingDir");
+            _animIDMovingDirF = Animator.StringToHash("MovingDirF");
+            _animIDMovingDirB = Animator.StringToHash("MovingDirB");
         }
 
         private void GroundedCheck()
@@ -764,43 +773,68 @@ namespace StarterAssets
 
             if (_hasAnimator)
             {
-                //垂直方向移动
-                if (MovingDirNorX == 0 && MovingDirNorZ == 1)                //前
+                float _TargetMovingDir =0; //判别前后
+
+                if (MovingDirNorX == -1 && MovingDirNorZ == 0)           //左
                 {
+                    _TargetMovingDirB = -2;
+                    _TargetMovingDir = -1;
+                }
+                else if (MovingDirNorX == -1 && MovingDirNorZ == 1)                //左前
+                {
+                    _TargetMovingDirF = -1;
+                    _TargetMovingDir = -1;
+                }
+                else if (MovingDirNorX == 0 && MovingDirNorZ == 1)            //正前
+                {
+                    _TargetMovingDirF = 0;
+                    _TargetMovingDir = -1;
+                }
+                else if (MovingDirNorX == 1 && MovingDirNorZ == 1)            //右前
+                {
+                    _TargetMovingDirF = 1;
+                    _TargetMovingDir = -1;
+                }
+                else if (MovingDirNorX == 1 && MovingDirNorZ == 0)            //右
+                {
+                    _TargetMovingDirF = 2;
+                    _TargetMovingDir = -1;
+                }
+
+
+                else if (MovingDirNorX == 1 && MovingDirNorZ == 0)            //右
+                {
+                    _TargetMovingDirF = -2;
                     _TargetMovingDir = 1;
                 }
-                else if (MovingDirNorX == 0 && MovingDirNorZ == -1)          //后
+                else if (MovingDirNorX == 1 && MovingDirNorZ == -1)           //右后
                 {
-                    _TargetMovingDir = 2;
+                    _TargetMovingDirB = -1;
+                    _TargetMovingDir = 1;
                 }
-                else if (MovingDirNorX == 1 && MovingDirNorZ == 0)          //右
+                else if (MovingDirNorX == 0 && MovingDirNorZ == -1)           //后方
                 {
-                    _TargetMovingDir = 3;
+                    _TargetMovingDirB = 0;
+                    _TargetMovingDir = 1;
                 }
-                else if (MovingDirNorX == -1 && MovingDirNorZ == 0)          //左
+                else if (MovingDirNorX == -1 && MovingDirNorZ == -1)          //左后
                 {
-                    _TargetMovingDir = 4;
+                    _TargetMovingDirB = 1;
+                    _TargetMovingDir = 1;
                 }
-                //斜方向移动
-                else if (MovingDirNorX == 1 && MovingDirNorZ == 1)           //右前
+                else if (MovingDirNorX == -1 && MovingDirNorZ == 0)           //左
                 {
-                    _TargetMovingDir = 5;
+                    _TargetMovingDirB = 2;
+                    _TargetMovingDir = 1;
                 }
-                else if (MovingDirNorX == 1 && MovingDirNorZ == -1)          //右后
+
+                if (_TargetMovingDir == -1)
                 {
-                    _TargetMovingDir = 6;
+                    FoB = -1;
                 }
-                else if (MovingDirNorX == -1 && MovingDirNorZ == 1)          //左前
+                else if (_TargetMovingDir == 1)
                 {
-                    _TargetMovingDir = 7;
-                }
-                else if (MovingDirNorX == -1 && MovingDirNorZ == -1)         //左后
-                {
-                    _TargetMovingDir = 8;
-                }
-                else
-                {
-                    _TargetMovingDir = 0;                //没有输入时归零，防止下次使用时初始化阶段出现别的动作
+                    FoB = 1;
                 }
 
             }
@@ -815,11 +849,33 @@ namespace StarterAssets
             }
             else
             {
-                _TargetMovingDir = 1;
+                FoB = 0;
+
             }
 
-            _TempMovingDir = Mathf.Lerp(_TempMovingDir, _TargetMovingDir, Time.deltaTime * SpeedChangeRate);
-            _animator.SetFloat(_animIDMovingDir, _TempMovingDir);
+            if(FoB == -1)
+            {
+                _animator.SetFloat(_animIDFoB, FoB);
+                _TempMovingDirF = Mathf.Lerp(_TempMovingDirF, _TargetMovingDirF, Time.deltaTime * SpeedChangeRate);
+                _animator.SetFloat(_animIDMovingDirF, _TempMovingDirF);
+                _animator.SetFloat(_animIDMovingDirB, 0);
+            }
+            else if(FoB == 1)
+            {
+                _animator.SetFloat(_animIDFoB, FoB);
+                _TempMovingDirB = Mathf.Lerp(_TempMovingDirB, _TargetMovingDirB, Time.deltaTime * SpeedChangeRate);
+                _animator.SetFloat(_animIDMovingDirB, _TempMovingDirB);
+                _animator.SetFloat(_animIDMovingDirF, 0);
+            }else if (FoB == 0)
+            {
+                _animator.SetFloat(_animIDFoB, FoB);
+                _animator.SetFloat(_animIDMovingDirB, 0);
+                _animator.SetFloat(_animIDMovingDirF, 0);
+            }
+
+
+
+
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
@@ -839,6 +895,18 @@ namespace StarterAssets
                     var index = Random.Range(0, FootstepAudioClips.Length);
                     AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
                 }
+            }
+        }
+
+        private void AimingStatus()
+        {
+            if (tpsshootcontroller.isAiming)
+            {
+                isAiming = true;
+            }
+            else
+            {
+                isAiming = false;
             }
         }
 
