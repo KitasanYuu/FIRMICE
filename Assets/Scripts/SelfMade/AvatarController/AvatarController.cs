@@ -3,6 +3,7 @@ using System.Collections;
 using Cinemachine;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
+using playershooting;
 #endif
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
@@ -88,9 +89,12 @@ namespace StarterAssets
         private float MovingDirX;
         private float MovingDirZ;
         private float MovingDirNorX;
+        public float _TempMovingDir;
+        public float _TargetMovingDir;
         private float MovingDirNorZ;
         public Vector3 MovingDir;
         public Vector3 MovingDirNor;
+        
 
         // 在类的顶部声明 _lastMoveDirection 字段，但不要赋值
         public Vector3 _lastMoveDirection = Vector3.zero;
@@ -170,6 +174,7 @@ namespace StarterAssets
         private PlayerInput _playerInput;
 #endif
         private Animator _animator;
+        private TPSShootController tpsshootcontroller;
         private CharacterController _controller;
         private StarterAssetsInputs _input;
         private GameObject _mainCamera;
@@ -193,6 +198,7 @@ namespace StarterAssets
 
         private void Awake()
         {
+            tpsshootcontroller = GetComponent<TPSShootController>();
             // get a reference to our main camera
             if (_mainCamera == null)
             {
@@ -231,7 +237,7 @@ namespace StarterAssets
 
         private void Update()
         {
-            MovingDirNormalize();
+            WalkSwitcher();
             CameraZoom();
             _hasAnimator = TryGetComponent(out _animator);
             JumpAndGravity();
@@ -761,44 +767,59 @@ namespace StarterAssets
                 //垂直方向移动
                 if (MovingDirNorX == 0 && MovingDirNorZ == 1)                //前
                 {
-                    _animator.SetFloat(_animIDMovingDir, 1);
+                    _TargetMovingDir = 1;
                 }
                 else if (MovingDirNorX == 0 && MovingDirNorZ == -1)          //后
                 {
-                    _animator.SetFloat(_animIDMovingDir, 2);
+                    _TargetMovingDir = 2;
                 }
                 else if (MovingDirNorX == 1 && MovingDirNorZ == 0)          //右
                 {
-                    _animator.SetFloat(_animIDMovingDir, 3);
+                    _TargetMovingDir = 3;
                 }
                 else if (MovingDirNorX == -1 && MovingDirNorZ == 0)          //左
                 {
-                    _animator.SetFloat(_animIDMovingDir, 4);
+                    _TargetMovingDir = 4;
                 }
                 //斜方向移动
                 else if (MovingDirNorX == 1 && MovingDirNorZ == 1)           //右前
                 {
-                    _animator.SetFloat(_animIDMovingDir, 5);
+                    _TargetMovingDir = 5;
                 }
                 else if (MovingDirNorX == 1 && MovingDirNorZ == -1)          //右后
                 {
-                    _animator.SetFloat(_animIDMovingDir, 6);
+                    _TargetMovingDir = 6;
                 }
                 else if (MovingDirNorX == -1 && MovingDirNorZ == 1)          //左前
                 {
-                    _animator.SetFloat(_animIDMovingDir, 7);
+                    _TargetMovingDir = 7;
                 }
                 else if (MovingDirNorX == -1 && MovingDirNorZ == -1)         //左后
                 {
-                    _animator.SetFloat(_animIDMovingDir, 8);
+                    _TargetMovingDir = 8;
                 }
                 else
                 {
-                    _animator.SetFloat(_animIDMovingDir, 0);                //没有输入时归零，防止下次使用时初始化阶段出现别的动作
+                    _TargetMovingDir = 0;                //没有输入时归零，防止下次使用时初始化阶段出现别的动作
                 }
 
             }
 
+        }
+
+        private void WalkSwitcher()
+        {
+            if (tpsshootcontroller.isAiming)
+            {
+                MovingDirNormalize();
+            }
+            else
+            {
+                _TargetMovingDir = 1;
+            }
+
+            _TempMovingDir = Mathf.Lerp(_TempMovingDir, _TargetMovingDir, Time.deltaTime * SpeedChangeRate);
+            _animator.SetFloat(_animIDMovingDir, _TempMovingDir);
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
