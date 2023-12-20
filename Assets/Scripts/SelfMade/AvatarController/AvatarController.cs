@@ -3,6 +3,7 @@ using System.Collections;
 using Cinemachine;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
+using playershooting;
 #endif
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
@@ -89,8 +90,14 @@ namespace StarterAssets
         private float MovingDirZ;
         private float MovingDirNorX;
         private float MovingDirNorZ;
+        public float _TempMovingDirF;
+        public float _TargetMovingDirF;
+        public float _TempMovingDirB;
+        public float _TargetMovingDirB;
+        public float FoB;
         public Vector3 MovingDir;
         public Vector3 MovingDirNor;
+        
 
         // 在类的顶部声明 _lastMoveDirection 字段，但不要赋值
         public Vector3 _lastMoveDirection = Vector3.zero;
@@ -144,7 +151,9 @@ namespace StarterAssets
         private int _animIDMotionSpeed;
         private int _animIDJetStatus;
         private int _animIDis_Crouching;
-        private int _animIDMovingDir;
+        private int _animIDMovingDirF;
+        private int _animIDMovingDirB;
+        private int _animIDFoB;
 
         //检测蹲下时上方是否有障碍物
         public LayerMask detectionLayer;
@@ -164,12 +173,14 @@ namespace StarterAssets
         public float zoomSpeed = 5f; // 缩放速度
 
         private float targetFov;
+        public bool isAiming;
 
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
 #endif
         private Animator _animator;
+        private TPSShootController tpsshootcontroller;
         private CharacterController _controller;
         private StarterAssetsInputs _input;
         private GameObject _mainCamera;
@@ -193,6 +204,7 @@ namespace StarterAssets
 
         private void Awake()
         {
+            tpsshootcontroller = GetComponent<TPSShootController>();
             // get a reference to our main camera
             if (_mainCamera == null)
             {
@@ -231,7 +243,8 @@ namespace StarterAssets
 
         private void Update()
         {
-            MovingDirNormalize();
+            AimingStatus();
+            WalkSwitcher();
             CameraZoom();
             _hasAnimator = TryGetComponent(out _animator);
             JumpAndGravity();
@@ -264,6 +277,7 @@ namespace StarterAssets
 
         private void AssignAnimationIDs()
         {
+            _animIDFoB = Animator.StringToHash("FoB");
             _animIDSpeed = Animator.StringToHash("Speed");
             _animIDGrounded = Animator.StringToHash("Grounded");
             _animIDJump = Animator.StringToHash("Jump");
@@ -271,7 +285,8 @@ namespace StarterAssets
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
             _animIDJetStatus = Animator.StringToHash("JetStatus");
             _animIDis_Crouching = Animator.StringToHash("is_crouching");
-            _animIDMovingDir = Animator.StringToHash("MovingDir");
+            _animIDMovingDirF = Animator.StringToHash("MovingDirF");
+            _animIDMovingDirB = Animator.StringToHash("MovingDirB");
         }
 
         private void GroundedCheck()
@@ -758,46 +773,108 @@ namespace StarterAssets
 
             if (_hasAnimator)
             {
-                //垂直方向移动
-                if (MovingDirNorX == 0 && MovingDirNorZ == 1)                //前
+                float _TargetMovingDir =0; //判别前后
+
+                if (MovingDirNorX == -1 && MovingDirNorZ == 0)           //左
                 {
-                    _animator.SetFloat(_animIDMovingDir, 1);
+                    _TargetMovingDirB = -2;
+                    _TargetMovingDir = -1;
                 }
-                else if (MovingDirNorX == 0 && MovingDirNorZ == -1)          //后
+                else if (MovingDirNorX == -1 && MovingDirNorZ == 1)                //左前
                 {
-                    _animator.SetFloat(_animIDMovingDir, 2);
+                    _TargetMovingDirF = -1;
+                    _TargetMovingDir = -1;
                 }
-                else if (MovingDirNorX == 1 && MovingDirNorZ == 0)          //右
+                else if (MovingDirNorX == 0 && MovingDirNorZ == 1)            //正前
                 {
-                    _animator.SetFloat(_animIDMovingDir, 3);
+                    _TargetMovingDirF = 0;
+                    _TargetMovingDir = -1;
                 }
-                else if (MovingDirNorX == -1 && MovingDirNorZ == 0)          //左
+                else if (MovingDirNorX == 1 && MovingDirNorZ == 1)            //右前
                 {
-                    _animator.SetFloat(_animIDMovingDir, 4);
+                    _TargetMovingDirF = 1;
+                    _TargetMovingDir = -1;
                 }
-                //斜方向移动
-                else if (MovingDirNorX == 1 && MovingDirNorZ == 1)           //右前
+                else if (MovingDirNorX == 1 && MovingDirNorZ == 0)            //右
                 {
-                    _animator.SetFloat(_animIDMovingDir, 5);
+                    _TargetMovingDirF = 2;
+                    _TargetMovingDir = -1;
                 }
-                else if (MovingDirNorX == 1 && MovingDirNorZ == -1)          //右后
+
+
+                else if (MovingDirNorX == 1 && MovingDirNorZ == 0)            //右
                 {
-                    _animator.SetFloat(_animIDMovingDir, 6);
+                    _TargetMovingDirF = -2;
+                    _TargetMovingDir = 1;
                 }
-                else if (MovingDirNorX == -1 && MovingDirNorZ == 1)          //左前
+                else if (MovingDirNorX == 1 && MovingDirNorZ == -1)           //右后
                 {
-                    _animator.SetFloat(_animIDMovingDir, 7);
+                    _TargetMovingDirB = -1;
+                    _TargetMovingDir = 1;
                 }
-                else if (MovingDirNorX == -1 && MovingDirNorZ == -1)         //左后
+                else if (MovingDirNorX == 0 && MovingDirNorZ == -1)           //后方
                 {
-                    _animator.SetFloat(_animIDMovingDir, 8);
+                    _TargetMovingDirB = 0;
+                    _TargetMovingDir = 1;
                 }
-                else
+                else if (MovingDirNorX == -1 && MovingDirNorZ == -1)          //左后
                 {
-                    _animator.SetFloat(_animIDMovingDir, 0);                //没有输入时归零，防止下次使用时初始化阶段出现别的动作
+                    _TargetMovingDirB = 1;
+                    _TargetMovingDir = 1;
+                }
+                else if (MovingDirNorX == -1 && MovingDirNorZ == 0)           //左
+                {
+                    _TargetMovingDirB = 2;
+                    _TargetMovingDir = 1;
+                }
+
+                if (_TargetMovingDir == -1)
+                {
+                    FoB = -1;
+                }
+                else if (_TargetMovingDir == 1)
+                {
+                    FoB = 1;
                 }
 
             }
+
+        }
+
+        private void WalkSwitcher()
+        {
+            if (tpsshootcontroller.isAiming)
+            {
+                MovingDirNormalize();
+            }
+            else
+            {
+                FoB = 0;
+
+            }
+
+            if(FoB == -1)
+            {
+                _animator.SetFloat(_animIDFoB, FoB);
+                _TempMovingDirF = Mathf.Lerp(_TempMovingDirF, _TargetMovingDirF, Time.deltaTime * SpeedChangeRate);
+                _animator.SetFloat(_animIDMovingDirF, _TempMovingDirF);
+                _animator.SetFloat(_animIDMovingDirB, 0);
+            }
+            else if(FoB == 1)
+            {
+                _animator.SetFloat(_animIDFoB, FoB);
+                _TempMovingDirB = Mathf.Lerp(_TempMovingDirB, _TargetMovingDirB, Time.deltaTime * SpeedChangeRate);
+                _animator.SetFloat(_animIDMovingDirB, _TempMovingDirB);
+                _animator.SetFloat(_animIDMovingDirF, 0);
+            }else if (FoB == 0)
+            {
+                _animator.SetFloat(_animIDFoB, FoB);
+                _animator.SetFloat(_animIDMovingDirB, 0);
+                _animator.SetFloat(_animIDMovingDirF, 0);
+            }
+
+
+
 
         }
 
@@ -818,6 +895,18 @@ namespace StarterAssets
                     var index = Random.Range(0, FootstepAudioClips.Length);
                     AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
                 }
+            }
+        }
+
+        private void AimingStatus()
+        {
+            if (tpsshootcontroller.isAiming)
+            {
+                isAiming = true;
+            }
+            else
+            {
+                isAiming = false;
             }
         }
 
