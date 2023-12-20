@@ -386,7 +386,14 @@ namespace StarterAssets
                 {
                     DetectedResult = true;  //设定Reselt为True
                     _isCrouching = true;    //设置保持下蹲状态
-                    targetSpeed = CrouchSpeed;  //速度切换为下蹲速度
+                    if (isAiming)
+                    {
+                        targetSpeed = CrouchingAimSpeed;
+                    }
+                    else
+                    {
+                        targetSpeed = CrouchSpeed;
+                    }
                 }
                 else
                 {
