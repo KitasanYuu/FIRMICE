@@ -8,7 +8,7 @@ namespace Detector
 
     public class RayDectec : MonoBehaviour
     {
-        private TPSShootController tpsShootController;
+        public TPSShootController tpsShootController;
 
         public bool isBlockedL = false;
         public bool isBlockedR = false;
@@ -19,11 +19,6 @@ namespace Detector
 
         private int frameCount = 0; // 当前帧计数器
         [SerializeField] private int detectionInterval = 10; // 检测间隔，每10帧进行一次检测
-
-        private void Awake()
-        {
-            tpsShootController = FindObjectOfType<TPSShootController>();
-        }
 
         private void Update()
         {
