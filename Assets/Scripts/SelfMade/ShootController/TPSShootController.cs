@@ -4,11 +4,10 @@ using UnityEngine;
 using Cinemachine;
 using StarterAssets;
 using UnityEngine.InputSystem;
-using AimAvoidedL;
-using AimAvoidedR;
 using UnityEngine.UI;
 using System.Runtime.CompilerServices;
 using RootMotion.FinalIK;
+using Detector;
 
 namespace playershooting
 {
@@ -41,10 +40,9 @@ namespace playershooting
 
         // 角色控制器和输入
         private Animator _animator;
-        private AimAviodL aimaviodl;
-        private AimAviodR aimaviodr;
         private AvatarController avatarController;
         private StarterAssetsInputs starterAssetsInputs;
+        public RayDectec rayDectec;
         public GameObject corshair;
 
         private bool _hasAnimator;
@@ -62,8 +60,6 @@ namespace playershooting
             // 获取角色控制器和输入
             avatarController = GetComponent<AvatarController>();
             starterAssetsInputs = GetComponent<StarterAssetsInputs>();
-            aimaviodl = FindObjectOfType<AimAviodL>();
-            aimaviodr = FindObjectOfType<AimAviodR>();
         }
         private void Start()
         {
@@ -203,37 +199,43 @@ namespace playershooting
 
             if (thirdPersonFollow != null)
             {
-                // 根据条件调整 targetCameraSide 值
-                if (aimaviodl.isBlockedL)
+                if (rayDectec != null)
                 {
-                    targetCameraSide = 1;
-                    isBlocked = true;
-
-                }
-                if (aimaviodr.isBlockedR)
-                {
-                    targetCameraSide = 0;
-                    isBlocked = true;
-                }
-                if (!aimaviodl.isBlockedL && !aimaviodr.isBlockedR)
-                {
-                    isBlocked = false;
-                }
-
-                if (!isBlocked && swaKeyPressed)
-                {
-                    if (targetCameraSide == 0)
+                    // 根据条件调整 targetCameraSide 值
+                    if (rayDectec.isBlockedL)
                     {
                         targetCameraSide = 1;
+                        isBlocked = true;
+
                     }
-                    else
+                    if (rayDectec.isBlockedR)
                     {
                         targetCameraSide = 0;
+                        isBlocked = true;
                     }
-                }
-                // 平滑地过渡 CameraSide 的值
-                thirdPersonFollow.CameraSide = Mathf.Lerp(thirdPersonFollow.CameraSide, targetCameraSide, transitionSpeed * Time.deltaTime);
+                    if (!rayDectec.isBlockedL && !rayDectec.isBlockedR)
+                    {
+                        isBlocked = false;
+                    }
 
+                    if (!isBlocked && swaKeyPressed)
+                    {
+                        if (targetCameraSide == 0)
+                        {
+                            targetCameraSide = 1;
+                        }
+                        else
+                        {
+                            targetCameraSide = 0;
+                        }
+                    }
+                    // 平滑地过渡 CameraSide 的值
+                    thirdPersonFollow.CameraSide = Mathf.Lerp(thirdPersonFollow.CameraSide, targetCameraSide, transitionSpeed * Time.deltaTime);
+                }
+                else
+                {
+                    Debug.LogError("rayDetec No Value");
+                }
             }
         }
         // 根据 CameraSide 计算目标位置
