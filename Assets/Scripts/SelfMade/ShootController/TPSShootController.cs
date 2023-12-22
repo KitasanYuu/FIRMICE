@@ -42,7 +42,7 @@ namespace playershooting
         private Animator _animator;
         private AvatarController avatarController;
         private StarterAssetsInputs starterAssetsInputs;
-        public RayDectec rayDectec;
+        private RayDectec rayDectec;
         public GameObject corshair;
 
         private bool _hasAnimator;
@@ -60,6 +60,7 @@ namespace playershooting
             // 获取角色控制器和输入
             avatarController = GetComponent<AvatarController>();
             starterAssetsInputs = GetComponent<StarterAssetsInputs>();
+            rayDectec = GetComponent<RayDectec>();
         }
         private void Start()
         {
