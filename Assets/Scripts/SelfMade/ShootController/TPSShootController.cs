@@ -42,7 +42,7 @@ namespace playershooting
         private Animator _animator;
         private AvatarController avatarController;
         private StarterAssetsInputs starterAssetsInputs;
-        public RayDectec rayDectec;
+        private RayDectec rayDectec;
         public GameObject corshair;
 
         private bool _hasAnimator;
@@ -60,6 +60,7 @@ namespace playershooting
             // 获取角色控制器和输入
             avatarController = GetComponent<AvatarController>();
             starterAssetsInputs = GetComponent<StarterAssetsInputs>();
+            rayDectec = GetComponent<RayDectec>();
         }
         private void Start()
         {
@@ -93,7 +94,7 @@ namespace playershooting
                 aimVirtualCamera.Priority = 20;
                 avatarController.SetSensitivity(aimSensitivity);
                 avatarController.SetRotateOnMove(false);
-                corshair.SetActive(true);
+
                 ShootSiteChange();
 
                 Vector3 worldAimTarget = mouseWorldPosition;
@@ -111,6 +112,11 @@ namespace playershooting
                     targetShoulderOffsetY,
                     Time.deltaTime * transitionspeed
                 );
+
+                if (corshair != null)
+                {
+                    corshair.SetActive(true);
+                }
 
                 if (_hasAnimator)
                 {
@@ -139,8 +145,12 @@ namespace playershooting
                 aimVirtualCamera.Priority = 5;
                 avatarController.SetSensitivity(normalSensitivity);
                 avatarController.SetRotateOnMove(newRorareOnMove: true);
-                corshair.SetActive(false);
                 gameObject.GetComponent<AimIK>().enabled = false;
+
+                if (corshair != null)
+                {
+                    corshair.SetActive(false);
+                }
 
                 if (_hasAnimator)
                 {
