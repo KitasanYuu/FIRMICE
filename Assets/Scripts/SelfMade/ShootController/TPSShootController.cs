@@ -94,7 +94,7 @@ namespace playershooting
                 aimVirtualCamera.Priority = 20;
                 avatarController.SetSensitivity(aimSensitivity);
                 avatarController.SetRotateOnMove(false);
-                corshair.SetActive(true);
+
                 ShootSiteChange();
 
                 Vector3 worldAimTarget = mouseWorldPosition;
@@ -112,6 +112,11 @@ namespace playershooting
                     targetShoulderOffsetY,
                     Time.deltaTime * transitionspeed
                 );
+
+                if (corshair != null)
+                {
+                    corshair.SetActive(true);
+                }
 
                 if (_hasAnimator)
                 {
@@ -140,8 +145,12 @@ namespace playershooting
                 aimVirtualCamera.Priority = 5;
                 avatarController.SetSensitivity(normalSensitivity);
                 avatarController.SetRotateOnMove(newRorareOnMove: true);
-                corshair.SetActive(false);
                 gameObject.GetComponent<AimIK>().enabled = false;
+
+                if (corshair != null)
+                {
+                    corshair.SetActive(false);
+                }
 
                 if (_hasAnimator)
                 {
