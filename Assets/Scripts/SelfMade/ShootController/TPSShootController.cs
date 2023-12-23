@@ -262,7 +262,7 @@ namespace playershooting
         void AimIKStatus(int status)
         {
             AimIKParameter = status;
-            Debug.Log(AimIKParameter);
+            //Debug.Log(AimIKParameter);
         }
 
     }

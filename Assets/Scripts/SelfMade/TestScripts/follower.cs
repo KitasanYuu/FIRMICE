@@ -48,7 +48,7 @@ public class Follower : MonoBehaviour
 
         if (targetToFollow != null)
         {
-            Debug.Log(isInsideSector);
+            //Debug.Log(isInsideSector);
             bool hasMoved = Vector3.Distance(targetToFollow.position, lastTargetPosition) > 0.01f;
 
             if (hasMoved)
@@ -62,11 +62,10 @@ public class Follower : MonoBehaviour
                 {
                     // 当目标停止移动时，重新检查是否在扇形内
                     isInsideSector = IsInSector(transform.position);
-                    Debug.LogError("FuckOFF");
                 }
                 if (canGeneratePoint && !isInsideSector)
                 {
-                    Debug.Log("Allow to Spwan Point");
+                    //Debug.Log("Allow to Spwan Point");
                     if (hasReachedTargetPoint)
                     {
                         // 只有在到达当前目标点后，才更新下一个目标点
@@ -181,9 +180,6 @@ public class Follower : MonoBehaviour
         }
 
     }
-
-
-
 
     void OnDrawGizmos()
     {
