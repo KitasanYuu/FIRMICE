@@ -6,7 +6,7 @@ using Cinemachine;
 [CustomEditor(typeof(AvatarController))]
 public class ControllerGUI : Editor
 {
-    SerializedObject serializedObject; // 创建一个SerializedObject来编辑目标脚本的属性
+    new SerializedObject serializedObject; // 创建一个SerializedObject来编辑目标脚本的属性
     private int selectedTab = 0;
     private Texture2D logo;
 

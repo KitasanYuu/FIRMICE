@@ -138,8 +138,6 @@ namespace StarterAssets
         private float _verticalVelocity;
         private float _terminalVelocity = 53.0f;
 
-        Animator animator;
-
         private const string JetStatusParam = "JetStatus";
         private const float ThresholdValue = 1.0f;
 
@@ -208,7 +206,7 @@ namespace StarterAssets
 
         private void Awake()
         {
-            tpsshootcontroller = GetComponent<TPSShootController>();
+
             // get a reference to our main camera
             if (_mainCamera == null)
             {
@@ -225,9 +223,9 @@ namespace StarterAssets
                 targetFov = virtualCamera.m_Lens.FieldOfView;
             }
 
+            tpsshootcontroller = GetComponent<TPSShootController>();
             _characterController = playerAmature.GetComponent<CharacterController>();
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-            animator = GetComponent<Animator>();
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
@@ -712,7 +710,7 @@ namespace StarterAssets
 
         private void JetON()
         {
-            float currentValue = animator.GetFloat(JetStatusParam);
+            float currentValue = _animator.GetFloat(JetStatusParam);
             if (currentValue == 0)
             {
                 _animator.SetFloat(_animIDJetStatus, 1.0f);
