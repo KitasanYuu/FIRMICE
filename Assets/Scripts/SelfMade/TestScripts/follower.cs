@@ -4,6 +4,7 @@ using UnityEngine.AI;
 using Pathfinding;
 using System.Collections.Generic;
 using TMPro;
+using StarterAssets;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -23,12 +24,23 @@ namespace Partner
         // 设置加速的阈值距离和加速速度
         public float accelerationDistance = 5.0f; // 你希望加速的距离阈值
         public float accelerationSpeed = 7.0f;    // 你希望达到的加速速度
+        public float rotationSpeed = 5.0f;
         private Vector3 currentTargetPoint;
         private Vector3 lastTargetPosition;
         private bool isInsideSector;
         private bool canGeneratePoint;
         private bool hasReachedTargetPoint = true; // 初始设为true，以允许首次目标点的设置
-        public float rotationSpeed = 5.0f;
+        private Vector3 Destination;
+
+        //这里为了在两种跟随模式下切换设定几个中立的速度变量
+        private float FSpeed;
+        private float FSprintSpeed;
+        private float FCrouchingSpeed;
+        private float FAimSpeed;
+
+        //直接取到AvatarController中的值
+        private AvatarController avatarController;
+
 
         //以下是Astar算法所用的参数
         private Seeker seeker;
@@ -41,7 +53,7 @@ namespace Partner
         //这里是仅用作外部调取的函数
         public Vector3 MoveDirection;//用于外部获取角色方向
         public Vector3 CTargetPosition;//用于外部获取目标点
-
+        
         private float currentSpeed;
 
         //测试函数
@@ -51,7 +63,7 @@ namespace Partner
             GetComponent();
             FollowTargetInit();
 
-            seeker.pathCallback += OnPathComplete; //在每次回调成功后把新路径点加在数组后面
+
 
         }
 
@@ -68,6 +80,8 @@ namespace Partner
         {
             Vector3 TargetPosition = targetToFollow.transform.TransformPoint(currentTargetPoint);
             seeker.StartPath(transform.position, TargetPosition);
+
+            seeker.pathCallback += OnPathComplete; //在每次回调成功后把新路径点加在数组后面
         }
 
         //一个方法，用来在回调后保存Path数组的值
@@ -83,7 +97,9 @@ namespace Partner
 
             //下面是移动方法的调用
             AStarMoving();
+
             //MoveTowardsTarget();
+
             //navMeshAgent.SetDestination(targetToFollow.TransformPoint(currentTargetPoint));
             //Debug.Log(navMeshPath.status);
             //hasReachedTargetPoint = true;
@@ -96,6 +112,9 @@ namespace Partner
             //navMeshPath = new NavMeshPath();
 
             seeker = GetComponent<Seeker>();
+            avatarController = targetToFollow.GetComponent<AvatarController>();
+            if (avatarController != null) { Debug.Log("Follower - AvatarController Initialized!"); }
+
         }
 
         //用于在Star方法中初始化随机跟随目标的生成
@@ -254,20 +273,28 @@ namespace Partner
         }
 
         //使用A*寻路移动的功能
-        protected void AStarMoving()
+        private void AStarMoving()
         {
             //这里用if是因为在抵达目标点一瞬间数组会只有一位数0，此时Vector3 aimPoint[1]会取不到值
             int Count = aimPoint.Count;
-            Vector3 Destination;
             //Debug.LogError(Count);
 
-            if(Count == 1)
+            if (Count == 1)
             {
                 Destination = aimPoint[index: 0];
             }
-            else
+            else if(Count >=1)
             {
                 Destination = aimPoint[index: 1];
+            }
+            else if(Count ==0)
+            {
+                Debug.LogError("Follower:The List Count is 0!");
+                return;
+            }
+            else
+            {
+                Debug.LogError("Follower:The List Count Take" + Count);
             }
 
             float distanceToTarget = CalculateTotalLength(aimPoint);
@@ -277,18 +304,22 @@ namespace Partner
 
             if (distanceToTarget > stoppingDistance)
             {
+                SpeedJudging();
+
                 // 计算当前速度，使其逐渐减小直到0
                 currentSpeed = followSpeed * (distanceToTarget / stoppingDistance);
 
                 if (distanceToTarget > accelerationDistance)
                 {
                     // 如果距离小于加速的阈值距离，使用加速速度
-                    currentSpeed = accelerationSpeed;
+                    currentSpeed = FSprintSpeed;
                 }
-                else if (currentSpeed > followSpeed)
+                else if (currentSpeed > FSpeed)
                 {
-                    currentSpeed = followSpeed;
+                    currentSpeed = FSpeed;
                 }
+
+                //Debug.Log("Follower #315 CurrentSpeed:" + currentSpeed);
 
                 if (aimPoint != null && aimPoint.Count != 0)
                 {
@@ -324,6 +355,20 @@ namespace Partner
                 isInsideSector = true;
                 hasReachedTargetPoint = true;
                 //Debug.LogWarning("REACHED TARGET POINT");
+            }
+        }
+
+        protected void SpeedJudging()
+        {
+            if (avatarController != null)
+            {
+                FSpeed = avatarController.MoveSpeed - 0.5f;
+                FSprintSpeed = avatarController.SprintSpeed - 1.0f;
+            }
+            else
+            {
+                FSpeed = followSpeed;
+                FSprintSpeed = accelerationSpeed;
             }
         }
 
