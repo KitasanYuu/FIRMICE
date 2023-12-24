@@ -53,7 +53,7 @@ namespace Partner
         //这里是仅用作外部调取的函数
         public Vector3 MoveDirection;//用于外部获取角色方向
         public Vector3 CTargetPosition;//用于外部获取目标点
-        
+        public float CSpeed;
         private float currentSpeed;
 
         //测试函数
@@ -319,15 +319,19 @@ namespace Partner
                     currentSpeed = FSpeed;
                 }
 
-                //Debug.Log("Follower #315 CurrentSpeed:" + currentSpeed);
+                Debug.Log("Follower #315 CurrentSpeed:" + currentSpeed);
 
                 if (aimPoint != null && aimPoint.Count != 0)
                 {
                     // 计算移动方向
                     Vector3 MoveDir = (aimPoint[1] - transform.position).normalized;
                     //Debug.Log(currentSpeed);
+
+                    CSpeed = currentSpeed;
+
                     //移动角色
                     transform.position = Vector3.MoveTowards(transform.position, Destination, currentSpeed * Time.deltaTime);
+
 
                     // 使物体朝向移动方向
                     if (MoveDir != Vector3.zero)
@@ -351,6 +355,8 @@ namespace Partner
             }
             else
             {
+                currentSpeed = 0;
+                CSpeed = currentSpeed;
                 //移动完成后跟随者是肯定在目标点刷新范围内的
                 isInsideSector = true;
                 hasReachedTargetPoint = true;
@@ -362,7 +368,7 @@ namespace Partner
         {
             if (avatarController != null)
             {
-                FSpeed = avatarController.MoveSpeed - 0.5f;
+                FSpeed = avatarController.MoveSpeed;
                 FSprintSpeed = avatarController.SprintSpeed - 1.0f;
             }
             else
@@ -387,7 +393,7 @@ namespace Partner
         }
 
 
-
+#if UNITY_EDITOR
         //下面是Gizmos上的绘制，仅在编辑视角生效
         void OnDrawGizmos()
         {
@@ -421,7 +427,6 @@ namespace Partner
             }
         }
 
-#if UNITY_EDITOR
         // Helper method to draw the sector
         void DrawSector(Vector3 center, Vector3 direction, float radius, float angle)
         {
