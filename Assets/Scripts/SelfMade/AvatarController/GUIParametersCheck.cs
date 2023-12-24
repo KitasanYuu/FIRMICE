@@ -1,8 +1,10 @@
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using StarterAssets;
 
-
+#if UNITY_EDITOR
 public class GUIParametersCheck : EditorWindow
 {
     private AvatarController avatarController;
@@ -51,3 +53,4 @@ public class GUIParametersCheck : EditorWindow
     }
 
 }
+#endif
