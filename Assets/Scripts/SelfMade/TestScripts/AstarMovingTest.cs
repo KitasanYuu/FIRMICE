@@ -1,3 +1,7 @@
+//这是A*算法寻路的移动基础示例
+//默认是使用鼠标点击Game上的地格来实现移动的
+//只有Capsule被正确设置了，那个FollowTest是测试Follow脚本的
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,7 +24,7 @@ public class AstarMovingTest : MonoBehaviour
     void Start()
     {
         seeker = GetComponent<Seeker>();
-        follower = GetComponent<Follower>();
+        //follower = GetComponent<Follower>();
 
         seeker.pathCallback += OnPathComplete;
 
@@ -30,11 +34,17 @@ public class AstarMovingTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(Input.GetMouseButtonDown(0))
+        {
+            RaycastHit hitinfo;
+            //这个只对主摄像机生效
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        RTargetPosition = follower.CTargetPosition;
-        TargetPosition = follower.targetToFollow.transform.TransformPoint(RTargetPosition);
-        seeker.StartPath(transform.position, TargetPosition);
-        //TargetPosition = follower.targetToFollow.position;
+            if(Physics.Raycast(ray, out hitinfo))
+            {
+                seeker.StartPath(transform.position,hitinfo.point);
+            }
+        }
 
 
         MovingBehavior();
@@ -54,6 +64,7 @@ public class AstarMovingTest : MonoBehaviour
         aimPoint = new List<Vector3>(path.vectorPath);
     }
 
+    //要搬的话这边啥也别改，因为检测的是Seeker上的回调的点
     private void MovingBehavior()
     {
         if (aimPoint != null && aimPoint.Count != 0)
@@ -63,15 +74,11 @@ public class AstarMovingTest : MonoBehaviour
 
             transform.position = Vector3.MoveTowards(transform.position, Destination, 3 * Time.deltaTime);
 
-
             // 使物体朝向移动方向
             if (MoveDir != Vector3.zero)
             {
                 // 计算目标朝向
                 Quaternion targetRotation = Quaternion.LookRotation(MoveDir);
-
-                //Debug.LogError(targetRotation);
-                //Debug.LogWarning(transform.rotation);
 
                 // 使用Slerp插值来平滑地转向目标朝向
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
