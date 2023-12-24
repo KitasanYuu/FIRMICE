@@ -4,7 +4,6 @@ using UnityEngine;
 using Cinemachine;
 using StarterAssets;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 using System.Runtime.CompilerServices;
 using RootMotion.FinalIK;
 using Detector;
@@ -14,31 +13,32 @@ namespace playershooting
 
     public class TPSShootController : MonoBehaviour
     {
-        // ÓÃÓÚÃé×¼µÄĞéÄâÏà»ú
+        // ç”¨äºç„å‡†çš„è™šæ‹Ÿç›¸æœº
         [SerializeField] private CinemachineVirtualCamera aimVirtualCamera;
-        // ÆÕÍ¨ÁéÃô¶ÈºÍÃé×¼ÁéÃô¶È
+        // æ™®é€šçµæ•åº¦å’Œç„å‡†çµæ•åº¦
         [SerializeField] private float normalSensitivity;
         [SerializeField] private float aimSensitivity;
-        // Ãé×¼Ê±ÉäÏß¼ì²âµÄLayerMask
+        // ç„å‡†æ—¶å°„çº¿æ£€æµ‹çš„LayerMask
         [SerializeField] private LayerMask aimColliderLayerMask = new LayerMask();
-        // ÓÃÓÚµ÷ÊÔÏÔÊ¾µÄTransform
+        // ç”¨äºè°ƒè¯•æ˜¾ç¤ºçš„Transform
         [SerializeField] private Transform debugTransform;
-        // ×Óµ¯Ô¤ÖÆ¼ş»òÓÎÏ·¶ÔÏó
+        // å­å¼¹é¢„åˆ¶ä»¶æˆ–æ¸¸æˆå¯¹è±¡
         [SerializeField] private GameObject bulletPrefab;
-        // ×Óµ¯Éú³ÉÎ»ÖÃºÍËÙ¶È
+        // å­å¼¹ç”Ÿæˆä½ç½®
         [SerializeField] private Transform spawnBulletPosition;
+        // å­å¼¹ç”Ÿæˆåçš„é€Ÿåº¦
         [SerializeField] public float bulletspeed;
 
         public bool isAiming = false;
         public float targetCameraSide = 1;
-        public float transitionSpeed = 0.5f; // µ÷Õû¹ı¶ÉËÙ¶ÈµÄÖµ
+        public float transitionSpeed = 0.5f; // è°ƒæ•´è¿‡æ¸¡é€Ÿåº¦çš„å€¼
         public bool isBlocked = false;
-        public bool swaKeyPressed = false; // ÓÃÓÚ¸ú×Ù°´¼ü×´Ì¬
+        public bool swaKeyPressed = false; // ç”¨äºè·Ÿè¸ªæŒ‰é”®çŠ¶æ€
 
         public float CrouchingY = -0.5f;
         public float OriginY = -0.4f;
 
-        // ½ÇÉ«¿ØÖÆÆ÷ºÍÊäÈë
+        // è§’è‰²æ§åˆ¶å™¨å’Œè¾“å…¥
         private Animator _animator;
         private AvatarController avatarController;
         private StarterAssetsInputs starterAssetsInputs;
@@ -51,13 +51,13 @@ namespace playershooting
         private int _animIDAimStatus;
 
         float lastShootTime = 0f;
-        public float fireRate = 0.5f; // 0.5ÃëÎªÀı£¬¿ÉÒÔ¸ù¾İĞèÒªµ÷ÕûÉäËÙ
+        public float fireRate = 0.5f; // 0.5ç§’ä¸ºä¾‹ï¼Œå¯ä»¥æ ¹æ®éœ€è¦è°ƒæ•´å°„é€Ÿ
 
         public int AimIKParameter;
 
         private void Awake()
         {
-            // »ñÈ¡½ÇÉ«¿ØÖÆÆ÷ºÍÊäÈë
+            // è·å–è§’è‰²æ§åˆ¶å™¨å’Œè¾“å…¥
             avatarController = GetComponent<AvatarController>();
             starterAssetsInputs = GetComponent<StarterAssetsInputs>();
             rayDectec = GetComponent<RayDectec>();
@@ -78,7 +78,7 @@ namespace playershooting
 
             _hasAnimator = TryGetComponent(out _animator);
 
-            // »ñÈ¡Êó±êÔÚÊÀ½ç¿Õ¼äÖĞµÄÎ»ÖÃ
+            // è·å–é¼ æ ‡åœ¨ä¸–ç•Œç©ºé—´ä¸­çš„ä½ç½®
             Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
             Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
             if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimColliderLayerMask))
@@ -87,7 +87,7 @@ namespace playershooting
                 mouseWorldPosition = raycastHit.point;
             }
 
-            // Ãé×¼
+            // ç„å‡†
             if (starterAssetsInputs.aim)
             {
                 isAiming = true;
@@ -104,9 +104,9 @@ namespace playershooting
                 transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * 20f);
 
                 float targetShoulderOffsetY = avatarController._isCrouching ? CrouchingY : OriginY;
-                float transitionspeed = 5f; // µ÷Õû¹ı¶ÉËÙ¶È
+                float transitionspeed = 5f; // è°ƒæ•´è¿‡æ¸¡é€Ÿåº¦
 
-                // Ê¹ÓÃ²åÖµÖğ½¥¸Ä±ä ShoulderOffset.y µÄÖµ
+                // ä½¿ç”¨æ’å€¼é€æ¸æ”¹å˜ ShoulderOffset.y çš„å€¼
                 aimVirtualCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>().ShoulderOffset.y = Mathf.Lerp(
                     aimVirtualCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>().ShoulderOffset.y,
                     targetShoulderOffsetY,
@@ -140,7 +140,7 @@ namespace playershooting
             }
             else
             {
-                // È¡ÏûÃé×¼
+                // å–æ¶ˆç„å‡†
                 isAiming = false;
                 aimVirtualCamera.Priority = 5;
                 avatarController.SetSensitivity(normalSensitivity);
@@ -158,19 +158,19 @@ namespace playershooting
                 }
             }
 
-            // ¿ª»ğ
+            // å¼€ç«
             if (starterAssetsInputs.shoot && isAiming)
             {
-                // »ñÈ¡µ±Ç°Ê±¼ä
+                // è·å–å½“å‰æ—¶é—´
                 float currentTime = Time.time;
 
                 if (currentTime - lastShootTime > fireRate)
                 {
 
                     Vector3 aimDir = (mouseWorldPosition - spawnBulletPosition.position).normalized;
-                    // Éú³É×Óµ¯ÊµÀı
+                    // ç”Ÿæˆå­å¼¹å®ä¾‹
                     GameObject bulletInstance = Instantiate(bulletPrefab, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
-                    // »ñÈ¡×Óµ¯½Å±¾²¢ÉèÖÃËÙ¶È
+                    // è·å–å­å¼¹è„šæœ¬å¹¶è®¾ç½®é€Ÿåº¦
                     BulletTest bullettest = bulletInstance.GetComponent<BulletTest>();
                     if (bullettest != null)
                     {
@@ -198,20 +198,20 @@ namespace playershooting
 
             if (!isBlocked && swaKeyPressed)
             {
-                swaKeyPressed = false; // ÖØÖÃ°´¼ü×´Ì¬
+                swaKeyPressed = false; // é‡ç½®æŒ‰é”®çŠ¶æ€
             }
 
-            // ¼ì²â°´¼ü°´ÏÂÊÂ¼ş
-            if (Input.GetKeyDown(KeyCode.Tab)) // ÓÃÄãÏëÒªµÄ°´¼üÌæ»» YourKey
+            // æ£€æµ‹æŒ‰é”®æŒ‰ä¸‹äº‹ä»¶
+            if (Input.GetKeyDown(KeyCode.Tab)) // ç”¨ä½ æƒ³è¦çš„æŒ‰é”®æ›¿æ¢ YourKey
             {
-                swaKeyPressed = true; // ÉèÖÃ°´¼ü×´Ì¬Îª true
+                swaKeyPressed = true; // è®¾ç½®æŒ‰é”®çŠ¶æ€ä¸º true
             }
 
             if (thirdPersonFollow != null)
             {
                 if (rayDectec != null)
                 {
-                    // ¸ù¾İÌõ¼şµ÷Õû targetCameraSide Öµ
+                    // æ ¹æ®æ¡ä»¶è°ƒæ•´ targetCameraSide å€¼
                     if (rayDectec.isBlockedL)
                     {
                         targetCameraSide = 1;
@@ -239,7 +239,7 @@ namespace playershooting
                             targetCameraSide = 0;
                         }
                     }
-                    // Æ½»¬µØ¹ı¶É CameraSide µÄÖµ
+                    // å¹³æ»‘åœ°è¿‡æ¸¡ CameraSide çš„å€¼
                     thirdPersonFollow.CameraSide = Mathf.Lerp(thirdPersonFollow.CameraSide, targetCameraSide, transitionSpeed * Time.deltaTime);
                 }
                 else
@@ -248,14 +248,14 @@ namespace playershooting
                 }
             }
         }
-        // ¸ù¾İ CameraSide ¼ÆËãÄ¿±êÎ»ÖÃ
+        // æ ¹æ® CameraSide è®¡ç®—ç›®æ ‡ä½ç½®
 
         private Vector3 CalculateTargetPosition(float cameraSide)
         {
-            // ÕâÀï¸ù¾İ CameraSide µÄÖµ¼ÆËãÄ¿±êÎ»ÖÃ£¬·µ»ØÒ»¸ö Vector3
-            // Çë¸ù¾İÄãµÄÂß¼­ÊµÏÖ¼ÆËãÄ¿±êÎ»ÖÃµÄ·½·¨
-            // Õâ¸ö·½·¨ĞèÒª¸ù¾İÉãÏñ»úºÍÄ¿±êÎ»ÖÃµÄÏà¶ÔÎ»ÖÃÀ´·µ»ØÒ»¸ö Vector3 ÀàĞÍµÄÄ¿±êÎ»ÖÃ
-            // ÀıÈç£º¸ù¾İÉãÏñ»úµ±Ç°Î»ÖÃºÍ·½Ïò£¬¼ÓÉÏ CameraSide Æ«ÒÆÁ¿À´¼ÆËãÄ¿±êÎ»ÖÃ
+            // è¿™é‡Œæ ¹æ® CameraSide çš„å€¼è®¡ç®—ç›®æ ‡ä½ç½®ï¼Œè¿”å›ä¸€ä¸ª Vector3
+            // è¯·æ ¹æ®ä½ çš„é€»è¾‘å®ç°è®¡ç®—ç›®æ ‡ä½ç½®çš„æ–¹æ³•
+            // è¿™ä¸ªæ–¹æ³•éœ€è¦æ ¹æ®æ‘„åƒæœºå’Œç›®æ ‡ä½ç½®çš„ç›¸å¯¹ä½ç½®æ¥è¿”å›ä¸€ä¸ª Vector3 ç±»å‹çš„ç›®æ ‡ä½ç½®
+            // ä¾‹å¦‚ï¼šæ ¹æ®æ‘„åƒæœºå½“å‰ä½ç½®å’Œæ–¹å‘ï¼ŒåŠ ä¸Š CameraSide åç§»é‡æ¥è®¡ç®—ç›®æ ‡ä½ç½®
             return Vector3.zero;
         }
 

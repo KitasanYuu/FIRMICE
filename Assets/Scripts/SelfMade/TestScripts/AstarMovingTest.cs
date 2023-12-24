@@ -1,6 +1,6 @@
-//ÕâÊÇA*Ëã·¨Ñ°Â·µÄÒÆ¶¯»ù´¡Ê¾Àı
-//Ä¬ÈÏÊÇÊ¹ÓÃÊó±êµã»÷GameÉÏµÄµØ¸ñÀ´ÊµÏÖÒÆ¶¯µÄ
-//Ö»ÓĞCapsule±»ÕıÈ·ÉèÖÃÁË£¬ÄÇ¸öFollowTestÊÇ²âÊÔFollow½Å±¾µÄ
+//è¿™æ˜¯A*ç®—æ³•å¯»è·¯çš„ç§»åŠ¨åŸºç¡€ç¤ºä¾‹
+//é»˜è®¤æ˜¯ä½¿ç”¨é¼ æ ‡ç‚¹å‡»Gameä¸Šçš„åœ°æ ¼æ¥å®ç°ç§»åŠ¨çš„
+//åªæœ‰Capsuleè¢«æ­£ç¡®è®¾ç½®äº†ï¼Œé‚£ä¸ªFollowTestæ˜¯æµ‹è¯•Followè„šæœ¬çš„
 
 using System.Collections;
 using System.Collections.Generic;
@@ -34,29 +34,29 @@ public class AstarMovingTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             RaycastHit hitinfo;
-            //Õâ¸öÖ»¶ÔÖ÷ÉãÏñ»úÉúĞ§
+            //è¿™ä¸ªåªå¯¹ä¸»æ‘„åƒæœºç”Ÿæ•ˆ
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if(Physics.Raycast(ray, out hitinfo))
+            if (Physics.Raycast(ray, out hitinfo))
             {
-                seeker.StartPath(transform.position,hitinfo.point);
+                seeker.StartPath(transform.position, hitinfo.point);
             }
         }
 
 
         MovingBehavior();
 
-        // ¼ÆËã×Ü³¤¶È
+        // è®¡ç®—æ€»é•¿åº¦
         //float totalLength = CalculateTotalLength(aimPoint);
-        //Debug.LogWarning("×Ü³¤¶È£º" + totalLength);
+        //Debug.LogWarning("æ€»é•¿åº¦ï¼š" + totalLength);
     }
 
     private void FixedUpdate()
     {
- 
+
     }
 
     void OnPathComplete(Path path)
@@ -64,7 +64,7 @@ public class AstarMovingTest : MonoBehaviour
         aimPoint = new List<Vector3>(path.vectorPath);
     }
 
-    //Òª°áµÄ»°Õâ±ßÉ¶Ò²±ğ¸Ä£¬ÒòÎª¼ì²âµÄÊÇSeekerÉÏµÄ»Øµ÷µÄµã
+    //è¦æ¬çš„è¯è¿™è¾¹å•¥ä¹Ÿåˆ«æ”¹ï¼Œå› ä¸ºæ£€æµ‹çš„æ˜¯Seekerä¸Šçš„å›è°ƒçš„ç‚¹
     private void MovingBehavior()
     {
         if (aimPoint != null && aimPoint.Count != 0)
@@ -74,13 +74,13 @@ public class AstarMovingTest : MonoBehaviour
 
             transform.position = Vector3.MoveTowards(transform.position, Destination, 3 * Time.deltaTime);
 
-            // Ê¹ÎïÌå³¯ÏòÒÆ¶¯·½Ïò
+            // ä½¿ç‰©ä½“æœå‘ç§»åŠ¨æ–¹å‘
             if (MoveDir != Vector3.zero)
             {
-                // ¼ÆËãÄ¿±ê³¯Ïò
+                // è®¡ç®—ç›®æ ‡æœå‘
                 Quaternion targetRotation = Quaternion.LookRotation(MoveDir);
 
-                // Ê¹ÓÃSlerp²åÖµÀ´Æ½»¬µØ×ªÏòÄ¿±ê³¯Ïò
+                // ä½¿ç”¨Slerpæ’å€¼æ¥å¹³æ»‘åœ°è½¬å‘ç›®æ ‡æœå‘
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
             }
 
@@ -95,7 +95,7 @@ public class AstarMovingTest : MonoBehaviour
     {
         float totalLength = 0f;
 
-        // ±éÀúµãÁĞ±í£¬¼ÆËãÏàÁÚµãÖ®¼äµÄ¾àÀë²¢Ïà¼Ó
+        // éå†ç‚¹åˆ—è¡¨ï¼Œè®¡ç®—ç›¸é‚»ç‚¹ä¹‹é—´çš„è·ç¦»å¹¶ç›¸åŠ 
         for (int i = 0; i < points.Count - 1; i++)
         {
             totalLength += Vector3.Distance(points[i], points[i + 1]);

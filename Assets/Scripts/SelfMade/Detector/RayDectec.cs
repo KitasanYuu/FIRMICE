@@ -5,30 +5,30 @@ using UnityEngine;
 
 namespace Detector
 {
-
     public class RayDectec : MonoBehaviour
     {
         private TPSShootController tpsShootController;
 
-        [Tooltip("¼ì²âÉäÏßµÄ³ö·¢µã")]
-        [SerializeField] private Transform rayOrigin; // ÉäÏßµÄ·¢³öµã
+        [Tooltip("æ£€æµ‹å°„çº¿çš„å‡ºå‘ç‚¹")]
+        [SerializeField] private Transform rayOrigin; // å°„çº¿çš„å‘å‡ºç‚¹
+        //æ£€æµ‹ä¸¤è¾¹é˜»ç¢çš„boolå‡½æ•°
         public bool isBlockedL = false;
         public bool isBlockedR = false;
         [SerializeField] private LayerMask AvoidColliderLayerMask;
-        [SerializeField] private float rayLength = 1.25f; // ÉäÏß³¤¶È
-        [SerializeField] private Vector3[] rayDirectionsL; // ÉäÏß·½ÏòÊı×éL
-        [SerializeField] private Vector3[] rayDirectionsR; // ÉäÏß·½ÏòÊı×éR
+        [SerializeField] private float rayLength = 1.25f; // å°„çº¿é•¿åº¦
+        [SerializeField] private Vector3[] rayDirectionsL; // å°„çº¿æ–¹å‘æ•°ç»„L
+        [SerializeField] private Vector3[] rayDirectionsR; // å°„çº¿æ–¹å‘æ•°ç»„R
 
 
 
-        private int frameCount = 0; // µ±Ç°Ö¡¼ÆÊıÆ÷
-        [SerializeField] private int detectionInterval = 30; // ¼ì²â¼ä¸ô£¬Ã¿30Ö¡½øĞĞÒ»´Î¼ì²â
+        private int frameCount = 0; // å½“å‰å¸§è®¡æ•°å™¨
+        [SerializeField] private int detectionInterval = 30; // æ£€æµ‹é—´éš”ï¼Œæ¯30å¸§è¿›è¡Œä¸€æ¬¡æ£€æµ‹
 
         private void Awake()
         {
             tpsShootController = GetComponent<TPSShootController>();
 
-            // Èç¹ûÃ»ÓĞÔÚ±à¼­Æ÷ÖĞÖ¸¶¨rayOrigin£¬¾ÍÊ¹ÓÃµ±Ç°ÎïÌåµÄTransform
+            // å¦‚æœæ²¡æœ‰åœ¨ç¼–è¾‘å™¨ä¸­æŒ‡å®šrayOriginï¼Œå°±ä½¿ç”¨å½“å‰ç‰©ä½“çš„Transform
             if (rayOrigin == null)
             {
                 rayOrigin = transform;
@@ -51,19 +51,19 @@ namespace Detector
             foreach (var direction in rayDirections)
             {
                 RaycastHit hit;
-                // Ê¹ÓÃrayOriginµÄÎ»ÖÃºÍ·½Ïò·¢³öÉäÏß
+                // ä½¿ç”¨rayOriginçš„ä½ç½®å’Œæ–¹å‘å‘å‡ºå°„çº¿
                 if (Physics.Raycast(rayOrigin.position, rayOrigin.TransformDirection(direction), out hit, rayLength, AvoidColliderLayerMask))
                 {
-                    // Èç¹û¼ì²âµ½ÁËÖ¸¶¨²ã¼¶µÄ¶ÔÏó£¬Ôò·µ»Øtrue±íÊ¾±»×èµ²
+                    // å¦‚æœæ£€æµ‹åˆ°äº†æŒ‡å®šå±‚çº§çš„å¯¹è±¡ï¼Œåˆ™è¿”å›trueè¡¨ç¤ºè¢«é˜»æŒ¡
                     Debug.DrawRay(rayOrigin.position, rayOrigin.TransformDirection(direction) * rayLength, Color.red);
-                    return true; // ¼ì²âµ½×èµ²£¬²»ĞèÒª¼ì²âÆäËû·½Ïò
+                    return true; // æ£€æµ‹åˆ°é˜»æŒ¡ï¼Œä¸éœ€è¦æ£€æµ‹å…¶ä»–æ–¹å‘
                 }
                 else
                 {
                     Debug.DrawRay(rayOrigin.position, rayOrigin.TransformDirection(direction) * rayLength, Color.green);
                 }
             }
-            return false; // Ã»ÓĞ¼ì²âµ½×èµ²
+            return false; // æ²¡æœ‰æ£€æµ‹åˆ°é˜»æŒ¡
         }
 
         private void Switcher()
@@ -72,13 +72,13 @@ namespace Detector
             {
                 if (tpsShootController.isAiming)
                 {
-                    // Ã¿¸ôdetectionIntervalÖ¡Ö´ĞĞÒ»´ÎÉäÏß¼ì²â
+                    // æ¯éš”detectionIntervalå¸§æ‰§è¡Œä¸€æ¬¡å°„çº¿æ£€æµ‹
                     if (frameCount >= detectionInterval)
                     {
                         PerformRayDetection();
-                        frameCount = 0; // ÖØÖÃÖ¡¼ÆÊıÆ÷
+                        frameCount = 0; // é‡ç½®å¸§è®¡æ•°å™¨
                     }
-                    frameCount++; // Ôö¼ÓÖ¡¼ÆÊıÆ÷
+                    frameCount++; // å¢åŠ å¸§è®¡æ•°å™¨
                 }
                 else
                 {
