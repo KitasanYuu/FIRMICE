@@ -1,12 +1,14 @@
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using StarterAssets;
 using Cinemachine;
 
-[CustomEditor(typeof(AvatarController))]
+#if UNITY_EDITOR
 public class ControllerGUI : Editor
 {
-    SerializedObject serializedObject; // 创建一个SerializedObject来编辑目标脚本的属性
+    new SerializedObject serializedObject; // 创建一个SerializedObject来编辑目标脚本的属性
     private int selectedTab = 0;
     private Texture2D logo;
 
@@ -183,3 +185,4 @@ public class ControllerGUI : Editor
     }
 
 }
+#endif

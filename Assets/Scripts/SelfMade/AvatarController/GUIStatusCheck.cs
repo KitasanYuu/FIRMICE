@@ -1,8 +1,11 @@
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using StarterAssets;
 using playershooting;
 
+#if UNITY_EDITOR
 public class GUIStatusCheck : EditorWindow
 {
     private AvatarController avatarController;
@@ -135,3 +138,4 @@ public class GUIStatusCheck : EditorWindow
 
     }
 }
+#endif
