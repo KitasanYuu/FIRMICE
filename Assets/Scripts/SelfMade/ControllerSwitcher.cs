@@ -9,7 +9,7 @@ public class ControllerSwitcher : MonoBehaviour
     public GameObject playerFollowCamera;
     public GameObject fpsCamera;
 
-    private bool tabPressed = false;
+    //private bool tabPressed = false;
 
     void Start()
     {
@@ -19,16 +19,16 @@ public class ControllerSwitcher : MonoBehaviour
     void Update()
     {
         // 在Update中检测Tab键按下和释放
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            tabPressed = true;
-        }
+        //if (Input.GetKeyDown(KeyCode.Tab))
+        //{
+        //    tabPressed = true;
+        //}
 
-        if (Input.GetKeyUp(KeyCode.Tab))
-        {
-            tabPressed = false;
-            SwitchController();
-        }
+        //if (Input.GetKeyUp(KeyCode.Tab))
+        //{
+        //    tabPressed = false;
+        //    SwitchController();
+        //}
     }
 
 
