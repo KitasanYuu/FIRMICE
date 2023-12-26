@@ -954,11 +954,11 @@ namespace ECE
     }
 
     [SerializeField]
-    private PhysicMaterial _PhysicMaterial;
+    private PhysicsMaterial _PhysicMaterial;
     /// <summary>
     /// Physic material to add to colliders upon creation.
     /// </summary>
-    public PhysicMaterial PhysicMaterial { get { return _PhysicMaterial; } set { _PhysicMaterial = value; } }
+    public PhysicsMaterial PhysicMaterial { get { return _PhysicMaterial; } set { _PhysicMaterial = value; } }
 
     [SerializeField]
     private List<Collider> _RaycastableColliders;

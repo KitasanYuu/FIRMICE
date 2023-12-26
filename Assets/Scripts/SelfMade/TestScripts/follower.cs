@@ -32,6 +32,11 @@ namespace Partner
         private bool hasReachedTargetPoint = true; // 初始设为true，以允许首次目标点的设置
         private Vector3 Destination;
 
+        //用来判定是否移动保底
+        private bool IsMoving;
+        private Vector3 lastPosition;
+        public float movementThreshold = 0.01f; // 可以调整这个阈值
+
         //这里为了在两种跟随模式下切换设定几个中立的速度变量
         private float FSpeed;
         private float FSprintSpeed;
@@ -63,7 +68,7 @@ namespace Partner
             GetComponent();
             FollowTargetInit();
 
-
+            lastPosition = transform.position;
 
         }
 
@@ -72,6 +77,7 @@ namespace Partner
             CanISpwanTargetPoint();
             SeekerCalcu();
             MovingStart();
+            MovingAnimProtect();
 
         }
 
@@ -275,6 +281,8 @@ namespace Partner
         //使用A*寻路移动的功能
         private void AStarMoving()
         {
+            IsMoving = true;
+
             //这里用if是因为在抵达目标点一瞬间数组会只有一位数0，此时Vector3 aimPoint[1]会取不到值
             int Count = aimPoint.Count;
             //Debug.LogError(Count);
@@ -364,6 +372,33 @@ namespace Partner
             }
         }
 
+        private void MovingAnimProtect()
+        {
+            // 检查角色位置是否发生了显著变化
+            if (Vector3.Distance(transform.position, lastPosition) > movementThreshold)
+            {
+                IsMoving = true;
+            }
+            else
+            {
+                IsMoving = false;
+            }
+
+            Debug.Log("Follower Moving:" + IsMoving);
+            // 更新最后的位置
+            lastPosition = transform.position;
+
+            if (IsMoving)
+            {
+                return;
+            }
+            else
+            {
+                CSpeed = 0;
+            }
+
+        }
+
         protected void SpeedJudging()
         {
             if (avatarController != null)
@@ -376,6 +411,8 @@ namespace Partner
                 FSpeed = followSpeed;
                 FSprintSpeed = accelerationSpeed;
             }
+
+
         }
 
         //用来计算A*路径上的总长度函数

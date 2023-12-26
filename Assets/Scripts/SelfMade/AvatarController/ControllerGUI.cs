@@ -6,6 +6,7 @@ using StarterAssets;
 using Cinemachine;
 
 #if UNITY_EDITOR
+[CustomEditor(typeof(AvatarController))]
 public class ControllerGUI : Editor
 {
     new SerializedObject serializedObject; // 创建一个SerializedObject来编辑目标脚本的属性

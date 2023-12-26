@@ -19,7 +19,7 @@ namespace ECE
     /// <summary>
     /// Physic material to set on collider.
     /// </summary>
-    public PhysicMaterial PhysicMaterial;
+    public PhysicsMaterial PhysicMaterial;
 
     /// <summary>
     /// Orientation of created collider.
@@ -39,7 +39,7 @@ namespace ECE
     /// <param name="physicMaterial">Physic Material to apply to a collider</param>
     /// <param name="attachTo">GameObject to attach the collider to</param>
     /// <param name="orientation">Orientation of the collider for generation</param>
-    public EasyColliderProperties(bool isTrigger, int layer, PhysicMaterial physicMaterial, GameObject attachTo, COLLIDER_ORIENTATION orientation = COLLIDER_ORIENTATION.NORMAL)
+    public EasyColliderProperties(bool isTrigger, int layer, PhysicsMaterial physicMaterial, GameObject attachTo, COLLIDER_ORIENTATION orientation = COLLIDER_ORIENTATION.NORMAL)
     {
       IsTrigger = isTrigger;
       Layer = layer;

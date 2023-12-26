@@ -15,7 +15,7 @@ public class BulletTest : MonoBehaviour
 
     void Start()
     {
-        bulletRigdbody.velocity = transform.forward * speed;
+        bulletRigdbody.linearVelocity = transform.forward * speed;
     }
 
     // Update is called once per frame

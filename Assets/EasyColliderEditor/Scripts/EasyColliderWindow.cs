@@ -2223,7 +2223,7 @@ namespace ECE
 
         // Physic material
         EditorGUI.BeginChangeCheck();
-        PhysicMaterial physicMaterial = (PhysicMaterial)EditorGUILayout.ObjectField(new GUIContent("Physic Material:", "PhysicMaterial to set on collider upon creation."), ECEditor.PhysicMaterial, typeof(PhysicMaterial), false);
+        PhysicsMaterial physicMaterial = (PhysicsMaterial)EditorGUILayout.ObjectField(new GUIContent("Physic Material:", "PhysicMaterial to set on collider upon creation."), ECEditor.PhysicMaterial, typeof(PhysicsMaterial), false);
         if (EditorGUI.EndChangeCheck())
         {
           Undo.RegisterCompleteObjectUndo(ECEditor, "Set PhysicMaterial");
