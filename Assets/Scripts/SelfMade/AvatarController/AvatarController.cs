@@ -724,7 +724,9 @@ namespace StarterAssets
         //下蹲站立时碰撞盒变更大小
         private void ModifyControllerProperties()
         {
-            PlayerCameraRoot = GameObject.Find("PlayerCameraRoot");
+            //铸币吧已经有CinemachineCameraTarget还Private个PlayerCameraRoot类
+            PlayerCameraRoot = CinemachineCameraTarget;
+
             // 检查is_crouching的值，并根据需要修改CharacterController的属性
             if (_isCrouching)
             {
