@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+#if !DEBUG
 using System;
 using System.Linq;
 using UnityEditor;
@@ -870,7 +871,7 @@ namespace lilToon
 
         public static void ConvertGifToAtlas(MaterialProperty tex, MaterialProperty decalAnimation, MaterialProperty decalSubParam, MaterialProperty isDecal)
         {
-            #if SYSTEM_DRAWING
+#if SYSTEM_DRAWING
                 if(tex.textureValue != null && AssetDatabase.GetAssetPath(tex.textureValue).EndsWith(".gif", StringComparison.OrdinalIgnoreCase) && Button(GetLoc("sConvertGif")))
                 {
                     int frameCount, loopXY, duration;
@@ -882,7 +883,7 @@ namespace lilToon
                     decalSubParam.vectorValue = new Vector4(xScale,yScale,decalSubParam.vectorValue.z,decalSubParam.vectorValue.w);
                     isDecal.floatValue = 1.0f;
                 }
-            #endif
+#endif
         }
 
         public static void RenderQueueField(MaterialEditor materialEditor)
@@ -906,11 +907,11 @@ namespace lilToon
         public static void LightmapEmissionFlagsProperty(MaterialEditor materialEditor)
         {
             if(!CheckPropertyToDraw("Global Illumination")) return;
-            #if UNITY_2019_1_OR_NEWER
+#if UNITY_2019_1_OR_NEWER
                 materialEditor.LightmapEmissionFlagsProperty(0, true, true);
-            #else
+#else
                 materialEditor.LightmapEmissionFlagsProperty(0, true);
-            #endif
+#endif
         }
 
         private static int IntClamp(int val, int min, int max)
@@ -962,4 +963,5 @@ namespace lilToon
         private static string GetLoc(string value) { return lilLanguageManager.GetLoc(value); }
     }
 }
+#endif
 #endif

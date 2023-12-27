@@ -1,4 +1,5 @@
 ﻿#if UNITY_EDITOR
+#if !DEBUG
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Rendering;
@@ -118,7 +119,7 @@ namespace lilToon
 
         //------------------------------------------------------------------------------------------------------------------------------
         // Assets/lilToon/Convert Gif to Atlas
-        #if SYSTEM_DRAWING
+#if SYSTEM_DRAWING
             // Gif to Atlas
             [MenuItem(menuPathConvertGifToAtlas, false, menuPriorityConvertGifToAtlas)]
             private static void ConvertGifToAtlas()
@@ -131,7 +132,7 @@ namespace lilToon
             {
                 return CheckExtension(".gif");
             }
-        #endif
+#endif
 
         //------------------------------------------------------------------------------------------------------------------------------
         // Assets/lilToon/Convert LUT to PNG
@@ -214,11 +215,11 @@ namespace lilToon
                 if(!path.EndsWith(".fbx", StringComparison.OrdinalIgnoreCase)) continue;
 
                 var importer = (ModelImporter)AssetImporter.GetAtPath(path);
-                #if UNITY_2019_3_OR_NEWER
+#if UNITY_2019_3_OR_NEWER
                     importer.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
-                #else
+#else
                     importer.importMaterials = true;
-                #endif
+#endif
 
                 string dirPath = Path.GetDirectoryName(path);
                 string materialFolder = dirPath + "/Materials";
@@ -568,13 +569,13 @@ namespace lilToon
 
             var buildTarget = EditorUserBuildSettings.activeBuildTarget;
             var buildTargetGroup = BuildPipeline.GetBuildTargetGroup(buildTarget);
-            #if UNITY_2021_3_OR_NEWER
+#if UNITY_2021_3_OR_NEWER
                 var namedBuildTarget = NamedBuildTarget.FromBuildTargetGroup(buildTargetGroup);
                 var scriptingDefineSymbols = PlayerSettings.GetScriptingDefineSymbols(namedBuildTarget);
-            #else
+#else
                 var namedBuildTarget = buildTargetGroup;
                 var scriptingDefineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
-            #endif
+#endif
 
             sb.AppendLine("# Player Settings");
             sb.AppendLine("Color Space: " + PlayerSettings.colorSpace.ToString());
@@ -612,9 +613,9 @@ namespace lilToon
             sb.AppendLine();
 
             sb.AppendLine("# VRCSDK Information");
-            #if UDON
+#if UDON
                 sb.AppendLine("UDON defined");
-            #endif
+#endif
             string versionVRCSDKBase = ReadVersion("1f872e4d36d785e409479da1c5fcde4c");
             if(versionVRCSDKBase != null) sb.AppendLine("VRChat SDK - Base: " + versionVRCSDKBase);
             string versionVRCSDKAvatars = ReadVersion("bd7510fb5fa478f43a81e9c74b72cb6f");
@@ -814,11 +815,11 @@ namespace lilToon
 
         private string[] GatherKeywords(Shader shader, IList<ShaderCompilerData> data)
         {
-            #if UNITY_2021_2_OR_NEWER
+#if UNITY_2021_2_OR_NEWER
                 return data.SelectMany(p => p.shaderKeywordSet.GetShaderKeywords()).Where(k => ShaderKeyword.IsKeywordLocal(k)).Select(k => k.name).Distinct().ToArray();
-            #else
+#else
                 return data.SelectMany(p => p.shaderKeywordSet.GetShaderKeywords()).Where(k => ShaderKeyword.IsKeywordLocal(k)).Select(k => ShaderKeyword.GetKeywordName(shader, k)).Distinct().ToArray();
-            #endif
+#endif
         }
     }
 #endif
@@ -841,4 +842,5 @@ namespace lilToon
     }
 #endif //LILTOON_DISABLE_ASSET_MODIFICATION
 }
+#endif
 #endif

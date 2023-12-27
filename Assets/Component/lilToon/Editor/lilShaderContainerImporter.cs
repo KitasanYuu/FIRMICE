@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+#if !DEBUG
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,18 +17,18 @@ using UnityEditor.AssetImporters;
 
 namespace lilToon
 {
-    #if LILTOON_DISABLE_ASSET_MODIFICATION == false
-    #if UNITY_2019_4_OR_NEWER
+#if LILTOON_DISABLE_ASSET_MODIFICATION == false
+#if UNITY_2019_4_OR_NEWER
         [ScriptedImporter(0, "lilcontainer")]
         public class lilShaderContainerImporter : ScriptedImporter
         {
             public override void OnImportAsset(AssetImportContext ctx)
             {
-                #if UNITY_2019_4_0 || UNITY_2019_4_1 || UNITY_2019_4_2 || UNITY_2019_4_3 || UNITY_2019_4_4 || UNITY_2019_4_5 || UNITY_2019_4_6 || UNITY_2019_4_7 || UNITY_2019_4_8 || UNITY_2019_4_9 || UNITY_2019_4_10
+#if UNITY_2019_4_0 || UNITY_2019_4_1 || UNITY_2019_4_2 || UNITY_2019_4_3 || UNITY_2019_4_4 || UNITY_2019_4_5 || UNITY_2019_4_6 || UNITY_2019_4_7 || UNITY_2019_4_8 || UNITY_2019_4_9 || UNITY_2019_4_10
                     var shader = ShaderUtil.CreateShaderAsset(lilShaderContainer.UnpackContainer(ctx.assetPath, ctx), false);
-                #else
+#else
                     var shader = ShaderUtil.CreateShaderAsset(ctx, lilShaderContainer.UnpackContainer(ctx.assetPath, ctx), false);
-                #endif
+#endif
 
                 ctx.AddObjectToAsset("main obj", shader);
                 ctx.SetMainObject(shader);
@@ -67,8 +68,8 @@ namespace lilToon
                 }
             }
         }
-    #endif
-    #endif //LILTOON_DISABLE_ASSET_MODIFICATION
+#endif
+#endif //LILTOON_DISABLE_ASSET_MODIFICATION
 
     public class lilShaderContainer
     {
@@ -408,9 +409,9 @@ namespace lilToon
                 sb.Replace("/SHADOW_CASTER_OUTLINE", "/SHADOW_CASTER");
             }
 
-            #if !UNITY_2019_4_OR_NEWER
+#if !UNITY_2019_4_OR_NEWER
                 sb.Replace("shader_feature_local", "shader_feature");
-            #endif
+#endif
 
             sb.Replace("\r\n", "\r");
             sb.Replace("\n", "\r");
@@ -833,7 +834,7 @@ namespace lilToon
 
         private static void FixIncludeForOldUnity(ref StringBuilder sb)
         {
-            #if UNITY_2019_4_0 || UNITY_2019_4_1 || UNITY_2019_4_2 || UNITY_2019_4_3 || UNITY_2019_4_4 || UNITY_2019_4_5 || UNITY_2019_4_6 || UNITY_2019_4_7 || UNITY_2019_4_8 || UNITY_2019_4_9 || UNITY_2019_4_10
+#if UNITY_2019_4_0 || UNITY_2019_4_1 || UNITY_2019_4_2 || UNITY_2019_4_3 || UNITY_2019_4_4 || UNITY_2019_4_5 || UNITY_2019_4_6 || UNITY_2019_4_7 || UNITY_2019_4_8 || UNITY_2019_4_9 || UNITY_2019_4_10
                 string additionalPath = assetFolderPath.Replace("\\", "/");
                 var escapes = Environment.NewLine.ToCharArray();
                 var text = sb.ToString().Split(escapes[0]);
@@ -861,7 +862,7 @@ namespace lilToon
                         sb.AppendLine(line);
                     }
                 }
-            #endif
+#endif
         }
 
         private static void AddHLSLDependency(string assetFolderPath, AssetImportContext ctx)
@@ -1626,10 +1627,11 @@ namespace lilToon
 
         private static void AddDependency(AssetImportContext ctx, string path)
         {
-            #if UNITY_2018_2_OR_NEWER
+#if UNITY_2018_2_OR_NEWER
                 if(ctx != null) ctx.DependsOnSourceAsset(path);
-            #endif
+#endif
         }
     }
 }
+#endif
 #endif

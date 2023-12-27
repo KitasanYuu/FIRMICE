@@ -1,10 +1,12 @@
 ﻿#if !LILTOON_VRCSDK3_AVATARS && !LILTOON_VRCSDK3_WORLDS && VRC_SDK_VRCSDK3
-    #if UDON
-        #define LILTOON_VRCSDK3_WORLDS
-    #else
-        #define LILTOON_VRCSDK3_AVATARS
-    #endif
+#if UDON
+#define LILTOON_VRCSDK3_WORLDS
+#else
+#define LILTOON_VRCSDK3_AVATARS
 #endif
+#endif
+#if !DEBUG
+
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
@@ -35,9 +37,9 @@ namespace lilToon
 
         protected virtual void DrawCustomProperties(Material material)
         {
-            #pragma warning disable 0618
+#pragma warning disable 0618
             DrawCustomProperties(m_MaterialEditor, material, boxOuter, boxInnerHalf, boxInner, customBox, customToggleFont, GUI.skin.button);
-            #pragma warning restore 0618
+#pragma warning restore 0618
         }
 
         //------------------------------------------------------------------------------------------------------------------------------
@@ -1591,11 +1593,11 @@ namespace lilToon
 
         private void DrawSimpleGUI(Material material)
         {
-            #if UNITY_2019_1_OR_NEWER
+#if UNITY_2019_1_OR_NEWER
             edSet.searchKeyWord = EditorGUILayout.TextField(edSet.searchKeyWord, EditorStyles.toolbarSearchField);
-            #else
+#else
             edSet.searchKeyWord = EditorGUILayout.TextField(edSet.searchKeyWord);
-            #endif
+#endif
 
             //------------------------------------------------------------------------------------------------------------------------------
             // Base Setting
@@ -1823,11 +1825,11 @@ namespace lilToon
 
         private void DrawAdvancedGUI(Material material)
         {
-            #if UNITY_2019_1_OR_NEWER
+#if UNITY_2019_1_OR_NEWER
             edSet.searchKeyWord = EditorGUILayout.TextField(edSet.searchKeyWord, EditorStyles.toolbarSearchField);
-            #else
+#else
             edSet.searchKeyWord = EditorGUILayout.TextField(edSet.searchKeyWord);
-            #endif
+#endif
             if(isLite)
             {
                 //------------------------------------------------------------------------------------------------------------------------------
@@ -3382,13 +3384,13 @@ namespace lilToon
             }
 
 
-            #if LILTOON_VRCSDK3_AVATARS
+#if LILTOON_VRCSDK3_AVATARS
                 EditorGUI.BeginChangeCheck();
                 GUI.enabled = !isLocked;
                 ToggleGUI(GetLoc("sShaderSettingOptimizeInTestBuild"), ref shaderSetting.isOptimizeInTestBuild);
                 GUI.enabled = true;
                 if(EditorGUI.EndChangeCheck()) lilToonSetting.SaveShaderSetting(shaderSetting);
-            #endif
+#endif
 
             EditorGUI.BeginChangeCheck();
             ToggleGUI(GetLoc("sShaderSettingOptimizeInEditor"), ref shaderSetting.isDebugOptimize);
@@ -3587,9 +3589,9 @@ namespace lilToon
                 menu.AddItem(new GUIContent(GetLoc("sCopy")),               false, CopyProperties,  propertyBlock);
                 menu.AddItem(new GUIContent(GetLoc("sPaste")),              false, PasteProperties, new PropertyBlockData{propertyBlock = propertyBlock, shouldCopyTex = false});
                 menu.AddItem(new GUIContent(GetLoc("sPasteWithTexture")),   false, PasteProperties, new PropertyBlockData{propertyBlock = propertyBlock, shouldCopyTex = true});
-                #if UNITY_2019_3_OR_NEWER
+#if UNITY_2019_3_OR_NEWER
                     menu.AddItem(new GUIContent(GetLoc("sReset")),              false, ResetProperties, propertyBlock);
-                #endif
+#endif
                 menu.AddItem(new GUIContent(GetLoc("sOpenManual")),         false, OpenHelpPage,    helpAnchor);
                 menu.ShowAsContext();
             }
@@ -3597,7 +3599,7 @@ namespace lilToon
 
         private void DrawVRCFallbackGUI(Material material)
         {
-            #if VRC_SDK_VRCSDK2 || LILTOON_VRCSDK3_AVATARS || LILTOON_VRCSDK3_WORLDS
+#if VRC_SDK_VRCSDK2 || LILTOON_VRCSDK3_AVATARS || LILTOON_VRCSDK3_WORLDS
                 edSet.isShowVRChat = lilEditorGUI.Foldout("VRChat", "VRChat", edSet.isShowVRChat);
                 if(edSet.isShowVRChat)
                 {
@@ -3678,14 +3680,14 @@ namespace lilToon
                     }
                     EditorGUILayout.EndVertical();
                 }
-            #endif
+#endif
         }
 
         private void DrawOptimizationButton(Material material, bool isnormal)
         {
-            #if LILTOON_VRCSDK3_WORLDS
+#if LILTOON_VRCSDK3_WORLDS
                 if(isnormal && lilEditorGUI.Button(GetLoc("sOptimizeForEvents"))) lilMaterialUtils.RemoveUnusedTexture(material);
-            #endif
+#endif
         }
         #endregion
 
@@ -3794,7 +3796,7 @@ namespace lilToon
 
         private void ResetProperties(PropertyBlock propertyBlock)
         {
-            #if UNITY_2019_3_OR_NEWER
+#if UNITY_2019_3_OR_NEWER
             foreach(var p in AllProperties().Where(p =>
                 p.p != null &&
                 p.blocks.Any(b => b == propertyBlock) &&
@@ -3812,7 +3814,7 @@ namespace lilToon
                 if(propType == MaterialProperty.PropType.Range)     p.floatValue = shader.GetPropertyDefaultFloatValue(propID);
                 if(propType == MaterialProperty.PropType.Texture)   p.textureValue = null;
             }
-            #endif
+#endif
         }
 
         private bool ShouldDrawBlock(PropertyBlock propertyBlock)
@@ -4509,14 +4511,14 @@ namespace lilToon
                     RenderQueueField();
                     if((renderingModeBuf >= RenderingMode.Transparent && renderingModeBuf != RenderingMode.FurCutout) || (isMulti && transparentModeMat.floatValue == 2.0f))
                     {
-                        #if LILTOON_VRCSDK3_WORLDS
+#if LILTOON_VRCSDK3_WORLDS
                             if(material.renderQueue <= 2999 && zwrite.floatValue == 1.0f)
                             {
                                 EditorGUILayout.HelpBox(GetLoc("sHelpTransparentForWorld"),MessageType.Warning);
                             }
-                        #else
+#else
                             EditorGUILayout.HelpBox(GetLoc("sHelpRenderingTransparent"),MessageType.Warning);
-                        #endif
+#endif
                     }
                     if(isLite)
                     {
@@ -7048,11 +7050,11 @@ namespace lilToon
         [Obsolete(WARN_ABOUT_DIRECTORY)] public const string packageListTempPath             = lilDirectoryManager.packageListTempPath;
         [Obsolete(WARN_ABOUT_DIRECTORY)] public const string postBuildTempPath               = lilDirectoryManager.postBuildTempPath;
         [Obsolete(WARN_ABOUT_DIRECTORY)] public const string startupTempPath                 = lilDirectoryManager.startupTempPath;
-        #if NET_4_6
+#if NET_4_6
             [Obsolete(WARN_ABOUT_DIRECTORY)] public const string rspPath = "Assets/csc.rsp";
-        #else
+#else
             [Obsolete(WARN_ABOUT_DIRECTORY)] public const string rspPath = "Assets/mcs.rsp";
-        #endif
+#endif
         [Obsolete(WARN_ABOUT_DIRECTORY)] public static string GetMainFolderPath()            { return lilDirectoryManager.GetMainFolderPath()        ; }
         [Obsolete(WARN_ABOUT_DIRECTORY)] public static string GetEditorFolderPath()          { return lilDirectoryManager.GetEditorFolderPath()      ; }
         [Obsolete(WARN_ABOUT_DIRECTORY)] public static string GetPresetsFolderPath()         { return lilDirectoryManager.GetPresetsFolderPath()     ; }
@@ -7079,4 +7081,5 @@ namespace lilToon
         #endregion
     }
 }
+#endif
 #endif

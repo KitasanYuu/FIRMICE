@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+#if !DEBUG
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.Networking;
@@ -30,8 +31,8 @@ namespace lilToon
             {
                 File.Create(lilDirectoryManager.startupTempPath);
 
-                #if LILTOON_DISABLE_ASSET_MODIFICATION == false
-                #if !SYSTEM_DRAWING
+#if LILTOON_DISABLE_ASSET_MODIFICATION == false
+#if !SYSTEM_DRAWING
                     string editorPath = lilDirectoryManager.GetEditorPath();
 
                     // RSP
@@ -64,8 +65,8 @@ namespace lilToon
                         AssetDatabase.Refresh();
                         AssetDatabase.ImportAsset(editorPath);
                     }
-                #endif
-                #endif //LILTOON_DISABLE_ASSET_MODIFICATION
+#endif
+#endif //LILTOON_DISABLE_ASSET_MODIFICATION
             }
 
             //------------------------------------------------------------------------------------------------------------------------------
@@ -136,7 +137,7 @@ namespace lilToon
                 lilToonInspector.edSet.currentVersionValue = lilConstants.currentVersionValue;
                 lilToonInspector.SaveEditorSettingTemp();
 
-                #if UNITY_2019_4_OR_NEWER
+#if UNITY_2019_4_OR_NEWER
                     // Update custom shaders
                     var folders = new List<string>();
                     foreach(var shaderPath in lilDirectoryManager.FindAssetsPath("t:shader").Where(p => p.Contains(".lilcontainer")))
@@ -156,7 +157,7 @@ namespace lilToon
                     {
                         AssetDatabase.ImportAsset(folder, ImportAssetOptions.ImportRecursive);
                     }
-                #endif
+#endif
             }
 
             //------------------------------------------------------------------------------------------------------------------------------
@@ -173,11 +174,11 @@ namespace lilToon
             using(UnityWebRequest webRequest = UnityWebRequest.Get(lilConstants.versionInfoURL))
             {
                 yield return webRequest.SendWebRequest();
-                #if UNITY_2020_2_OR_NEWER
+#if UNITY_2020_2_OR_NEWER
                     if(webRequest.result != UnityWebRequest.Result.ConnectionError)
-                #else
+#else
                     if(!webRequest.isNetworkError)
-                #endif
+#endif
                 {
                     var sw = new StreamWriter(lilDirectoryManager.versionInfoTempPath,false);
                     sw.Write(webRequest.downloadHandler.text);
@@ -316,4 +317,5 @@ namespace lilToon
         }
     }
 }
+#endif
 #endif
