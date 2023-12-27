@@ -636,7 +636,8 @@ namespace ECE
 
       #region Various fixes for bugs in scene view.
 
-      if (!ECEPreferences.AllowBackgroundSelection && Selection.activeGameObject!=ECEditor.SelectedGameObject && ECEditor.SelectedGameObject!=null) {
+      if (!ECEPreferences.AllowBackgroundSelection && Selection.activeGameObject != ECEditor.SelectedGameObject && ECEditor.SelectedGameObject != null)
+      {
         Selection.activeGameObject = ECEditor.SelectedGameObject;
       }
 
@@ -1168,7 +1169,7 @@ namespace ECE
     GameObject _lastSelectionGameobject;
     void CheckSelChangedForDrag()
     {
-#if UNITY_2022_3_14
+#if UNITY_2022_3_14 || UNITY_2022_3_15 || UNITY_2022_3_16 || UNITY_2022_3_17 || UNITY_2022_3_18 || UNITY_2022_3_19 || UNITY_2022_3_20 || UNITY_2022_3_21 || UNITY_2022_3_22 || UNITY_2022_3_23 || UNITY_2022_3_24 || UNITY_2022_3_25 || UNITY_2023_1_OR_NEWER
 #else
       if (_trackedMouseDownEvent != null)
       {
@@ -1265,7 +1266,7 @@ namespace ECE
               IsMouseDraggedModified = true;
             }
           }
-#if UNITY_2022_3_14
+#if UNITY_2022_3_14 || UNITY_2022_3_15 || UNITY_2022_3_16 || UNITY_2022_3_17 || UNITY_2022_3_18 || UNITY_2022_3_19 || UNITY_2022_3_20 || UNITY_2022_3_21 || UNITY_2022_3_22 || UNITY_2022_3_23 || UNITY_2022_3_24 || UNITY_2022_3_25 || UNITY_2023_1_OR_NEWER
           if (Event.current.type == EventType.MouseDown && (GUIUtility.hotControl == 0 || Event.current.modifiers == EventModifiers.Alt)) // alt automatically does a hot control it appears, this fixes that.
           {
             //Debug.Log("Mouse down.");
@@ -2223,7 +2224,7 @@ namespace ECE
 
         // Physic material
         EditorGUI.BeginChangeCheck();
-        PhysicsMaterial physicMaterial = (PhysicsMaterial)EditorGUILayout.ObjectField(new GUIContent("Physic Material:", "PhysicMaterial to set on collider upon creation."), ECEditor.PhysicMaterial, typeof(PhysicsMaterial), false);
+        PhysicMaterial physicMaterial = (PhysicMaterial)EditorGUILayout.ObjectField(new GUIContent("Physic Material:", "PhysicMaterial to set on collider upon creation."), ECEditor.PhysicMaterial, typeof(PhysicMaterial), false);
         if (EditorGUI.EndChangeCheck())
         {
           Undo.RegisterCompleteObjectUndo(ECEditor, "Set PhysicMaterial");
@@ -2746,18 +2747,6 @@ namespace ECE
           }
         }
       }
-
-
-#if UNITY_2022_3_14
-      GUIStyle tipStyle2 = new GUIStyle(GUI.skin.label);
-      tipStyle2.wordWrap = true;
-      tipStyle2.alignment = TextAnchor.UpperLeft;
-      tipStyle2.fontStyle = FontStyle.Normal;
-      tipStyle2.fontSize = 12;
-      tipStyle2.alignment = TextAnchor.MiddleCenter;
-      tipStyle2.richText = true;
-      EditorGUILayout.LabelField("- 2022.3.14f1 required a specific workaround for input handling. If you are on version 2022.3.14f2 or later and notice input is not working, please contact me!", tipStyle2);
-#endif
       // always draw documentation link.
       DrawDocumentationTip();
     }
