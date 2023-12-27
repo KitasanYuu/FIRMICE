@@ -94,11 +94,12 @@ namespace StarterAssets
         private float MovingDirZ;
         private float MovingDirNorX;
         private float MovingDirNorZ;
-        public float _TempMovingDirF;
-        public float _TargetMovingDirF;
-        public float _TempMovingDirB;
-        public float _TargetMovingDirB;
-        public float FoB;
+        private float _TempMovingX;
+        private float _TempMovingY;
+        private float _TargetMovingX;
+        private float _TargetMovingY;
+        private float AimOrNot;
+        private float _TargetAimOrNot;
         public Vector3 MovingDir;
         public Vector3 MovingDirNor;
         
@@ -153,9 +154,9 @@ namespace StarterAssets
         private int _animIDMotionSpeed;
         private int _animIDJetStatus;
         private int _animIDis_Crouching;
-        private int _animIDMovingDirF;
-        private int _animIDMovingDirB;
-        private int _animIDFoB;
+        private int _animIDMovingX;
+        private int _animIDMovingY;
+        private int _animIDAimOrNot;
 
         //检测蹲下时上方是否有障碍物
         public LayerMask detectionLayer;
@@ -279,7 +280,6 @@ namespace StarterAssets
 
         private void AssignAnimationIDs()
         {
-            _animIDFoB = Animator.StringToHash("FoB");
             _animIDSpeed = Animator.StringToHash("Speed");
             _animIDGrounded = Animator.StringToHash("Grounded");
             _animIDJump = Animator.StringToHash("Jump");
@@ -287,8 +287,9 @@ namespace StarterAssets
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
             _animIDJetStatus = Animator.StringToHash("JetStatus");
             _animIDis_Crouching = Animator.StringToHash("is_crouching");
-            _animIDMovingDirF = Animator.StringToHash("MovingDirF");
-            _animIDMovingDirB = Animator.StringToHash("MovingDirB");
+            _animIDMovingX = Animator.StringToHash("MovingX");
+            _animIDMovingY = Animator.StringToHash("MovingY");
+            _animIDAimOrNot = Animator.StringToHash("AimOrNot");
         }
 
         private void GroundedCheck()
@@ -805,68 +806,45 @@ namespace StarterAssets
 
             if (_hasAnimator)
             {
-                float _TargetMovingDir =0; //判别前后
-
                 if (MovingDirNorX == -1 && MovingDirNorZ == 0)           //左
                 {
-                    _TargetMovingDirF = -2;
-                    _TargetMovingDir = -1;
+                    _TargetMovingX = -1;
+                    _TargetMovingY = 0;
                 }
                 else if (MovingDirNorX == -1 && MovingDirNorZ == 1)                //左前
                 {
-                    _TargetMovingDirF = -1;
-                    _TargetMovingDir = -1;
+                    _TargetMovingX = -1;
+                    _TargetMovingY = 1;
                 }
                 else if (MovingDirNorX == 0 && MovingDirNorZ == 1)            //正前
                 {
-                    _TargetMovingDirF = 0;
-                    _TargetMovingDir = -1;
+                    _TargetMovingX = 0;
+                    _TargetMovingY = 1;
                 }
                 else if (MovingDirNorX == 1 && MovingDirNorZ == 1)            //右前
                 {
-                    _TargetMovingDirF = 1;
-                    _TargetMovingDir = -1;
+                    _TargetMovingX = 1;
+                    _TargetMovingY = 1;
                 }
                 else if (MovingDirNorX == 1 && MovingDirNorZ == 0)            //右
                 {
-                    _TargetMovingDirF = 2;
-                    _TargetMovingDir = -1;
-                }
-
-
-                else if (MovingDirNorX == 1 && MovingDirNorZ == 0)            //右
-                {
-                    _TargetMovingDirB = -2;
-                    _TargetMovingDir = 1;
+                    _TargetMovingX = 1;
+                    _TargetMovingY = 0;
                 }
                 else if (MovingDirNorX == 1 && MovingDirNorZ == -1)           //右后
                 {
-                    _TargetMovingDirB = -1;
-                    _TargetMovingDir = 1;
+                    _TargetMovingX = 1;
+                    _TargetMovingY = -1;
                 }
                 else if (MovingDirNorX == 0 && MovingDirNorZ == -1)           //后方
                 {
-                    _TargetMovingDirB = 0;
-                    _TargetMovingDir = 1;
+                    _TargetMovingX = 0;
+                    _TargetMovingY = -1;
                 }
                 else if (MovingDirNorX == -1 && MovingDirNorZ == -1)          //左后
                 {
-                    _TargetMovingDirB = 1;
-                    _TargetMovingDir = 1;
-                }
-                else if (MovingDirNorX == -1 && MovingDirNorZ == 0)           //左
-                {
-                    _TargetMovingDirB = 2;
-                    _TargetMovingDir = 1;
-                }
-
-                if (_TargetMovingDir == -1)
-                {
-                    FoB = -1;
-                }
-                else if (_TargetMovingDir == 1)
-                {
-                    FoB = 1;
+                    _TargetMovingX = -1;
+                    _TargetMovingY = -1;
                 }
 
             }
@@ -875,38 +853,23 @@ namespace StarterAssets
 
         private void WalkSwitcher()
         {
-            if (tpsshootcontroller.isAiming)
+            if (isAiming)
             {
                 MovingDirNormalize();
+                _TempMovingX = Mathf.Lerp(_TempMovingX, _TargetMovingX, Time.deltaTime * SpeedChangeRate);
+                _TempMovingY = Mathf.Lerp(_TempMovingY, _TargetMovingY, Time.deltaTime * SpeedChangeRate);
+
+                _animator.SetFloat(_animIDMovingX, _TempMovingX);
+                _animator.SetFloat(_animIDMovingY, _TempMovingY);
             }
             else
             {
-                FoB = 0;
-
+                _animator.SetFloat(_animIDMovingX, 0f);
+                _animator.SetFloat(_animIDMovingY, 0f);
             }
 
-            if(FoB == -1)
-            {
-                _animator.SetFloat(_animIDFoB, FoB);
-                _TempMovingDirF = Mathf.Lerp(_TempMovingDirF, _TargetMovingDirF, Time.deltaTime * SpeedChangeRate);
-                _animator.SetFloat(_animIDMovingDirF, _TempMovingDirF);
-                _animator.SetFloat(_animIDMovingDirB, 0);
-            }
-            else if(FoB == 1)
-            {
-                _animator.SetFloat(_animIDFoB, FoB);
-                _TempMovingDirB = Mathf.Lerp(_TempMovingDirB, _TargetMovingDirB, Time.deltaTime * SpeedChangeRate);
-                _animator.SetFloat(_animIDMovingDirB, _TempMovingDirB);
-                _animator.SetFloat(_animIDMovingDirF, 0);
-            }else if (FoB == 0)
-            {
-                _animator.SetFloat(_animIDFoB, FoB);
-                _animator.SetFloat(_animIDMovingDirB, 0);
-                _animator.SetFloat(_animIDMovingDirF, 0);
-            }
-
-
-
+            _TargetAimOrNot = Mathf.Lerp(_TargetAimOrNot, AimOrNot, Time.deltaTime * SpeedChangeRate);
+            _animator.SetFloat(_animIDAimOrNot, _TargetAimOrNot);
 
         }
 
@@ -935,10 +898,12 @@ namespace StarterAssets
             if (tpsshootcontroller.isAiming)
             {
                 isAiming = true;
+                AimOrNot = 1;
             }
             else
             {
                 isAiming = false;
+                AimOrNot = 0;
             }
         }
 
