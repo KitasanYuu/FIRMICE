@@ -5,8 +5,9 @@ using Pathfinding;
 using UnityEngine.EventSystems;
 
 namespace Pathfinding.Examples {
-	/// <summary>Helper script in the example scene 'Turn Based'</summary>
-	[HelpURL("https://arongranberg.com/astar/documentation/stable/class_pathfinding_1_1_examples_1_1_turn_based_manager.php")]
+#pragma warning disable 0618 // ½ûÓÃ¾¯¸æ CS0618
+    /// <summary>Helper script in the example scene 'Turn Based'</summary>
+    [HelpURL("https://arongranberg.com/astar/documentation/stable/class_pathfinding_1_1_examples_1_1_turn_based_manager.php")]
 	public class TurnBasedManager : MonoBehaviour {
 		TurnBasedAI selected;
 
@@ -178,4 +179,5 @@ namespace Pathfinding.Examples {
 			}
 		}
 	}
+#pragma warning restore 0618 // »Ö¸´¾¯¸æ CS0618
 }

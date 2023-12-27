@@ -2,15 +2,16 @@ using UnityEngine;
 using System.Collections.Generic;
 
 namespace Pathfinding {
-	/// <summary>
-	/// GraphModifier is used for modifying graphs or processing graph data based on events.
-	/// This class is a simple container for a number of events.
-	///
-	/// Warning: Some events will be called both in play mode <b>and in editor mode</b> (at least the scan events).
-	/// So make sure your code handles both cases well. You may choose to ignore editor events.
-	/// See: Application.IsPlaying
-	/// </summary>
-	[ExecuteInEditMode]
+#pragma warning disable 0618 // ½ûÓÃ¾¯¸æ CS0618
+    /// <summary>
+    /// GraphModifier is used for modifying graphs or processing graph data based on events.
+    /// This class is a simple container for a number of events.
+    ///
+    /// Warning: Some events will be called both in play mode <b>and in editor mode</b> (at least the scan events).
+    /// So make sure your code handles both cases well. You may choose to ignore editor events.
+    /// See: Application.IsPlaying
+    /// </summary>
+    [ExecuteInEditMode]
 	public abstract class GraphModifier : VersionedMonoBehaviour {
 		/// <summary>All active graph modifiers</summary>
 		private static GraphModifier root;

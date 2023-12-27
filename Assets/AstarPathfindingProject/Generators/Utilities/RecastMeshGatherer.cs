@@ -2,7 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 
 namespace Pathfinding.Recast {
-	using System;
+#pragma warning disable 0618 // ½ûÓÃ¾¯¸æ CS0618
+    using System;
 	using Pathfinding;
 	using Pathfinding.Voxels;
 
@@ -567,4 +568,5 @@ namespace Pathfinding.Recast {
 			return new RasterizationMesh(verts, trisArr, bounds, localToWorldMatrix);
 		}
 	}
+#pragma warning restore 0618 // »Ö¸´¾¯¸æ CS0618
 }

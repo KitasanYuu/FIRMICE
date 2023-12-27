@@ -16,8 +16,9 @@ using Pathfinding.Ionic.Zip;
 #endif
 
 namespace Pathfinding.Serialization {
-	/// <summary>Holds information passed to custom graph serializers</summary>
-	public class GraphSerializationContext {
+#pragma warning disable 0618 // ½ûÓÃ¾¯¸æ CS0618
+    /// <summary>Holds information passed to custom graph serializers</summary>
+    public class GraphSerializationContext {
 		private readonly GraphNode[] id2NodeMapping;
 
 		/// <summary>
@@ -912,4 +913,5 @@ namespace Pathfinding.Serialization {
 			}
 		}
 	}
+#pragma warning restore 0618 // »Ö¸´¾¯¸æ CS0618
 }

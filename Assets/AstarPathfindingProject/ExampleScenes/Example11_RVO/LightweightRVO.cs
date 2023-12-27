@@ -4,21 +4,22 @@ using Pathfinding.RVO;
 
 namespace Pathfinding.Examples {
 	[RequireComponent(typeof(MeshFilter))]
-	/// <summary>
-	/// Lightweight RVO Circle Example.
-	/// Lightweight script for simulating agents in a circle trying to reach their antipodal positions.
-	/// This script, compared to using lots of RVOAgents shows the real power of the RVO simulator when
-	/// little other overhead (e.g GameObjects) is present.
-	///
-	/// For example with this script, I can simulate 5000 agents at around 50 fps on my laptop (with desired simulation fps = 10 and interpolation, 2 threads)
-	/// however when using prefabs, only instantiating the 5000 agents takes 10 seconds and it runs at around 5 fps.
-	///
-	/// This script will render the agents by generating a square for each agent combined into a single mesh with appropriate UV.
-	///
-	/// A few GUI buttons will be drawn by this script with which the user can change the number of agents.
-	/// [Open online documentation to see images]
-	/// </summary>
-	[HelpURL("https://arongranberg.com/astar/documentation/stable/class_pathfinding_1_1_examples_1_1_lightweight_r_v_o.php")]
+#pragma warning disable 0618 // ½ûÓÃ¾¯¸æ CS0618
+    /// <summary>
+    /// Lightweight RVO Circle Example.
+    /// Lightweight script for simulating agents in a circle trying to reach their antipodal positions.
+    /// This script, compared to using lots of RVOAgents shows the real power of the RVO simulator when
+    /// little other overhead (e.g GameObjects) is present.
+    ///
+    /// For example with this script, I can simulate 5000 agents at around 50 fps on my laptop (with desired simulation fps = 10 and interpolation, 2 threads)
+    /// however when using prefabs, only instantiating the 5000 agents takes 10 seconds and it runs at around 5 fps.
+    ///
+    /// This script will render the agents by generating a square for each agent combined into a single mesh with appropriate UV.
+    ///
+    /// A few GUI buttons will be drawn by this script with which the user can change the number of agents.
+    /// [Open online documentation to see images]
+    /// </summary>
+    [HelpURL("https://arongranberg.com/astar/documentation/stable/class_pathfinding_1_1_examples_1_1_lightweight_r_v_o.php")]
 	public class LightweightRVO : MonoBehaviour {
 		/// <summary>Number of agents created at start</summary>
 		public int agentCount = 100;
@@ -316,4 +317,5 @@ namespace Pathfinding.Examples {
 			mesh.RecalculateNormals();
 		}
 	}
+#pragma warning restore 0618 // »Ö¸´¾¯¸æ CS0618
 }

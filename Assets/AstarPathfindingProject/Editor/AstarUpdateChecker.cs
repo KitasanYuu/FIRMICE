@@ -190,7 +190,8 @@ namespace Pathfinding {
 		}
 
 		static void DownloadVersionInfo () {
-			if (!Application.isPlaying) AstarPath.FindAstarPath();
+#pragma warning disable 0618 // ½ûÓÃ¾¯¸æ CS0618
+            if (!Application.isPlaying) AstarPath.FindAstarPath();
 			var script = AstarPath.active != null ? AstarPath.active : GameObject.FindObjectOfType(typeof(AstarPath)) as AstarPath;
 
 			bool mecanim = GameObject.FindObjectOfType(typeof(Animator)) != null;

@@ -2,15 +2,16 @@ using UnityEngine;
 using System.Linq;
 
 namespace Pathfinding {
-	/// <summary>
-	/// Moves the target in example scenes.
-	/// This is a simple script which has the sole purpose
-	/// of moving the target point of agents in the example
-	/// scenes for the A* Pathfinding Project.
-	///
-	/// It is not meant to be pretty, but it does the job.
-	/// </summary>
-	[HelpURL("https://arongranberg.com/astar/documentation/stable/class_pathfinding_1_1_target_mover.php")]
+    /// <summary>
+    /// Moves the target in example scenes.
+    /// This is a simple script which has the sole purpose
+    /// of moving the target point of agents in the example
+    /// scenes for the A* Pathfinding Project.
+    ///
+    /// It is not meant to be pretty, but it does the job.
+    /// </summary>
+#pragma warning disable 0618 // ½ûÓÃ¾¯¸æ CS0618
+    [HelpURL("https://arongranberg.com/astar/documentation/stable/class_pathfinding_1_1_target_mover.php")]
 	public class TargetMover : MonoBehaviour {
 		/// <summary>Mask for the raycast placement</summary>
 		public LayerMask mask;
@@ -74,4 +75,5 @@ namespace Pathfinding {
 			}
 		}
 	}
+#pragma warning restore 0618 // »Ö¸´¾¯¸æ CS0618
 }
