@@ -3,8 +3,12 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.Reflection;
 
+
+
 namespace Pathfinding {
-	[CustomEditor(typeof(AstarPath))]
+#pragma warning disable 0618 // 禁用警告 CS0618
+
+    [CustomEditor(typeof(AstarPath))]
 	public class AstarPathEditor : Editor {
 		/// <summary>List of all graph editors available (e.g GridGraphEditor)</summary>
 		static Dictionary<string, CustomGraphEditorAttribute> graphEditorTypes = new Dictionary<string, CustomGraphEditorAttribute>();
@@ -932,7 +936,8 @@ namespace Pathfinding {
 
 		/// <summary>Opens the A* Inspector and shows the section for editing tags</summary>
 		public static void EditTags () {
-			AstarPath astar = GameObject.FindObjectOfType<AstarPath>();
+#pragma warning disable 0618 // 禁用警告 CS0618
+            AstarPath astar = GameObject.FindObjectOfType<AstarPath>();
 
 			if (astar != null) {
 				editTags = true;
@@ -1418,4 +1423,5 @@ namespace Pathfinding {
 			script.data.FindGraphTypes();
 		}
 	}
+#pragma warning restore 0618 // 恢复警告 CS0618
 }

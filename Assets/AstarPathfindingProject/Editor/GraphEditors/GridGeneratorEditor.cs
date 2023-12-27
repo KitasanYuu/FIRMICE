@@ -4,7 +4,8 @@ using Pathfinding.Serialization;
 using System.Collections.Generic;
 
 namespace Pathfinding {
-	using Pathfinding.Util;
+#pragma warning disable 0618 // 禁用警告 CS0618
+    using Pathfinding.Util;
 
 	[CustomGraphEditor(typeof(GridGraph), "Grid Graph")]
 	public class GridGraphEditor : GraphEditor {

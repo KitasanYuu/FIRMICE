@@ -327,7 +327,7 @@ namespace Partner
                     currentSpeed = FSpeed;
                 }
 
-                Debug.Log("Follower #315 CurrentSpeed:" + currentSpeed);
+                //Debug.Log("Follower #315 CurrentSpeed:" + currentSpeed);
 
                 if (aimPoint != null && aimPoint.Count != 0)
                 {
@@ -339,6 +339,7 @@ namespace Partner
 
                     //移动角色
                     transform.position = Vector3.MoveTowards(transform.position, Destination, currentSpeed * Time.deltaTime);
+                    //Debug.Log(Destination);
 
 
                     // 使物体朝向移动方向
@@ -384,7 +385,7 @@ namespace Partner
                 IsMoving = false;
             }
 
-            Debug.Log("Follower Moving:" + IsMoving);
+            //Debug.Log("Follower Moving:" + IsMoving);
             // 更新最后的位置
             lastPosition = transform.position;
 

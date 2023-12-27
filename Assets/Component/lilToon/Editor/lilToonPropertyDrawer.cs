@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+#if !DEBUG
 using UnityEditor;
 using UnityEngine;
 using System;
@@ -13,7 +14,7 @@ namespace lilToon
         // [lilHDR]
         public override void OnGUI(Rect position, MaterialProperty prop, string label, MaterialEditor editor)
         {
-            #if UNITY_2019_1_OR_NEWER
+#if UNITY_2019_1_OR_NEWER
                 float xMax = position.xMax;
                 position.width = string.IsNullOrEmpty(label) ? Mathf.Min(50.0f, position.width) : EditorGUIUtility.labelWidth + 50.0f;
                 var value = prop.colorValue;
@@ -35,7 +36,7 @@ namespace lilToon
                 int indentLevel = EditorGUI.indentLevel;
                 EditorGUI.indentLevel = 0;
                 position.x += position.width + 4.0f;
-                #if UNITY_2021_2_OR_NEWER
+#if UNITY_2021_2_OR_NEWER
                     position.width = Mathf.Min(50.0f, xMax - position.x);
                     if(position.width > 10.0f)
                     {
@@ -43,12 +44,12 @@ namespace lilToon
                         hex = "#" + EditorGUI.TextField(position, GUIContent.none, hex);
                         EditorGUI.showMixedValue = false;
                     }
-                #else
+#else
                     position.width = 50.0f;
                     EditorGUI.showMixedValue = prop.hasMixedValue;
                     hex = "#" + EditorGUI.TextField(position, GUIContent.none, hex);
                     EditorGUI.showMixedValue = false;
-                #endif
+#endif
                 EditorGUI.indentLevel = indentLevel;
                 if(EditorGUI.EndChangeCheck())
                 {
@@ -58,7 +59,7 @@ namespace lilToon
                     value.b = value2.b * intensity;
                     prop.colorValue = value;
                 }
-            #else
+#else
                 var value = prop.colorValue;
                 EditorGUI.BeginChangeCheck();
                 EditorGUI.showMixedValue = prop.hasMixedValue;
@@ -69,7 +70,7 @@ namespace lilToon
                 {
                     prop.colorValue = value;
                 }
-            #endif
+#endif
         }
     }
 
@@ -979,4 +980,5 @@ namespace lilToon
         }
     }
 }
+#endif
 #endif

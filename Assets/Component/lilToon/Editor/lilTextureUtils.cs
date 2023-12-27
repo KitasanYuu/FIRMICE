@@ -1,4 +1,6 @@
 #if UNITY_EDITOR
+#if !DEBUG
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,9 +21,9 @@ namespace lilToon
         #region
         internal static void GradientEditor(Material material, Gradient ingrad, MaterialProperty texprop, bool setLinear = false)
         {
-            #if UNITY_2018_3_OR_NEWER
+#if UNITY_2018_3_OR_NEWER
                 ingrad = EditorGUILayout.GradientField(lilLanguageManager.GetLoc("sGradColor"), ingrad);
-            #else
+#else
                 var setMethod = typeof(EditorGUILayout).GetMethod(
                     "GradientField",
                     BindingFlags.NonPublic | BindingFlags.Static,
@@ -31,7 +33,7 @@ namespace lilToon
                 if(setMethod != null) {
                     ingrad = (Gradient)setMethod.Invoke(null, new object[]{lilLanguageManager.GetLoc("sGradColor"), ingrad, null});;
                 }
-            #endif
+#endif
             GUILayout.BeginHorizontal();
             GUILayout.Space(EditorGUI.indentLevel * 16);
             if(GUILayout.Button("Test"))
@@ -51,9 +53,9 @@ namespace lilToon
         internal static void GradientEditor(Material material, string emissionName, Gradient ingrad, MaterialProperty texprop, bool setLinear = false)
         {
             ingrad = MaterialToGradient(material, emissionName);
-            #if UNITY_2018_3_OR_NEWER
+#if UNITY_2018_3_OR_NEWER
                 ingrad = EditorGUILayout.GradientField(lilLanguageManager.GetLoc("sGradColor"), ingrad);
-            #else
+#else
                 var setMethod = typeof(EditorGUILayout).GetMethod(
                     "GradientField",
                     BindingFlags.NonPublic | BindingFlags.Static,
@@ -63,7 +65,7 @@ namespace lilToon
                 if(setMethod != null) {
                     ingrad = (Gradient)setMethod.Invoke(null, new object[]{lilLanguageManager.GetLoc("sGradColor"), ingrad, null});;
                 }
-            #endif
+#endif
             GradientToMaterial(material, emissionName, ingrad);
             GUILayout.BeginHorizontal();
             GUILayout.Space(EditorGUI.indentLevel * 16);
@@ -150,9 +152,9 @@ namespace lilToon
         {
             if(tex == null) return;
 
-            #if UNITY_2018_3_OR_NEWER
+#if UNITY_2018_3_OR_NEWER
             if(!tex.isReadable)
-            #endif
+#endif
             {
                 var bufRT = RenderTexture.active;
                 var texR = RenderTexture.GetTemporary(tex.width, tex.height);
@@ -255,7 +257,7 @@ namespace lilToon
         //------------------------------------------------------------------------------------------------------------------------------
         // Gif to Atlas
         #region
-        #if SYSTEM_DRAWING
+#if SYSTEM_DRAWING
             public static string ConvertGifToAtlas(Object tex)
             {
                 int frameCount, loopXY, duration;
@@ -317,7 +319,7 @@ namespace lilToon
                     AssetDatabase.Refresh();
                     return savePath;
             }
-        #else
+#else
             public static string ConvertGifToAtlas(Object tex)
             {
                 int frameCount, loopXY, duration;
@@ -334,8 +336,8 @@ namespace lilToon
                 yScale = 1.0f;
                 return "";
             }
-        #endif
-        #endregion
+#endif
+#endregion
 
         //------------------------------------------------------------------------------------------------------------------------------
         // Cube to PNG
@@ -438,4 +440,5 @@ namespace lilToon
         #endregion
     }
 }
+#endif
 #endif

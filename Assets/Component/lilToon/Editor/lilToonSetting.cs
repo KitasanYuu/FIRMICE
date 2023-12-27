@@ -1,11 +1,12 @@
 #if !LILTOON_VRCSDK3_AVATARS && !LILTOON_VRCSDK3_WORLDS && VRC_SDK_VRCSDK3
-    #if UDON
-        #define LILTOON_VRCSDK3_WORLDS
-    #else
-        #define LILTOON_VRCSDK3_AVATARS
-    #endif
+#if UDON
+#define LILTOON_VRCSDK3_WORLDS
+#else
+#define LILTOON_VRCSDK3_AVATARS
+#endif
 #endif
 #if UNITY_EDITOR
+#if !DEBUG
 using lilToon;
 using System;
 using System.Collections.Generic;
@@ -1387,11 +1388,11 @@ public class lilToonSetting : ScriptableObject
 
         lilToonSetting shaderSetting = null;
         InitializeShaderSetting(ref shaderSetting);
-        #if LILTOON_VRCSDK3_AVATARS
+#if LILTOON_VRCSDK3_AVATARS
             return shaderSetting.isOptimizeInTestBuild && !shaderSetting.isDebugOptimize;
-        #else
+#else
             return !shaderSetting.isDebugOptimize;
-        #endif
+#endif
     }
 
     private static List<Shader> GetShaderListFromProject()
@@ -1448,4 +1449,5 @@ public class lilToonSetting : ScriptableObject
         shaders.AddRange(AnimationUtility.GetObjectReferenceCurveBindings(clip).SelectMany(b => AnimationUtility.GetObjectReferenceCurve(clip, b)).Where(f => lilMaterialUtils.CheckShaderIslilToon(f.value as Material)).Select(f => ((Material)f.value).shader));
     }
 }
+#endif
 #endif

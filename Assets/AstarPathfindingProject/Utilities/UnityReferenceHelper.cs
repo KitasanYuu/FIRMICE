@@ -1,7 +1,8 @@
 using UnityEngine;
 
 namespace Pathfinding {
-	[ExecuteInEditMode]
+#pragma warning disable 0618 // ½ûÓÃ¾¯¸æ CS0618
+    [ExecuteInEditMode]
 	/// <summary>
 	/// Helper class to keep track of references to GameObjects.
 	/// Does nothing more than to hold a GUID value.

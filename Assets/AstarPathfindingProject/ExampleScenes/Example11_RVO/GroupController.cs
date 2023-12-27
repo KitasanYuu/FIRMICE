@@ -4,11 +4,12 @@ using Pathfinding.RVO;
 using Pathfinding.RVO.Sampled;
 
 namespace Pathfinding.Examples {
-	/// <summary>
-	/// RVO Example Scene Unit Controller.
-	/// Controls AIs and camera in the RVO example scene.
-	/// </summary>
-	[HelpURL("https://arongranberg.com/astar/documentation/stable/class_pathfinding_1_1_examples_1_1_group_controller.php")]
+#pragma warning disable 0618 // ½ûÓÃ¾¯¸æ CS0618
+    /// <summary>
+    /// RVO Example Scene Unit Controller.
+    /// Controls AIs and camera in the RVO example scene.
+    /// </summary>
+    [HelpURL("https://arongranberg.com/astar/documentation/stable/class_pathfinding_1_1_examples_1_1_group_controller.php")]
 	public class GroupController : MonoBehaviour {
 		public GUIStyle selectionBox;
 		public bool adjustCamera = true;

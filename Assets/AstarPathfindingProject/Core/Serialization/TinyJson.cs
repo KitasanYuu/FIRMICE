@@ -8,7 +8,8 @@ using WinRTLegacy;
 #endif
 
 namespace Pathfinding.Serialization {
-	public class JsonMemberAttribute : System.Attribute {
+#pragma warning disable 0618 // ½ûÓÃ¾¯¸æ CS0618
+    public class JsonMemberAttribute : System.Attribute {
 	}
 	public class JsonOptInAttribute : System.Attribute {
 	}
