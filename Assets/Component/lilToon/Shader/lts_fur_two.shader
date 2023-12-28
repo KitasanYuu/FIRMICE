@@ -445,6 +445,11 @@ Shader "Hidden/lilToonFurTwoPass"
 
         //----------------------------------------------------------------------------------------------------------------------
         // ID Mask
+        // _IDMaskCompile will enable compilation of IDMask-related systems. For compatibility, setting certain
+        // parameters to non-zero values will also enable the IDMask feature, but this enable switch ensures that
+        // animator-controlled IDMasked meshes will be compiled correctly. Note that this _only_ controls compilation,
+        // and is ignored at runtime.
+        [ToggleUI]      _IDMaskCompile              ("_IDMaskCompile", Int) = 0
         [lilEnum]       _IDMaskFrom                 ("_IDMaskFrom|0: UV0|1: UV1|2: UV2|3: UV3|4: UV4|5: UV5|6: UV6|7: UV7|8: VertexID", Int) = 8
         [ToggleUI]      _IDMask1                    ("_IDMask1", Int) = 0
         [ToggleUI]      _IDMask2                    ("_IDMask2", Int) = 0
@@ -454,6 +459,7 @@ Shader "Hidden/lilToonFurTwoPass"
         [ToggleUI]      _IDMask6                    ("_IDMask6", Int) = 0
         [ToggleUI]      _IDMask7                    ("_IDMask7", Int) = 0
         [ToggleUI]      _IDMask8                    ("_IDMask8", Int) = 0
+        [ToggleUI]      _IDMaskIsBitmap             ("_IDMaskIsBitmap", Int) = 0
                         _IDMaskIndex1               ("_IDMaskIndex1", Int) = 0
                         _IDMaskIndex2               ("_IDMaskIndex2", Int) = 0
                         _IDMaskIndex3               ("_IDMaskIndex3", Int) = 0
@@ -462,6 +468,16 @@ Shader "Hidden/lilToonFurTwoPass"
                         _IDMaskIndex6               ("_IDMaskIndex6", Int) = 0
                         _IDMaskIndex7               ("_IDMaskIndex7", Int) = 0
                         _IDMaskIndex8               ("_IDMaskIndex8", Int) = 0
+
+        [ToggleUI]      _IDMaskControlsDissolve     ("_IDMaskControlsDissolve", Int) = 0
+        [ToggleUI]      _IDMaskPrior1               ("_IDMaskPrior1", Int) = 0
+        [ToggleUI]      _IDMaskPrior2               ("_IDMaskPrior2", Int) = 0
+        [ToggleUI]      _IDMaskPrior3               ("_IDMaskPrior3", Int) = 0
+        [ToggleUI]      _IDMaskPrior4               ("_IDMaskPrior4", Int) = 0
+        [ToggleUI]      _IDMaskPrior5               ("_IDMaskPrior5", Int) = 0
+        [ToggleUI]      _IDMaskPrior6               ("_IDMaskPrior6", Int) = 0
+        [ToggleUI]      _IDMaskPrior7               ("_IDMaskPrior7", Int) = 0
+        [ToggleUI]      _IDMaskPrior8               ("_IDMaskPrior8", Int) = 0
 
         //----------------------------------------------------------------------------------------------------------------------
         // Encryption
@@ -542,7 +558,7 @@ Shader "Hidden/lilToonFurTwoPass"
         [HideInInspector]                               _BaseColor          ("sColor", Color) = (1,1,1,1)
         [HideInInspector]                               _BaseMap            ("Texture", 2D) = "white" {}
         [HideInInspector]                               _BaseColorMap       ("Texture", 2D) = "white" {}
-        [HideInInspector]                               _lilToonVersion     ("Version", Int) = 34
+        [HideInInspector]                               _lilToonVersion     ("Version", Int) = 37
 
         //----------------------------------------------------------------------------------------------------------------------
         // Advanced
@@ -732,9 +748,9 @@ Shader "Hidden/lilToonFurTwoPass"
             #define LIL_OPTIMIZE_USE_FORWARDADD
             #define LIL_OPTIMIZE_USE_VERTEXLIGHT
             #pragma skip_variants LIGHTMAP_ON DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRLIGHTMAP_COMBINED _MIXED_LIGHTING_SUBTRACTIVE
-            #define LIL_SRP_VERSION_MAJOR 14
+            #define LIL_SRP_VERSION_MAJOR 16
             #define LIL_SRP_VERSION_MINOR 0
-            #define LIL_SRP_VERSION_PATCH 9
+            #define LIL_SRP_VERSION_PATCH 4
 
             #pragma target 4.5
             #pragma require geometry
@@ -982,6 +998,17 @@ Shader "Hidden/lilToonFurTwoPass"
         {
             Name "DEPTHONLY"
             Tags {"LightMode" = "DepthOnly"}
+
+            Stencil
+            {
+                Ref [_StencilRef]
+                ReadMask [_StencilReadMask]
+                WriteMask [_StencilWriteMask]
+                Comp [_StencilComp]
+                Pass [_StencilPass]
+                Fail [_StencilFail]
+                ZFail [_StencilZFail]
+            }
             Cull [_Cull]
             ZClip [_ZClip]
             ZWrite [_ZWrite]
@@ -1014,6 +1041,17 @@ Shader "Hidden/lilToonFurTwoPass"
         {
             Name "DEPTHNORMALS"
             Tags {"LightMode" = "DepthNormals"}
+
+            Stencil
+            {
+                Ref [_StencilRef]
+                ReadMask [_StencilReadMask]
+                WriteMask [_StencilWriteMask]
+                Comp [_StencilComp]
+                Pass [_StencilPass]
+                Fail [_StencilFail]
+                ZFail [_StencilZFail]
+            }
             Cull [_Cull]
             ZClip [_ZClip]
             ZWrite [_ZWrite]
@@ -1046,6 +1084,17 @@ Shader "Hidden/lilToonFurTwoPass"
         {
             Name "MOTIONVECTORS"
             Tags {"LightMode" = "MotionVectors"}
+
+            Stencil
+            {
+                Ref [_StencilRef]
+                ReadMask [_StencilReadMask]
+                WriteMask [_StencilWriteMask]
+                Comp [_StencilComp]
+                Pass [_StencilPass]
+                Fail [_StencilFail]
+                ZFail [_StencilZFail]
+            }
             Cull [_Cull]
             ZClip [_ZClip]
             ZWrite [_ZWrite]
@@ -1250,9 +1299,9 @@ Shader "Hidden/lilToonFurTwoPass"
             #define LIL_OPTIMIZE_USE_FORWARDADD
             #define LIL_OPTIMIZE_USE_VERTEXLIGHT
             #pragma skip_variants LIGHTMAP_ON DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRLIGHTMAP_COMBINED _MIXED_LIGHTING_SUBTRACTIVE
-            #define LIL_SRP_VERSION_MAJOR 14
+            #define LIL_SRP_VERSION_MAJOR 16
             #define LIL_SRP_VERSION_MINOR 0
-            #define LIL_SRP_VERSION_PATCH 9
+            #define LIL_SRP_VERSION_PATCH 4
 
             #pragma target 4.5
             #pragma require geometry
@@ -1496,6 +1545,17 @@ Shader "Hidden/lilToonFurTwoPass"
         {
             Name "DEPTHONLY"
             Tags {"LightMode" = "DepthOnly"}
+
+            Stencil
+            {
+                Ref [_StencilRef]
+                ReadMask [_StencilReadMask]
+                WriteMask [_StencilWriteMask]
+                Comp [_StencilComp]
+                Pass [_StencilPass]
+                Fail [_StencilFail]
+                ZFail [_StencilZFail]
+            }
             Cull [_Cull]
             ZClip [_ZClip]
             ZWrite [_ZWrite]
@@ -1527,6 +1587,17 @@ Shader "Hidden/lilToonFurTwoPass"
         {
             Name "DEPTHNORMALS"
             Tags {"LightMode" = "DepthNormals"}
+
+            Stencil
+            {
+                Ref [_StencilRef]
+                ReadMask [_StencilReadMask]
+                WriteMask [_StencilWriteMask]
+                Comp [_StencilComp]
+                Pass [_StencilPass]
+                Fail [_StencilFail]
+                ZFail [_StencilZFail]
+            }
             Cull [_Cull]
             ZClip [_ZClip]
             ZWrite [_ZWrite]
@@ -1558,6 +1629,17 @@ Shader "Hidden/lilToonFurTwoPass"
         {
             Name "MOTIONVECTORS"
             Tags {"LightMode" = "MotionVectors"}
+
+            Stencil
+            {
+                Ref [_StencilRef]
+                ReadMask [_StencilReadMask]
+                WriteMask [_StencilWriteMask]
+                Comp [_StencilComp]
+                Pass [_StencilPass]
+                Fail [_StencilFail]
+                ZFail [_StencilZFail]
+            }
             Cull [_Cull]
             ZClip [_ZClip]
             ZWrite [_ZWrite]

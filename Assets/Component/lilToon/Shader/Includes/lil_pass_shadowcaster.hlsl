@@ -39,12 +39,12 @@ struct v2f
         float4 uv23         : TEXCOORD2;
     #endif
     #if defined(LIL_V2F_POSITION_OS)
-        float3 positionOS   : TEXCOORD3;
+        float4 positionOSdissolve   : TEXCOORD3;
     #endif
     #if defined(LIL_V2F_POSITION_WS)
         float3 positionWS   : TEXCOORD4;
     #endif
-    LIL_CUSTOM_V2F_MEMBER(4,5,6,7,8,9,10,11)
+    LIL_CUSTOM_V2F_MEMBER(5,6,7,8,9,10,11,12)
     LIL_VERTEX_INPUT_INSTANCE_ID
     LIL_VERTEX_OUTPUT_STEREO
 };

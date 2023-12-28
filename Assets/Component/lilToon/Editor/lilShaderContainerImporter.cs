@@ -1,5 +1,4 @@
 #if UNITY_EDITOR
-#if !DEBUG
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,18 +16,18 @@ using UnityEditor.AssetImporters;
 
 namespace lilToon
 {
-#if LILTOON_DISABLE_ASSET_MODIFICATION == false
-#if UNITY_2019_4_OR_NEWER
+    #if LILTOON_DISABLE_ASSET_MODIFICATION == false
+    #if UNITY_2019_4_OR_NEWER
         [ScriptedImporter(0, "lilcontainer")]
         public class lilShaderContainerImporter : ScriptedImporter
         {
             public override void OnImportAsset(AssetImportContext ctx)
             {
-#if UNITY_2019_4_0 || UNITY_2019_4_1 || UNITY_2019_4_2 || UNITY_2019_4_3 || UNITY_2019_4_4 || UNITY_2019_4_5 || UNITY_2019_4_6 || UNITY_2019_4_7 || UNITY_2019_4_8 || UNITY_2019_4_9 || UNITY_2019_4_10
+                #if UNITY_2019_4_0 || UNITY_2019_4_1 || UNITY_2019_4_2 || UNITY_2019_4_3 || UNITY_2019_4_4 || UNITY_2019_4_5 || UNITY_2019_4_6 || UNITY_2019_4_7 || UNITY_2019_4_8 || UNITY_2019_4_9 || UNITY_2019_4_10
                     var shader = ShaderUtil.CreateShaderAsset(lilShaderContainer.UnpackContainer(ctx.assetPath, ctx), false);
-#else
+                #else
                     var shader = ShaderUtil.CreateShaderAsset(ctx, lilShaderContainer.UnpackContainer(ctx.assetPath, ctx), false);
-#endif
+                #endif
 
                 ctx.AddObjectToAsset("main obj", shader);
                 ctx.SetMainObject(shader);
@@ -68,8 +67,8 @@ namespace lilToon
                 }
             }
         }
-#endif
-#endif //LILTOON_DISABLE_ASSET_MODIFICATION
+    #endif
+    #endif //LILTOON_DISABLE_ASSET_MODIFICATION
 
     public class lilShaderContainer
     {
@@ -141,7 +140,7 @@ namespace lilToon
         private const string LIL_LIGHTMODE_URP_9_FORWARD_0  = "SRPDefaultUnlit";
         private const string LIL_LIGHTMODE_URP_9_FORWARD_1  = "UniversalForward";
         private const string LIL_LIGHTMODE_URP_9_FORWARD_2  = "UniversalForwardOnly";
-
+        
         private const string csdShaderNameTag                   = "ShaderName";
         private const string csdEditorNameTag                   = "EditorName";
         private const string csdReplaceTag                      = "Replace";
@@ -177,6 +176,8 @@ namespace lilToon
         private static string insertUsePassPre = "";
         private static string insertUsePassPost = "";
 
+        private static string insertUsePassReference = "";
+
         private static PackageVersionInfos version = new PackageVersionInfos();
         private static int indent = 12;
 
@@ -200,6 +201,9 @@ namespace lilToon
             insertPassPost = "";
             insertUsePassPre = "";
             insertUsePassPost = "";
+            insertUsePassReference = File.ReadAllText(
+                GetCustomShaderResourcesFolderPath() + "/Misc/ReferenceUVs.lilblock"
+            );
             isOrigShaderNameLoaded = false;
             replaces = new Dictionary<string, string>();
 
@@ -237,6 +241,8 @@ namespace lilToon
             ReplaceMultiCompiles(ref insertPassPost, version, indent, false);
             ReplaceMultiCompiles(ref insertUsePassPre, version, indent, false);
             ReplaceMultiCompiles(ref insertUsePassPost, version, indent, false);
+            insertUsePassPost += insertUsePassReference;
+                
             sb.Replace(LIL_INSERT_PASS_PRE,         insertPassPre);
             sb.Replace(LIL_INSERT_PASS_POST,        insertPassPost);
             sb.Replace(LIL_INSERT_USEPASS_PRE,      insertUsePassPre);
@@ -377,7 +383,7 @@ namespace lilToon
                 !assetName.Contains("ltspass_lite") &&
                 !assetName.Contains("ltsl") &&
                 !assetName.Contains("fakeshadow") &&
-                File.Exists(lilDirectoryManager.postBuildTempPath)
+                !string.IsNullOrEmpty(lilEditorParameters.instance.modifiedShaders)
             )
             {
                 string pathOpt = AssetDatabase.GUIDToAssetPath("571051a232e4af44a98389bda858df27");
@@ -409,9 +415,9 @@ namespace lilToon
                 sb.Replace("/SHADOW_CASTER_OUTLINE", "/SHADOW_CASTER");
             }
 
-#if !UNITY_2019_4_OR_NEWER
+            #if !UNITY_2019_4_OR_NEWER
                 sb.Replace("shader_feature_local", "shader_feature");
-#endif
+            #endif
 
             sb.Replace("\r\n", "\r");
             sb.Replace("\n", "\r");
@@ -428,7 +434,7 @@ namespace lilToon
 
         public static string UnpackContainer(string assetPath, AssetImportContext ctx = null)
         {
-            bool doOptimize = File.Exists(lilDirectoryManager.postBuildTempPath);
+            bool doOptimize = !string.IsNullOrEmpty(lilEditorParameters.instance.modifiedShaders);
             return UnpackContainer(assetPath, ctx, doOptimize);
         }
 
@@ -834,7 +840,7 @@ namespace lilToon
 
         private static void FixIncludeForOldUnity(ref StringBuilder sb)
         {
-#if UNITY_2019_4_0 || UNITY_2019_4_1 || UNITY_2019_4_2 || UNITY_2019_4_3 || UNITY_2019_4_4 || UNITY_2019_4_5 || UNITY_2019_4_6 || UNITY_2019_4_7 || UNITY_2019_4_8 || UNITY_2019_4_9 || UNITY_2019_4_10
+            #if UNITY_2019_4_0 || UNITY_2019_4_1 || UNITY_2019_4_2 || UNITY_2019_4_3 || UNITY_2019_4_4 || UNITY_2019_4_5 || UNITY_2019_4_6 || UNITY_2019_4_7 || UNITY_2019_4_8 || UNITY_2019_4_9 || UNITY_2019_4_10
                 string additionalPath = assetFolderPath.Replace("\\", "/");
                 var escapes = Environment.NewLine.ToCharArray();
                 var text = sb.ToString().Split(escapes[0]);
@@ -862,7 +868,7 @@ namespace lilToon
                         sb.AppendLine(line);
                     }
                 }
-#endif
+            #endif
         }
 
         private static void AddHLSLDependency(string assetFolderPath, AssetImportContext ctx)
@@ -1627,11 +1633,10 @@ namespace lilToon
 
         private static void AddDependency(AssetImportContext ctx, string path)
         {
-#if UNITY_2018_2_OR_NEWER
+            #if UNITY_2018_2_OR_NEWER
                 if(ctx != null) ctx.DependsOnSourceAsset(path);
-#endif
+            #endif
         }
     }
 }
-#endif
 #endif

@@ -59,6 +59,9 @@
             #pragma fragment frag
             #pragma multi_compile_instancing
 
+            // Replace keywords
+            #include "Includes/lil_replace_keywords.hlsl"
+
             //----------------------------------------------------------------------------------------------------------------------
             // Pass
             #define LIL_GEM_PRE
@@ -182,6 +185,17 @@
         {
             Name "DEPTHONLY"
             Tags {"LightMode" = "DepthOnly"}
+
+            Stencil
+            {
+                Ref [_StencilRef]
+                ReadMask [_StencilReadMask]
+                WriteMask [_StencilWriteMask]
+                Comp [_StencilComp]
+                Pass [_StencilPass]
+                Fail [_StencilFail]
+                ZFail [_StencilZFail]
+            }
             Cull [_Cull]
             ZClip [_ZClip]
             ZWrite [_ZWrite]
@@ -219,6 +233,17 @@
         {
             Name "DEPTHNORMALS"
             Tags {"LightMode" = "DepthNormals"}
+
+            Stencil
+            {
+                Ref [_StencilRef]
+                ReadMask [_StencilReadMask]
+                WriteMask [_StencilWriteMask]
+                Comp [_StencilComp]
+                Pass [_StencilPass]
+                Fail [_StencilFail]
+                ZFail [_StencilZFail]
+            }
             Cull [_Cull]
             ZClip [_ZClip]
             ZWrite [_ZWrite]
@@ -256,6 +281,17 @@
         {
             Name "MOTIONVECTORS"
             Tags {"LightMode" = "MotionVectors"}
+
+            Stencil
+            {
+                Ref [_StencilRef]
+                ReadMask [_StencilReadMask]
+                WriteMask [_StencilWriteMask]
+                Comp [_StencilComp]
+                Pass [_StencilPass]
+                Fail [_StencilFail]
+                ZFail [_StencilZFail]
+            }
             Cull [_Cull]
             ZClip [_ZClip]
             ZWrite [_ZWrite]
@@ -268,6 +304,9 @@
             #pragma vertex vert
             #pragma fragment frag
             #pragma lil_multi_compile_motionvectors
+
+            // Replace keywords
+            #include "Includes/lil_replace_keywords.hlsl"
 
             //----------------------------------------------------------------------------------------------------------------------
             // Pass
@@ -313,6 +352,9 @@
             // Build Option
             #pragma vertex vert
             #pragma fragment frag
+
+            // Replace keywords
+            #include "Includes/lil_replace_keywords.hlsl"
 
             //----------------------------------------------------------------------------------------------------------------------
             // Pass

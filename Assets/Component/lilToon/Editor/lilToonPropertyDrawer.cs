@@ -1,5 +1,4 @@
 #if UNITY_EDITOR
-#if !DEBUG
 using UnityEditor;
 using UnityEngine;
 using System;
@@ -14,7 +13,7 @@ namespace lilToon
         // [lilHDR]
         public override void OnGUI(Rect position, MaterialProperty prop, string label, MaterialEditor editor)
         {
-#if UNITY_2019_1_OR_NEWER
+            #if UNITY_2019_1_OR_NEWER
                 float xMax = position.xMax;
                 position.width = string.IsNullOrEmpty(label) ? Mathf.Min(50.0f, position.width) : EditorGUIUtility.labelWidth + 50.0f;
                 var value = prop.colorValue;
@@ -36,7 +35,7 @@ namespace lilToon
                 int indentLevel = EditorGUI.indentLevel;
                 EditorGUI.indentLevel = 0;
                 position.x += position.width + 4.0f;
-#if UNITY_2021_2_OR_NEWER
+                #if UNITY_2021_2_OR_NEWER
                     position.width = Mathf.Min(50.0f, xMax - position.x);
                     if(position.width > 10.0f)
                     {
@@ -44,12 +43,12 @@ namespace lilToon
                         hex = "#" + EditorGUI.TextField(position, GUIContent.none, hex);
                         EditorGUI.showMixedValue = false;
                     }
-#else
+                #else
                     position.width = 50.0f;
                     EditorGUI.showMixedValue = prop.hasMixedValue;
                     hex = "#" + EditorGUI.TextField(position, GUIContent.none, hex);
                     EditorGUI.showMixedValue = false;
-#endif
+                #endif
                 EditorGUI.indentLevel = indentLevel;
                 if(EditorGUI.EndChangeCheck())
                 {
@@ -59,7 +58,7 @@ namespace lilToon
                     value.b = value2.b * intensity;
                     prop.colorValue = value;
                 }
-#else
+            #else
                 var value = prop.colorValue;
                 EditorGUI.BeginChangeCheck();
                 EditorGUI.showMixedValue = prop.hasMixedValue;
@@ -70,7 +69,7 @@ namespace lilToon
                 {
                     prop.colorValue = value;
                 }
-#endif
+            #endif
         }
     }
 
@@ -173,6 +172,13 @@ namespace lilToon
             float type = prop.vectorValue.y;
             float speed = prop.vectorValue.z / Mathf.PI;
             float offset = prop.vectorValue.w / Mathf.PI;
+            if(Event.current.alt)
+            {
+                labels[0] = prop.name + ".x";
+                labels[1] = prop.name + ".y";
+                labels[2] = prop.name + ".z";
+                labels[3] = prop.name + ".w";
+            }
 
             EditorGUI.BeginChangeCheck();
             strength = EditorGUI.Slider(position, labels[0], strength, 0.0f, 1.0f);
@@ -271,6 +277,11 @@ namespace lilToon
             var labels = label.Split('|');
             var vec = new Vector3(prop.vectorValue.x, prop.vectorValue.y, prop.vectorValue.z);
             float length = prop.vectorValue.w;
+            if(Event.current.alt)
+            {
+                labels[0] = prop.name + ".xyz";
+                labels[1] = prop.name + ".w";
+            }
 
             EditorGUIUtility.wideMode = true;
 
@@ -298,6 +309,13 @@ namespace lilToon
             float sat = prop.vectorValue.y;
             float val = prop.vectorValue.z;
             float gamma = prop.vectorValue.w;
+            if(Event.current.alt)
+            {
+                labels[0] = prop.name + ".x";
+                labels[1] = prop.name + ".y";
+                labels[2] = prop.name + ".z";
+                labels[3] = prop.name + ".w";
+            }
 
             EditorGUI.BeginChangeCheck();
             hue = EditorGUI.Slider(position, labels[0], hue, -0.5f, 0.5f);
@@ -338,6 +356,12 @@ namespace lilToon
             }
             else
             {
+                if(Event.current.alt)
+                {
+                    labels[0] = prop.name + ".z";
+                    labels[2] = prop.name + ".xy";
+                    labels[3] = prop.name + ".w";
+                }
                 // Angle
                 angle = EditorGUI.Slider(position, labels[0], angle, -180.0f, 180.0f);
 
@@ -385,6 +409,13 @@ namespace lilToon
             int loopY = (int)prop.vectorValue.y;
             int frames = (int)prop.vectorValue.z;
             float speed = prop.vectorValue.w;
+            if(Event.current.alt)
+            {
+                labels[1] = prop.name + ".x";
+                labels[2] = prop.name + ".y";
+                labels[3] = prop.name + ".z";
+                labels[4] = prop.name + ".w";
+            }
 
             // Heading (UV Animation)
             EditorGUI.LabelField(position, labels[0], EditorStyles.boldLabel);
@@ -419,6 +450,12 @@ namespace lilToon
             float scaleY = prop.vectorValue.y;
             float border = prop.vectorValue.z;
             float unused = prop.vectorValue.w;
+            if(Event.current.alt)
+            {
+                labels[0] = prop.name + ".x";
+                labels[1] = prop.name + ".y";
+                labels[2] = prop.name + ".z";
+            }
 
             EditorGUI.indentLevel++;
             var position1 = EditorGUILayout.GetControlRect();
@@ -522,6 +559,12 @@ namespace lilToon
             float param2 = prop.vectorValue.y;
             float param3 = prop.vectorValue.z;
             float unused = prop.vectorValue.w;
+            if(Event.current.alt)
+            {
+                labels[0] = prop.name + ".x";
+                labels[1] = prop.name + ".y";
+                labels[2] = prop.name + ".z";
+            }
 
             EditorGUI.indentLevel++;
             var position1 = EditorGUILayout.GetControlRect();
@@ -550,6 +593,11 @@ namespace lilToon
             float param2 = prop.vectorValue.y;
             float param3 = prop.vectorValue.z;
             float param4 = prop.vectorValue.w;
+            if(Event.current.alt)
+            {
+                labels[0] = prop.name + ".x";
+                labels[1] = prop.name + ".y";
+            }
 
             var position1 = EditorGUILayout.GetControlRect();
 
@@ -574,6 +622,13 @@ namespace lilToon
             float param2 = prop.vectorValue.y;
             float param3 = prop.vectorValue.z;
             float param4 = prop.vectorValue.w;
+            if(Event.current.alt)
+            {
+                labels[0] = prop.name + ".x";
+                labels[1] = prop.name + ".y";
+                labels[2] = prop.name + ".z";
+                labels[3] = prop.name + ".w";
+            }
 
             var position1 = EditorGUILayout.GetControlRect();
             var position2 = EditorGUILayout.GetControlRect();
@@ -602,6 +657,13 @@ namespace lilToon
             float param2 = prop.vectorValue.y;
             float param3 = prop.vectorValue.z;
             bool param4 = prop.vectorValue.w != 0.0f;
+            if(Event.current.alt)
+            {
+                labels[0] = prop.name + ".x";
+                labels[1] = prop.name + ".y";
+                labels[2] = prop.name + ".z";
+                labels[3] = prop.name + ".w";
+            }
 
             var position1 = EditorGUILayout.GetControlRect();
             var position2 = EditorGUILayout.GetControlRect();
@@ -630,6 +692,13 @@ namespace lilToon
             float param2 = prop.vectorValue.y;
             float param3 = prop.vectorValue.z;
             float param4 = prop.vectorValue.w;
+            if(Event.current.alt)
+            {
+                labels[0] = prop.name + ".x";
+                labels[1] = prop.name + ".y";
+                labels[2] = prop.name + ".z";
+                labels[3] = prop.name + ".w";
+            }
 
             var position1 = EditorGUILayout.GetControlRect();
             var position2 = EditorGUILayout.GetControlRect();
@@ -657,6 +726,11 @@ namespace lilToon
             var labels = label.Split('|');
             var vec = new Vector3(prop.vectorValue.x, prop.vectorValue.y, prop.vectorValue.z);
             bool value = prop.vectorValue.w != 0.0f;
+            if(Event.current.alt)
+            {
+                labels[0] = prop.name + ".xyz";
+                labels[1] = prop.name + ".w";
+            }
 
             var position1 = EditorGUILayout.GetControlRect();
 
@@ -691,12 +765,23 @@ namespace lilToon
             EditorGUI.BeginChangeCheck();
             if(labels.Length == 6)
             {
+                if(Event.current.alt)
+                {
+                    labels[0] = prop.name + ".y";
+                    labels[1] = prop.name + ".w";
+                }
                 var position1 = EditorGUILayout.GetControlRect();
                 offset = EditorGUI.FloatField(position, labels[0], offset);
                 band = EditorGUI.Popup(position1, labels[1], (int)band, new string[]{labels[2],labels[3],labels[4],labels[5]});
             }
             if(labels.Length == 7)
             {
+                if(Event.current.alt)
+                {
+                    labels[0] = prop.name + ".x";
+                    labels[1] = prop.name + ".y";
+                    labels[2] = prop.name + ".w";
+                }
                 var position1 = EditorGUILayout.GetControlRect();
                 var position2 = EditorGUILayout.GetControlRect();
                 scale = EditorGUI.FloatField(position, labels[0], scale);
@@ -705,6 +790,13 @@ namespace lilToon
             }
             if(labels.Length == 8)
             {
+                if(Event.current.alt)
+                {
+                    labels[0] = prop.name + ".x";
+                    labels[1] = prop.name + ".y";
+                    labels[2] = prop.name + ".z";
+                    labels[3] = prop.name + ".w";
+                }
                 var position1 = EditorGUILayout.GetControlRect();
                 var position2 = EditorGUILayout.GetControlRect();
                 var position3 = EditorGUILayout.GetControlRect();
@@ -731,6 +823,12 @@ namespace lilToon
             float Notes = prop.vectorValue.y;
             float Offset = prop.vectorValue.z;
             float unused = prop.vectorValue.w;
+            if(Event.current.alt)
+            {
+                labels[0] = prop.name + ".x";
+                labels[1] = prop.name + ".y";
+                labels[2] = prop.name + ".z";
+            }
 
             EditorGUI.indentLevel++;
             var position1 = EditorGUILayout.GetControlRect();
@@ -763,6 +861,10 @@ namespace lilToon
             EditorGUI.BeginChangeCheck();
             if(labels.Length == 5)
             {
+                if(Event.current.alt)
+                {
+                    labels[0] = prop.name + ".x";
+                }
                 if(EditorGUIUtility.isProSkin)
                 {
                     type = EditorGUI.Popup(position, labels[0], (int)type, new string[]{labels[1],labels[2],labels[3],labels[4]});
@@ -780,6 +882,12 @@ namespace lilToon
             }
             if(labels.Length == 6)
             {
+                if(Event.current.alt)
+                {
+                    labels[0] = prop.name + ".y";
+                    labels[3] = prop.name + ".z";
+                    labels[4] = prop.name + ".w";
+                }
                 if(type == 1.0f)
                 {
                     var position1 = EditorGUILayout.GetControlRect();
@@ -805,6 +913,13 @@ namespace lilToon
             }
             if(labels.Length == 10)
             {
+                if(Event.current.alt)
+                {
+                    labels[0] = prop.name + ".x";
+                    labels[5] = prop.name + ".y";
+                    labels[8] = prop.name + ".z";
+                    labels[9] = prop.name + ".w";
+                }
                 type = EditorGUI.Popup(position, labels[0], (int)type, new string[]{labels[1],labels[2],labels[3],labels[4]});
                 if(type == 1.0f)
                 {
@@ -936,6 +1051,12 @@ namespace lilToon
             var position1 = EditorGUILayout.GetControlRect();
             var position2 = EditorGUILayout.GetControlRect();
             EditorGUIUtility.wideMode = true;
+            if(Event.current.alt)
+            {
+                labels[0] = prop.name + ".xy";
+                labels[1] = prop.name + ".z";
+                labels[2] = prop.name + ".w";
+            }
 
             EditorGUI.BeginChangeCheck();
             EditorGUI.showMixedValue = prop.hasMixedValue;
@@ -964,6 +1085,13 @@ namespace lilToon
             var position1 = EditorGUILayout.GetControlRect();
             var position2 = EditorGUILayout.GetControlRect();
             var position3 = EditorGUILayout.GetControlRect();
+            if(Event.current.alt)
+            {
+                labels[0] = prop.name + ".x";
+                labels[1] = prop.name + ".y";
+                labels[2] = prop.name + ".z";
+                labels[3] = prop.name + ".w";
+            }
 
             EditorGUI.BeginChangeCheck();
             EditorGUI.showMixedValue = prop.hasMixedValue;
@@ -980,5 +1108,4 @@ namespace lilToon
         }
     }
 }
-#endif
 #endif

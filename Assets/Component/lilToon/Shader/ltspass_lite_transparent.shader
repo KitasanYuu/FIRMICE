@@ -87,7 +87,7 @@ Shader "Hidden/ltspass_lite_transparent"
         [HideInInspector]                               _BaseColor          ("sColor", Color) = (1,1,1,1)
         [HideInInspector]                               _BaseMap            ("Texture", 2D) = "white" {}
         [HideInInspector]                               _BaseColorMap       ("Texture", 2D) = "white" {}
-        [HideInInspector]                               _lilToonVersion     ("Version", Int) = 34
+        [HideInInspector]                               _lilToonVersion     ("Version", Int) = 37
 
         //----------------------------------------------------------------------------------------------------------------------
         // Advanced
@@ -192,9 +192,9 @@ Shader "Hidden/ltspass_lite_transparent"
     {
         Tags { "ShaderModel" = "4.5"}
         HLSLINCLUDE
-            #define LIL_SRP_VERSION_MAJOR 14
+            #define LIL_SRP_VERSION_MAJOR 16
             #define LIL_SRP_VERSION_MINOR 0
-            #define LIL_SRP_VERSION_PATCH 9
+            #define LIL_SRP_VERSION_PATCH 4
 
             #pragma target 4.5
             #pragma exclude_renderers d3d11_9x
@@ -442,6 +442,17 @@ Shader "Hidden/ltspass_lite_transparent"
         {
             Name "DEPTHONLY"
             Tags {"LightMode" = "DepthOnly"}
+
+            Stencil
+            {
+                Ref [_StencilRef]
+                ReadMask [_StencilReadMask]
+                WriteMask [_StencilWriteMask]
+                Comp [_StencilComp]
+                Pass [_StencilPass]
+                Fail [_StencilFail]
+                ZFail [_StencilZFail]
+            }
             Cull [_Cull]
             ZClip [_ZClip]
             ZWrite [_ZWrite]
@@ -474,6 +485,17 @@ Shader "Hidden/ltspass_lite_transparent"
         {
             Name "DEPTHNORMALS"
             Tags {"LightMode" = "DepthNormals"}
+
+            Stencil
+            {
+                Ref [_StencilRef]
+                ReadMask [_StencilReadMask]
+                WriteMask [_StencilWriteMask]
+                Comp [_StencilComp]
+                Pass [_StencilPass]
+                Fail [_StencilFail]
+                ZFail [_StencilZFail]
+            }
             Cull [_Cull]
             ZClip [_ZClip]
             ZWrite [_ZWrite]
@@ -506,6 +528,17 @@ Shader "Hidden/ltspass_lite_transparent"
         {
             Name "MOTIONVECTORS"
             Tags {"LightMode" = "MotionVectors"}
+
+            Stencil
+            {
+                Ref [_StencilRef]
+                ReadMask [_StencilReadMask]
+                WriteMask [_StencilWriteMask]
+                Comp [_StencilComp]
+                Pass [_StencilPass]
+                Fail [_StencilFail]
+                ZFail [_StencilZFail]
+            }
             Cull [_Cull]
             ZClip [_ZClip]
             ZWrite [_ZWrite]
@@ -610,9 +643,9 @@ Shader "Hidden/ltspass_lite_transparent"
     {
         Tags {}
         HLSLINCLUDE
-            #define LIL_SRP_VERSION_MAJOR 14
+            #define LIL_SRP_VERSION_MAJOR 16
             #define LIL_SRP_VERSION_MINOR 0
-            #define LIL_SRP_VERSION_PATCH 9
+            #define LIL_SRP_VERSION_PATCH 4
 
             #pragma exclude_renderers d3d11_9x
             #pragma fragmentoption ARB_precision_hint_fastest
@@ -855,6 +888,17 @@ Shader "Hidden/ltspass_lite_transparent"
         {
             Name "DEPTHONLY"
             Tags {"LightMode" = "DepthOnly"}
+
+            Stencil
+            {
+                Ref [_StencilRef]
+                ReadMask [_StencilReadMask]
+                WriteMask [_StencilWriteMask]
+                Comp [_StencilComp]
+                Pass [_StencilPass]
+                Fail [_StencilFail]
+                ZFail [_StencilZFail]
+            }
             Cull [_Cull]
             ZClip [_ZClip]
             ZWrite [_ZWrite]
@@ -886,6 +930,17 @@ Shader "Hidden/ltspass_lite_transparent"
         {
             Name "DEPTHNORMALS"
             Tags {"LightMode" = "DepthNormals"}
+
+            Stencil
+            {
+                Ref [_StencilRef]
+                ReadMask [_StencilReadMask]
+                WriteMask [_StencilWriteMask]
+                Comp [_StencilComp]
+                Pass [_StencilPass]
+                Fail [_StencilFail]
+                ZFail [_StencilZFail]
+            }
             Cull [_Cull]
             ZClip [_ZClip]
             ZWrite [_ZWrite]
@@ -917,6 +972,17 @@ Shader "Hidden/ltspass_lite_transparent"
         {
             Name "MOTIONVECTORS"
             Tags {"LightMode" = "MotionVectors"}
+
+            Stencil
+            {
+                Ref [_StencilRef]
+                ReadMask [_StencilReadMask]
+                WriteMask [_StencilWriteMask]
+                Comp [_StencilComp]
+                Pass [_StencilPass]
+                Fail [_StencilFail]
+                ZFail [_StencilZFail]
+            }
             Cull [_Cull]
             ZClip [_ZClip]
             ZWrite [_ZWrite]

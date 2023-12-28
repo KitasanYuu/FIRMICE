@@ -85,7 +85,7 @@ Shader "_lil/[Optional] lilToonFakeShadow"
         [HideInInspector]                               _BaseColor          ("sColor", Color) = (1,1,1,1)
         [HideInInspector]                               _BaseMap            ("Texture", 2D) = "white" {}
         [HideInInspector]                               _BaseColorMap       ("Texture", 2D) = "white" {}
-        [HideInInspector]                               _lilToonVersion     ("Version", Int) = 34
+        [HideInInspector]                               _lilToonVersion     ("Version", Int) = 37
     }
 
     SubShader
@@ -192,9 +192,9 @@ Shader "_lil/[Optional] lilToonFakeShadow"
             #define LIL_OPTIMIZE_USE_FORWARDADD
             #define LIL_OPTIMIZE_USE_VERTEXLIGHT
             #pragma skip_variants LIGHTMAP_ON DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRLIGHTMAP_COMBINED _MIXED_LIGHTING_SUBTRACTIVE
-            #define LIL_SRP_VERSION_MAJOR 14
+            #define LIL_SRP_VERSION_MAJOR 16
             #define LIL_SRP_VERSION_MINOR 0
-            #define LIL_SRP_VERSION_PATCH 9
+            #define LIL_SRP_VERSION_PATCH 4
 
             #pragma target 4.5
             #pragma fragmentoption ARB_precision_hint_fastest
@@ -384,9 +384,9 @@ Shader "_lil/[Optional] lilToonFakeShadow"
             #define LIL_OPTIMIZE_USE_FORWARDADD
             #define LIL_OPTIMIZE_USE_VERTEXLIGHT
             #pragma skip_variants LIGHTMAP_ON DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRLIGHTMAP_COMBINED _MIXED_LIGHTING_SUBTRACTIVE
-            #define LIL_SRP_VERSION_MAJOR 14
+            #define LIL_SRP_VERSION_MAJOR 16
             #define LIL_SRP_VERSION_MINOR 0
-            #define LIL_SRP_VERSION_PATCH 9
+            #define LIL_SRP_VERSION_PATCH 4
 
             #pragma target 3.5
             #pragma fragmentoption ARB_precision_hint_fastest
