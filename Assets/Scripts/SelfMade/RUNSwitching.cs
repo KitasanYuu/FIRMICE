@@ -3,36 +3,36 @@ using UnityEngine;
 public class FOVController : MonoBehaviour
 {
     [SerializeField]
-    private Camera targetCamera; // ÔÚInspectorÖĞ½«Ä¿±êÏà»úÍÏ×§µ½ÕâÀï
+    private Camera targetCamera; // åœ¨Inspectorä¸­å°†ç›®æ ‡ç›¸æœºæ‹–æ‹½åˆ°è¿™é‡Œ
 
     [SerializeField]
-    private float normalFOV = 60f; // Ä¬ÈÏµÄFOV
+    private float normalFOV = 60f; // é»˜è®¤çš„FOV
     [SerializeField]
-    private float zoomedFOV = 30f; // °´×¡ShiftÊ±µÄFOV
+    private float zoomedFOV = 30f; // æŒ‰ä½Shiftæ—¶çš„FOV
 
     [SerializeField]
-    private float rotationSpeed = 2f; // Ğı×ªËÙ¶È
+    private float rotationSpeed = 2f; // æ—‹è½¬é€Ÿåº¦
     [SerializeField]
-    private float fovLerpSpeed = 5f; // ²åÖµËÙ¶È
+    private float fovLerpSpeed = 5f; // æ’å€¼é€Ÿåº¦
 
     void Update()
     {
-        // ¼ì²âÊÇ·ñ°´×¡ Shift ¼ü
+        // æ£€æµ‹æ˜¯å¦æŒ‰ä½ Shift é”®
         bool isShiftPressed = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 
-        // Èç¹û°´×¡ Shift ²¢Í¬Ê±°´ÏÂ WASD ¼ü
+        // å¦‚æœæŒ‰ä½ Shift å¹¶åŒæ—¶æŒ‰ä¸‹ WASD é”®
         if (isShiftPressed && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)))
         {
-            // ¸ü¸ÄÏà»úµÄ FOV
+            // æ›´æ”¹ç›¸æœºçš„ FOV
             ChangeFOV(zoomedFOV);
         }
         else
         {
-            // »Ö¸´Ä¬ÈÏ FOV
+            // æ¢å¤é»˜è®¤ FOV
             ChangeFOV(normalFOV);
         }
 
-        // Í¨¹ıÊó±êĞı×ªÏà»ú
+        // é€šè¿‡é¼ æ ‡æ—‹è½¬ç›¸æœº
         RotateCamera();
     }
 
@@ -40,7 +40,7 @@ public class FOVController : MonoBehaviour
     {
         if (targetCamera != null)
         {
-            // Ê¹ÓÃ²åÖµÖğ½¥¸Ä±ä FOV
+            // ä½¿ç”¨æ’å€¼é€æ¸æ”¹å˜ FOV
             float currentFOV = targetCamera.fieldOfView;
             float newFOV = Mathf.Lerp(currentFOV, targetFOV, Time.deltaTime * fovLerpSpeed);
             targetCamera.fieldOfView = newFOV;
@@ -52,7 +52,7 @@ public class FOVController : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X") * rotationSpeed;
         float mouseY = Input.GetAxis("Mouse Y") * rotationSpeed;
 
-        // ÔÚÕâÀïÊµÏÖ¸ù¾İÊó±êĞı×ªÏà»úµÄÂß¼­
-        // Äã¿ÉÒÔÊ¹ÓÃÉÏÃæµÄÏà»úĞı×ªÂß¼­»òÕßÆäËûÄãÏëÒªµÄÂß¼­
+        // åœ¨è¿™é‡Œå®ç°æ ¹æ®é¼ æ ‡æ—‹è½¬ç›¸æœºçš„é€»è¾‘
+        // ä½ å¯ä»¥ä½¿ç”¨ä¸Šé¢çš„ç›¸æœºæ—‹è½¬é€»è¾‘æˆ–è€…å…¶ä»–ä½ æƒ³è¦çš„é€»è¾‘
     }
 }

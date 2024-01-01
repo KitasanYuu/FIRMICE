@@ -2,19 +2,19 @@ using UnityEngine;
 
 public class SimpleCameraLookAt : MonoBehaviour
 {
-    public Transform target; // Ä¿±êÎïÌå
+    public Transform target; // ç›®æ ‡ç‰©ä½“
 
     void Update()
     {
         if (target != null)
         {
-            // ¼ÆËã³¯ÏòÄ¿±êÎïÌåµÄ·½Ïò
+            // è®¡ç®—æœå‘ç›®æ ‡ç‰©ä½“çš„æ–¹å‘
             Vector3 lookAtDirection = target.position - transform.position;
 
-            // ¼ÆËãĞı×ª½Ç¶È
+            // è®¡ç®—æ—‹è½¬è§’åº¦
             Quaternion rotation = Quaternion.LookRotation(lookAtDirection, Vector3.up);
 
-            // Ó¦ÓÃĞı×ªµ½Ïà»ú
+            // åº”ç”¨æ—‹è½¬åˆ°ç›¸æœº
             transform.rotation = rotation;
         }
     }

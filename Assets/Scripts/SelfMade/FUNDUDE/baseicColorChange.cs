@@ -2,17 +2,17 @@ using UnityEngine;
 
 public class EmissionColorController : MonoBehaviour
 {
-    private Material material; // ÒıÓÃÄãµÄ²ÄÖÊ
-    public Color colorA = Color.black; // ÑÕÉ«A
-    public Color colorB = Color.white; // ÑÕÉ«B
-    public float duration = 2.0f; // ±ä»¯³ÖĞøÊ±¼ä
+    private Material material; // å¼•ç”¨ä½ çš„æè´¨
+    public Color colorA = Color.black; // é¢œè‰²A
+    public Color colorB = Color.white; // é¢œè‰²B
+    public float duration = 2.0f; // å˜åŒ–æŒç»­æ—¶é—´
     public float lerpcolor;
 
     private float startTime;
 
     void Start()
     {
-        // »ñÈ¡ÎïÌåÉÏµÄ²ÄÖÊ
+        // è·å–ç‰©ä½“ä¸Šçš„æè´¨
         Renderer renderer = GetComponent<Renderer>();
         if (renderer != null)
         {
@@ -21,7 +21,7 @@ public class EmissionColorController : MonoBehaviour
         else
         {
             Debug.LogError("No Renderer component found on this GameObject.");
-            enabled = false; // ½ûÓÃ½Å±¾
+            enabled = false; // ç¦ç”¨è„šæœ¬
             return;
         }
 
@@ -32,21 +32,21 @@ public class EmissionColorController : MonoBehaviour
     {
         float t = Mathf.PingPong(Time.time - startTime, duration) / duration;
 
-        // »ñÈ¡µ±Ç°Ç¿¶ÈÖµ
+        // è·å–å½“å‰å¼ºåº¦å€¼
         float currentIntensity = material.GetColor("_EmissionColor").maxColorComponent;
 
-        // ·Ö±ğ´¦ÀíARGBÍ¨µÀ
+        // åˆ†åˆ«å¤„ç†ARGBé€šé“
         float lerpedR = Mathf.Lerp(colorA.r, colorB.r, t);
         float lerpedG = Mathf.Lerp(colorA.g, colorB.g, t);
         float lerpedB = Mathf.Lerp(colorA.b, colorB.b, t);
 
-        // ´´½¨ĞÂµÄÑÕÉ«
+        // åˆ›å»ºæ–°çš„é¢œè‰²
         Color lerpedColor = new Color(lerpedR, lerpedG, lerpedB);
 
-        // ½«ĞÂµÄÑÕÉ«Óëµ±Ç°Ç¿¶ÈÖµºÏ²¢
+        // å°†æ–°çš„é¢œè‰²ä¸å½“å‰å¼ºåº¦å€¼åˆå¹¶
         lerpedColor *= lerpcolor;
         //Debug.Log(lerpedColor);
-        // ÉèÖÃ²ÄÖÊµÄEmissionÑÕÉ«
+        // è®¾ç½®æè´¨çš„Emissioné¢œè‰²
         material.SetColor("_EmissionColor", lerpedColor);
     }
 }

@@ -1,8 +1,9 @@
 using UnityEngine;
 
+//ç”¨æ¥è®¾ç½®ä¼™ä¼´æè´¨ä¸Šçš„å‘å…‰è´´å›¾åç§»
 public class TextureOffsetAnimation : MonoBehaviour
 {
-    public Vector2 offsetSpeed = new Vector2(0.1f, 0.1f); // XºÍYµÄÆ«ÒÆËÙ¶È
+    public Vector2 offsetSpeed = new Vector2(0.1f, 0.1f); // Xå’ŒYçš„åç§»é€Ÿåº¦
     private Material materialInstance;
     private Vector2 currentOffset;
 
@@ -11,7 +12,7 @@ public class TextureOffsetAnimation : MonoBehaviour
         Renderer renderer = GetComponent<Renderer>();
         if (renderer != null)
         {
-            // ÊµÀı»¯²ÄÖÊÒÔ½øĞĞÔËĞĞÊ±ĞŞ¸Ä
+            // å®ä¾‹åŒ–æè´¨ä»¥è¿›è¡Œè¿è¡Œæ—¶ä¿®æ”¹
             materialInstance = renderer.material;
             currentOffset = materialInstance.GetTextureOffset("_MainTex");
         }
@@ -21,11 +22,11 @@ public class TextureOffsetAnimation : MonoBehaviour
     {
         if (materialInstance != null)
         {
-            // ¸ù¾İÊ±¼äºÍËÙ¶È¸üĞÂÆ«ÒÆ
+            // æ ¹æ®æ—¶é—´å’Œé€Ÿåº¦æ›´æ–°åç§»
             currentOffset.x = Mathf.Repeat(currentOffset.x + offsetSpeed.x * Time.deltaTime, 1);
             currentOffset.y = Mathf.Repeat(currentOffset.y + offsetSpeed.y * Time.deltaTime, 1);
 
-            // Ó¦ÓÃĞÂµÄÆ«ÒÆÖµ
+            // åº”ç”¨æ–°çš„åç§»å€¼
             materialInstance.mainTextureOffset = currentOffset;
         }
     }

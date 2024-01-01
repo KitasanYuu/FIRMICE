@@ -10,7 +10,7 @@ namespace Partner
         [Tooltip("Acceleration and deceleration")]
         public float SpeedChangeRate = 10.0f;
 
-        //³õÊ¼»¯½Å±¾
+        //åˆå§‹åŒ–è„šæœ¬
         private Animator _animator;
         private Follower follower;
 
@@ -22,7 +22,7 @@ namespace Partner
         private int _animIDSpeed;
         private int _animIDMotionSpeed;
 
-        //ÕâĞ©ÓÃÀ´»ñÈ¡ÆäËû½Å±¾ÖĞµÄ±äÁ¿
+        //è¿™äº›ç”¨æ¥è·å–å…¶ä»–è„šæœ¬ä¸­çš„å˜é‡
         private float CurrentSpeed;
 
 
