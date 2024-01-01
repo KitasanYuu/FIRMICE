@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EmissionColorController : MonoBehaviour
+public class baseicColorChange : MonoBehaviour
 {
     private Material material; // 引用你的材质
     public Color colorA = Color.black; // 颜色A
