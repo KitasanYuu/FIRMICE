@@ -3,19 +3,19 @@ using UnityEngine;
 public class EmissionColorController : MonoBehaviour
 {
     [SerializeField]
-    private GameObject[] targetObjects; // Ñ¡ÔñµÄÄ¿±ê GameObject Êı×é
-    private Material[] materials; // Ä¿±ê GameObject ÉÏµÄ²ÄÖÊÊı×é
+    private GameObject[] targetObjects; // é€‰æ‹©çš„ç›®æ ‡ GameObject æ•°ç»„
+    private Material[] materials; // ç›®æ ‡ GameObject ä¸Šçš„æè´¨æ•°ç»„
 
-    public Color colorA = Color.black; // ÑÕÉ«A
-    public Color colorB = Color.white; // ÑÕÉ«B
+    public Color colorA = Color.black; // é¢œè‰²A
+    public Color colorB = Color.white; // é¢œè‰²B
 
-    public float lerpColorIntensity = 1.0f; // ÑÕÉ«²åÖµÇ¿¶È
+    public float lerpColorIntensity = 1.0f; // é¢œè‰²æ’å€¼å¼ºåº¦
 
-    [Range(0.0f, 1.0f)] // Ê¹ÓÃ Range ÌØĞÔÀ´¶¨Òå»¬¶¯Ìõ·¶Î§
-    public float TimeScale = 0.5f; // ×Ô¶¨Òå t Öµ£¬¿ÉÒÔÔÚ Inspector ÖĞÊ¹ÓÃ»¬¶¯Ìõ
+    [Range(0.0f, 1.0f)] // ä½¿ç”¨ Range ç‰¹æ€§æ¥å®šä¹‰æ»‘åŠ¨æ¡èŒƒå›´
+    public float TimeScale = 0.5f; // è‡ªå®šä¹‰ t å€¼ï¼Œå¯ä»¥åœ¨ Inspector ä¸­ä½¿ç”¨æ»‘åŠ¨æ¡
 
     private TargetBotActiveRange targetbotactive;
-    private Color currentColor; // µ±Ç°ÑÕÉ«
+    private Color currentColor; // å½“å‰é¢œè‰²
     private float lerpColorStartTime;
 
     private void Start()
@@ -32,7 +32,7 @@ public class EmissionColorController : MonoBehaviour
 
                 if (targetObject != null)
                 {
-                    // »ñÈ¡Ä¿±ê GameObject ÉÏµÄ Renderer ×é¼ş
+                    // è·å–ç›®æ ‡ GameObject ä¸Šçš„ Renderer ç»„ä»¶
                     Renderer renderer = targetObject.GetComponent<Renderer>();
                     if (renderer != null)
                     {
@@ -41,14 +41,14 @@ public class EmissionColorController : MonoBehaviour
                     else
                     {
                         Debug.LogError("No Renderer component found on target GameObject " + targetObject.name);
-                        enabled = false; // ½ûÓÃ½Å±¾
+                        enabled = false; // ç¦ç”¨è„šæœ¬
                         return;
                     }
                 }
                 else
                 {
                     Debug.LogError("Target GameObject at index " + i + " is not assigned.");
-                    enabled = false; // ½ûÓÃ½Å±¾
+                    enabled = false; // ç¦ç”¨è„šæœ¬
                     return;
                 }
             }
@@ -56,7 +56,7 @@ public class EmissionColorController : MonoBehaviour
         else
         {
             Debug.LogError("No target GameObjects are assigned.");
-            enabled = false; // ½ûÓÃ½Å±¾
+            enabled = false; // ç¦ç”¨è„šæœ¬
             return;
         }
 
@@ -64,9 +64,9 @@ public class EmissionColorController : MonoBehaviour
 
     void Update()
     {
-        // ¸ù¾İ TargetStatus µÄÖµÀ´¿ØÖÆÄ¿±êÑÕÉ«
+        // æ ¹æ® TargetStatus çš„å€¼æ¥æ§åˆ¶ç›®æ ‡é¢œè‰²
         Color targetColor = targetbotactive != null && targetbotactive.TargetStatus == 1 ? colorB : colorA;
-        // Ê¹ÓÃ Lerp ²åÖµ²¢ÉèÖÃ²ÄÖÊµÄ Emission ÑÕÉ«£¬±£³ÖÇ¿¶È²»±ä
+        // ä½¿ç”¨ Lerp æ’å€¼å¹¶è®¾ç½®æè´¨çš„ Emission é¢œè‰²ï¼Œä¿æŒå¼ºåº¦ä¸å˜
         for (int i = 0; i < materials.Length; i++)
         {
             currentColor = Color.Lerp(currentColor, targetColor * lerpColorIntensity, TimeScale);

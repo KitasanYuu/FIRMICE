@@ -6,7 +6,7 @@ public class BulletTest : MonoBehaviour
 {
     private Rigidbody bulletRigidbody;
     public float speed;
-    public LayerMask destroyOnCollisionWith; // Ñ¡ÔñÒªÏú»ÙµÄ²ã¼¶
+    public LayerMask destroyOnCollisionWith; // é€‰æ‹©è¦é”€æ¯çš„å±‚çº§
     [SerializeField] private Transform vfxHitYellow;
 
     private void Awake()
@@ -23,8 +23,8 @@ public class BulletTest : MonoBehaviour
     {
         if (destroyOnCollisionWith == (destroyOnCollisionWith | (1 << collision.gameObject.layer)))
         {
-            // Èç¹ûÅö×²¶ÔÏóµÄ²ã¼¶Óë destroyOnCollisionWith Æ¥Åä
-            // Æô¶¯ÑÓ³ÙÏú»ÙĞ­³Ì
+            // å¦‚æœç¢°æ’å¯¹è±¡çš„å±‚çº§ä¸ destroyOnCollisionWith åŒ¹é…
+            // å¯åŠ¨å»¶è¿Ÿé”€æ¯åç¨‹
             //StartCoroutine(DestroyBulletAfterFrames(1));
             Instantiate(vfxHitYellow,transform.position, Quaternion.identity);
             Destroy(gameObject);
@@ -41,10 +41,10 @@ public class BulletTest : MonoBehaviour
     //{
     //    for (int i = 0; i < frameCount; i++)
     //    {
-    //        yield return null; // µÈ´ıÒ»Ö¡
+    //        yield return null; // ç­‰å¾…ä¸€å¸§
     //    }
 
-    //    // ÔÚÈıÖ¡ºóÏú»Ù×Óµ¯
+    //    // åœ¨ä¸‰å¸§åé”€æ¯å­å¼¹
     //    Destroy(gameObject);
     //}
 
