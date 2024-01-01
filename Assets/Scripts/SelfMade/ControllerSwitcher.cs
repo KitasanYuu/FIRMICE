@@ -18,7 +18,7 @@ public class ControllerSwitcher : MonoBehaviour
 
     void Update()
     {
-        // ÔÚUpdateÖĞ¼ì²âTab¼ü°´ÏÂºÍÊÍ·Å
+        // åœ¨Updateä¸­æ£€æµ‹Tabé”®æŒ‰ä¸‹å’Œé‡Šæ”¾
         //if (Input.GetKeyDown(KeyCode.Tab))
         //{
         //    tabPressed = true;
@@ -34,23 +34,23 @@ public class ControllerSwitcher : MonoBehaviour
 
     void SwitchController()
     {
-        // »ñÈ¡ÒıÓÃ
+        // è·å–å¼•ç”¨
         avatarController = playerArmature.GetComponent<AvatarController>();
 
 
         if (avatarController != null)
         {
-            // ÇĞ»» IsTPS ÊôĞÔÖµ
+            // åˆ‡æ¢ IsTPS å±æ€§å€¼
             avatarController.IsTPS = !avatarController.IsTPS;
 
-            // ¸ù¾İ IsTPS µÄ×´Ì¬À´ÆôÓÃ»ò½ûÓÃ FPSCamera
+            // æ ¹æ® IsTPS çš„çŠ¶æ€æ¥å¯ç”¨æˆ–ç¦ç”¨ FPSCamera
             fpsCamera.SetActive(!avatarController.IsTPS);
         }
     }
 
     void SetCinemachineVirtualCameraState(GameObject cameraObject, bool state)
     {
-        // ÆôÓÃ»ò½ûÓÃ×Ó¶ÔÏóÏÂµÄ CinemachineVirtualCamera ×é¼ş
+        // å¯ç”¨æˆ–ç¦ç”¨å­å¯¹è±¡ä¸‹çš„ CinemachineVirtualCamera ç»„ä»¶
         CinemachineVirtualCamera virtualCamera = cameraObject.GetComponentInChildren<CinemachineVirtualCamera>();
         if (virtualCamera != null)
         {

@@ -9,23 +9,23 @@ using Cinemachine;
 [CustomEditor(typeof(AvatarController))]
 public class ControllerGUI : Editor
 {
-    new SerializedObject serializedObject; // ´´½¨Ò»¸öSerializedObjectÀ´±à¼­Ä¿±ê½Å±¾µÄÊôĞÔ
+    new SerializedObject serializedObject; // åˆ›å»ºä¸€ä¸ªSerializedObjectæ¥ç¼–è¾‘ç›®æ ‡è„šæœ¬çš„å±æ€§
     private int selectedTab = 0;
     private Texture2D logo;
 
     private void OnEnable()
     {
-        serializedObject = new SerializedObject(target); // ³õÊ¼»¯SerializedObject
+        serializedObject = new SerializedObject(target); // åˆå§‹åŒ–SerializedObject
     }
 
     public override void OnInspectorGUI()
     {
-        // ¼ÓÔØÍ¼Æ¬
+        // åŠ è½½å›¾ç‰‡
         logo = EditorGUIUtility.Load("Assets/Scripts/SelfMade/AvatarController/ControllerImage.png") as Texture2D;
 
-        serializedObject.Update(); // ¸üĞÂSerializedObjectÒÔ±ãÏÔÊ¾×îĞÂµÄÊôĞÔÖµ
-        serializedObject.ApplyModifiedProperties(); // µ÷ÓÃÏÔÊ¾ÊôĞÔµÄ·½·¨
-        AvatarController avatarController = (AvatarController)target; // Ó¦ÓÃĞŞ¸ÄºóµÄÊôĞÔµ½Ä¿±ê½Å±¾
+        serializedObject.Update(); // æ›´æ–°SerializedObjectä»¥ä¾¿æ˜¾ç¤ºæœ€æ–°çš„å±æ€§å€¼
+        serializedObject.ApplyModifiedProperties(); // è°ƒç”¨æ˜¾ç¤ºå±æ€§çš„æ–¹æ³•
+        AvatarController avatarController = (AvatarController)target; // åº”ç”¨ä¿®æ”¹åçš„å±æ€§åˆ°ç›®æ ‡è„šæœ¬
 
         if (logo != null)
         {
@@ -66,26 +66,26 @@ public class ControllerGUI : Editor
     private void DisplayTabContent0(AvatarController avatarController)
     {
         EditorGUILayout.LabelField("GameMode", EditorStyles.boldLabel);
-        avatarController.IsTPS = EditorGUILayout.Toggle(new GUIContent("TPS", "½øĞĞÓÎÏ·µÄÄ£Ê½"), avatarController.IsTPS);
-        GUILayout.Space(10); // ÓÃÀ´Ìí¼Ó¿ÕĞĞ
+        avatarController.IsTPS = EditorGUILayout.Toggle(new GUIContent("TPS", "è¿›è¡Œæ¸¸æˆçš„æ¨¡å¼"), avatarController.IsTPS);
+        GUILayout.Space(10); // ç”¨æ¥æ·»åŠ ç©ºè¡Œ
         EditorGUILayout.LabelField("PlayerGrounded", EditorStyles.boldLabel);
-        EditorGUI.BeginDisabledGroup(true); // ¿ªÊ¼ÖÃ»ÒÇøÓò
-        avatarController.Grounded = EditorGUILayout.Toggle(new GUIContent("Grounded", "ÅĞ¶¨ÊÇ·ñÔÚµØÉÏ"), avatarController.Grounded);
+        EditorGUI.BeginDisabledGroup(true); // å¼€å§‹ç½®ç°åŒºåŸŸ
+        avatarController.Grounded = EditorGUILayout.Toggle(new GUIContent("Grounded", "åˆ¤å®šæ˜¯å¦åœ¨åœ°ä¸Š"), avatarController.Grounded);
         EditorGUI.EndDisabledGroup();
-        avatarController.GroundedOffset = EditorGUILayout.FloatField(new GUIContent("GroundedOffset", "µØÃæ¼ì²âÇòÌåÖĞĞÄÏà¶ÔÓÚ½ÇÉ«µ×²¿µÄ´¹Ö±Æ«ÒÆÁ¿"), avatarController.GroundedOffset);
-        avatarController.GroundedRadius = EditorGUILayout.FloatField(new GUIContent("GroundedRadius", "µØÃæ¼ì²âµÄÇòÌå°ë¾¶"), avatarController.GroundedRadius);
-        avatarController.GroundLayers = EditorGUILayout.MaskField(new GUIContent("GroundLayers", "Ñ¡Ôñ½«ÄÄĞ©²ã¼¶ÊÓÎªµØÃæ"), avatarController.GroundLayers, UnityEditorInternal.InternalEditorUtility.layers);
+        avatarController.GroundedOffset = EditorGUILayout.FloatField(new GUIContent("GroundedOffset", "åœ°é¢æ£€æµ‹çƒä½“ä¸­å¿ƒç›¸å¯¹äºè§’è‰²åº•éƒ¨çš„å‚ç›´åç§»é‡"), avatarController.GroundedOffset);
+        avatarController.GroundedRadius = EditorGUILayout.FloatField(new GUIContent("GroundedRadius", "åœ°é¢æ£€æµ‹çš„çƒä½“åŠå¾„"), avatarController.GroundedRadius);
+        avatarController.GroundLayers = EditorGUILayout.MaskField(new GUIContent("GroundLayers", "é€‰æ‹©å°†å“ªäº›å±‚çº§è§†ä¸ºåœ°é¢"), avatarController.GroundLayers, UnityEditorInternal.InternalEditorUtility.layers);
 
-        GUILayout.Space(10); // ÓÃÀ´Ìí¼Ó¿ÕĞĞ
+        GUILayout.Space(10); // ç”¨æ¥æ·»åŠ ç©ºè¡Œ
 
         EditorGUILayout.LabelField("Gravity", EditorStyles.boldLabel);
-        avatarController.Gravity = EditorGUILayout.FloatField(new GUIContent("Gravity", "×Ô¶¨Òå½ÇÉ«ËùÊÜÖĞÁ¢(ÒıÇæÄ¬ÈÏ-9.81f)"), avatarController.Gravity);
+        avatarController.Gravity = EditorGUILayout.FloatField(new GUIContent("Gravity", "è‡ªå®šä¹‰è§’è‰²æ‰€å—ä¸­ç«‹(å¼•æ“é»˜è®¤-9.81f)"), avatarController.Gravity);
 
-        GUILayout.Space(10); // ÓÃÀ´Ìí¼Ó¿ÕĞĞ
+        GUILayout.Space(10); // ç”¨æ¥æ·»åŠ ç©ºè¡Œ
 
         if (GUILayout.Button("Parameters Check"))
         {
-            // ´ò¿ªĞÂµÄ´°¿Ú»òÖ´ĞĞÏà¹Ø²Ù×÷
+            // æ‰“å¼€æ–°çš„çª—å£æˆ–æ‰§è¡Œç›¸å…³æ“ä½œ
             GUIParametersCheck ParametersCheck = EditorWindow.GetWindow<GUIParametersCheck>("Parameters Check");
             ParametersCheck.Init(avatarController);
             ParametersCheck.Show();
@@ -93,7 +93,7 @@ public class ControllerGUI : Editor
 
         if (GUILayout.Button("Status Check"))
         {
-            // ´ò¿ªĞÂµÄ´°¿Ú»òÖ´ĞĞÏà¹Ø²Ù×÷
+            // æ‰“å¼€æ–°çš„çª—å£æˆ–æ‰§è¡Œç›¸å…³æ“ä½œ
             GUIStatusCheck StatusCheck = EditorWindow.GetWindow<GUIStatusCheck>("Status Check");
             StatusCheck.Init(avatarController);
             StatusCheck.Show();
@@ -105,9 +105,9 @@ public class ControllerGUI : Editor
     private void DisplayTabContent1(AvatarController avatarController)
     {
         EditorGUILayout.LabelField("Binding", EditorStyles.boldLabel);
-        avatarController.playerAmature = EditorGUILayout.ObjectField(new GUIContent("playerAmature", "Íæ¼ÒÖ÷Ìå"), avatarController.playerAmature, typeof(GameObject), true) as GameObject;
-        avatarController.sphereCenter = EditorGUILayout.ObjectField(new GUIContent("sphereCenter", "ÏÂ¶×Í·ÉÏ×è°­µÄ¼ì²âÖĞĞÄ"), avatarController.sphereCenter, typeof(Transform), true) as Transform;
-        avatarController.virtualCamera = EditorGUILayout.ObjectField(new GUIContent("VirtualCamera", tooltip: "µÚÈıÈË³ÆÉãÏñ»ú"), avatarController.virtualCamera, typeof(CinemachineVirtualCamera), allowSceneObjects: true) as CinemachineVirtualCamera;
+        avatarController.playerAmature = EditorGUILayout.ObjectField(new GUIContent("playerAmature", "ç©å®¶ä¸»ä½“"), avatarController.playerAmature, typeof(GameObject), true) as GameObject;
+        avatarController.sphereCenter = EditorGUILayout.ObjectField(new GUIContent("sphereCenter", "ä¸‹è¹²å¤´ä¸Šé˜»ç¢çš„æ£€æµ‹ä¸­å¿ƒ"), avatarController.sphereCenter, typeof(Transform), true) as Transform;
+        avatarController.virtualCamera = EditorGUILayout.ObjectField(new GUIContent("VirtualCamera", tooltip: "ç¬¬ä¸‰äººç§°æ‘„åƒæœº"), avatarController.virtualCamera, typeof(CinemachineVirtualCamera), allowSceneObjects: true) as CinemachineVirtualCamera;
         avatarController.CinemachineCameraTarget = EditorGUILayout.ObjectField(new GUIContent("CinemachineCameraTarget", "Camera target"), avatarController.CinemachineCameraTarget, typeof(GameObject), true) as GameObject;
 
         // Add more GUI elements as needed
@@ -117,36 +117,36 @@ public class ControllerGUI : Editor
     private void DisplayTabContent2(AvatarController avatarController)
     {
         EditorGUILayout.LabelField("Speed", EditorStyles.boldLabel);
-        avatarController.CrouchSpeed = EditorGUILayout.FloatField(new GUIContent("CrouchSpeed", "ÏÂ¶×ÒÆËÙ"), avatarController.CrouchSpeed);
-        avatarController.MoveSpeed = EditorGUILayout.FloatField(new GUIContent("MoveSpeed", "Õı³£ÒÆËÙ"), avatarController.MoveSpeed);
-        avatarController.SprintSpeed = EditorGUILayout.FloatField(new GUIContent("SprintSpeed", "³å´ÌÒÆËÙ"), avatarController.SprintSpeed);
-        avatarController.AimSpeed = EditorGUILayout.FloatField(new GUIContent("AimSpeed", "Ãé×¼Ê±µÄÒÆËÙ"), avatarController.AimSpeed);
-        avatarController.CrouchingAimSpeed = EditorGUILayout.FloatField(new GUIContent("CrouchingAimSpeed", "ÏÂ¶×Ãé×¼Ê±µÄÒÆËÙ"), avatarController.CrouchingAimSpeed);
-        avatarController.SpeedChangeRate = EditorGUILayout.FloatField(new GUIContent("SpeedChangeRate", "¼Ó/¼õËÙ¶È"), avatarController.SpeedChangeRate);
-        avatarController.RotationSmoothTime = EditorGUILayout.Slider(new GUIContent("RotationSmoothTime", "TPSÏÂ½ÇÉ«µÄ×ªÏòËÙ¶È ÊıÖµÔ½´ó×ªÏòÔ½Âı"), avatarController.RotationSmoothTime, 0.0f, 0.3f);
+        avatarController.CrouchSpeed = EditorGUILayout.FloatField(new GUIContent("CrouchSpeed", "ä¸‹è¹²ç§»é€Ÿ"), avatarController.CrouchSpeed);
+        avatarController.MoveSpeed = EditorGUILayout.FloatField(new GUIContent("MoveSpeed", "æ­£å¸¸ç§»é€Ÿ"), avatarController.MoveSpeed);
+        avatarController.SprintSpeed = EditorGUILayout.FloatField(new GUIContent("SprintSpeed", "å†²åˆºç§»é€Ÿ"), avatarController.SprintSpeed);
+        avatarController.AimSpeed = EditorGUILayout.FloatField(new GUIContent("AimSpeed", "ç„å‡†æ—¶çš„ç§»é€Ÿ"), avatarController.AimSpeed);
+        avatarController.CrouchingAimSpeed = EditorGUILayout.FloatField(new GUIContent("CrouchingAimSpeed", "ä¸‹è¹²ç„å‡†æ—¶çš„ç§»é€Ÿ"), avatarController.CrouchingAimSpeed);
+        avatarController.SpeedChangeRate = EditorGUILayout.FloatField(new GUIContent("SpeedChangeRate", "åŠ /å‡é€Ÿåº¦"), avatarController.SpeedChangeRate);
+        avatarController.RotationSmoothTime = EditorGUILayout.Slider(new GUIContent("RotationSmoothTime", "TPSä¸‹è§’è‰²çš„è½¬å‘é€Ÿåº¦ æ•°å€¼è¶Šå¤§è½¬å‘è¶Šæ…¢"), avatarController.RotationSmoothTime, 0.0f, 0.3f);
 
 
-        GUILayout.Space(10); // ÓÃÀ´Ìí¼Ó¿ÕĞĞ
+        GUILayout.Space(10); // ç”¨æ¥æ·»åŠ ç©ºè¡Œ
 
         EditorGUILayout.LabelField("Crouch", EditorStyles.boldLabel);
-        avatarController._isCrouching = EditorGUILayout.Toggle(new GUIContent("isCrouching", "ÅĞ¶ÏÊÇ·ñ¶×ÏÂ"), avatarController._isCrouching);
-        GUILayout.Space(10); // ÓÃÀ´Ìí¼Ó¿ÕĞĞ
-        avatarController.OriginOffset = EditorGUILayout.FloatField(new GUIContent("OriginOffset", "Ä¬ÈÏ×´Ì¬ÏÂCameraRootÓë¸¸½ÚµãµÄ¾àÀë"), avatarController.OriginOffset);
-        avatarController.CrouchingOffset = EditorGUILayout.FloatField(new GUIContent("CrouchingOffset", "ÏÂ¶×Ê±CameraRootÓë¸¸½ÚµãµÄ¾àÀë"), avatarController.CrouchingOffset);
-        avatarController.sphereCenter = EditorGUILayout.ObjectField(new GUIContent("sphereCenter", "ÏÂ¶×Í·ÉÏ×è°­µÄ¼ì²âÖĞĞÄ"), avatarController.sphereCenter, typeof(Transform), true) as Transform;
-        avatarController.Crouchradius = EditorGUILayout.FloatField(new GUIContent("Crouchradius", "¼ì²âµÄÇòÌå°ë¾¶"), avatarController.Crouchradius);
-        avatarController.detectionLayer = EditorGUILayout.MaskField(new GUIContent("DetectionLayer", "Ñ¡Ôñ½«ÄÄĞ©²ã¼¶ÊÓÎªÍ·¶¥×è°­"), avatarController.detectionLayer, UnityEditorInternal.InternalEditorUtility.layers);
+        avatarController._isCrouching = EditorGUILayout.Toggle(new GUIContent("isCrouching", "åˆ¤æ–­æ˜¯å¦è¹²ä¸‹"), avatarController._isCrouching);
+        GUILayout.Space(10); // ç”¨æ¥æ·»åŠ ç©ºè¡Œ
+        avatarController.OriginOffset = EditorGUILayout.FloatField(new GUIContent("OriginOffset", "é»˜è®¤çŠ¶æ€ä¸‹CameraRootä¸çˆ¶èŠ‚ç‚¹çš„è·ç¦»"), avatarController.OriginOffset);
+        avatarController.CrouchingOffset = EditorGUILayout.FloatField(new GUIContent("CrouchingOffset", "ä¸‹è¹²æ—¶CameraRootä¸çˆ¶èŠ‚ç‚¹çš„è·ç¦»"), avatarController.CrouchingOffset);
+        avatarController.sphereCenter = EditorGUILayout.ObjectField(new GUIContent("sphereCenter", "ä¸‹è¹²å¤´ä¸Šé˜»ç¢çš„æ£€æµ‹ä¸­å¿ƒ"), avatarController.sphereCenter, typeof(Transform), true) as Transform;
+        avatarController.Crouchradius = EditorGUILayout.FloatField(new GUIContent("Crouchradius", "æ£€æµ‹çš„çƒä½“åŠå¾„"), avatarController.Crouchradius);
+        avatarController.detectionLayer = EditorGUILayout.MaskField(new GUIContent("DetectionLayer", "é€‰æ‹©å°†å“ªäº›å±‚çº§è§†ä¸ºå¤´é¡¶é˜»ç¢"), avatarController.detectionLayer, UnityEditorInternal.InternalEditorUtility.layers);
 
-        GUILayout.Space(10); // ÓÃÀ´Ìí¼Ó¿ÕĞĞ
+        GUILayout.Space(10); // ç”¨æ¥æ·»åŠ ç©ºè¡Œ
 
         EditorGUILayout.LabelField("Jump", EditorStyles.boldLabel);
-        avatarController.Gravity = EditorGUILayout.FloatField(new GUIContent("Gravity", "×Ô¶¨Òå½ÇÉ«ËùÊÜÖĞÁ¢(ÒıÇæÄ¬ÈÏ-9.81f)"), avatarController.Gravity);
-        avatarController.MaxJumpCount = EditorGUILayout.FloatField(new GUIContent("MaxJumpCount", "×î´óÁ¬Ìø´ÎÊı"), avatarController.MaxJumpCount);
-        avatarController.JumpHeight = EditorGUILayout.FloatField(new GUIContent("JumpHeight", "µÚÒ»¶ÎÌøÔ¾µÄ¸ß¶È"), avatarController.JumpHeight);
-        avatarController.ComplexJumpHeight = EditorGUILayout.FloatField(new GUIContent("ComplexJumpHeight", "ºóĞøÌøÔ¾µÄ¸ß¶È"), avatarController.ComplexJumpHeight);
-        GUILayout.Space(10); // ÓÃÀ´Ìí¼Ó¿ÕĞĞ
-        avatarController.JumpTimeout = EditorGUILayout.FloatField(new GUIContent("JumpTimeout", "ÌøÔ¾¼ä¸ôCD£¬ÈôÎª0Ôò¿ÉÒÔÎŞÏŞÌøÔ¾"), avatarController.JumpTimeout);
-        avatarController.FallTimeout = EditorGUILayout.FloatField(new GUIContent("FallTimeout", "ÔÚ½øÈëµôÂä×´Ì¬Ç°ËùÓÃµÄÊ±¼ä"), avatarController.FallTimeout);
+        avatarController.Gravity = EditorGUILayout.FloatField(new GUIContent("Gravity", "è‡ªå®šä¹‰è§’è‰²æ‰€å—ä¸­ç«‹(å¼•æ“é»˜è®¤-9.81f)"), avatarController.Gravity);
+        avatarController.MaxJumpCount = EditorGUILayout.FloatField(new GUIContent("MaxJumpCount", "æœ€å¤§è¿è·³æ¬¡æ•°"), avatarController.MaxJumpCount);
+        avatarController.JumpHeight = EditorGUILayout.FloatField(new GUIContent("JumpHeight", "ç¬¬ä¸€æ®µè·³è·ƒçš„é«˜åº¦"), avatarController.JumpHeight);
+        avatarController.ComplexJumpHeight = EditorGUILayout.FloatField(new GUIContent("ComplexJumpHeight", "åç»­è·³è·ƒçš„é«˜åº¦"), avatarController.ComplexJumpHeight);
+        GUILayout.Space(10); // ç”¨æ¥æ·»åŠ ç©ºè¡Œ
+        avatarController.JumpTimeout = EditorGUILayout.FloatField(new GUIContent("JumpTimeout", "è·³è·ƒé—´éš”CDï¼Œè‹¥ä¸º0åˆ™å¯ä»¥æ— é™è·³è·ƒ"), avatarController.JumpTimeout);
+        avatarController.FallTimeout = EditorGUILayout.FloatField(new GUIContent("FallTimeout", "åœ¨è¿›å…¥æ‰è½çŠ¶æ€å‰æ‰€ç”¨çš„æ—¶é—´"), avatarController.FallTimeout);
 
         // Add more GUI elements as needed
     }
@@ -156,7 +156,7 @@ public class ControllerGUI : Editor
         EditorGUILayout.LabelField("Audio Clips", EditorStyles.boldLabel);
         avatarController.LandingAudioClip = (AudioClip)EditorGUILayout.ObjectField("LandingAudioClip", avatarController.LandingAudioClip, typeof(AudioClip), false);
 
-        DisplayAudioClips(serializedObject); // µ÷ÓÃÏÔÊ¾ÒôÆµ¼ô¼­µÄ·½·¨
+        DisplayAudioClips(serializedObject); // è°ƒç”¨æ˜¾ç¤ºéŸ³é¢‘å‰ªè¾‘çš„æ–¹æ³•
 
         avatarController.FootstepAudioVolume = EditorGUILayout.Slider("FootstepAudioVolume", avatarController.FootstepAudioVolume, 0, 1);
 
@@ -164,25 +164,25 @@ public class ControllerGUI : Editor
 
     private void DisplayTabContent4(AvatarController avatarController)
     {
-        EditorGUI.BeginDisabledGroup(true); // ¿ªÊ¼ÖÃ»ÒÇøÓò
+        EditorGUI.BeginDisabledGroup(true); // å¼€å§‹ç½®ç°åŒºåŸŸ
         avatarController.virtualCamera = EditorGUILayout.ObjectField(new GUIContent("CinemachineCamera", "virtualCamera"), avatarController.virtualCamera, typeof(CinemachineVirtualCamera), true) as CinemachineVirtualCamera;
         avatarController.CinemachineCameraTarget = EditorGUILayout.ObjectField(new GUIContent("CinemachineCameraTarget", "Camera target"), avatarController.CinemachineCameraTarget, typeof(GameObject), true) as GameObject;
-        EditorGUI.EndDisabledGroup(); // ½áÊøÖÃ»ÒÇøÓò
-        avatarController.minFov = EditorGUILayout.FloatField(new GUIContent("MinFOV", "¹öÂÖËõ·ÅµÄ×îĞ¡FOV"), avatarController.minFov);
-        avatarController.maxFov = EditorGUILayout.FloatField(new GUIContent("MaxFOV", "¹öÂÖËõ·ÅµÄ×î´óFOV"), avatarController.maxFov);
-        avatarController.zoomSpeed = EditorGUILayout.FloatField(new GUIContent("ZoomSpeed", "Ëõ·ÅËÙ¶È"), avatarController.zoomSpeed);
-        avatarController.zoomsensitivity = EditorGUILayout.FloatField(new GUIContent("ZoomSensitivity", "¹öÂÖËõ·ÅµÄÁéÃô¶È"), avatarController.zoomsensitivity);
-        avatarController.TopClamp = EditorGUILayout.FloatField(new GUIContent("TopClamp", "Ïà»úÏòÉÏÒÆ¶¯µÄ×î´ó½Ç¶È"), avatarController.TopClamp);
-        avatarController.BottomClamp = EditorGUILayout.FloatField(new GUIContent("BottomClamp", "Ïà»úÏòÏÂÒÆ¶¯µÄ×î´ó½Ç¶È"), avatarController.BottomClamp);
-        avatarController.CameraAngleOverride = EditorGUILayout.FloatField(new GUIContent("CameraAngleOverride", "ÔÚÏà»úËø¶¨Ê±£¬¿ÉÒÔÊ¹ÓÃÕâ¸ö×Ö¶Î¶ÔÏà»úÎ»ÖÃ½øĞĞÎ¢µ÷"), avatarController.CameraAngleOverride);
-        avatarController.LockCameraPosition = EditorGUILayout.Toggle(new GUIContent("LockCameraPosition", "Ëø¶¨Ïà»ú"), avatarController.LockCameraPosition);
+        EditorGUI.EndDisabledGroup(); // ç»“æŸç½®ç°åŒºåŸŸ
+        avatarController.minFov = EditorGUILayout.FloatField(new GUIContent("MinFOV", "æ»šè½®ç¼©æ”¾çš„æœ€å°FOV"), avatarController.minFov);
+        avatarController.maxFov = EditorGUILayout.FloatField(new GUIContent("MaxFOV", "æ»šè½®ç¼©æ”¾çš„æœ€å¤§FOV"), avatarController.maxFov);
+        avatarController.zoomSpeed = EditorGUILayout.FloatField(new GUIContent("ZoomSpeed", "ç¼©æ”¾é€Ÿåº¦"), avatarController.zoomSpeed);
+        avatarController.zoomsensitivity = EditorGUILayout.FloatField(new GUIContent("ZoomSensitivity", "æ»šè½®ç¼©æ”¾çš„çµæ•åº¦"), avatarController.zoomsensitivity);
+        avatarController.TopClamp = EditorGUILayout.FloatField(new GUIContent("TopClamp", "ç›¸æœºå‘ä¸Šç§»åŠ¨çš„æœ€å¤§è§’åº¦"), avatarController.TopClamp);
+        avatarController.BottomClamp = EditorGUILayout.FloatField(new GUIContent("BottomClamp", "ç›¸æœºå‘ä¸‹ç§»åŠ¨çš„æœ€å¤§è§’åº¦"), avatarController.BottomClamp);
+        avatarController.CameraAngleOverride = EditorGUILayout.FloatField(new GUIContent("CameraAngleOverride", "åœ¨ç›¸æœºé”å®šæ—¶ï¼Œå¯ä»¥ä½¿ç”¨è¿™ä¸ªå­—æ®µå¯¹ç›¸æœºä½ç½®è¿›è¡Œå¾®è°ƒ"), avatarController.CameraAngleOverride);
+        avatarController.LockCameraPosition = EditorGUILayout.Toggle(new GUIContent("LockCameraPosition", "é”å®šç›¸æœº"), avatarController.LockCameraPosition);
 
     }
 
     private void DisplayAudioClips(SerializedObject so)
     {
-        SerializedProperty audioClips = so.FindProperty("FootstepAudioClips"); // »ñÈ¡ÒôÆµ¼ô¼­ÊôĞÔ
-        EditorGUILayout.PropertyField(audioClips); // ÔÚInspector´°¿ÚÖĞÏÔÊ¾ÒôÆµ¼ô¼­ÊôĞÔ
+        SerializedProperty audioClips = so.FindProperty("FootstepAudioClips"); // è·å–éŸ³é¢‘å‰ªè¾‘å±æ€§
+        EditorGUILayout.PropertyField(audioClips); // åœ¨Inspectorçª—å£ä¸­æ˜¾ç¤ºéŸ³é¢‘å‰ªè¾‘å±æ€§
     }
 
 }

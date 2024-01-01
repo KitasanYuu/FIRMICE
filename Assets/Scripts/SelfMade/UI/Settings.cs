@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class SettingsPanelController : MonoBehaviour
 {
@@ -6,7 +6,7 @@ public class SettingsPanelController : MonoBehaviour
 
     public void ToggleSettingsPanel()
     {
-        // ÇĞ»»ÉèÖÃ½çÃæµÄÏÔÊ¾×´Ì¬
+        // åˆ‡æ¢è®¾ç½®ç•Œé¢çš„æ˜¾ç¤ºçŠ¶æ€
         if (settingsPanel != null)
         {
             settingsPanel.SetActive(!settingsPanel.activeSelf);

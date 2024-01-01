@@ -8,21 +8,21 @@ public class UICanvasController : MonoBehaviour
 
     void Start()
     {
-        // ³õÊ¼Ê±½ûÓÃ UI ºÍÄ£ºıĞ§¹û
+        // åˆå§‹æ—¶ç¦ç”¨ UI å’Œæ¨¡ç³Šæ•ˆæœ
         uiCanvasGroup.alpha = 0f;
         blurImage.gameObject.SetActive(false);
     }
 
     public void ShowUI()
     {
-        // ÏÔÊ¾ UI£¬ÆôÓÃÄ£ºıĞ§¹û
+        // æ˜¾ç¤º UIï¼Œå¯ç”¨æ¨¡ç³Šæ•ˆæœ
         uiCanvasGroup.alpha = 1f;
         blurImage.gameObject.SetActive(true);
     }
 
     public void HideUI()
     {
-        // Òş²Ø UI£¬½ûÓÃÄ£ºıĞ§¹û
+        // éšè— UIï¼Œç¦ç”¨æ¨¡ç³Šæ•ˆæœ
         uiCanvasGroup.alpha = 0f;
         blurImage.gameObject.SetActive(false);
     }

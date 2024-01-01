@@ -5,7 +5,7 @@ using UnityEngine;
 public class FPSCameraController : MonoBehaviour
 {
     public Transform player;
-    public Transform calibrationObject; // 新增：标定的物体
+    public Transform calibrationObject; // 鏂板锛氭爣瀹氱殑鐗╀綋
     public float mouseX, mouseY;
     public float mouseSensitivity;
     public float xRotation;
@@ -21,7 +21,7 @@ public class FPSCameraController : MonoBehaviour
         player.Rotate(Vector3.up * mouseX);
         transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
 
-        // 新增：将摄像机的位置设置为标定物体的位置
+        // 鏂板锛氬皢鎽勫儚鏈虹殑浣嶇疆璁剧疆涓烘爣瀹氱墿浣撶殑浣嶇疆
         transform.position = calibrationObject.position;
     }
 }

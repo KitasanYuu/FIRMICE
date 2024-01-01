@@ -27,7 +27,7 @@ public class GUIStatusCheck : EditorWindow
         }
         StatusCheck();
 
-        Repaint(); // ÊµÊ±Ë¢ĞÂ Inspector ½çÃæ
+        Repaint(); // å®æ—¶åˆ·æ–° Inspector ç•Œé¢
     }
 
     private void StatusCheck()
@@ -36,7 +36,7 @@ public class GUIStatusCheck : EditorWindow
 
         if (avatarController.IsTPS)
         {
-            // ÏÔÊ¾¶îÍâµÄ×Ö¶Î
+            // æ˜¾ç¤ºé¢å¤–çš„å­—æ®µ
             EditorGUILayout.LabelField("Controller Mode:TPS");
         }
         else
@@ -46,7 +46,7 @@ public class GUIStatusCheck : EditorWindow
 
         if (avatarController.Grounded)
         {
-            // ÏÔÊ¾¶îÍâµÄ×Ö¶Î
+            // æ˜¾ç¤ºé¢å¤–çš„å­—æ®µ
             EditorGUILayout.LabelField("GroundCheck:Grounded");
         }
         else
@@ -69,7 +69,7 @@ public class GUIStatusCheck : EditorWindow
             EditorGUILayout.LabelField("TPSCamera:NotLocked");
         }
 
-        GUILayout.Space(20); // ÓÃÀ´Ìí¼Ó¿ÕĞĞ
+        GUILayout.Space(20); // ç”¨æ¥æ·»åŠ ç©ºè¡Œ
 
         EditorGUILayout.LabelField("Crouch", EditorStyles.boldLabel);
         if (!avatarController._isCrouching)
@@ -108,7 +108,7 @@ public class GUIStatusCheck : EditorWindow
             EditorGUILayout.LabelField("Head:NotObstructed");
         }
 
-        GUILayout.Space(20); // ÓÃÀ´Ìí¼Ó¿ÕĞĞ
+        GUILayout.Space(20); // ç”¨æ¥æ·»åŠ ç©ºè¡Œ
 
         EditorGUILayout.LabelField("Jump", EditorStyles.boldLabel);
 

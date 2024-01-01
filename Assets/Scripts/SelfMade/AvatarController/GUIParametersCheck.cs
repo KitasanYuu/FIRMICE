@@ -24,11 +24,11 @@ public class GUIParametersCheck : EditorWindow
 
         ParameterCheck();
 
-        GUILayout.Space(20); // 用来添加空行
+        GUILayout.Space(20); // 鐢ㄦ潵娣诲姞绌鸿
 
 
 
-        Repaint(); // 实时刷新 Inspector 界面
+        Repaint(); // 瀹炴椂鍒锋柊 Inspector 鐣岄潰
     }
 
     private void ParameterCheck()
