@@ -28,6 +28,7 @@ namespace playershooting
         [SerializeField] private Transform spawnBulletPosition;
         // 子弹生成后的速度
         [SerializeField] public float bulletspeed;
+        [SerializeField] public LayerMask DestoryLayer;
 
         public bool isAiming = false;
         public float targetCameraSide = 1;
@@ -81,10 +82,12 @@ namespace playershooting
             // 获取鼠标在世界空间中的位置
             Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
             Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+            //Transform hitTransform = null;
             if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimColliderLayerMask))
             {
                 debugTransform.position = raycastHit.point;
                 mouseWorldPosition = raycastHit.point;
+                //hitTransform = raycastHit.transform;
             }
 
             // 瞄准
@@ -166,6 +169,19 @@ namespace playershooting
 
                 if (currentTime - lastShootTime > fireRate)
                 {
+                    //// 在这里执行射线投射
+                    //Ray shootRay = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+                    //if (Physics.Raycast(shootRay, out RaycastHit shootRaycastHit))
+                    //{
+                    //    // 获取击中点的坐标
+                    //    Vector3 hitPoint = shootRaycastHit.point;
+
+                    //    // 生成特效
+                    //    Instantiate(vfxHitYellow, mouseWorldPosition, Quaternion.identity);
+
+                    //    // 在这里处理射击命中的逻辑，例如对击中物体造成伤害或触发其他效果等
+                    //    Debug.Log("射击命中：" + shootRaycastHit.collider.gameObject.name + "，击中坐标：" + hitPoint);
+                    //}
 
                     Vector3 aimDir = (mouseWorldPosition - spawnBulletPosition.position).normalized;
                     // 生成子弹实例
@@ -175,12 +191,13 @@ namespace playershooting
                     if (bullettest != null)
                     {
                         bullettest.SetBulletSpeed(bulletspeed);
+                        bullettest.SetBulletHitLayer(DestoryLayer);
                     }
                     else
                     {
                         Debug.LogError("BulletTest component not found on instantiated object.");
                     }
-                    //starterAssetsInputs.shoot = false;
+                    starterAssetsInputs.shoot = false;
                     lastShootTime = currentTime;
                 }
             }
