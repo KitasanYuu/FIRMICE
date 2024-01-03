@@ -8,6 +8,11 @@ public class BulletTest : MonoBehaviour
     public float speed;
     public LayerMask destroyOnCollisionWith; // 选择要销毁的层级
     [SerializeField] private Transform vfxHitYellow;
+    private bool hasHit = false; // 是否已经命中
+    public float damage = 10f; // 子弹伤害值
+    public LayerMask hitLayers; // 自定义的射线检测层级
+    public float rayLength = 10f; // 自定义射线长度
+    private GameObject hitObject; // 保存命中的游戏对象
 
     private void Awake()
     {
@@ -19,6 +24,14 @@ public class BulletTest : MonoBehaviour
         bulletRigidbody.velocity = transform.forward * speed;
     }
 
+    private void Update()
+    {
+        // 如果已经命中，不再进行射线检测
+        if (hasHit) return;
+
+        ShootRay();
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (destroyOnCollisionWith == (destroyOnCollisionWith | (1 << collision.gameObject.layer)))
@@ -26,6 +39,13 @@ public class BulletTest : MonoBehaviour
             // 如果碰撞对象的层级与 destroyOnCollisionWith 匹配
             // 启动延迟销毁协程
             //StartCoroutine(DestroyBulletAfterFrames(1));
+            // 在销毁子弹之前获取目标物体的信息
+            if (hitObject != null)
+            {
+                // 在这里可以处理目标物体的信息
+                Debug.Log("销毁前获取到目标物体信息：" + hitObject.name);
+            }
+
             Instantiate(vfxHitYellow,transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
@@ -48,6 +68,26 @@ public class BulletTest : MonoBehaviour
     //    Destroy(gameObject);
     //}
 
+    void ShootRay()
+    {
+        Ray ray = new Ray(transform.position, transform.forward);
+        RaycastHit hitInfo;
+
+        if (Physics.Raycast(ray, out hitInfo, rayLength, hitLayers))
+        {
+            // 获取命中的游戏对象
+            hitObject = hitInfo.collider.gameObject;
+            hasHit = true; // 设置已命中标志
+
+            // 在此处可以进行命中的处理，例如播放音效、添加命中效果、处理伤害等
+            Debug.Log("命中了：" + hitObject.name);
+
+            // 立刻返回或执行其他逻辑
+            return;
+        }
+    }
+
+
     public void SetBulletSpeed(float newSpeed)
     {
         speed = newSpeed;
@@ -57,4 +97,14 @@ public class BulletTest : MonoBehaviour
     {
         destroyOnCollisionWith = HitLayer;
     }
+
+#if UNITY_EDITOR
+    // 在编辑器中使用Gizmos显示射线
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Ray ray = new Ray(transform.position, transform.forward);
+        Gizmos.DrawRay(ray);
+    }
+#endif
 }
