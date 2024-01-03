@@ -5,6 +5,7 @@ namespace BattleBullet
 {
     public class HitCollisionDetection : MonoBehaviour
     {
+        public GameObject ColliderContainer;
         private BoxCollider boxCollider;
         public LayerMask targetLayer;
         public bool reverseXAxis = false;
@@ -19,11 +20,14 @@ namespace BattleBullet
 
         private void Awake()
         {
-            boxCollider = GetComponent<BoxCollider>();
-
+            boxCollider = ColliderContainer.GetComponent<BoxCollider>();
             if (boxCollider == null)
             {
-                Debug.LogError("没有找到 Box Collider 组件！");
+                Debug.LogError("HitCollisionDetection:没有找到 Box Collider 组件！");
+            }
+            else
+            {
+                Debug.Log("HitCollisionDetection:方向受击检测初始化完成");
             }
 
             // 初始化方向和射线向量对应关系
