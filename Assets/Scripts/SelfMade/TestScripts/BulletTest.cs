@@ -1,18 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using BattleHealth;
 public class BulletTest : MonoBehaviour
 {
     private Rigidbody bulletRigidbody;
     public float speed;
     public LayerMask destroyOnCollisionWith; // 选择要销毁的层级
-    [SerializeField] private Transform vfxHitYellow;
     private bool hasHit = false; // 是否已经命中
     public float damage = 10f; // 子弹伤害值
     public LayerMask hitLayers; // 自定义的射线检测层级
     public float rayLength = 10f; // 自定义射线长度
     private GameObject hitObject; // 保存命中的游戏对象
+
+    //以下参数是测试参数
+    private VirtualHP virtualhp;
+
+
+    //子弹命中后的特效
+    [SerializeField] private GameObject vfxHitYellow;
 
     private void Awake()
     {
@@ -42,6 +48,7 @@ public class BulletTest : MonoBehaviour
             // 在销毁子弹之前获取目标物体的信息
             if (hitObject != null)
             {
+                DodingDamage();
                 // 在这里可以处理目标物体的信息
                 Debug.Log("销毁前获取到目标物体信息：" + hitObject.name);
             }
@@ -82,11 +89,21 @@ public class BulletTest : MonoBehaviour
             // 在此处可以进行命中的处理，例如播放音效、添加命中效果、处理伤害等
             Debug.Log("命中了：" + hitObject.name);
 
+
+
             // 立刻返回或执行其他逻辑
             return;
         }
     }
 
+    private void DodingDamage()
+    {
+        virtualhp = hitObject.GetComponent<VirtualHP>();
+        if(virtualhp != null)
+        {
+            virtualhp.TotalHP = virtualhp.TotalHP - damage;
+        }
+    }
 
     public void SetBulletSpeed(float newSpeed)
     {

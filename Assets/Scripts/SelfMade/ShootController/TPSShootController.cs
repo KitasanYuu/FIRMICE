@@ -190,6 +190,7 @@ namespace playershooting
                     BulletTest bullettest = bulletInstance.GetComponent<BulletTest>();
                     if (bullettest != null)
                     {
+                        Debug.LogError("BulletSpwaned");
                         bullettest.SetBulletSpeed(bulletspeed);
                         bullettest.SetBulletHitLayer(DestoryLayer);
                     }
@@ -197,7 +198,7 @@ namespace playershooting
                     {
                         Debug.LogError("BulletTest component not found on instantiated object.");
                     }
-                    starterAssetsInputs.shoot = false;
+                    //starterAssetsInputs.shoot = false;
                     lastShootTime = currentTime;
                 }
             }
