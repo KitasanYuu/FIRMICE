@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BattleHealth;
+using BattleBullet;
+
 public class BulletTest : MonoBehaviour
 {
     private Rigidbody bulletRigidbody;
@@ -10,12 +12,12 @@ public class BulletTest : MonoBehaviour
     private bool hasHit = false; // 是否已经命中
     public float damage = 10f; // 子弹伤害值
     public LayerMask hitLayers; // 自定义的射线检测层级
-    public float rayLength = 10f; // 自定义射线长度
+    private float rayLength = 10f; // 自定义射线长度
     private GameObject hitObject; // 保存命中的游戏对象
 
     //以下参数是测试参数
     private VirtualHP virtualhp;
-
+    private HitOrNot hitornot;
 
     //子弹命中后的特效
     [SerializeField] private GameObject vfxHitYellow;
@@ -49,6 +51,7 @@ public class BulletTest : MonoBehaviour
             if (hitObject != null)
             {
                 DodingDamage();
+                SetHitted();
                 // 在这里可以处理目标物体的信息
                 Debug.Log("销毁前获取到目标物体信息：" + hitObject.name);
             }
@@ -85,7 +88,8 @@ public class BulletTest : MonoBehaviour
             // 获取命中的游戏对象
             hitObject = hitInfo.collider.gameObject;
             hasHit = true; // 设置已命中标志
-
+            virtualhp = hitObject.GetComponent<VirtualHP>();
+            hitornot = hitObject.GetComponent<HitOrNot>();
             // 在此处可以进行命中的处理，例如播放音效、添加命中效果、处理伤害等
             Debug.Log("命中了：" + hitObject.name);
 
@@ -98,10 +102,18 @@ public class BulletTest : MonoBehaviour
 
     private void DodingDamage()
     {
-        virtualhp = hitObject.GetComponent<VirtualHP>();
-        if(virtualhp != null)
+        if (virtualhp != null)
         {
-            virtualhp.TotalHP = virtualhp.TotalHP - damage;
+            virtualhp.AddDamage(damage); // 将伤害值传递给目标脚本的方法
+        }
+    }
+
+    private void SetHitted()
+    {
+        if (hitornot != null)
+        {
+            Debug.Log("1111");
+            hitornot.hitted = true;
         }
     }
 
@@ -113,6 +125,16 @@ public class BulletTest : MonoBehaviour
     public void SetBulletHitLayer(LayerMask HitLayer)
     {
         destroyOnCollisionWith = HitLayer;
+    }
+
+    public void SetRayLength(float newRayLength)
+    {
+        rayLength = newRayLength;
+    }
+
+    public void SetDamage(float newDamage)
+    {
+        damage = newDamage;
     }
 
 #if UNITY_EDITOR

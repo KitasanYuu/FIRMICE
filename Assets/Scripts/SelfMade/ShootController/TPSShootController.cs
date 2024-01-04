@@ -22,13 +22,6 @@ namespace playershooting
         [SerializeField] private LayerMask aimColliderLayerMask = new LayerMask();
         // 用于调试显示的Transform
         [SerializeField] private Transform debugTransform;
-        // 子弹预制件或游戏对象
-        [SerializeField] private GameObject bulletPrefab;
-        // 子弹生成位置
-        [SerializeField] private Transform spawnBulletPosition;
-        // 子弹生成后的速度
-        [SerializeField] public float bulletspeed;
-        [SerializeField] public LayerMask DestoryLayer;
 
         public bool isAiming = false;
         public float targetCameraSide = 1;
@@ -51,10 +44,11 @@ namespace playershooting
         private int _animIDEnterAiming;
         private int _animIDAimStatus;
 
-        float lastShootTime = 0f;
-        public float fireRate = 0.5f; // 0.5秒为例，可以根据需要调整射速
 
         public int AimIKParameter;
+
+        //给外部取用
+        public Vector3 TmouseWorldPosition;
 
         private void Awake()
         {
@@ -68,7 +62,6 @@ namespace playershooting
             _hasAnimator = TryGetComponent(out _animator);
 
             AssignAnimationIDs();
-
 
         }
 
@@ -87,6 +80,7 @@ namespace playershooting
             {
                 debugTransform.position = raycastHit.point;
                 mouseWorldPosition = raycastHit.point;
+                TmouseWorldPosition = mouseWorldPosition;
                 //hitTransform = raycastHit.transform;
             }
 
@@ -161,47 +155,6 @@ namespace playershooting
                 }
             }
 
-            // 开火
-            if (starterAssetsInputs.shoot && isAiming)
-            {
-                // 获取当前时间
-                float currentTime = Time.time;
-
-                if (currentTime - lastShootTime > fireRate)
-                {
-                    //// 在这里执行射线投射
-                    //Ray shootRay = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-                    //if (Physics.Raycast(shootRay, out RaycastHit shootRaycastHit))
-                    //{
-                    //    // 获取击中点的坐标
-                    //    Vector3 hitPoint = shootRaycastHit.point;
-
-                    //    // 生成特效
-                    //    Instantiate(vfxHitYellow, mouseWorldPosition, Quaternion.identity);
-
-                    //    // 在这里处理射击命中的逻辑，例如对击中物体造成伤害或触发其他效果等
-                    //    Debug.Log("射击命中：" + shootRaycastHit.collider.gameObject.name + "，击中坐标：" + hitPoint);
-                    //}
-
-                    Vector3 aimDir = (mouseWorldPosition - spawnBulletPosition.position).normalized;
-                    // 生成子弹实例
-                    GameObject bulletInstance = Instantiate(bulletPrefab, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
-                    // 获取子弹脚本并设置速度
-                    BulletTest bullettest = bulletInstance.GetComponent<BulletTest>();
-                    if (bullettest != null)
-                    {
-                        Debug.LogError("BulletSpwaned");
-                        bullettest.SetBulletSpeed(bulletspeed);
-                        bullettest.SetBulletHitLayer(DestoryLayer);
-                    }
-                    else
-                    {
-                        Debug.LogError("BulletTest component not found on instantiated object.");
-                    }
-                    //starterAssetsInputs.shoot = false;
-                    lastShootTime = currentTime;
-                }
-            }
         }
 
         private void AssignAnimationIDs()
@@ -220,7 +173,7 @@ namespace playershooting
             }
 
             // 检测按键按下事件
-            if (Input.GetKeyDown(KeyCode.Tab)) // 用你想要的按键替换 YourKey
+            if (Input.GetKeyDown(KeyCode.Tab))
             {
                 swaKeyPressed = true; // 设置按键状态为 true
             }
@@ -267,6 +220,8 @@ namespace playershooting
             }
         }
         // 根据 CameraSide 计算目标位置
+
+
 
         private Vector3 CalculateTargetPosition(float cameraSide)
         {
