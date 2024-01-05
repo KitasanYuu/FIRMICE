@@ -53,7 +53,7 @@ public class Bullet : MonoBehaviour
                 DodingDamage();
                 SetHitted();
                 // 在这里可以处理目标物体的信息
-                Debug.Log("销毁前获取到目标物体信息：" + hitObject.name);
+                //Debug.Log("销毁前获取到目标物体信息：" + hitObject.name);
             }
 
             Instantiate(vfxHitYellow,transform.position, Quaternion.identity);
@@ -91,7 +91,7 @@ public class Bullet : MonoBehaviour
             virtualhp = hitObject.GetComponent<VirtualHP>();
             hitornot = hitObject.GetComponent<HitOrNot>();
             // 在此处可以进行命中的处理，例如播放音效、添加命中效果、处理伤害等
-            Debug.Log("命中了：" + hitObject.name);
+            //Debug.Log("命中了：" + hitObject.name);
 
 
 
@@ -112,7 +112,6 @@ public class Bullet : MonoBehaviour
     {
         if (hitornot != null)
         {
-            Debug.Log("1111");
             hitornot.hitted = true;
         }
     }

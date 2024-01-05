@@ -64,19 +64,19 @@ namespace TargetDirDetec
                         {
                             case CollisionSide.Front:
                                 HitDir = 1;
-                                Debug.Log("前碰撞");
+                                //Debug.Log("前碰撞");
                                 break;
                             case CollisionSide.Back:
                                 HitDir = -1;
-                                Debug.Log("后碰撞");
+                                //Debug.Log("后碰撞");
                                 break;
                             case CollisionSide.Left:
                                 HitDir = -2;
-                                Debug.Log("左碰撞");
+                                //Debug.Log("左碰撞");
                                 break;
                             case CollisionSide.Right:
                                 HitDir = 2;
-                                Debug.Log("右碰撞");
+                                //Debug.Log("右碰撞");
                                 break;
                         }
 

@@ -78,12 +78,13 @@ public class WeaponShooter : MonoBehaviour
                     Bullet bullet = bulletInstance.GetComponent<Bullet>();
                     if (bullet != null)
                     {
-                        Debug.LogError("BulletSpwaned");
+
                         bullet.SetDamage(BulletDamage);
                         bullet.SetRayLength(bulletspeed * SRR);
                         bullet.SetBulletSpeed(bulletspeed);
                         bullet.SetBulletHitLayer(DestoryLayer);
-                        Debug.Log(bulletspeed * SRR);
+                        //Debug.Log(bulletspeed * SRR);
+                        //Debug.LogError("BulletSpwaned");
                     }
                     else
                     {

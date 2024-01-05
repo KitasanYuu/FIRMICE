@@ -33,7 +33,7 @@ namespace BattleHealth
         {
             DamageCalculating();
 
-            Debug.LogWarning(CurrentHP);
+            //Debug.LogWarning(CurrentHP);
 
             if (CurrentHP <= 0)
             {
