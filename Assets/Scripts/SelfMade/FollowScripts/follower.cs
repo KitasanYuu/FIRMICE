@@ -4,7 +4,7 @@ using UnityEngine.AI;
 using Pathfinding;
 using System.Collections.Generic;
 using TMPro;
-using StarterAssets;
+using Avatar;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif

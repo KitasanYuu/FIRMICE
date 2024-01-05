@@ -1,4 +1,5 @@
 using UnityEngine;
+using Avatar;
 
 namespace StarterAssets
 {
@@ -6,7 +7,7 @@ namespace StarterAssets
     {
 
         [Header("Output")]
-        public StarterAssetsInputs starterAssetsInputs;
+        public BasicInput starterAssetsInputs;
 
         public void VirtualMoveInput(Vector2 virtualMoveDirection)
         {
