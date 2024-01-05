@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class TargetHitBehavior : MonoBehaviour
 {
-    public GameObject HitDetector;
-
     [Tooltip("Acceleration and deceleration")]
     public float SpeedChangeRate = 10.0f;
 
@@ -27,7 +25,7 @@ public class TargetHitBehavior : MonoBehaviour
     void Start()
     {
         AssignAnimationIDs();
-        hitcollisiondetection = HitDetector.TryGetComponent<HitCollisionDetection>(out hitdetection);
+        hitcollisiondetection = TryGetComponent<HitCollisionDetection>(out hitdetection);
         targetbotactiverange = TryGetComponent<TargetBotActiveRange>(out targetbotactive);
         _hasAnimator = TryGetComponent(out _animator);
     }
@@ -58,7 +56,7 @@ public class TargetHitBehavior : MonoBehaviour
             if(targetbotactiverange)
             {
                 _animator.SetInteger(_animIDTargetStatus, targetbotactive.TargetStatus);
-                Debug.Log(targetbotactive.TargetStatus);
+                //Debug.Log(targetbotactive.TargetStatus);
             }
         }
     }
