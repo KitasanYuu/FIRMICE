@@ -1,4 +1,5 @@
 using UnityEngine;
+using ActiveRange;
 
 public class EmissionColorController : MonoBehaviour
 {
