@@ -16,6 +16,7 @@ public class baseicColorChange : MonoBehaviour
         Renderer renderer = GetComponent<Renderer>();
         if (renderer != null)
         {
+            Debug.Log("MaterialGot");
             material = renderer.material;
         }
         else
