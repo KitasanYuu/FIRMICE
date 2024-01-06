@@ -11,7 +11,7 @@ public class SceneSwitcher : MonoBehaviour
     void Start()
     {
         // 加载起始场景
-        //SceneManager.LoadScene(SceneName);
+        SceneManager.LoadScene("Starter");
     }
 
     // 用于接收场景名称的方法
@@ -21,16 +21,16 @@ public class SceneSwitcher : MonoBehaviour
     //    SceneManager.LoadScene(sceneName);
     //}
 
-    public void StartTransition(string transitionSceneName)
-    {
-        // 异步加载过渡场景
-        SceneManager.LoadSceneAsync(transitionSceneName);
-    }
+    //public void StartTransition(string transitionSceneName)
+    //{
+    //    // 异步加载过渡场景
+    //    SceneManager.LoadSceneAsync(transitionSceneName);
+    //}
 
-    // 这个方法可以在过渡场景中的某个动画事件中调用，表示过渡动画结束
-    public void EndTransition(string sceneName)
-    {
-        // 异步加载目标场景
-        SceneManager.LoadSceneAsync(sceneName);
-    }
+    //// 这个方法可以在过渡场景中的某个动画事件中调用，表示过渡动画结束
+    //public void EndTransition(string sceneName)
+    //{
+    //    // 异步加载目标场景
+    //    SceneManager.LoadSceneAsync(sceneName);
+    //}
 }
