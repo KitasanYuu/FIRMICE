@@ -25,7 +25,7 @@
 <details>
   <summary>Asset结构</summary>
 
-```json
+```
 -Asset                          //主目录
 |    -ACTOR                     //用于存放对象
 |    -ART                       //一般的平面美术资源
