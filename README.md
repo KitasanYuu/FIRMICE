@@ -26,29 +26,32 @@
   <summary>Asset结构</summary>
 
 ```
--Asset                          //主目录
-|    -ACTOR                     //用于存放对象
-|    -ART                       //一般的平面美术资源
-|    |  -Materials              //Prefab中用到的材质
-|    -AstarNavMesh              //A*寻路缓存的NavMesh
-|    -Component                 //引用的外部组件
-|    -Editor                    //UnityEditor工具
-|    -Plugins                   //引用的外部插件
-|    -Prefab                    //系统预制体
-|    -SCENE                     //场景文件
-|    -Scripts                   //主要脚本
-|    |  -SelfMade
-|    |  |   -Actor              //角色控制器相关基础脚本
-|    |  |   -Common             //全局通用
-|    |  |   -Detecor            //检测器
-|    |  |   -FollowScripts      //跟随核心
-|    |  |   -FPSUSED(Aborted)   //FPS相关(项目已不使用)
-|    |  |   -FUNDUDE            //娱乐效果脚本
-|    |  |   -GunBattle          //射击相关
-|    |  |   -TestScripts        //临时测试脚本暂存
-|    |  |   -UI                 //UI相关
-|    -TempAsset                 //临时文件暂存
-|    -Trash                     //文件暂存
+-Asset                                                //主目录
+|    -ACTOR                                           //用于存放对象
+|    -ART                                             //一般的平面美术资源
+|    |    -Materials                                  //Prefab中用到的材质
+|    -AstarNavMesh                                    //A*寻路缓存的NavMesh
+|    -Component                                       //引用的外部组件
+|    -Editor                                          //UnityEditor工具
+|    -Plugins                                         //引用的外部插件
+|    -Prefab                                          //系统预制体
+|    |    -LSS                                        //LoadScene存放处
+|    |    |    -Resources
+|    |    |    |    -Loading Screens                  //LSS的预制体
+|    -SCENE                                           //场景文件
+|    -Scripts                                         //主要脚本
+|    |    -SelfMade
+|    |    |    -Actor                                 //角色控制器相关基础脚本
+|    |    |    -Common                                //全局通用
+|    |    |    -Detecor                               //检测器
+|    |    |    -FollowScripts                         //跟随核心
+|    |    |    -FPSUSED(Aborted)                      //FPS相关(项目已不使用)
+|    |    |    -FUNDUDE                               //娱乐效果脚本
+|    |    |    -GunBattle                             //射击相关
+|    |    |    -TestScripts                           //临时测试脚本暂存
+|    |    |    -UI                                    //UI相关
+|    -TempAsset                                       //临时文件暂存
+|    -Trash                                           //文件暂存
 ```
 </details>
 
