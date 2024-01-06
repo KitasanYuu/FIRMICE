@@ -3,35 +3,37 @@ using UnityEngine.SceneManagement;
 
 public class TargetSwpaner : MonoBehaviour
 {
-    public GameObject prefabToGenerate; // Ô¤ÖÆÌå
-    public string respawnObjectName = "Reswpan"; // ReswpanÎïÌåµÄÃû³Æ
+    public GameObject CharacterPool; // çˆ¶ç‰©ä½“çš„é¢„åˆ¶ä½“
+    public GameObject prefabToGenerate; // é¢„åˆ¶ä½“
+    public string respawnObjectName = "Reswpan"; // Reswpanç‰©ä½“çš„åç§°
 
 
     private void Awake()
     {
-        // ¶©ÔÄ³¡¾°¼ÓÔØÍê³ÉÊÂ¼ş
+        // è®¢é˜…åœºæ™¯åŠ è½½å®Œæˆäº‹ä»¶
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDestroy()
     {
-        // È¡Ïû¶©ÔÄ³¡¾°¼ÓÔØÍê³ÉÊÂ¼şÒÔ·ÀÖ¹ÄÚ´æĞ¹Â©
+        // å–æ¶ˆè®¢é˜…åœºæ™¯åŠ è½½å®Œæˆäº‹ä»¶ä»¥é˜²æ­¢å†…å­˜æ³„æ¼
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // ÔÚĞÂ³¡¾°¼ÓÔØÍê³ÉºóÉú³ÉÔ¤ÖÆÌå
+        // åœ¨æ–°åœºæ™¯åŠ è½½å®Œæˆåç”Ÿæˆé¢„åˆ¶ä½“
         if (prefabToGenerate != null)
         {
-            // ²éÕÒÃûÎª"Reswpan"µÄÎïÌå
+            // æŸ¥æ‰¾åä¸º"Reswpan"çš„ç‰©ä½“
             GameObject respawnObject = GameObject.Find(respawnObjectName);
 
-            // Èç¹ûÕÒµ½ÁË"Reswpan"ÎïÌå£¬»ñÈ¡ÆäÎ»ÖÃ²¢Éú³ÉÔ¤ÖÆÌå
+            // å¦‚æœæ‰¾åˆ°äº†"Reswpan"ç‰©ä½“ï¼Œè·å–å…¶ä½ç½®å¹¶ç”Ÿæˆé¢„åˆ¶ä½“
             if (respawnObject != null)
             {
+                GameObject Pool = Instantiate(CharacterPool);
                 Vector3 spawnPosition = respawnObject.transform.position;
-                Instantiate(prefabToGenerate, spawnPosition, Quaternion.identity);
+                Instantiate(prefabToGenerate, spawnPosition, Quaternion.identity,Pool.transform);
             }
             else
             {
