@@ -1,0 +1,206 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: M_Metalplate4
+  m_Shader: {fileID: -6465566751694194690, guid: 262bb03d801940b438a5757a469b2600, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _DISABLE_SSR_TRANSPARENT
+  m_InvalidKeywords:
+  - _NORMALMAP_TANGENT_SPACE
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 2225
+  stringTagMap:
+    MotionVector: User
+  disabledShaderPasses:
+  - TransparentDepthPrepass
+  - TransparentDepthPostpass
+  - TransparentBackface
+  - RayTracingPrepass
+  - MOTIONVECTORS
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: 88a4c39ca776eb44c9c3fb6e01d6fa50, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BaseNormalMap:
+        m_Texture: {fileID: 2800000, guid: 5c4e97e2d28798145aceb0dcea9b5d63, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BaseORM:
+        m_Texture: {fileID: 2800000, guid: 21f1c7da2d97363408bb98bcd35add55, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Color_Tint_Mask:
+        m_Texture: {fileID: 2800000, guid: de483a2f8c33d15478acd1116553702e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Grunge01:
+        m_Texture: {fileID: 2800000, guid: e8b1f123347374e4d99e40c4aeeae9d1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Grunge02:
+        m_Texture: {fileID: 2800000, guid: e8b1f123347374e4d99e40c4aeeae9d1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GrungeTexture:
+        m_Texture: {fileID: 2800000, guid: 9f6f30cda803e3d459c8dd4e9016427d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SecondNormalMap:
+        m_Texture: {fileID: 2800000, guid: 8fedac27752597e458982e4ddfb4f675, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ShaderMasks:
+        m_Texture: {fileID: 2800000, guid: 4fc313a898d13d1499ad1ab11312d397, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _T_Normal:
+        m_Texture: {fileID: 2800000, guid: 8fedac27752597e458982e4ddfb4f675, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _A: 0
+    - _AddPrecomputedVelocity: 0
+    - _AlphaCutoffEnable: 0
+    - _AlphaDstBlend: 0
+    - _AlphaSrcBlend: 1
+    - _AlphaToMask: 0
+    - _AlphaToMaskInspectorValue: 0
+    - _B: 1
+    - _BlendMode: 0
+    - _ConservativeDepthOffsetEnable: 0
+    - _CullMode: 2
+    - _CullModeForward: 2
+    - _DepthOffsetEnable: 0
+    - _Distortion: 0.2
+    - _DoubleSidedEnable: 0
+    - _DoubleSidedGIMode: 0
+    - _DoubleSidedNormalMode: 2
+    - _DstBlend: 0
+    - _DstBlend2: 0
+    - _EnableBlendModePreserveSpecularLighting: 1
+    - _EnableFogOnTransparent: 1
+    - _Enable_Grunge: 0
+    - _ExcludeFromTUAndAA: 0
+    - _Grunge_Mask_Invert: 0
+    - _Grunge_Mask_Size: 512
+    - _Grunge_Size: 512
+    - _MaterialID: 1
+    - _MaterialTypeMask: 2
+    - _Metallic: 0
+    - _NormalMapStrength: 1
+    - _NormalStrength: 0.9
+    - _OpaqueCullMode: 2
+    - _PerPixelSorting: 0
+    - _RayTracing: 0
+    - _ReceivesSSR: 1
+    - _ReceivesSSRTransparent: 0
+    - _RefractionModel: 0
+    - _RenderQueueType: 1
+    - _RequireSplitLighting: 0
+    - _Roughness: 0.5
+    - _Second_Normal_Map_Dirt_Balance: 1
+    - _Second_Normal_Map_Dirt_Strength: 1
+    - _Second_Normal_Map_UV_Scale: 1
+    - _SrcBlend: 1
+    - _StencilRef: 0
+    - _StencilRefDepth: 8
+    - _StencilRefDistortionVec: 4
+    - _StencilRefGBuffer: 10
+    - _StencilRefMV: 40
+    - _StencilWriteMask: 6
+    - _StencilWriteMaskDepth: 9
+    - _StencilWriteMaskDistortionVec: 4
+    - _StencilWriteMaskGBuffer: 15
+    - _StencilWriteMaskMV: 41
+    - _SupportDecals: 1
+    - _SurfaceType: 0
+    - _TransmissionEnable: 1
+    - _TransparentBackfaceEnable: 0
+    - _TransparentCullMode: 2
+    - _TransparentDepthPostpassEnable: 0
+    - _TransparentDepthPrepassEnable: 0
+    - _TransparentSortPriority: 0
+    - _TransparentWritingMotionVec: 0
+    - _TransparentZWrite: 0
+    - _UV_Scale: 1
+    - _UseShadowThreshold: 0
+    - _Use_3_Color_Tint: 0
+    - _Use_AO_Dirt: 0
+    - _Use_Base_Color_Alpha_Mask: 0
+    - _Use_Bottom_Dirt: 0
+    - _Use_Cubemap: 0
+    - _Use_Dirt: 0
+    - _Use_Local_Space_For_Bottom_Dirt: 0
+    - _Use_Second_Normal_Map: 0
+    - _Use_Texture_Inputs: 1
+    - _ZTestDepthEqualForOpaque: 3
+    - _ZTestGBuffer: 4
+    - _ZTestTransparent: 4
+    - _ZWrite: 1
+    m_Colors:
+    - _AO_Dirt_Color: {r: 0.12477186, g: 0.12477186, b: 0.12477186, a: 1}
+    - _AO_Dirt_Controls: {r: 0.2, g: 0.2, b: 1, a: 1}
+    - _Base_Color_Tint: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    - _Base_Color_Tint_02: {r: 1, g: 1, b: 1, a: 1}
+    - _Base_Color_Tint_03: {r: 1, g: 1, b: 1, a: 1}
+    - _BlendDirtORM: {r: 1, g: 0.2, b: 0.8, a: 0}
+    - _Bottom_Dirt_Color: {r: 0.33716366, g: 0.2874409, b: 0.16513224, a: 1}
+    - _Bottom_Dirt_Controls: {r: 0.5, g: 0.2, b: 1, a: 150}
+    - _Dirt_Color: {r: 0.088655606, g: 0.086500466, b: 0.082282715, a: 1}
+    - _Dirt_Controls: {r: 2, g: 1, b: 0.2, a: 1}
+    - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Grunge01_Size: {r: 800, g: 800, b: 800, a: 0}
+    - _Grunge02_Size: {r: 256, g: 256, b: 256, a: 0}
+    - _Grunge_Controls: {r: 1, g: 1, b: 1, a: 0}
+    - _Grunge_Mask_Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _Grunge_Texture_HSV: {r: 0, g: 1, b: 1, a: 0}
+    - _Grunge_Texture_Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _Normal_TilingAndOffset: {r: 10, g: 10, b: 0, a: 0}
+    - _ORM: {r: 1, g: 0.3, b: 0, a: 0}
+    - _UV_Offset: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
+--- !u!114 &7506307758294432259
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da692e001514ec24dbc4cca1949ff7e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 13
+  hdPluginSubTargetMaterialVersions:
+    m_Keys: []
+    m_Values: 
