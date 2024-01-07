@@ -153,14 +153,12 @@ Shader "Hidden/lilToonLiteOutline"
 
     SubShader
     {
-        Tags {"RenderType" = "Opaque" "Queue" = "Geometry"}
+        Tags {"RenderType" = "HDLitShader" "Queue" = "Geometry"}
         UsePass "Hidden/ltspass_lite_opaque/FORWARD"
         UsePass "Hidden/ltspass_lite_opaque/FORWARD_OUTLINE"
         UsePass "Hidden/ltspass_lite_opaque/SHADOW_CASTER"
-        UsePass "Hidden/ltspass_lite_opaque/DEPTHONLY"
-        UsePass "Hidden/ltspass_lite_opaque/DEPTHNORMALS"
-        UsePass "Hidden/ltspass_lite_opaque/MOTIONVECTORS"
-        UsePass "Hidden/ltspass_lite_opaque/UNIVERSAL2D"
+        UsePass "Hidden/ltspass_lite_opaque/DEPTHONLY_OUTLINE"
+        UsePass "Hidden/ltspass_lite_opaque/MOTIONVECTORS_OUTLINE"
         UsePass "Hidden/ltspass_lite_opaque/META"
         Pass
         {
@@ -220,7 +218,7 @@ Shader "Hidden/lilToonLiteOutline"
             ENDHLSL
         }
     }
-    Fallback "Universal Render Pipeline/Unlit"
+    Fallback "HDRP/Unlit"
 
     CustomEditor "lilToon.lilToonInspector"
 }

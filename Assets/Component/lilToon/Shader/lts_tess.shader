@@ -624,13 +624,11 @@ Shader "Hidden/lilToonTessellation"
 
     SubShader
     {
-        Tags {"RenderType" = "Opaque" "Queue" = "Geometry"}
+        Tags {"RenderType" = "HDLitShader" "Queue" = "Geometry"}
         UsePass "Hidden/ltspass_tess_opaque/FORWARD"
         UsePass "Hidden/ltspass_tess_opaque/SHADOW_CASTER"
         UsePass "Hidden/ltspass_tess_opaque/DEPTHONLY"
-        UsePass "Hidden/ltspass_tess_opaque/DEPTHNORMALS"
         UsePass "Hidden/ltspass_tess_opaque/MOTIONVECTORS"
-        UsePass "Hidden/ltspass_tess_opaque/UNIVERSAL2D"
         UsePass "Hidden/ltspass_tess_opaque/META"
         Pass
         {
@@ -690,7 +688,7 @@ Shader "Hidden/lilToonTessellation"
             ENDHLSL
         }
     }
-    Fallback "Universal Render Pipeline/Unlit"
+    Fallback "HDRP/Unlit"
 
     CustomEditor "lilToon.lilToonInspector"
 }

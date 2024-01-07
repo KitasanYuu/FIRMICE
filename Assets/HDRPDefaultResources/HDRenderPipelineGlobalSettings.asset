@@ -1,0 +1,190 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 781cc897cf8675041a751163b51f97dd, type: 3}
+  m_Name: HDRenderPipelineGlobalSettings
+  m_EditorClassIdentifier: 
+  m_Settings:
+    m_SettingsList: []
+    m_RuntimeSettings: []
+  m_DefaultVolumeProfile: {fileID: 11400000, guid: b1e074c531de1e04cabf344f3e181f06, type: 2}
+  m_LookDevVolumeProfile: {fileID: 11400000, guid: c655fb101f646d74a98f40beef56844d, type: 2}
+  m_ObsoleteRenderingPathDefaultCameraFrameSettings:
+    bitDatas:
+      data1: 5770166122053453
+      data2: 13799031440106553368
+    lodBias: 1
+    lodBiasMode: 0
+    lodBiasQualityLevel: 0
+    maximumLODLevel: 0
+    maximumLODLevelMode: 0
+    maximumLODLevelQualityLevel: 0
+    sssQualityMode: 0
+    sssQualityLevel: 0
+    sssCustomSampleBudget: 20
+    sssCustomDownsampleSteps: 0
+    msaaMode: 1
+    materialQuality: 0
+  m_ObsoleteRenderingPathDefaultBakedOrCustomReflectionFrameSettings:
+    bitDatas:
+      data1: 4643523019153229
+      data2: 13763000534527115280
+    lodBias: 1
+    lodBiasMode: 0
+    lodBiasQualityLevel: 0
+    maximumLODLevel: 0
+    maximumLODLevelMode: 0
+    maximumLODLevelQualityLevel: 0
+    sssQualityMode: 0
+    sssQualityLevel: 0
+    sssCustomSampleBudget: 20
+    sssCustomDownsampleSteps: 0
+    msaaMode: 1
+    materialQuality: 0
+  m_ObsoleteRenderingPathDefaultRealtimeReflectionFrameSettings:
+    bitDatas:
+      data1: 4638910381585229
+      data2: 13763001461971648536
+    lodBias: 1
+    lodBiasMode: 0
+    lodBiasQualityLevel: 0
+    maximumLODLevel: 0
+    maximumLODLevelMode: 0
+    maximumLODLevelQualityLevel: 0
+    sssQualityMode: 0
+    sssQualityLevel: 0
+    sssCustomSampleBudget: 20
+    sssCustomDownsampleSteps: 0
+    msaaMode: 1
+    materialQuality: 0
+  m_RenderingPath:
+    m_Version: 0
+    m_Camera:
+      bitDatas:
+        data1: 5770166122053453
+        data2: 13799031440106553368
+      lodBias: 1
+      lodBiasMode: 0
+      lodBiasQualityLevel: 0
+      maximumLODLevel: 0
+      maximumLODLevelMode: 0
+      maximumLODLevelQualityLevel: 0
+      sssQualityMode: 0
+      sssQualityLevel: 0
+      sssCustomSampleBudget: 20
+      sssCustomDownsampleSteps: 0
+      msaaMode: 1
+      materialQuality: 0
+    m_CustomOrBakedReflection:
+      bitDatas:
+        data1: 4643523019153229
+        data2: 13763000534527115280
+      lodBias: 1
+      lodBiasMode: 0
+      lodBiasQualityLevel: 0
+      maximumLODLevel: 0
+      maximumLODLevelMode: 0
+      maximumLODLevelQualityLevel: 0
+      sssQualityMode: 0
+      sssQualityLevel: 0
+      sssCustomSampleBudget: 20
+      sssCustomDownsampleSteps: 0
+      msaaMode: 1
+      materialQuality: 0
+    m_RealtimeReflection:
+      bitDatas:
+        data1: 4638910381585229
+        data2: 13763001461971648536
+      lodBias: 1
+      lodBiasMode: 0
+      lodBiasQualityLevel: 0
+      maximumLODLevel: 0
+      maximumLODLevelMode: 0
+      maximumLODLevelQualityLevel: 0
+      sssQualityMode: 0
+      sssQualityLevel: 0
+      sssCustomSampleBudget: 20
+      sssCustomDownsampleSteps: 0
+      msaaMode: 1
+      materialQuality: 0
+  m_RenderPipelineResources: {fileID: 11400000, guid: 3ce144cff5783da45aa5d4fdc2da14b7, type: 2}
+  m_RenderPipelineRayTracingResources: {fileID: 0}
+  beforeTransparentCustomPostProcesses: []
+  beforePostProcessCustomPostProcesses: []
+  afterPostProcessBlursCustomPostProcesses: []
+  afterPostProcessCustomPostProcesses: []
+  beforeTAACustomPostProcesses: []
+  defaultRenderingLayerMask: -1
+  renderingLayerNames:
+  - Default
+  - Enviroment
+  - Player
+  - Target
+  lightLayerName0: 
+  lightLayerName1: 
+  lightLayerName2: 
+  lightLayerName3: 
+  lightLayerName4: 
+  lightLayerName5: 
+  lightLayerName6: 
+  lightLayerName7: 
+  decalLayerName0: 
+  decalLayerName1: 
+  decalLayerName2: 
+  decalLayerName3: 
+  decalLayerName4: 
+  decalLayerName5: 
+  decalLayerName6: 
+  decalLayerName7: 
+  lensAttenuationMode: 0
+  colorGradingSpace: 0
+  m_ObsoleteDiffusionProfileSettingsList: []
+  specularFade: 0
+  rendererListCulling: 0
+  DLSSProjectId: 000000
+  useDLSSCustomProjectId: 0
+  supportProbeVolumes: 0
+  autoRegisterDiffusionProfiles: 1
+  analyticDerivativeEmulation: 0
+  analyticDerivativeDebugOutput: 0
+  apvScenesData:
+    m_ObsoleteSerializedBakingSets: []
+    sceneToBakingSet:
+      m_Keys:
+      - 4b8780c0ce6f781469ca9743b7029af9
+      - 730bed3681f9acf49b58c63c2e261710
+      m_Values:
+      - {fileID: 11400000, guid: 284693f37ca6c2c4abfbd637cd84e000, type: 2}
+      - {fileID: 11400000, guid: 1f5b3a7b133effe4a853ff661c2ec9df, type: 2}
+    bakingSets:
+    - {fileID: 11400000, guid: 284693f37ca6c2c4abfbd637cd84e000, type: 2}
+    - {fileID: 11400000, guid: 1f5b3a7b133effe4a853ff661c2ec9df, type: 2}
+    sceneBounds:
+      m_Keys: []
+      m_Values: []
+    hasProbeVolumes:
+      m_Keys:
+      - 4b8780c0ce6f781469ca9743b7029af9
+      - 730bed3681f9acf49b58c63c2e261710
+      m_Values: 0000
+  m_Version: 10
+  m_ShaderStrippingSetting:
+    m_Version: 0
+    m_ExportShaderVariants: 1
+    m_ShaderVariantLogLevel: 0
+    m_StripRuntimeDebugShaders: 1
+  m_ShaderVariantLogLevel: 0
+  m_SupportRuntimeDebugDisplay: 0
+  m_ExportShaderVariants: 1
+  m_StripDebugVariants: 0
+  references:
+    version: 2
+    RefIds: []

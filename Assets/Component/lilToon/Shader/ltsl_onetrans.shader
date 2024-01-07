@@ -186,13 +186,11 @@ Shader "Hidden/lilToonLiteOnePassTransparent"
 
     SubShader
     {
-        Tags {"RenderType" = "TransparentCutout" "Queue" = "AlphaTest+10"}
+        Tags {"RenderType" = "HDLitShader" "Queue" = "Transparent"}
         UsePass "Hidden/ltspass_lite_transparent/FORWARD"
         UsePass "Hidden/ltspass_lite_transparent/SHADOW_CASTER"
         UsePass "Hidden/ltspass_lite_transparent/DEPTHONLY"
-        UsePass "Hidden/ltspass_lite_transparent/DEPTHNORMALS"
         UsePass "Hidden/ltspass_lite_transparent/MOTIONVECTORS"
-        UsePass "Hidden/ltspass_lite_transparent/UNIVERSAL2D"
         UsePass "Hidden/ltspass_lite_transparent/META"
         Pass
         {
@@ -252,7 +250,7 @@ Shader "Hidden/lilToonLiteOnePassTransparent"
             ENDHLSL
         }
     }
-    Fallback "Universal Render Pipeline/Unlit"
+    Fallback "HDRP/Unlit"
 
     CustomEditor "lilToon.lilToonInspector"
 }
