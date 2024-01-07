@@ -624,8 +624,10 @@ Shader "_lil/[Optional] lilToonOutlineOnlyCutout"
 
     SubShader
     {
-        Tags {"RenderType" = "TransparentCutout" "Queue" = "AlphaTest"}
+        Tags {"RenderType" = "HDLitShader" "Queue" = "AlphaTest"}
         UsePass "Hidden/ltspass_cutout/FORWARD_OUTLINE"
+        UsePass "Hidden/ltspass_cutout/DEPTHONLY_OUTLINE"
+        UsePass "Hidden/ltspass_cutout/MOTIONVECTORS_OUTLINE"
         Pass
         {
             Tags { "LightMode" = "Never" }
@@ -684,7 +686,7 @@ Shader "_lil/[Optional] lilToonOutlineOnlyCutout"
             ENDHLSL
         }
     }
-    Fallback "Universal Render Pipeline/Unlit"
+    Fallback "HDRP/Unlit"
 
     CustomEditor "lilToon.lilToonInspector"
 }

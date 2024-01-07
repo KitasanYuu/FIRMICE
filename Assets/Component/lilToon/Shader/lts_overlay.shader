@@ -657,7 +657,7 @@ Shader "_lil/[Optional] lilToonOverlay"
 
     SubShader
     {
-        Tags {"RenderType" = "TransparentCutout" "Queue" = "AlphaTest+10"}
+        Tags {"RenderType" = "HDLitShader" "Queue" = "Transparent"}
         UsePass "Hidden/ltspass_transparent/FORWARD"
         Pass
         {
@@ -717,7 +717,7 @@ Shader "_lil/[Optional] lilToonOverlay"
             ENDHLSL
         }
     }
-    Fallback "Universal Render Pipeline/Unlit"
+    Fallback "HDRP/Unlit"
 
     CustomEditor "lilToon.lilToonInspector"
 }

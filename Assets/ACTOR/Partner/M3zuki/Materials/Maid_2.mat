@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Maid_2
-  m_Shader: {fileID: 4800000, guid: df12117ecd77c31469c224178886498e, type: 3}
+  m_Shader: {fileID: 4800000, guid: 85d6126cae43b6847aff4b13f4adb8ec, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -266,7 +266,7 @@ Material:
     - _AlphaMaskMode: 0
     - _AlphaMaskScale: 1
     - _AlphaMaskValue: 0
-    - _AlphaToMask: 0
+    - _AlphaToMask: 1
     - _Anisotropy2MatCap: 0
     - _Anisotropy2MatCap2nd: 0
     - _Anisotropy2Reflection: 0
@@ -536,6 +536,9 @@ Material:
     - _ReflectionCubeEnableLighting: 1
     - _ReflectionCubeOverride: 0
     - _ReflectionNormalStrength: 1
+    - _RefractionColorFromMain: 0
+    - _RefractionFresnelPower: 0.5
+    - _RefractionStrength: 0.1
     - _RimApplyTransparency: 1
     - _RimBackfaceMask: 1
     - _RimBlendMode: 1
@@ -697,6 +700,7 @@ Material:
     - _OutlineTex_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
     - _ReflectionColor: {r: 1, g: 1, b: 1, a: 1}
     - _ReflectionCubeColor: {r: 0, g: 0, b: 0, a: 1}
+    - _RefractionColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimColor: {r: 0.5698202, g: 0.58184093, b: 0.6132076, a: 0.496}
     - _RimIndirColor: {r: 1, g: 1, b: 1, a: 1}
     - _Shadow2ndColor: {r: 0.75594074, g: 0.7249021, b: 0.8490566, a: 1}
