@@ -1185,8 +1185,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3538829791284424987}
   - {fileID: 2052323330}
+  - {fileID: 3538829791284424987}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1718147447
@@ -1318,6 +1318,87 @@ MonoBehaviour:
   CharacterPool: {fileID: 1436121505823521212, guid: d82982b2927ee2c4992f4ab09c5a4164, type: 3}
   prefabToGenerate: {fileID: 7028068431925013405, guid: 89278e114bf75914db054c98096d17df, type: 3}
   respawnObjectName: Reswpan
+--- !u!1 &1923088668
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1923088669}
+  - component: {fileID: 1923088671}
+  - component: {fileID: 1923088670}
+  - component: {fileID: 1923088672}
+  m_Layer: 0
+  m_Name: '[CursorManager]'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1923088669
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923088668}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.4710933, y: 1.0382141, z: 2.9398854}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1923088670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923088668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b227e1cfd5dfa2746a4b6dcb6abaff78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1923088671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923088668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dce8c2429f1f6554993ca982a05bf83b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  basicinput: {fileID: 0}
+  Player: {fileID: 0}
+--- !u!114 &1923088672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923088668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe591f57c39ef364294fdc2b2a560be4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  matchByID: 0
+  objectIDToFind: 
+  objectTagToFind: Player
+  objectLayerToFind:
+    serializedVersion: 2
+    m_Bits: 1073741824
+  scenesToDeactivateScript:
+  - Starter
+  foundObject: {fileID: 0}
 --- !u!1 &2052323329
 GameObject:
   m_ObjectHideFlags: 0
@@ -1699,13 +1780,34 @@ GameObject:
   - component: {fileID: 3013996846586925146}
   - component: {fileID: 7381943638790477486}
   - component: {fileID: 446079616113665255}
+  - component: {fileID: 8103773444382814169}
   m_Layer: 5
   m_Name: Corshair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
+--- !u!114 &8103773444382814169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8103773444382814168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe591f57c39ef364294fdc2b2a560be4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  matchByID: 0
+  objectIDToFind: 
+  objectTagToFind: ObjectTag
+  objectLayerToFind:
+    serializedVersion: 2
+    m_Bits: 0
+  scenesToDeactivateScript: []
+  foundObject: {fileID: 0}
 --- !u!1 &8559709831674788035
 GameObject:
   m_ObjectHideFlags: 0
@@ -1737,3 +1839,4 @@ SceneRoots:
   - {fileID: 902519511}
   - {fileID: 2111276131}
   - {fileID: 76314737}
+  - {fileID: 1923088669}
