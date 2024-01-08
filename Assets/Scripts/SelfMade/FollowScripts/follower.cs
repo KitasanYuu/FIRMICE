@@ -5,6 +5,7 @@ using Pathfinding;
 using System.Collections.Generic;
 using TMPro;
 using Avatar;
+using TargetFinding;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -46,6 +47,7 @@ namespace Partner
         //直接取到AvatarController中的值
         private AvatarController avatarController;
 
+        private bool NeedtoRetakeTarget;
 
         //以下是Astar算法所用的参数
         private Seeker seeker;
@@ -74,6 +76,11 @@ namespace Partner
 
         void Update()
         {
+            if (NeedtoRetakeTarget)
+            {
+                RetakeTarget();
+            }
+
             CanISpwanTargetPoint();
             SeekerCalcu();
             MovingStart();
@@ -84,10 +91,13 @@ namespace Partner
         //这个方法用来启动Seeker的路径计算
         private void SeekerCalcu()
         {
-            Vector3 TargetPosition = targetToFollow.transform.TransformPoint(currentTargetPoint);
-            seeker.StartPath(transform.position, TargetPosition);
+            if (targetToFollow != null)
+            {
+                Vector3 TargetPosition = targetToFollow.transform.TransformPoint(currentTargetPoint);
+                seeker.StartPath(transform.position, TargetPosition);
 
-            seeker.pathCallback += OnPathComplete; //在每次回调成功后把新路径点加在数组后面
+                seeker.pathCallback += OnPathComplete; //在每次回调成功后把新路径点加在数组后面
+            }
         }
 
         //一个方法，用来在回调后保存Path数组的值
@@ -117,10 +127,33 @@ namespace Partner
             //navMeshAgent = GetComponent<NavMeshAgent>();
             //navMeshPath = new NavMeshPath();
 
-            seeker = GetComponent<Seeker>();
-            avatarController = targetToFollow.GetComponent<AvatarController>();
-            if (avatarController != null) { Debug.Log("Follower - AvatarController Initialized!"); }
 
+            seeker = GetComponent<Seeker>();
+            if (targetToFollow != null)
+            {
+                avatarController = targetToFollow.GetComponent<AvatarController>();
+                Debug.Log("Follower - AvatarController Initialized!");
+            }
+            else
+            {
+                NeedtoRetakeTarget = true;
+            }
+
+        }
+
+        private void RetakeTarget()
+        {
+            ObjectSeeker objectseeker = GetComponent<ObjectSeeker>();
+            objectseeker.StartSeek(true);
+            if (objectseeker.targetToFollow != null)
+            {
+                targetToFollow = objectseeker.targetToFollow;
+                avatarController = targetToFollow.GetComponent<AvatarController>();
+                Debug.Log("FollowerRebinded");
+                GetComponent();
+                FollowTargetInit();
+                NeedtoRetakeTarget = false;
+            }
         }
 
         //用于在Star方法中初始化随机跟随目标的生成
@@ -129,7 +162,7 @@ namespace Partner
             if (targetToFollow != null)
             {
                 lastTargetPosition = targetToFollow.transform.position;
-                isInsideSector = true;
+                //isInsideSector = true;
                 UpdateTargetPoint();
             }
         }
@@ -226,7 +259,7 @@ namespace Partner
         //用来判定启动协程计时执行Move的函数
         private void MovingStart()
         {
-            if (!isInsideSector && !IsInvoking("MoveAfterDelay"))
+            if (targetToFollow!=null && !isInsideSector && !IsInvoking("MoveAfterDelay"))
             {
                 StartCoroutine(MoveAfterDelay(DelayStartTime)); // x 是延迟时间，以秒为单位
             }
@@ -291,11 +324,11 @@ namespace Partner
             {
                 Destination = aimPoint[index: 0];
             }
-            else if(Count >=1)
+            else if (Count >= 1)
             {
                 Destination = aimPoint[index: 1];
             }
-            else if(Count ==0)
+            else if (Count == 0)
             {
                 Debug.LogError("Follower:The List Count is 0!");
                 return;

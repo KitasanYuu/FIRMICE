@@ -42,6 +42,10 @@ namespace Avatar
 			{
 				LookInput(value.Get<Vector2>());
 			}
+			else
+			{
+				LookInput(new Vector2(0,0));
+			}
 		}
 
 		public void OnJump(InputValue value)
@@ -106,7 +110,9 @@ namespace Avatar
 		private void OnApplicationFocus(bool hasFocus)
 		{
 			SetCursorState(cursorLocked);
-		}
+			cursorInputForLook = true;
+
+        }
 
 		private void SetCursorState(bool newState)
 		{

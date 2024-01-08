@@ -5,11 +5,11 @@ namespace TargetFinding
 {
     public class ObjectSeeker : MonoBehaviour
     {
-        private Vector3 DetecCenter;
-        private Vector3 DetecRange;
-        private LayerMask targetLayer;
+        public Vector3 DetecCenter;
+        public Vector3 DetecRange;
+        public LayerMask targetLayer;
         public string targetTag = "Player";
-        [HideInInspector]
+        //[HideInInspector]
         public GameObject targetToFollow; // 用于存储找到的目标物体
 
         private void Update()
