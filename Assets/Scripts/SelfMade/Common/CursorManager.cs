@@ -7,9 +7,7 @@ using Avatar;
 public class CursorManager : MonoBehaviour
 {
     private TargetSeeker targetseeker;
-    [SerializeField]
     private BasicInput basicinput;
-    [SerializeField]
     private GameObject Player;
 
     // Start is called before the first frame update
