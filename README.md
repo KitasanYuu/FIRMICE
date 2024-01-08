@@ -33,8 +33,12 @@
 |    -ACTOR                                           //用于存放对象
 |    -ART                                             //一般的平面美术资源
 |    |    -Materials                                  //Prefab中用到的材质
+|    |    -Fonts                                      //TextMeshPro字体文件
 |    -AstarNavMesh                                    //A*寻路缓存的NavMesh
 |    -Component                                       //引用的外部组件
+|    -Extenals                                        //外部Git组件
+|    |    -TextFilesForTextMeshPro                    //TextMeshPro字库
+|    -HDRPDefaultResources                            //HDRP管线默认配置
 |    -Editor                                          //UnityEditor工具
 |    -Plugins                                         //引用的外部插件
 |    -Prefab                                          //系统预制体
