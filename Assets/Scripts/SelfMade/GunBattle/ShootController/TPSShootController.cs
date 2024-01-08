@@ -5,6 +5,7 @@ using Avatar;
 using UnityEngine.InputSystem;
 using RootMotion.FinalIK;
 using Detector;
+using TargetFinding;
 
 namespace playershooting
 {
@@ -45,6 +46,11 @@ namespace playershooting
 
         public int AimIKParameter;
 
+        //这些是实例化生成后查找物体用的参数
+        private string corshairtag = "Corshair";
+        private string corshairname = "Corshair";
+        private bool searchInactiveObjects = true;
+
         //给外部取用
         public Vector3 TmouseWorldPosition;
 
@@ -58,7 +64,6 @@ namespace playershooting
         private void Start()
         {
             _hasAnimator = TryGetComponent(out _animator);
-
             AssignAnimationIDs();
 
         }
@@ -112,6 +117,11 @@ namespace playershooting
                 {
                     corshair.SetActive(true);
                 }
+                else
+                {
+                    FindCorshair();
+                }
+
 
                 if (_hasAnimator)
                 {
@@ -219,7 +229,25 @@ namespace playershooting
         }
         // 根据 CameraSide 计算目标位置
 
-
+        private void FindCorshair()
+        {
+            if (corshair == null)
+            {
+                TargetSeeker targetseeker = GetComponent<TargetSeeker>();
+                if (targetseeker != null)
+                {
+                    targetseeker.objectTagToFind = corshairtag;
+                    targetseeker.objectNameToFind = corshairname;
+                    targetseeker.searchInactiveObjects = searchInactiveObjects;
+                    targetseeker.SetStatus(true);
+                    if (targetseeker.foundObject != null)
+                    {
+                        corshair = targetseeker.foundObject;
+                        targetseeker.SetStatus(false);
+                    }
+                }
+            }
+        }
 
         private Vector3 CalculateTargetPosition(float cameraSide)
         {
