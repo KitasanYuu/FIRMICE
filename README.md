@@ -1,4 +1,7 @@
-<div align = "center">
+<div align="center">
+  <a href="https://crypko.ai/cn/crypko/ABoLzpQhVPRMR/">
+  <img src="Assets/Lozas.png" alt="看板娘" width = "400">
+  </a><br>
 
 <h1>FIRM ICE</h1>
 基于Unity的TPS项目
