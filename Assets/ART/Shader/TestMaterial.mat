@@ -31,6 +31,7 @@ Material:
   - _ALPHATEST_ON
   - _DISABLE_SSR_TRANSPARENT
   - _EMISSION
+  - _ENABLEDISSOLVE
   m_InvalidKeywords:
   - _BOOLEAN
   - _NORMALMAP_TANGENT_SPACE
@@ -77,6 +78,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _DetailMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DissolveMap:
+        m_Texture: {fileID: 2800000, guid: ecee42f89d59a8745b69c4e5a43870cc, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
@@ -213,6 +218,8 @@ Material:
     - _DisplacementLockObjectScale: 1
     - _DisplacementLockTilingScale: 1
     - _DisplacementMode: 0
+    - _DissolveBorder: 0.17
+    - _DissolveRate: 0.95
     - _Dither: 1
     - _DoubleSidedEnable: 0
     - _DoubleSidedGIMode: 1
@@ -220,6 +227,7 @@ Material:
     - _DstBlend: 0
     - _DstBlend2: 0
     - _EMISSION: 1
+    - _ENABLEDISSOLVE: 1
     - _ENABLEDITHER: 0
     - _EmissiveColorMode: 1
     - _EmissiveExposureWeight: 1
@@ -320,6 +328,7 @@ Material:
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 1}
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
+    - _DissolveColor: {r: 80.465065, g: 0.3795531, b: 56.908188, a: 1}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmColor: {r: 19.775824, g: 0, b: 1888.566, a: 1}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}

@@ -32,7 +32,7 @@ Material:
   - _DISABLE_SSR
   - _DISABLE_SSR_TRANSPARENT
   - _EMISSION
-  - _ENABLEDITHER
+  - _ENABLEDISSOLVE
   - _MATCAP1
   - _MATCAP2
   m_InvalidKeywords: []
@@ -102,6 +102,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: dea5d51bd2255b74a977857174334f87, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DissolveMap:
+        m_Texture: {fileID: 2800000, guid: 3d421fc7bc8924f4985df741bf8d70ed, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DissolveMask:
@@ -415,21 +419,24 @@ Material:
     - _CullModeForward: 2
     - _Cutoff: 0.5
     - _DepthOffsetEnable: 0
+    - _DissolveBorder: 0.12
     - _DissolveNoiseStrength: 0.1
+    - _DissolveRate: -1
     - _DistanceFadeMode: 0
     - _DistanceFadeRimFresnelPower: 5
     - _Dither: 1
     - _DitherMaxValue: 255
     - _DoubleSidedEnable: 0
     - _DoubleSidedGIMode: 0
-    - _DoubleSidedNormalMode: 2
+    - _DoubleSidedNormalMode: 0
     - _DstBlend: 0
     - _DstBlend2: 0
     - _DstBlendAlpha: 10
     - _DstBlendAlphaFA: 1
     - _DstBlendFA: 1
     - _EMISSION: 1
-    - _ENABLEDITHER: 1
+    - _ENABLEDISSOLVE: 1
+    - _ENABLEDITHER: 0
     - _Emission2ndBlend: 1
     - _Emission2ndBlendMode: 1
     - _Emission2ndFluorescence: 0
@@ -696,6 +703,7 @@ Material:
     - _TessStrength: 0.5
     - _Threshold: 0
     - _TransmissionEnable: 1
+    - _Transparency: 0
     - _TransparentBackfaceEnable: 0
     - _TransparentCullMode: 2
     - _TransparentDepthPostpassEnable: 0
@@ -754,14 +762,14 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Color2nd: {r: 0, g: 0, b: 0, a: 1}
     - _Color3rd: {r: 1, g: 1, b: 1, a: 1}
-    - _DissolveColor: {r: 4, g: 0, b: 0.28235295, a: 1}
+    - _DissolveColor: {r: 33.896763, g: 14.164273, b: 0, a: 1}
     - _DissolveNoiseMask_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
     - _DissolveParams: {r: 3, g: 1, b: -1, a: 0.05}
     - _DissolvePos: {r: 0, g: 0.1, b: 0, a: 0}
     - _DistanceFade: {r: 0.1, g: 0.01, b: 0, a: 0}
     - _DistanceFadeColor: {r: 0, g: 0, b: 0, a: 1}
     - _DistanceFadeRimColor: {r: 0, g: 0, b: 0, a: 0}
-    - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
+    - _DoubleSidedConstants: {r: -1, g: -1, b: -1, a: 0}
     - _EmColor: {r: 290.63724, g: 0, b: 3.4192615, a: 1}
     - _Emission2ndBlendMask_ScrollRotate: {r: 0, g: 0.17, b: 0, a: 0}
     - _Emission2ndBlink: {r: 0.178, g: 0, b: 2.0734513, a: 0}
