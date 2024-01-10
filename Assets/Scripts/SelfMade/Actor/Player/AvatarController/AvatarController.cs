@@ -133,7 +133,7 @@ namespace Avatar
 
         // player
         public float _speed;
-        private float _animationBlend;
+        public float _animationBlend;
         private float _targetRotation = 0.0f;
         private float _rotationVelocity;
         private float _verticalVelocity;
@@ -143,8 +143,8 @@ namespace Avatar
         private const float ThresholdValue = 1.0f;
 
         // timeout deltatime
-        private float _jumpTimeoutDelta;
-        private float _fallTimeoutDelta;
+        public float _jumpTimeoutDelta;
+        public float _fallTimeoutDelta;
 
         // animation IDs
         private int _animIDSpeed;
