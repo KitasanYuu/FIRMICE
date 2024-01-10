@@ -24,21 +24,21 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: TestMaterial
-  m_Shader: {fileID: -6465566751694194690, guid: fd260d1e1acf08d4e80e19d32cfd1d78, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: ade42a5baf1e50740b3c2c1e22180f6a, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ALPHATEST_ON
-  - _DISABLE_SSR_TRANSPARENT
   - _EMISSION
-  - _ENABLEDISSOLVE
+  - _ENABLEDITHER
+  - _SIX_WAY_COLOR_ABSORPTION
   m_InvalidKeywords:
   - _BOOLEAN
   - _NORMALMAP_TANGENT_SPACE
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
-  m_CustomRenderQueue: 2475
+  m_CustomRenderQueue: 2450
   stringTagMap:
     MotionVector: User
     RenderType: TransparentCutout
@@ -219,7 +219,7 @@ Material:
     - _DisplacementLockTilingScale: 1
     - _DisplacementMode: 0
     - _DissolveBorder: 0.17
-    - _DissolveRate: 0.95
+    - _DissolveRate: -1
     - _Dither: 1
     - _DoubleSidedEnable: 0
     - _DoubleSidedGIMode: 1
@@ -227,8 +227,10 @@ Material:
     - _DstBlend: 0
     - _DstBlend2: 0
     - _EMISSION: 1
-    - _ENABLEDISSOLVE: 1
-    - _ENABLEDITHER: 0
+    - _ENABLEALPHAREPLACE: 0
+    - _ENABLEDISSOLVE: 0
+    - _ENABLEDITHER: 1
+    - _ENAKBLEALPHAREPLACE: 0
     - _EmissiveColorMode: 1
     - _EmissiveExposureWeight: 1
     - _EmissiveIntensity: 1
@@ -261,6 +263,8 @@ Material:
     - _Metallic: 0
     - _MetallicRemapMax: 1
     - _MetallicRemapMin: 0
+    - _MultiColorRate: 1
+    - _NORMALMAPENABLE: 0
     - _NormalMapSpace: 0
     - _NormalScale: 1
     - _NormalStrength: 0.03
@@ -274,12 +278,14 @@ Material:
     - _PPDPrimitiveWidth: 1
     - _PerPixelSorting: 0
     - _RayTracing: 0
+    - _ReceiveShadows: 1
     - _ReceivesSSR: 1
     - _ReceivesSSRTransparent: 0
     - _RefractionModel: 0
     - _RenderQueueType: 1
     - _RequireSplitLighting: 0
     - _ScrollRate: 0.614
+    - _Smooth: 0
     - _Smoothness: 0.5
     - _SmoothnessRemapMax: 1
     - _SmoothnessRemapMin: 0
@@ -288,15 +294,15 @@ Material:
     - _SpecularOcclusionMode: 1
     - _SrcBlend: 1
     - _StencilRef: 0
-    - _StencilRefDepth: 8
+    - _StencilRefDepth: 1
     - _StencilRefDistortionVec: 4
     - _StencilRefGBuffer: 10
-    - _StencilRefMV: 40
+    - _StencilRefMV: 33
     - _StencilWriteMask: 6
     - _StencilWriteMaskDepth: 9
     - _StencilWriteMaskDistortionVec: 4
     - _StencilWriteMaskGBuffer: 15
-    - _StencilWriteMaskMV: 41
+    - _StencilWriteMaskMV: 43
     - _SubsurfaceMask: 1
     - _SupportDecals: 1
     - _SurfaceType: 0
@@ -317,6 +323,7 @@ Material:
     - _UVBase: 0
     - _UVDetail: 0
     - _UVEmissive: 0
+    - _UseColorAbsorption: 1
     - _UseEmissiveIntensity: 0
     - _UseShadowThreshold: 0
     - _ZTestDepthEqualForOpaque: 3
@@ -330,7 +337,7 @@ Material:
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
     - _DissolveColor: {r: 80.465065, g: 0.3795531, b: 56.908188, a: 1}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
-    - _EmColor: {r: 19.775824, g: 0, b: 1888.566, a: 1}
+    - _EmColor: {r: 2.471978, g: 0, b: 236.07076, a: 1}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissiveColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissiveColorLDR: {r: 0, g: 0, b: 0, a: 1}
