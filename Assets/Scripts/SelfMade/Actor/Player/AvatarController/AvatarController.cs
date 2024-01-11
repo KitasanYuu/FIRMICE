@@ -94,12 +94,15 @@ namespace Avatar
         private float MovingDirZ;
         private float MovingDirNorX;
         private float MovingDirNorZ;
-        private float _TempMovingX;
-        private float _TempMovingY;
+        [HideInInspector]
+        public float _TempMovingX;
+        [HideInInspector]
+        public float _TempMovingY;
         private float _TargetMovingX;
         private float _TargetMovingY;
         private float AimOrNot;
-        private float _TargetAimOrNot;
+        [HideInInspector]
+        public float _TargetAimOrNot;
         public Vector3 MovingDir;
         public Vector3 MovingDirNor;
         
@@ -133,7 +136,7 @@ namespace Avatar
 
         // player
         public float _speed;
-        private float _animationBlend;
+        public float _animationBlend;
         private float _targetRotation = 0.0f;
         private float _rotationVelocity;
         private float _verticalVelocity;
@@ -143,8 +146,8 @@ namespace Avatar
         private const float ThresholdValue = 1.0f;
 
         // timeout deltatime
-        private float _jumpTimeoutDelta;
-        private float _fallTimeoutDelta;
+        public float _jumpTimeoutDelta;
+        public float _fallTimeoutDelta;
 
         // animation IDs
         private int _animIDSpeed;

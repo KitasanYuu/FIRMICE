@@ -43,7 +43,7 @@ namespace playershooting
         private int _animIDEnterAiming;
         private int _animIDAimStatus;
 
-
+        [HideInInspector]
         public int AimIKParameter;
 
         //这些是实例化生成后查找物体用的参数
@@ -52,6 +52,7 @@ namespace playershooting
         private bool searchInactiveObjects = true;
 
         //给外部取用
+        [HideInInspector]
         public Vector3 TmouseWorldPosition;
 
         private void Awake()
@@ -139,8 +140,9 @@ namespace playershooting
 
                 if (AimIKParameter == 1)
                 {
+                    AimIKParameter = 1;
                     gameObject.GetComponent<AimIK>().enabled = true;
-                    AimIKParameter = 0;
+                    //AimIKParameter = 0;
                 }
             }
             else
@@ -151,6 +153,7 @@ namespace playershooting
                 avatarController.SetSensitivity(normalSensitivity);
                 avatarController.SetRotateOnMove(newRorareOnMove: true);
                 gameObject.GetComponent<AimIK>().enabled = false;
+                AimIKParameter = 0;
 
                 if (corshair != null)
                 {

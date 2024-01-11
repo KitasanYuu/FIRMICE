@@ -38,7 +38,7 @@ public class TargetSwpaner : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogWarning("Could not find object with the name " + respawnObjectName);
+                    //Debug.LogWarning("Could not find object with the name " + respawnObjectName);
                 }
             }
     }
