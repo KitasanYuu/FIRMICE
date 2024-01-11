@@ -231,6 +231,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _RimShadeMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Shadow2ndColorTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -579,6 +583,10 @@ Material:
     - _RimIndirRange: 0
     - _RimMainStrength: 0
     - _RimNormalStrength: 1
+    - _RimShadeBlur: 1
+    - _RimShadeBorder: 0.5
+    - _RimShadeFresnelPower: 1
+    - _RimShadeNormalStrength: 1
     - _RimShadowMask: 0.5
     - _RimVRParallaxStrength: 1
     - _Shadow2ndBlur: 0.271
@@ -650,6 +658,7 @@ Material:
     - _UseParallax: 0
     - _UseReflection: 0
     - _UseRim: 1
+    - _UseRimShade: 0
     - _UseShadow: 1
     - _VertexLightStrength: 0
     - _ZClip: 1
@@ -661,7 +670,7 @@ Material:
     - _egci: 2
     - _lilDirectionalLightStrength: 1
     - _lilShadowCasterBias: 0
-    - _lilToonVersion: 37
+    - _lilToonVersion: 39
     m_Colors:
     - _AudioLinkDefaultValue: {r: 0, g: 0, b: 2, a: 0.75}
     - _AudioLinkLocalMapParams: {r: 120, g: 1, b: 0, a: 0}
@@ -729,6 +738,7 @@ Material:
     - _ReflectionCubeColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 0.41224584, g: 0.45282984, b: 0.44832057, a: 1}
     - _RimIndirColor: {r: 1, g: 1, b: 1, a: 1}
+    - _RimShadeColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _Shadow2ndColor: {r: 0.75594074, g: 0.7249021, b: 0.8490566, a: 1}
     - _Shadow3rdColor: {r: 0.9716981, g: 0.637104, b: 0.637104, a: 0}
     - _ShadowAOShift: {r: 1, g: 0, b: 1, a: 0}
