@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using CustomInspector;
 
 namespace TargetFinding
 {
@@ -14,7 +15,7 @@ namespace TargetFinding
         public LayerMask objectLayerToFind; // 用于存储要查找的层级
         public List<string> scenesToDeactivateScript; // 存储要禁用脚本的场景名称列表
 
-        public GameObject foundObject; // 用于存储找到的物体的引用
+        [ReadOnly] public GameObject foundObject; // 用于存储找到的物体的引用
         private string currentSceneName; // 用于存储当前场景名称
 
         private void Start()

@@ -5101,6 +5101,7 @@ MonoBehaviour:
   keyCode: 32
   enableVirtualLoading: 0
   virtualLoadingTimer: 8
+  currentVirtualTime: 0
   setTimeScale: 1
   enablePressAnyKey: 1
   customSceneActivation: 0
@@ -5109,6 +5110,9 @@ MonoBehaviour:
   contentFadeSpeed: 2
   projectorCamera: {fileID: 0}
   onLoadingStart:
+    m_PersistentCalls:
+      m_Calls: []
+  onTransitionCompleted:
     m_PersistentCalls:
       m_Calls: []
   onLoadingEnd:
