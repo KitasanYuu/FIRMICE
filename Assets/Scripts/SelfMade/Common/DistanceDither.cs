@@ -4,7 +4,7 @@ using UnityEngine;
 using CameraTools;
 using RenderTools;
 
-namespace Avatar
+namespace AvatarMain
 {
     public class DistanceDither : MonoBehaviour
     {

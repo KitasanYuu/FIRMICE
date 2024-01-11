@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 #endif
 
-namespace Avatar
+namespace AvatarMain
 {
 	public class BasicInput : MonoBehaviour
 	{

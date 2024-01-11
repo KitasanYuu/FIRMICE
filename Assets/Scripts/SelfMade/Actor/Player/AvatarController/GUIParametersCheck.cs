@@ -2,7 +2,7 @@
 using UnityEditor;
 #endif
 using UnityEngine;
-using Avatar;
+using AvatarMain;
 
 #if UNITY_EDITOR
 public class GUIParametersCheck : EditorWindow

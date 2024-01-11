@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TargetFinding;
-using Avatar;
+using AvatarMain;
 
 public class CursorManager : MonoBehaviour
 {

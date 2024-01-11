@@ -1,5 +1,5 @@
 using UnityEngine;
-using Avatar;
+using AvatarMain;
 
 namespace StarterAssets
 {

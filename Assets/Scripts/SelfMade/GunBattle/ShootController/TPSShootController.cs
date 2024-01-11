@@ -1,7 +1,7 @@
 
 using UnityEngine;
 using Cinemachine;
-using Avatar;
+using AvatarMain;
 using UnityEngine.InputSystem;
 using RootMotion.FinalIK;
 using Detector;

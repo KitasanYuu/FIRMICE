@@ -4,7 +4,7 @@ using UnityEngine;
 using playershooting;
 using RootMotion.FinalIK;
 
-namespace Avatar
+namespace AvatarMain
 {
     public class CloneAvatarController : MonoBehaviour
     {

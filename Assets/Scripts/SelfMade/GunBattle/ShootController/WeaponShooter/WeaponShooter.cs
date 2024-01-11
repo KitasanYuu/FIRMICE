@@ -1,5 +1,5 @@
 using UnityEngine;
-using Avatar;
+using AvatarMain;
 using playershooting;
 using RootMotion.Demos;
 using UnityEngine.EventSystems;

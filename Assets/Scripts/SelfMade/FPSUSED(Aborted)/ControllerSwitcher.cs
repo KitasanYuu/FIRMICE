@@ -1,7 +1,7 @@
 using UnityEngine;
 using StarterAssets;
 using Cinemachine;
-using Avatar;
+using AvatarMain;
 
 public class ControllerSwitcher : MonoBehaviour
 {

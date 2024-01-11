@@ -2,7 +2,7 @@
 using UnityEditor;
 #endif
 using UnityEngine;
-using Avatar;
+using AvatarMain;
 using Cinemachine;
 
 #if UNITY_EDITOR
