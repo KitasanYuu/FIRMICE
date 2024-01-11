@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class AllinOne : MonoBehaviour
 {
@@ -19,17 +20,38 @@ public class AllinOne : MonoBehaviour
     [Range(0.0f, 1.0f)]
     public float _Dither = 0.0f;
 
+    // 公开的GameObject，用于指定要遍历的对象及其直接子对象
+    public GameObject targetGameObject;
+
     void Start()
     {
         // 获取当前物体及其子物体上的所有Renderer组件
-        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        Renderer[] allRenderers = GetComponentsInChildren<Renderer>(true);
 
-        // 将所有Renderer添加到renderersList中
-        renderersList.AddRange(renderers);
+        if (targetGameObject == null)
+        {
+            // 如果未指定目标GameObject，则遍历全部Renderer
+            renderersList.AddRange(allRenderers);
+        }
+        else
+        {
+            // 获取指定的GameObject及其直接子对象上的所有Renderer组件
+            Renderer[] targetRenderers = targetGameObject.GetComponentsInChildren<Renderer>(true);
+
+            // 将所有Renderer添加到renderersList中，但不包括指定的GameObject及其子对象的Renderer
+            renderersList.AddRange(allRenderers.Except(targetRenderers));
+        }
 
         // 遍历所有Renderer
-        foreach (Renderer renderer in renderers)
+        foreach (Renderer renderer in allRenderers)
         {
+            // 检查是否为指定的GameObject及其子对象的Renderer
+            if (targetGameObject != null && targetGameObject.GetComponentsInChildren<Renderer>(true).Contains(renderer))
+            {
+                // 如果是，跳过处理
+                continue;
+            }
+
             // 获取Renderer使用的材质（通常是一个数组）
             Material[] materials = renderer.materials;
 
@@ -45,14 +67,14 @@ public class AllinOne : MonoBehaviour
             }
         }
 
-        // 如果disableAllRenderers为true，则关闭所有Render组件
-        //if (disableAllRenderers)
-        //{
-        //    SetRenderersEnabled(false);
-        //}
+        //如果disableAllRenderers为true，则关闭所有Render组件
+        if (disableAllRenderers)
+        {
+            SetRenderersEnabled(false);
+        }
 
-        // 更新所有材质中的_ENABLEDITHER和_Dither属性
-        //UpdateMaterialProperties();
+        //更新所有材质中的_ENABLEDITHER和_Dither属性
+        UpdateMaterialProperties();
     }
 
     // 控制所有Render组件的开关状态

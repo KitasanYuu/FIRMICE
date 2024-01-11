@@ -94,12 +94,15 @@ namespace Avatar
         private float MovingDirZ;
         private float MovingDirNorX;
         private float MovingDirNorZ;
-        private float _TempMovingX;
-        private float _TempMovingY;
+        [HideInInspector]
+        public float _TempMovingX;
+        [HideInInspector]
+        public float _TempMovingY;
         private float _TargetMovingX;
         private float _TargetMovingY;
         private float AimOrNot;
-        private float _TargetAimOrNot;
+        [HideInInspector]
+        public float _TargetAimOrNot;
         public Vector3 MovingDir;
         public Vector3 MovingDirNor;
         

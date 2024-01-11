@@ -19,7 +19,7 @@ public class MaterialTestController : MonoBehaviour
     {
         if (material != null)
         {
-            Debug.Log("Got");
+            //Debug.Log("Got");
         }
         else if(material == null)
         {

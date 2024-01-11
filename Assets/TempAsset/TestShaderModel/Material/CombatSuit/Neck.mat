@@ -31,6 +31,7 @@ Material:
   - _ALPHATEST_ON
   - _DISABLE_SSR_TRANSPARENT
   - _EMISSION
+  - _ENABLEDITHER
   - _INVERT
   - _MATCAP1
   - _MATCAP2
@@ -536,7 +537,7 @@ Material:
     - _EMISSION2: 0
     - _ENABLEALPHAREPLACE: 0
     - _ENABLEDISSOLVE: 0
-    - _ENABLEDITHER: 0
+    - _ENABLEDITHER: 1
     - _ENAKBLEALPHAREPLACE: 0
     - _Emission2ndBlend: 1
     - _Emission2ndBlendMode: 1
@@ -949,7 +950,7 @@ Material:
     - _DistanceFadeColor: {r: 0, g: 0, b: 0, a: 1}
     - _DistanceFadeRimColor: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
-    - _EmColor: {r: 27.532719, g: 0, b: 0, a: 1}
+    - _EmColor: {r: 2.9960785, g: 0, b: 0.0627451, a: 1}
     - _Emission2ndBlendMask_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
     - _Emission2ndBlink: {r: 0, g: 0, b: 3.141593, a: 0}
     - _Emission2ndColor: {r: 1, g: 1, b: 1, a: 1}
