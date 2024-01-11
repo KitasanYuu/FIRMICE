@@ -14,10 +14,166 @@ using static VHierarchy.Libs.VGUI;
 
 namespace VHierarchy
 {
-    public class VHierarchyLightingWindow : CustomPopupWindow
+    public class VHierarchyLightingWindow : EditorWindow
     {
         void OnGUI()
         {
+            void updateSize()
+            {
+                var r = ExpandWidthLabelRect();
+
+                if (!curEvent.isRepaint) return;
+
+                var curHeight = r.y;
+
+                this.position = position.SetWidth(initWidth).SetHeight(curHeight);
+
+                this.minSize = Vector2.zero;
+                this.maxSize = Vector2.one * 123212;
+
+            }
+
+            void header()
+            {
+                var height = 22f;
+
+                var headerRect = Rect.zero.SetHeight(height).SetWidth(position.width);
+                var pinButtonRect = headerRect.SetWidthFromRight(17).SetHeightFromMid(17).Move(-21, .5f);
+                var closeButtonRect = headerRect.SetWidthFromRight(16).SetHeightFromMid(16).Move(-3, .5f);
+
+                void startDragging()
+                {
+                    if (isDragged) return;
+                    if (!curEvent.isMouseDrag) return;
+                    if (!headerRect.IsHovered()) return;
+
+
+                    isDragged = true;
+
+                    dragStartMousePos = EditorGUIUtility.GUIToScreenPoint(curEvent.mousePosition);
+                    dragStartWindowPos = position.position;
+
+
+                    isPinned = true;
+
+                    EditorApplication.RepaintHierarchyWindow();
+
+
+                }
+                void updateDragging()
+                {
+                    if (!isDragged) return;
+
+                    if (!curEvent.isRepaint) // ??
+                        position = position.SetPos(dragStartWindowPos + EditorGUIUtility.GUIToScreenPoint(curEvent.mousePosition) - dragStartMousePos);
+
+                    EditorGUIUtility.hotControl = EditorGUIUtility.GetControlID(FocusType.Passive);
+
+                }
+                void stopDragging()
+                {
+                    if (!isDragged) return;
+                    if (!curEvent.isMouseUp) return;
+
+                    isDragged = false;
+
+                    EditorGUIUtility.hotControl = 0;
+
+                }
+
+                void background()
+                {
+                    headerRect.Draw(EditorGUIUtility.isProSkin ? Greyscale(.185f) : Greyscale(.7f));
+                }
+                void title_()
+                {
+                    SetGUIColor(Greyscale(.8f));
+                    SetLabelAlignmentCenter();
+
+                    GUI.Label(headerRect, "Lighting");
+
+                    ResetLabelStyle();
+                    ResetGUIColor();
+
+                }
+                void pinButton()
+                {
+                    if (!isPinned && closeButtonRect.IsHovered()) return;
+
+
+                    var normalColor = isDarkTheme ? Greyscale(.65f) : Greyscale(.8f);
+                    var hoveredColor = isDarkTheme ? Greyscale(.9f) : normalColor;
+                    var activeColor = Color.white;
+
+
+
+                    SetGUIColor(isPinned ? activeColor : pinButtonRect.IsHovered() ? hoveredColor : normalColor);
+
+                    GUI.Label(pinButtonRect, EditorGUIUtility.IconContent("pinned"));
+
+                    ResetGUIColor();
+
+
+                    SetGUIColor(Color.clear);
+
+                    var clicked = GUI.Button(pinButtonRect, "");
+
+                    ResetGUIColor();
+
+
+                    if (!clicked) return;
+
+                    isPinned = !isPinned;
+
+                }
+                void closeButton()
+                {
+
+                    SetGUIColor(Color.clear);
+
+                    if (GUI.Button(closeButtonRect, "") || (curEvent.isKeyDown && curEvent.keyCode == KeyCode.Escape))
+                        Close();
+
+                    ResetGUIColor();
+
+
+                    var normalColor = isDarkTheme ? Greyscale(.65f) : Greyscale(.35f);
+                    var hoveredColor = isDarkTheme ? Greyscale(.9f) : normalColor;
+
+
+                    SetGUIColor(closeButtonRect.IsHovered() ? hoveredColor : normalColor);
+
+                    GUI.Label(closeButtonRect, EditorGUIUtility.IconContent("CrossIcon"));
+
+                    ResetGUIColor();
+
+
+                    if (isPinned) return;
+
+                    var escRect = closeButtonRect.Move(-22, -1).SetWidth(70);
+
+                    SetGUIEnabled(false);
+
+                    if (closeButtonRect.IsHovered())
+                        GUI.Label(escRect, "Esc");
+
+                    ResetGUIEnabled();
+
+                }
+
+
+                startDragging();
+                updateDragging();
+                stopDragging();
+
+                background();
+                title_();
+                pinButton();
+                closeButton();
+
+                Space(height);
+
+            }
             void directionalLight()
             {
                 var light = FindObjects<Light>().Where(r => r.type == LightType.Directional && r.gameObject.scene == EditorSceneManager.GetActiveScene()).FirstOrDefault();
@@ -118,10 +274,11 @@ namespace VHierarchy
             }
 
 
-            HeaderGUI<VHierarchyLightingWindow>("Lighting");
+            header();
 
 
             BeginIndent(6);
+
             EditorGUIUtility.labelWidth = 115;
 
             Space(11);
@@ -136,20 +293,61 @@ namespace VHierarchy
             EndIndent(6);
 
             Space(21);
-            UpdateSize(false, true);
 
+            updateSize();
+
+
+            if (Application.platform != RuntimePlatform.OSXEditor)
+                position.SetPos(0, 0).DrawOutline(Greyscale(.1f));
 
             EditorGUIUtility.labelWidth = 0;
 
-            if (Application.platform != RuntimePlatform.OSXEditor)
-                DrawOutline();
-
             Repaint();
+
 
         }
 
-        public override float initWidth => 250;
-        public override float initHeight => 320;
+        bool isDragged;
+        Vector2 dragStartMousePos;
+        Vector2 dragStartWindowPos;
+
+
+
+        void OnLostFocus()
+        {
+            if (isPinned) return;
+
+            Close();
+
+        }
+
+        public bool isPinned;
+
+
+
+
+        public static void CreateInstance(Vector2 position)
+        {
+            instance = ScriptableObject.CreateInstance<VHierarchyLightingWindow>();
+
+            instance.ShowPopup();
+
+            instance.position = Rect.zero.SetPos(position).SetSize(initWidth, initHeight);
+
+            instance.minSize = Vector2.zero;
+            instance.maxSize = Vector2.one * 123212;
+
+
+        }
+
+        public static VHierarchyLightingWindow instance;
+
+
+
+
+        static float initWidth => 250;
+        static float initHeight => 320;
     }
 }
+
 #endif
