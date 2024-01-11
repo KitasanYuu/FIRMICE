@@ -11,13 +11,6 @@ namespace Michsky.LSS
         {
             static InitOnLoad()
             {
-                if (!EditorPrefs.HasKey("LSS.Installed"))
-                {
-                    EditorPrefs.SetInt("LSS.Installed", 1);
-                    EditorUtility.DisplayDialog("Hello there!", "Thank you for purchasing Loading Screen Studio.\n\n" +
-                                                "If you need help, feel free to contact us through our support channels or Discord.", "Got it!");
-                }
-
                 if (!EditorPrefs.HasKey("LSS.HasCustomEditorData"))
                 {
                     string darkPath = AssetDatabase.GetAssetPath(Resources.Load("LSSEditor-Dark"));
