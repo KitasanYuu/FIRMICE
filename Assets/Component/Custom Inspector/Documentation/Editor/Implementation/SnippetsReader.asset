@@ -1,0 +1,1309 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d34a1674184c29742bb0d850aa83d8c7, type: 3}
+  m_Name: SnippetsReader
+  m_EditorClassIdentifier: 
+  codeSnippetsFile: {fileID: 11500000, guid: 63b4a4613ea159c41ad5e91988bf2ea6, type: 3}
+  codeSnippets: "using System;\r\nusing System.Collections.Generic;\r\nusing UnityEngine;\r\nusing
+    Debug = UnityEngine.Debug;\r\nusing Object = UnityEngine.Object;\r\nusing RangeAttribute
+    = UnityEngine.RangeAttribute;\r\n\r\nnamespace CustomInspector.Documentation\r\n{\r\n   
+    [System.Serializable]\r\n    public class CodeSnippets\r\n    {\r\n#pragma warning
+    disable IDE0090 // Use 'new(...)'\r\n#pragma warning disable CS0414\r\n#pragma
+    warning disable IDE0052 // Remove unread private members\r\n#pragma warning disable
+    IDE0044 // Add readonly modifier\r\n#pragma warning disable IDE0051 // Remove
+    unused private members\r\n#pragma warning disable IDE0059 // Unnecessary assignment
+    of a value\r\n        /*\r\n            * \r\n            * Fields:\r\n           
+    * Naming convention: [SerializeField] ClassNameExamples classNameExamples = new();\r\n           
+    * name is same than classname, but first letter is lowercase\r\n            *
+    \r\n            * Classes:\r\n            * set [System.Serializable]\r\n           
+    * it displays the attribute with the same name as the attribute plus the \"Examples\"
+    word\r\n            * \r\n            */\r\n\r\n\r\n[SerializeField] AsButtonAttributeExamples
+    asButtonAttributeExamples = new AsButtonAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    AsButtonAttributeExamples \r\n{\r\n    [AsButton]\r\n    public bool selectableBoolean;\r\n   
+    \r\n    [Space2(10)]\r\n\r\n    [ShowMethod(nameof(GetSelectableBoolean))]\r\n\r\n   
+    [Space2(20)]\r\n\r\n    [AsButton(staysPressed: false)]\r\n    public bool holdDownBoolean;\r\n   
+    \r\n    [Space2(10)]\r\n\r\n    [ShowMethod(nameof(GetHoldDownBoolean))]\r\n\r\n   
+    [Space2(20)]\r\n\r\n    [AsButton]\r\n    public int myInteger;\r\n    \r\n   
+    [Space2(10)]\r\n\r\n    [ShowMethod(nameof(GetInteger))]\r\n    \r\n    [Space2(20)]\r\n\r\n   
+    [AsButton]\r\n    public InspectorButtonState buttonState;\r\n    \r\n    [Space2(10)]\r\n   
+    \r\n    [ShowMethod(nameof(GetButtonState))]\r\n\r\n    [Space2(20)]\r\n\r\n   
+    [AsButton(selectedColor = FixedColor.CherryRed,\r\n              size = Size.small,\r\n             
+    label = \"My String Button\",\r\n              tooltip = \"Some Tooltip\")]\r\n   
+    public string myString;\r\n    \r\n    [Space2(10)]\r\n\r\n    [ShowMethod(nameof(GetString))]\r\n\r\n   
+    [HideField] public bool _;\r\n    bool GetSelectableBoolean() => selectableBoolean;\r\n   
+    bool GetHoldDownBoolean() => holdDownBoolean;\r\n    int GetInteger() => myInteger;\r\n   
+    InspectorButtonState GetButtonState() => buttonState;\r\n    string GetString()
+    => myString;\r\n}\r\n\r\n[SerializeField] AsRangeAttributeExamples asRangeAttributeExamples
+    = new AsRangeAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass AsRangeAttributeExamples
+    \r\n{\r\n    [Header(\"Ranges\")]\r\n    [AsRange(0, 10)]\r\n    public Vector2
+    positiveRange\r\n        = Vector2.up * 3.1415927f;\r\n\r\n    [AsRange(10, 0)]\r\n   
+    public Vector2 negativeRange\r\n        = new(1, 5);\r\n}\r\n\r\n[SerializeField]
+    AssetsOnlyAttributeExamples assetsOnlyAttributeExamples = new AssetsOnlyAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    AssetsOnlyAttributeExamples\r\n{\r\n    [Header(\"Assets\")]\r\n    [AssetsOnly]
+    public GameObject gob1;\r\n    [AssetsOnly] public GameObject gob2;\r\n\r\n   
+    [AssetsOnly] public Transform chest;\r\n    [AssetsOnly] public Transform leg;\r\n\r\n   
+    [AssetsOnly] public Camera cam;\r\n}\r\n\r\n[SerializeField] BackgroundColorAttributeExamples
+    backgroundColorAttributeExamples = new BackgroundColorAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    BackgroundColorAttributeExamples\r\n{\r\n    [BackgroundColor(FixedColor.Gray),
+    ReadOnly(DisableStyle.OnlyText, LabelStyle.NoLabel)]\r\n    public string info1
+    = \"Really Important\";\r\n\r\n    [Space(20)]\r\n\r\n    [BackgroundColor]\r\n   
+    public int myNumber;\r\n\r\n    [Space2(20)]\r\n    [BackgroundColor(FixedColor.CherryRed)]\r\n   
+    [Title(\"Important\", upperSpacing = 2)]\r\n    public int yourNumber;\r\n\r\n   
+    [Title(\"My GameObject\")]\r\n    [BackgroundColor(FixedColor.DustyBlue)]\r\n   
+    public GameObject gob;\r\n}\r\n\r\n[SerializeField] ButtonAttributeExamples buttonAttributeExamples
+    = new ButtonAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass ButtonAttributeExamples\r\n{\r\n   
+    [HorizontalLine(\"Default Method\")]\r\n\r\n    [Button(nameof(LogHelloWorld),\r\n       
+    tooltip = \"This will log 'Hello World' in the console\")]\r\n\r\n    [Button(nameof(LogHelloWorld),\r\n       
+    label = \"Hello World\",\r\n        size = Size.small)]\r\n\r\n    [HideField]\r\n   
+    public bool _bool;\r\n\r\n    void LogHelloWorld()\r\n    {\r\n        Debug.Log(\"Hello
+    World\");\r\n    }\r\n\r\n    [HorizontalLine(\"Method with parameter\")]\r\n\r\n   
+    [MessageBox(\"Please change the following number.\", MessageBoxType.Info)]\r\n   
+    [Button(nameof(LogNumber), true)]\r\n    public int _number;\r\n\r\n    void
+    LogNumber(int n)\r\n    {\r\n        Debug.Log(n.ToString());\r\n    }\r\n}\r\n\r\n[SerializeField]
+    CopyPasteAttributeExamples copyPasteAttributeExamples = new CopyPasteAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    CopyPasteAttributeExamples\r\n{\r\n    [CopyPaste] public Vector3 v1\r\n       
+    = Vector3.forward;\r\n    [CopyPaste] public Vector3 v2\r\n        = Vector3.one;\r\n\r\n   
+    [CopyPaste] public Color c1\r\n        = Color.white;\r\n    [CopyPaste] public
+    Color c2\r\n        = new(.5f, .4f, .2f, 1);\r\n\r\n    [CopyPaste] public string
+    _string = \"Hello World!\";\r\n\r\n    [ShowMethod(nameof(GetCurrentClipboard))]\r\n   
+    [SerializeField, HideField] bool b;\r\n\r\n    string GetCurrentClipboard()\r\n       
+    => GUIUtility.systemCopyBuffer;\r\n}\r\n\r\n\r\n[SerializeField] DecimalsAttributeExamples
+    decimalsAttributeExamples = new DecimalsAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    DecimalsAttributeExamples\r\n{\r\n    [Decimals(1)]\r\n    public float oneDecimal
+    = 0.1f;\r\n    [Decimals(2)]\r\n    public float twoDecimal = 0.02f;\r\n\r\n   
+    [HorizontalLine]\r\n\r\n    [Decimals(-1)]\r\n    public float onlyTens = 20;\r\n   
+    [Decimals(-2)]\r\n    public int onlyHundreds = 300;\r\n}\r\n\r\n[SerializeField]
+    Delayed2AttributeExamples delayed2AttributeExamples = new Delayed2AttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    Delayed2AttributeExamples\r\n{\r\n    [Delayed]\r\n    public string delayed
+    = \"Edit Here\";\r\n\r\n    public string instant = \"Edit Here\";\r\n\r\n\r\n   
+    [ShowMethod(nameof(GetDelayedOne))]\r\n    [ShowMethod(nameof(GetInstantOne))]\r\n\r\n   
+    [HideField]\r\n    public bool b2;\r\n\r\n    string GetDelayedOne()\r\n       
+    => delayed;\r\n    string GetInstantOne()\r\n        => instant;\r\n}\r\n\r\n\r\n[SerializeField]
+    DisplayAutoPropertyAttributeExamples displayAutoPropertyAttributeExamples = new
+    DisplayAutoPropertyAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    DisplayAutoPropertyAttributeExamples\r\n{\r\n    public int Foo\r\n    { get;
+    private set; } = 45;\r\n\r\n    public GameObject Bar\r\n    { private get; set;
+    }\r\n\r\n    [Title(\"Automatic Properties\")]\r\n    [DisplayAutoProperty(nameof(Foo))]\r\n   
+    [DisplayAutoProperty(\"Bar\")]\r\n\r\n    [HideField]\r\n    public bool _;\r\n}\r\n\r\n[SerializeField]
+    FixedValuesAttributeExamples fixedValuesAttributeExamples = new FixedValuesAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    FixedValuesAttributeExamples\r\n{   \r\n    [FixedValues(1, 7, 15)]\r\n    public
+    int integer;\r\n    \r\n    [FixedValues(\"Bob\", \"John\", \"Martin\")]\r\n   
+    public string name;\r\n}\r\n\r\n[SerializeField] FoldoutAttributeExamples foldoutAttributeExamples
+    = new FoldoutAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass FoldoutAttributeExamples\r\n{  
+    \r\n    [MessageBox(\"Please fill the 'scriptable1'-value and then click the
+    foldout to edit its values.\", MessageBoxType.Info)]\r\n    [Foldout]\r\n   
+    public ScriptableObject scriptable1;\r\n\r\n    [MessageBox(\"This is the default
+    display.\", MessageBoxType.Info)]\r\n    public ScriptableObject scriptable2;\r\n}\r\n\r\n[SerializeField]
+    ForceFillAttributeExamples forceFillAttributeExamples = new ForceFillAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    ForceFillAttributeExamples\r\n{\r\n    [ForceFill] public GameObject gob1;\r\n\r\n   
+    [ForceFill, SerializeField]\r\n    string s2 = \"Make this String Empty.\";\r\n\r\n   
+    [ForceFill(\"<undefined>\",\r\n               \"empty\", \"Empty\",\r\n              
+    \"undefined\")]\r\n    public string s3 = \"<undefined>\";\r\n\r\n    [HorizontalLine(\"others\")]\r\n\r\n   
+    [ForceFill(\"(0, 0, 0)\"), SerializeField]\r\n    Vector3 c = new Vector3(0,
+    0, 0);\r\n\r\n    [ForceFill(null)] public GameObject gob2;\r\n\r\n    [ForceFill(\"-1\"),
+    SerializeField]\r\n    float f = -1;\r\n\r\n    [HorizontalLine(\"only check
+    if playing\")] //test it by starting your game and then look back on this editorwindow\r\n   
+    //or only check if playing (because it would get filled)\r\n    [ForceFill(onlyTestInPlayMode
+    = true)] public GameObject gob = null;\r\n\r\n    void Start()\r\n    {\r\n       
+    //this.CheckForceFilled();\r\n        gob2 = GameObject.FindObjectOfType<GameObject>();\r\n   
+    }\r\n}\r\n\r\n[SerializeField] GetSetAttributeExamples getSetAttributeExamples
+    = new GetSetAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass GetSetAttributeExamples\r\n{\r\n   
+    [MessageBox(\"Shown as vector2, but in fact is vector3\", MessageBoxType.Info)]\r\n   
+    [GetSet(nameof(GetPosition), nameof(SetPosition))]\r\n\r\n    [HideField] public
+    Vector3 position;\r\n\r\n    Vector2 GetPosition()\r\n    {\r\n        return
+    (Vector2)position;\r\n    }\r\n    void SetPosition(Vector2 v)\r\n    {\r\n       
+    position = new(v.x, v.y, 5);\r\n    }\r\n\r\n    [HorizontalLine]\r\n\r\n   
+    [MessageBox(\"You can't insert odd numbers\", MessageBoxType.Info)]\r\n    [GetSet(nameof(GetEvenNumber),
+    nameof(SetEvenNumber),\r\n            label = \"Only Even Numbers:\", tooltip
+    = \"You can't insert odd numbers\")]\r\n\r\n    [HideField] public int evenNumber
+    = 66;\r\n    \r\n    int GetEvenNumber()\r\n        => evenNumber;\r\n    void
+    SetEvenNumber(int n)\r\n        => evenNumber = n - n % 2;\r\n}\r\n\r\n[SerializeField]
+    GUIColorAttributeExamples gUIColorAttributeExamples = new GUIColorAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    GUIColorAttributeExamples\r\n{\r\n    public int a, b;\r\n\r\n    [GUIColor]\r\n       
+    public string s1 = \"Hello World!\";\r\n    [GUIColor(FixedColor.Red, colorWholeUI:
+    false)]\r\n        public string s2 = \"Hello World!\";\r\n    [GUIColor(FixedColor.Orange)]\r\n       
+    public string s3 = \"Hello World!\";\r\n    [GUIColor(FixedColor.Yellow)]\r\n       
+    public string s4 = \"Hello World!\";\r\n    [GUIColor(FixedColor.Green)]\r\n       
+    public string s5 = \"Hello World!\";\r\n    [GUIColor(FixedColor.BabyBlue)]\r\n       
+    public string s6 = \"Hello World!\";\r\n    [GUIColor(FixedColor.Magenta)]\r\n       
+    public string s7 = \"Hello World!\";\r\n\r\n    public int c, d;\r\n}\r\n\r\n[SerializeField]
+    HideFieldAttributeExamples hideFieldAttributeExamples = new HideFieldAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    HideFieldAttributeExamples\r\n{\r\n    [MessageBox(\"[HideField] still shows
+    all other attributes\", MessageBoxType.Info)]\r\n    [HideField] public bool
+    _;\r\n\r\n    //Title is visible\r\n    [Title(\"Title1\")]\r\n    [HideField]\r\n   
+    public bool a1;\r\n    public bool a2;\r\n\r\n\r\n    [MessageBox(\"[HideInInspector]
+    hides everything\", MessageBoxType.Info)]\r\n    [HideField] public bool __;\r\n\r\n   
+    //Title is hidden too\r\n    [Title(\"Title2\")]\r\n    [HideInInspector]\r\n   
+    public bool b1;\r\n    public bool b2;\r\n}\r\n\r\n[SerializeField] HookAttributeExamples
+    hookAttributeExamples = new HookAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    HookAttributeExamples\r\n{\r\n    [Title(\"Logs previous and new value in console\")]\r\n   
+    [MessageBox(\"Change value and look into console\", MessageBoxType.Info)]\r\n   
+    [Hook(nameof(LogInput))]\r\n    public float value = 0;\r\n\r\n    void LogInput(float
+    oldValue, float newValue)\r\n    {\r\n        Debug.Log($\"Changed from {oldValue}
+    to {newValue}\");\r\n    }\r\n}\r\n\r\n[SerializeField] HorizontalGroupAttributeExamples
+    horizontalGroupAttributeExamples = new HorizontalGroupAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    HorizontalGroupAttributeExamples\r\n{\r\n    [SerializeField, HorizontalGroup(true)]\r\n   
+    SceneInfos offlineScene;\r\n    [SerializeField, HorizontalGroup]\r\n    SceneInfos
+    onlineScene;\r\n\r\n\r\n    [HorizontalLine(2.5f, FixedColor.Gray, 30)]\r\n\r\n\r\n   
+    [MessageBox(\"Combine with other attributes\", MessageBoxType.Info)]\r\n\r\n   
+    [HorizontalGroup(true, size = 4)]\r\n    public string test = \"Combine with
+    a button\";\r\n\r\n    [HorizontalGroup(size = 1),\r\n    Button(nameof(Func),
+    size = Size.small),\r\n    HideField] public int b;\r\n    void Func() { Debug.Log(\"Button
+    pressed!\"); }\r\n\r\n\r\n\r\n    [HorizontalLine(2.5f, FixedColor.Gray, 30)]\r\n\r\n\r\n\r\n   
+    [HorizontalGroup(true),\r\n    LabelSettings(LabelStyle.NoLabel)]\r\n    public
+    string hisName = \"James\";\r\n\r\n    [HorizontalGroup,\r\n    LabelSettings(LabelStyle.NoLabel)]\r\n   
+    public string hisName2 = \"Robert\";\r\n\r\n    [HorizontalGroup,\r\n    LabelSettings(LabelStyle.NoLabel)]\r\n   
+    public string hisName3 = \"Smith\";\r\n\r\n    [HorizontalGroup(true),\r\n   
+    LabelSettings(LabelStyle.NoLabel)]\r\n    public string herName = \"Jennifer\";\r\n\r\n   
+    [HorizontalGroup,\r\n    LabelSettings(LabelStyle.NoLabel)]\r\n    public string
+    herName2 = \"Susan\";\r\n\r\n    [HorizontalGroup,\r\n    LabelSettings(LabelStyle.NoLabel)]\r\n   
+    public string herName3 = \"Miller\";\r\n\r\n\r\n    [System.Serializable]\r\n   
+    class SceneInfos\r\n    {\r\n        [ForceFill] public string name = \"Start
+    Scene\";\r\n        [Title(\"Some Info\")]\r\n        [Min(0)] public int loadingTime
+    = 5;\r\n        public GameObject prefab = null;\r\n\r\n        [HorizontalGroup(true),
+    LabelSettings(LabelStyle.NoLabel)]\r\n        public string foo = \"Hello\";\r\n       
+    [HorizontalGroup, LabelSettings(LabelStyle.NoLabel)]\r\n        public string
+    bar = \"World\";\r\n    }\r\n}\r\n\r\n[SerializeField] HorizontalLineAttributeExamples
+    horizontalLineAttributeExamples = new HorizontalLineAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    HorizontalLineAttributeExamples\r\n{\r\n    [HorizontalLine(\"Booleans\", 2)]\r\n   
+    public bool myBool1 = true;\r\n    public bool myBool2 = true;\r\n    public
+    bool myBool3 = true;\r\n    public bool myBool4 = true;\r\n\r\n    [HorizontalLine(\"Numbers\")]\r\n\r\n   
+    public int myInt = -1;\r\n    public float myFloat = -1;\r\n\r\n    [HorizontalLine]\r\n\r\n   
+    public string myString = \"<empty>\";\r\n    public string myString2 = \"<empty>\";\r\n\r\n   
+    [Space2(20)]\r\n    [HorizontalLine(1, FixedColor.Yellow, 0)]\r\n    [HorizontalLine(1,
+    FixedColor.Green, 2)]\r\n\r\n    public string myString3 = \"Two Lines\";\r\n\r\n   
+    [HorizontalLine(\"My Important Property\",\r\n                        2, FixedColor.Red)]\r\n\r\n   
+    public GameObject myGameObject = null;\r\n}\r\n\r\n\r\n[SerializeField] IndentAttributeExamples
+    indentAttributeExamples = new IndentAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    IndentAttributeExamples\r\n{\r\n    public int i1;\r\n    [Indent(1)] public
+    int i2;\r\n    [Indent(2)] public int i3;\r\n    public int i4;\r\n\r\n    [HorizontalLine]\r\n\r\n   
+    public MyClass _class;\r\n\r\n    public int i7;\r\n\r\n    [System.Serializable]\r\n   
+    public class MyClass\r\n    {\r\n        public int i5;\r\n        [Indent(-1)]
+    public int i6;\r\n    }\r\n}\r\n\r\n[SerializeField] InspectorIconAttributeExamples
+    inspectorIconAttributeExamples = new InspectorIconAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    InspectorIconAttributeExamples\r\n{\r\n    [InspectorIcon(InspectorIcon.Camera)]
+    \r\n    public string camName = \"Bobs cam\";\r\n\r\n    [InspectorIcon(InspectorIcon.Favorite,
+    true)]\r\n    public string favorite = \"Look right! (the star) ->\";\r\n\r\n   
+    [InspectorIcon(InspectorIcon.Light), InspectorIcon(InspectorIcon.Eye)]\r\n   
+    public string lightName = \"LED\";\r\n}\r\n\r\n[SerializeField] LabelSettingsAttributeExamples
+    labelSettingsAttributeExamples = new LabelSettingsAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    LabelSettingsAttributeExamples\r\n{\r\n    [Title(\"Short names?\")]\r\n    [LabelSettings(LabelStyle.NoSpacing)]\r\n   
+    public string _short = \"Tired of too big label space??\";\r\n\r\n    [Title(\"You
+    want an empty label?\")]\r\n    public string message = \"John\";\r\n\r\n   
+    [LabelSettings(LabelStyle.EmptyLabel)]\r\n    public string message2 = \"Smith\";\r\n\r\n   
+    [Title(\"You want no label?\")]\r\n    [LabelSettings(LabelStyle.NoLabel)]\r\n   
+    public string longString = \"My very long string\";\r\n}\r\n\r\n[SerializeField]
+    LayerAttributeExamples layerAttributeExamples = new LayerAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    LayerAttributeExamples\r\n{\r\n    [Title(\"Any Layer:\")]\r\n\r\n    [Layer]
+    public int layer;\r\n\r\n    [Title(\"Specific Layers:\")]\r\n\r\n    [Layer(\"Default\")]\r\n   
+    public int layer1;\r\n\r\n    [Layer(\"TransparentFX\")]\r\n    public int layer2;\r\n}\r\n\r\n[SerializeField]
+    MaskAttributeExamples maskAttributeExamples = new MaskAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    MaskAttributeExamples\r\n{\r\n    [MessageBox(\"Here are the first 5 bits of
+    the integer (represented as booleans)\", MessageBoxType.Info)]\r\n    [Mask(5)]
+    public int myInt = 5;\r\n\r\n    [Space2(10)]\r\n    \r\n    [MessageBox(\"Select
+    multiple enum values at once.\", MessageBoxType.Info)]\r\n    [Mask] public RigidbodyConstraints
+    rc;\r\n\r\n    [Space2(10)]\r\n\r\n    [Mask] public Ability ability\r\n          
+    = Ability.Look | Ability.Hear;\r\n    public enum Ability\r\n    {\r\n       
+    Look = 1 << 0,\r\n        Hear = 1 << 1,\r\n        Walk = 1 << 2,\r\n       
+    HearAndWalk = Hear | Walk,\r\n    }\r\n\r\n    void Start()\r\n    {\r\n       
+    bool thirdBool\r\n            = (myInt & (1 << 3)) != 0;\r\n    }\r\n\r\n   
+    [Space2(10)]\r\n    //--- a deeper example showing how to work with the values\r\n\r\n   
+    //The value\r\n    [Mask(\" x \", \" y \", \" z \")] public int FreezePosition
+    = 0;\r\n    //enum definition\r\n    public enum PositionConstraints\r\n    {\r\n       
+    None = 0,\r\n        FreezeX = 1 << 0,\r\n        FreezeY = 1 << 1,\r\n       
+    FreezeZ = 1 << 2,\r\n        FreezeAll = FreezeX | FreezeY | FreezeZ\r\n    }\r\n   
+    //You can read/write the value the enum\r\n    public PositionConstraints positionConstraints\r\n   
+    {\r\n        get => (PositionConstraints)FreezePosition;\r\n        set => FreezePosition
+    = (int)value;\r\n    }\r\n}\r\n\r\n[SerializeField] MaxAttributeExamples maxAttributeExamples
+    = new MaxAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass MaxAttributeExamples\r\n{\r\n   
+    [Max(10)]\r\n    public int _int;\r\n\r\n    [Max(0)]\r\n    public Vector3 vector3;\r\n\r\n   
+    [MessageBox(\"Minimum is always <= Maximum\", MessageBoxType.Info)]\r\n    [Max(nameof(maximum))]
+    public float minimum = 0;\r\n    public float maximum = 1;\r\n\r\n    //or combine
+    it with a min\r\n    [HorizontalLine(\"values: 0 - 10\")]\r\n    [Min(0), Max(10)]\r\n   
+    public float _float;\r\n\r\n    //range looks different\r\n    [HorizontalLine(\"[Range]\")]\r\n   
+    [Range(0, 10)]\r\n    public float rangeComparison;\r\n}\r\n\r\n[SerializeField]
+    MessageBoxAttributeExamples messageBoxAttributeExamples = new MessageBoxAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    MessageBoxAttributeExamples\r\n{\r\n    [Title(\"Here are some message-boxes:\")]\r\n   
+    [MessageBox(\"Booleans\",\r\n            MessageBoxType.Info)]\r\n    public
+    bool myBool1 = true;\r\n\r\n    [MessageBox(\"These values are obsolete.\",\r\n           
+    MessageBoxType.Warning)]\r\n    public int amount1 = 55;\r\n\r\n    [MessageBox(\"Some
+    error\", MessageBoxType.Error)]\r\n\r\n    [SerializeField, HideField]\r\n   
+    bool abc;\r\n}\r\n\r\n[SerializeField] Min2AttributeExamples min2AttributeExamples
+    = new Min2AttributeExamples();\r\n\r\n[System.Serializable]\r\nclass Min2AttributeExamples\r\n{\r\n   
+    [Min2(10)]\r\n    public int _int;\r\n\r\n    [HorizontalLine]\r\n\r\n    [MessageBox(\"Minimum
+    is always <= Maximum\", MessageBoxType.Info)]\r\n\r\n    public float minimum
+    = 0;\r\n    [Min2(nameof(minimum))] public float maximum = 1;\r\n\r\n    [HorizontalLine]\r\n\r\n   
+    //you could even reference strings if they are in correct format\r\n    [Min2(nameof(stringMin))]\r\n   
+    public int myCappedValue = 2;\r\n    public string stringMin = \"5\";\r\n}\r\n\r\n[SerializeField]
+    MultipleOfAttributeExamples multipleOfAttributeExamples = new MultipleOfAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    MultipleOfAttributeExamples\r\n{\r\n    [MultipleOf(3)]\r\n    public int _int
+    = 6;\r\n\r\n    [MultipleOf(0.3f)]\r\n    public float _float = 1.2f;\r\n\r\n   
+    [HorizontalLine]\r\n\r\n    public double step = .5f;\r\n    [MultipleOf(\"step\")]\r\n   
+    public float multipleOfStep;\r\n}\r\n\r\n[SerializeField] PreviewAttributeExamples
+    previewAttributeExamples = new PreviewAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    PreviewAttributeExamples\r\n{\r\n    [MessageBox(\"Please drag/select values
+    to see previews\", MessageBoxType.Info)]\r\n\r\n    [SerializeField, Preview(Size.small)]
+    GameObject gob;\r\n    [SerializeField, Preview] Sprite sprite;\r\n\r\n    [ForceFill(errorMessage
+    = \"Select an icon/Sprite from the drop-down\")]\r\n    [SerializeField, Preview(Size.big)]
+    Sprite icon;\r\n}\r\n\r\n[SerializeField] ProgressBarAttributeExamples progressBarAttributeExamples
+    = new ProgressBarAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass ProgressBarAttributeExamples\r\n{\r\n   
+    [Title(\"Progress Bars:\")]\r\n    [Space2(20)]\r\n\r\n    //You can set a maximum
+    value\r\n    [SerializeField, ProgressBar(1)] // 1 is the maximum\r\n    [ReadOnly]\r\n   
+    float value1 = 0.6f;\r\n\r\n    [HorizontalLine]\r\n\r\n    //You can also set
+    a minimum value and the size\r\n    [MessageBox(\"Drag to edit this bar.\", MessageBoxType.Info)]\r\n   
+    [SerializeField, ProgressBar(0, 100, size = Size.big)]\r\n    int value2 = 20;\r\n\r\n   
+    [HorizontalLine]\r\n\r\n    [MessageBox(\"This bar is read-only.\", MessageBoxType.Info)]\r\n   
+    [SerializeField,\r\n     ProgressBar(nameof(min), nameof(max),\r\n        size
+    = Size.big,\r\n        isReadOnly = true)]\r\n    float value3 = 2;\r\n\r\n   
+    [SerializeField] float min = 1;\r\n    [SerializeField] float max = 3;\r\n}\r\n\r\n[SerializeField]
+    ReadOnlyAttributeExamples readOnlyAttributeExamples = new ReadOnlyAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    ReadOnlyAttributeExamples\r\n{\r\n    [HorizontalLine(\"Disabled\")]\r\n\r\n   
+    [SerializeField, ReadOnly] int n;\r\n    [SerializeField, ReadOnly] GameObject
+    gob;\r\n    [SerializeField, ReadOnly] Sprite spr;\r\n\r\n    [HorizontalLine(\"Only
+    Text\")]\r\n\r\n    [SerializeField, ReadOnly(DisableStyle.OnlyText)]\r\n   
+    string info = \"Some Info\";\r\n\r\n    [HorizontalLine]\r\n\r\n    public bool
+    show = true;\r\n\r\n    [SerializeField, ShowIf(nameof(show)),\r\n    ReadOnly(DisableStyle.OnlyText,
+    LabelStyle.NoLabel)]\r\n    string\r\n    i1 = \"This is a very deep explanation..\",\r\n   
+    i2 = \"Oho, what do i see there\",\r\n    i3 = \"Hello World!\";\r\n}\r\n\r\n[SerializeField]
+    RequireTypeAttributeExamples requireTypeAttributeExamples = new RequireTypeAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    RequireTypeAttributeExamples\r\n{\r\n    [MessageBox(\"Allow only Components
+    that contain specific interfaces.\", MessageBoxType.Info)]\r\n\r\n    [RequireType(typeof(IAge))]\r\n   
+    public Component agingScript;\r\n\r\n    [RequireType(typeof(IHuman))]\r\n   
+    public MonoBehaviour myHuman;\r\n\r\n    interface IAge\r\n    {\r\n        public
+    abstract int GetAge();\r\n    }\r\n    interface IHuman : IAge\r\n    {\r\n       
+    public abstract int GetHeight();\r\n        public abstract int GetHairColor();\r\n   
+    }\r\n}\r\n\r\n[SerializeField] RichTextAttributeExamples richTextAttributeExamples
+    = new RichTextAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass RichTextAttributeExamples\r\n{\r\n   
+    [RichText] public string myRichText = \"We are <color=green><b>not</b></color>
+    sad.\";\r\n\r\n    //setting the 'allowMultipleLines'-parameter\r\n    [RichText(true)]
+    \r\n    [LabelSettings(LabelStyle.NoLabel)]\r\n    public string myRichtText
+    = \"We are <color=green>green</color> with envy.\\n\\nHello <i>World</i>\";\r\n\r\n   
+    public string noRichText = \"We are <color=green><b>not</b></color> sad.\";\r\n}\r\n\r\n[SerializeField]
+    SelfFillPreview selfFillAttributeExamples = new SelfFillPreview();\r\n\r\n[System.Serializable]
+    //i hide this class on purpose, because SelfFill does not work on scriptable
+    objects\r\nclass SelfFillAttributeExamples\r\n{\r\n    //In this example all
+    these components are attached\r\n\r\n    [SelfFill] public Camera cam;\r\n\r\n   
+    [SelfFill(true)] public AudioSource audio;\r\n    [SelfFill(true)] public Light
+    light;\r\n    \r\n    /*\r\n     * this.CheckSelfFilled() == true;\r\n     *\r\n    
+    * cam == GetComponent<Camera>()\r\n     * audio == GetComponent<AudioSource>()\r\n    
+    * light == GetComponent<Light>()\r\n     */\r\n    \r\n}\r\n[System.Serializable]\r\nclass
+    SelfFillPreview\r\n{\r\n    [LabelSettings(newName: \"Cam (auto-filled)\")]\r\n   
+    [ReadOnly(DisableStyle.GreyedOut)]\r\n    public Camera cam;\r\n\r\n    void
+    Start()\r\n    {\r\n        cam = Camera.main;\r\n    }\r\n}\r\n\r\n[SerializeField]
+    ShowAssetReferenceAttributeExamples showAssetReferenceAttributeExamples = new
+    ShowAssetReferenceAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    ShowAssetReferenceAttributeExamples\r\n{\r\n    [ShowAssetReference(\"CodeSnippets\")]
+    // in this case you could also use 'nameof(CodeSnippets)'\r\n    public A a;\r\n\r\n   
+    [HorizontalLine]\r\n\r\n    [ShowAssetReference]\r\n    public TestClass testClass;\r\n\r\n\r\n   
+    [System.Serializable]\r\n    public class A\r\n    {\r\n        public string
+    name = \"Some Custom Class\";\r\n        [Min(0)] public int amount = 10;\r\n   
+    }\r\n}\r\n\r\n[SerializeField] ShowIfAttributeExamples showIfAttributeExamples
+    = new ShowIfAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass ShowIfAttributeExamples\r\n{\r\n   
+    [HorizontalLine(\"with Booleans\")]\r\n\r\n    [MessageBox(\"Toggle this bool
+    value to expose the custom colors\", MessageBoxType.Info)]\r\n    public bool
+    customColors = false;\r\n    [ShowIf(nameof(customColors))]\r\n    public Color
+    headColor = Color.white;\r\n    [ShowIf(nameof(customColors))]\r\n    public
+    Color bodyColor = Color.black;\r\n\r\n    [HorizontalLine]\r\n\r\n    [MessageBox(\"Tick
+    both conditions\", MessageBoxType.Info)]\r\n    public bool condition1 = true;\r\n   
+    public bool condition2 = false;\r\n\r\n    [ShowIf(nameof(condition1), style
+    = DisabledStyle.GreyedOut)]\r\n    public GameObject cond1True = null;\r\n\r\n   
+    [ShowIf(BoolOperator.And,\r\n            nameof(condition1),\r\n            nameof(condition2),\r\n           
+    style = DisabledStyle.Invisible,\r\n            indent = 0)]\r\n    public string
+    someText = \"Both conditions are true\";\r\n\r\n    [HorizontalLine(\"With Comparisons\")]\r\n\r\n   
+    [MessageBox(\"Please fill material to expose the tiling.\", MessageBoxType.Info)]\r\n   
+    public Material material;\r\n    [ShowIf(ComparisonOp.NotNull, nameof(material))]\r\n   
+    public Vector2 tiling;\r\n\r\n    [HorizontalLine]\r\n\r\n    [MessageBox(\"Make
+    a and b same value to expose an info.\", MessageBoxType.Info)]\r\n    public
+    int a;\r\n    public int b = 1;\r\n    [ShowIf(ComparisonOp.Equals, nameof(a),
+    nameof(b))]\r\n    [ReadOnly(DisableStyle.OnlyText)] public string info = \"Both
+    are the same.\";\r\n\r\n    [HorizontalLine(\"Custom Functions\")]\r\n\r\n   
+    [MessageBox(\"Expose by clicking the toggle.\", MessageBoxType.Info)]\r\n   
+    \r\n    public bool toggle1;\r\n\r\n    [ShowIf(nameof(MyMethod))]\r\n    public
+    float float1, float2;\r\n    public bool MyMethod()\r\n        => toggle1 ==
+    true;\r\n\r\n        \r\n    [HorizontalLine(\"With \" + nameof(StaticConditions))]\r\n   
+    [MessageBox(\"Hit play-mode for testing\", MessageBoxType.Info)]\r\n\r\n    [ShowIf(StaticConditions.IsNotPlaying,
+    style = DisabledStyle.GreyedOut)]\r\n    [Indent(-1)]\r\n    public string playername
+    = \"Bob\";\r\n\r\n    [ShowIf(StaticConditions.IsPlaying)]\r\n    [Button(nameof(Jump))]
+    [SerializeField, HideField] bool _;\r\n    void Jump() { }\r\n}\r\n\r\n[SerializeField]
+    ShowIfIsAttributeExamples showIfIsAttributeExamples = new ShowIfIsAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    ShowIfIsAttributeExamples\r\n{\r\n    public enum Labeling { NoLabel, CustomLabel
+    }\r\n\r\n    public Labeling labeling;\r\n\r\n    [ShowIfIs(nameof(labeling),
+    Labeling.CustomLabel)]\r\n    public string labelText = \"My Label\";\r\n}\r\n\r\n[SerializeField]
+    ShowIfIsNotAttributeExamples showIfIsNotAttributeExamples = new ShowIfIsNotAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    ShowIfIsNotAttributeExamples\r\n{\r\n    public enum Labeling { NoLabel, CustomLabel
+    }\r\n\r\n    public Labeling labeling;\r\n\r\n    [ShowIfIsNot(nameof(labeling),
+    Labeling.NoLabel)]\r\n    public string labelText = \"My Label\";\r\n}\r\n\r\n[SerializeField]
+    ShowIfNotAttributeExamples showIfNotAttributeExamples = new ShowIfNotAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    ShowIfNotAttributeExamples\r\n{\r\n    public Material customMaterial = null;\r\n   
+    //The ComparisonOp defines what to check on the given property\r\n    //ComparisonOp.Null
+    checks, if it is null\r\n    [ShowIfNot(ComparisonOp.Null, nameof(customMaterial))]\r\n   
+    public Vector2 tiling = Vector2.one;\r\n\r\n\r\n    [MessageBox(\"Tick all conditions.\",
+    MessageBoxType.Info)]\r\n\r\n    public bool condition1 = true;\r\n    public
+    bool condition2 = true;\r\n    public bool condition3 = false;\r\n\r\n    [ShowIfNot(BoolOperator.And,\r\n               
+    nameof(condition1),\r\n                nameof(condition2),\r\n               
+    nameof(condition3))]\r\n    public string notAllTrue = \"Not all conditions are
+    true.\";\r\n\r\n\r\n    [HorizontalLine(\"Functions\")]\r\n\r\n    [MessageBox(\"A
+    field is visible if even number is set to an odd value.\", MessageBoxType.Info)]\r\n   
+    public int evenNumber = 1;\r\n    [ShowIfNot(nameof(IsEven))]\r\n    public float
+    value = -1;\r\n\r\n    public bool IsEven()\r\n    {\r\n        return evenNumber
+    % 2 == 0;\r\n    }\r\n}\r\n\r\n[SerializeField] ShowMethodAttributeExamples showMethodAttributeExamples
+    = new ShowMethodAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass ShowMethodAttributeExamples\r\n{\r\n   
+    [ShowMethod(nameof(GetTime))]\r\n\r\n    [ShowMethod(nameof(GetTime),\r\n       
+    label = \"Current time\",\r\n        tooltip = \"Updated on each gui-update\")]\r\n\r\n   
+    [SerializeField, HideField]\r\n    bool someBool = false;\r\n\r\n    string GetTime()\r\n   
+    {\r\n        return DateTime.Now.ToString();\r\n    }\r\n}\r\n\r\n[SerializeField]
+    ShowPropertyAttributeExamples showPropertyAttributeExamples = new ShowPropertyAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    ShowPropertyAttributeExamples\r\n{\r\n    [ShowProperty(\"myClass.enabled\",
+    label = \"Use Class\")]\r\n\r\n    [SerializeField, ShowIf(\"myClass.enabled\"),
+    Indent(-1)]\r\n    MyClass myClass;\r\n\r\n    [System.Serializable]\r\n    class
+    MyClass\r\n    {\r\n        [HideField] public bool enabled;\r\n\r\n        public
+    int a;\r\n        public int b;\r\n    }\r\n}\r\n\r\n[SerializeField] Space2AttributeExamples
+    space2AttributeExamples = new Space2AttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    Space2AttributeExamples\r\n{\r\n    [Button(nameof(MyMethod))]\r\n\r\n    [Space2(30)]\r\n\r\n   
+    [Button(nameof(MyMethod))]\r\n    [Button(nameof(MyMethod))]\r\n\r\n    public
+    bool _;\r\n\r\n    void MyMethod() { }\r\n}\r\n\r\n\r\n\r\n[SerializeField] TabAttributeExamples
+    tabAttributeExamples = new TabAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    TabAttributeExamples\r\n{\r\n    [Tab(\"Inventory\")] public GameObject item;\r\n   
+    [Tab(\"Inventory\"), Min(0)] public float weight;\r\n    \r\n    [Tab(\"Stats\"),
+    Unwrap]\r\n    public Stats stats;\r\n\r\n    [Tab(InspectorIcon.Settings)]\r\n   
+    public float size;\r\n\r\n    [System.Serializable]\r\n    public class Stats\r\n   
+    {\r\n        [ProgressBar(100)]\r\n        public int health = 79;\r\n       
+    [ProgressBar(1)]\r\n        public float stamina = 1;\r\n        [Min(.01f)]\r\n       
+    public float speed = 1.3f;\r\n    }\r\n}\r\n\r\n[SerializeField] TagAttributeExamples
+    tagAttributeExamples = new TagAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    TagAttributeExamples\r\n{\r\n    [Tag] public string tag1 = \"Player\";\r\n   
+    [Tag] public string tag2;\r\n}\r\n\r\n[SerializeField] TitleAttributeExamples
+    titleAttributeExamples = new TitleAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    TitleAttributeExamples\r\n{\r\n    [MessageBox(\"The [Title]-attribute allows
+    other attributes to draw before\", MessageBoxType.Info)]\r\n    [Button(nameof(MyFunc),
+    label = \"Button1\")]\r\n    [Title(\"My Boolean\")]\r\n    [Button(nameof(MyFunc),
+    label = \"Button2\")]\r\n    public bool b1;\r\n\r\n    [HorizontalLine(\"\")]\r\n\r\n   
+    [MessageBox(\"The [Header]-attribute draws first\", MessageBoxType.Info)]\r\n   
+    [SerializeField, HideField] bool _;\r\n\r\n    [Button(nameof(MyFunc), label
+    = \"Button3\")]\r\n    [Header(\"My Boolean\")]\r\n    [Button(nameof(MyFunc),
+    label = \"Button4\")]\r\n    public bool b2;\r\n\r\n    void MyFunc()\r\n   
+    { }\r\n}\r\n\r\n[SerializeField] ToolbarAttributeExamples toolbarAttributeExamples
+    = new ToolbarAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass ToolbarAttributeExamples\r\n{\r\n   
+    [HorizontalLine(\"Booleans\")]\r\n\r\n    [Toolbar] public bool edit;\r\n   
+    //edit the height and the spacing\r\n    [Toolbar(20, 0)] public bool create;\r\n\r\n   
+    [HorizontalLine(\"Enums\", 1, 2)]\r\n\r\n    [Toolbar]\r\n    public Animal animal;\r\n   
+    public enum Animal { Dog, Cat, Bird }\r\n\r\n    [Toolbar]\r\n    public EditType
+    type;\r\n    public enum EditType { create, edit, delete, update }\r\n}\r\n\r\n[SerializeField]
+    TooltipBoxAttributeExamples tooltipBoxAttributeExamples = new TooltipBoxAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    TooltipBoxAttributeExamples\r\n{\r\n    [TooltipBox(\"Explanation (1)\")]\r\n   
+    public GameObject myGameObject;\r\n\r\n    [HorizontalLine]\r\n\r\n    [TooltipBox(\"m
+    = meter\")]\r\n    [Unit(\"m\")]\r\n    [TooltipBox(\"Explanation (2)\")]\r\n   
+    public float myFloat;\r\n}\r\n\r\n[SerializeField] UnfoldAttributeExamples unfoldAttributeExamples
+    = new UnfoldAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass UnfoldAttributeExamples\r\n{\r\n   
+    [Unfold] public MyClass unfolded;\r\n\r\n    [System.Serializable]\r\n    public
+    class MyClass\r\n    {\r\n        public int number1;\r\n        public int number2;\r\n   
+    }\r\n}\r\n\r\n[SerializeField] UnitAttributeExamples unitAttributeExamples =
+    new UnitAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass UnitAttributeExamples\r\n{\r\n   
+    [Unit(\"per second\")] public int amount = 5;\r\n    [Unit(\"cm\")] public int
+    jumpHeight = 80;\r\n    [Unit(\"feet\")] public int distance = 100;\r\n}\r\n\r\n[SerializeField]
+    UnwrapAttributeExamples unwrapAttributeExamples = new UnwrapAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    UnwrapAttributeExamples\r\n{\r\n    [HorizontalLine(\"Unwrapped\")]\r\n    [Unwrap]
+    public MyClass unwrapped;\r\n    \r\n    [HorizontalLine]\r\n\r\n    [MessageBox(\"Adds
+    the class name as prefix.\", MessageBoxType.Info)]\r\n    [Unwrap(applyName =
+    true)] public MyClass class1;\r\n\r\n    [HorizontalLine(\"Default Display\")]\r\n   
+    public MyClass wrapped;\r\n\r\n\r\n    [System.Serializable]\r\n    public class
+    MyClass\r\n    {\r\n        public int number1;\r\n        public int number2;\r\n   
+    }\r\n}\r\n\r\n[SerializeField] URLAttributeExamples uRLAttributeExamples = new
+    URLAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass URLAttributeExamples\r\n{\r\n   
+    public int a;    \r\n    public int b;\r\n\r\n    [URL(\"http://mbservices.de/\")]\r\n   
+    // you can also add a label and tooltip\r\n    [URL(\"www.google.com/\", label
+    = \"google:\",\r\n                            tooltip = \"This is a tooltip\")]\r\n   
+    \r\n    public int c;\r\n    public int d;\r\n}\r\n\r\n[SerializeField] ValidateAttributeExamples
+    validateAttributeExamples = new ValidateAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    ValidateAttributeExamples\r\n{\r\n    [HorizontalLine(\"Change Values:\", 0)]\r\n\r\n   
+    [Validate(nameof(IsEven))]\r\n        public int evenNumber = 2;\r\n\r\n    [HorizontalLine]\r\n\r\n   
+    [Validate(nameof(IsOdd), \"Value has to be odd!\")]\r\n        public int oddNumber
+    = 1;\r\n\r\n    bool IsEven(int i)\r\n        => i % 2 == 0;\r\n    bool IsOdd(int
+    i)\r\n        => Math.Abs(i % 2) == 1;\r\n}\r\n\r\n//----------------------------------------------------Types------------------------------------------------\r\n[HorizontalLine(\"Types\",
+    3)]\r\n\r\n\r\n[SerializeField] Array2DExamples array2DExamples = new Array2DExamples();\r\n\r\n[System.Serializable]\r\nclass
+    Array2DExamples\r\n{\r\n    [SerializeField, Array2D] Array2D<Sprite> images\r\n        
+    = new Array2D<Sprite>(2, 2);\r\n\r\n    [HorizontalLine]\r\n\r\n    [Array2D]
+    public Array2D<int> numbers;\r\n}\r\n\r\n[SerializeField] DynamicSliderExamples
+    dynamicSliderExamples = new DynamicSliderExamples();\r\n\r\n[System.Serializable]\r\nclass
+    DynamicSliderExamples\r\n{   \r\n    [Title(\"A changable range\")]\r\n    public
+    DynamicSlider sliderValue\r\n        = new DynamicSlider(5, 1, 10);\r\n\r\n   
+    [Title(\"Only one custom side\")]\r\n    public DynamicSlider value2\r\n       
+    = new DynamicSlider(5, 1, 10, FixedSide.FixedMin);\r\n\r\n    public DynamicSlider
+    value3\r\n        = new DynamicSlider(5, 1, 10, FixedSide.FixedMax);\r\n\r\n   
+    [HorizontalLine]\r\n\r\n    public bool useSlider = false;\r\n    [DynamicSlider,
+    ShowIf(nameof(useSlider), style = DisabledStyle.GreyedOut)]\r\n    public DynamicSlider
+    slider\r\n        = new DynamicSlider(1, 0, 2);\r\n\r\n\r\n    void Increment()\r\n   
+    {\r\n        //implicit conversion to float \r\n        float a = sliderValue;\r\n       
+    a++;\r\n        sliderValue.value = a;\r\n    }\r\n}\r\n\r\n[SerializeField]
+    FilePathExamples filePathExamples = new FilePathExamples();\r\n\r\n[System.Serializable]\r\nclass
+    FilePathExamples\r\n{\r\n    [HorizontalLine(\"Some Files:\")]\r\n    public
+    FilePath filePath\r\n                = new FilePath(\"Assets\");\r\n\r\n    public
+    FilePath meshPath\r\n                = new FilePath(typeof(Mesh));\r\n\r\n   
+    [HorizontalLine]\r\n\r\n    [ReadOnly, AssetPath]\r\n    public FilePath path
+    = new FilePath();\r\n\r\n    void SomeFunc()\r\n    {\r\n        if(filePath.HasPath())\r\n       
+    {\r\n            string path = filePath.GetPath();\r\n        }\r\n    }\r\n}\r\n\r\n[SerializeField]
+    FolderPathExamples folderPathExamples = new FolderPathExamples();\r\n\r\n[System.Serializable]\r\nclass
+    FolderPathExamples\r\n{\r\n    [HorizontalLine(\"Some FolderPaths\")]\r\n   
+    public FolderPath folderPath\r\n                = new FolderPath(\"Assets\");\r\n\r\n   
+    public FolderPath path2 \r\n                = new FolderPath();\r\n\r\n    public
+    FolderPath path3\r\n                = new FolderPath(\"Assets/Materials\");\r\n\r\n   
+    [HorizontalLine]\r\n\r\n    [ReadOnly, AssetPath]\r\n    public FolderPath path
+    = new(\"Assets/\");\r\n\r\n    void SomeFunc()\r\n    {\r\n        try\r\n       
+    {\r\n            Mesh mesh = path2.LoadAsset<Mesh>(\"MyMesh.mesh\");\r\n           
+    path3.CreateAsset(null, \"Abc.mesh\");\r\n        }\r\n        catch (NullReferenceException
+    e)\r\n        {\r\n            Debug.LogException(e);\r\n        }\r\n    }\r\n}\r\n\r\n[SerializeField]
+    LineGraphExamples lineGraphExamples = new LineGraphExamples();\r\n\r\n[System.Serializable]\r\nclass
+    LineGraphExamples\r\n{\r\n    [Unfold, LineGraph]\r\n    public LineGraph ak47_damage\r\n       
+    = new LineGraph(new Vector2[]{ new Vector2(10, 50),\r\n                                      
+    new Vector2(20, 20),\r\n                                       new Vector2(50,
+    10),\r\n                                       new Vector2(50, 0)});\r\n\r\n\r\n   
+    private void Start()\r\n    {\r\n        float distance = 15;\r\n        float
+    damage = ak47_damage.GetYValue(distance);\r\n        // damage -> 35\r\n    }\r\n}\r\n\r\n[SerializeField]
+    MessageDrawerExamples messageDrawerExamples = new MessageDrawerExamples();\r\n\r\n[System.Serializable]\r\nclass
+    MessageDrawerExamples\r\n{\r\n    [Button(nameof(LogTime), label = \"Add Current
+    Time\")]  \r\n    [Button(nameof(LogWarning))]\r\n    [Button(nameof(LogError))]\r\n\r\n   
+    [MessageDrawer] public MessageDrawer md = new MessageDrawer();\r\n\r\n    void
+    LogTime()\r\n    {\r\n        md.DrawMessage(DateTime.Now.ToString());\r\n   
+    }\r\n    void LogWarning()\r\n    {\r\n        md.DrawWarning(\"You added a Warning\");\r\n   
+    }\r\n    void LogError()\r\n    {\r\n        md.DrawError(\"You added an Error
+    Message\");\r\n    }\r\n}\r\n\r\n[SerializeField] ReorderableDictionaryExamples
+    reorderableDictionaryExamples = new ReorderableDictionaryExamples();\r\n\r\n[System.Serializable]\r\nclass
+    ReorderableDictionaryExamples\r\n{\r\n    [SerializeField]\r\n    [Dictionary]\r\n   
+    ReorderableDictionary<int, string> dict1 = new();\r\n\r\n    [SerializeField,
+    Dictionary(keySize: .2f)]\r\n    ReorderableDictionary<string, MyClass> dict2
+    = new();\r\n\r\n    [System.Serializable]\r\n    class MyClass\r\n    {\r\n       
+    public int a;\r\n        public int b;\r\n        public int c;\r\n    }\r\n}\r\n\r\n[SerializeField]
+    SerializableDateTimeExamples serializableDateTimeExamples = new SerializableDateTimeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    SerializableDateTimeExamples\r\n{\r\n    //leave out the attribute to display
+    the class normally\r\n    public SerializableDateTime time1\r\n        = DateTime.Today;\r\n\r\n   
+    [HorizontalLine]\r\n\r\n    [SerializableDateTime(SerializableDateTime.InspectorFormat.DateEnums)]\r\n   
+    public SerializableDateTime time2;\r\n\r\n    [HorizontalLine]\r\n\r\n    [SerializableDateTime(SerializableDateTime.InspectorFormat.AddTextInput)]\r\n   
+    public SerializableDateTime time3;\r\n}\r\n\r\n[SerializeField] SerializableDictionaryExamples
+    serializableDictionaryExamples = new SerializableDictionaryExamples();\r\n\r\n[System.Serializable]\r\nclass
+    SerializableDictionaryExamples\r\n{\r\n    [Dictionary] //dont forget the attribute!\r\n   
+    public SerializableDictionary<int, string> dict1\r\n        = new SerializableDictionary<int,
+    string>();\r\n\r\n    [HorizontalLine]\r\n\r\n    [Button(nameof(AddRandomValue))]\r\n   
+    [SerializeField, HideField] bool _;\r\n\r\n    void AddRandomValue()\r\n    {\r\n       
+    dict1.TryAdd(UnityEngine.Random.Range(-2000, 2000), \"Some Random Value\");\r\n       
+    //Access: myDictionary[key] = value\r\n    }\r\n\r\n    [HorizontalLine(\"More
+    Examples\")]\r\n\r\n    [Dictionary]\r\n    public SerializableDictionary<int,
+    MyClass> dict2 = new SerializableDictionary<int, MyClass>();\r\n    [Dictionary]\r\n   
+    public SerializableDictionary<int, GameObject> dict3 = new SerializableDictionary<int,
+    GameObject>();\r\n\r\n    [System.Serializable]\r\n    public class MyClass\r\n   
+    {\r\n        public string name = \"Empty\";\r\n        public int id = -1;\r\n\r\n       
+    public MyClass(string name, int id)\r\n        {\r\n            this.name = name;\r\n           
+    this.id = id;\r\n        }\r\n\r\n        public override string ToString()\r\n       
+    {\r\n            return $\"{name} ({id})\";\r\n        }\r\n\r\n        public
+    override bool Equals(object obj)\r\n        {\r\n            if(obj is MyClass
+    c)\r\n            {\r\n                return name == c.name && id == c.id;\r\n           
+    }\r\n            return false;\r\n        }\r\n\r\n        public override int
+    GetHashCode()\r\n        {\r\n            return id;\r\n        }\r\n    }\r\n}\r\n\r\n[SerializeField]
+    SerializableSortedDictionaryExamples serializableSortedDictionaryExamples = new
+    SerializableSortedDictionaryExamples();\r\n\r\n[System.Serializable]\r\nclass
+    SerializableSortedDictionaryExamples\r\n{\r\n    [Dictionary] //dont forget the
+    attribute!\r\n    public SerializableSortedDictionary<int, string> dict1\r\n       
+    = new SerializableSortedDictionary<int, string>();\r\n\r\n    [HorizontalLine]\r\n\r\n   
+    [Button(nameof(AddRandomValue))]\r\n    [SerializeField, HideField] bool a;\r\n\r\n   
+    void AddRandomValue()\r\n    {\r\n        dict1.TryAdd(UnityEngine.Random.Range(-2000,
+    2000), \"Some Random Value\");\r\n        //Access: myDictionary[key] = value\r\n   
+    }\r\n}\r\n\r\n[SerializeField] SerializableSetExamples serializableSetExamples
+    = new SerializableSetExamples();\r\n\r\n[System.Serializable]\r\nclass SerializableSetExamples\r\n{\r\n   
+    [Set] //dont forget the attribute!\r\n    public SerializableSet<int> set1\r\n       
+    = new SerializableSet<int>();\r\n\r\n    [HorizontalLine]\r\n\r\n    [Button(nameof(AddRandomValue))]\r\n   
+    [SerializeField, HideField] bool a;\r\n\r\n    void AddRandomValue()\r\n    {\r\n       
+    set1.TryAdd(UnityEngine.Random.Range(-2000, 2000));\r\n    }\r\n\r\n    [HorizontalLine(\"Custom
+    Class Example\")]\r\n\r\n    [Set]\r\n    public SerializableSet<MyClass> set2\r\n       
+    = new SerializableSet<MyClass>();\r\n\r\n    [System.Serializable]\r\n    public
+    class MyClass\r\n    {\r\n        public string name = \"Empty\";\r\n       
+    public int id = -1;\r\n\r\n        public MyClass(string name, int id)\r\n       
+    {\r\n            this.name = name;\r\n            this.id = id;\r\n        }\r\n\r\n       
+    public override string ToString()\r\n        {\r\n            return $\"{name}
+    ({id})\";\r\n        }\r\n\r\n        public override bool Equals(object obj)\r\n       
+    {\r\n            if(obj is MyClass c)\r\n            {\r\n                return
+    name == c.name && id == c.id;\r\n            }\r\n            return false;\r\n       
+    }\r\n\r\n        public override int GetHashCode()\r\n        {\r\n           
+    return id;\r\n        }\r\n    }\r\n}\r\n\r\n[SerializeField] SerializableSortedSetExamples
+    serializableSortedSetExamples = new SerializableSortedSetExamples();\r\n\r\n[System.Serializable]\r\nclass
+    SerializableSortedSetExamples\r\n{\r\n    [Set] //dont forget the attribute!\r\n   
+    public SerializableSortedSet<int> set1\r\n        = new SerializableSortedSet<int>()
+    { 1, 3, -75, 2 };\r\n\r\n    [HorizontalLine]\r\n\r\n    [Button(nameof(AddRandomValue))]\r\n   
+    [SerializeField, HideField] bool a;\r\n\r\n    void AddRandomValue()\r\n    {\r\n       
+    set1.TryAdd(UnityEngine.Random.Range(-2000, 2000));\r\n    }\r\n}\r\n\r\n\r\n[SerializeField]
+    StaticsDrawerExamples staticsDrawerExamples = new StaticsDrawerExamples();\r\n\r\n[System.Serializable]\r\nclass
+    StaticsDrawerExamples\r\n{\r\n    [Title(\"My Values\")]\r\n    public string
+    hello = \"Hello!\";\r\n\r\n\r\n    static int a = 6;\r\n    static float b =
+    9.5f;\r\n    static GameObject c = null;\r\n    static Color d = Color.white;\r\n   
+    public static Vector2 e = new Vector2(0.5f, 8);\r\n\r\n    [SerializeField] StaticsDrawer
+    sDrawer;\r\n}\r\n\r\n[SerializeField] SerializableTupleExamples serializableTupleExamples
+    = new SerializableTupleExamples();\r\n\r\n[System.Serializable]\r\nclass SerializableTupleExamples\r\n{\r\n   
+    [Tuple] public SerializableTuple<int, string> tuple1 = new(1, \"a\");\r\n   
+    [Tuple] public SerializableTuple<int, float, GameObject> tuple2 = new(1, 1.5f,
+    null);\r\n}\r\n\r\n//----------------------------------------------------Unitys------------------------------------------------\r\n[HorizontalLine(\"Unitys\",
+    3)]\r\n\r\n[SerializeField] DelayedAttributeExamples delayedAttributeExamples
+    = new DelayedAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass DelayedAttributeExamples\r\n{\r\n   
+    [Delayed]\r\n    public string delayed = \"Edit Here\";\r\n\r\n    public string
+    instant = \"Edit Here\";\r\n\r\n\r\n    [ShowMethod(nameof(GetDelayedOne))]\r\n   
+    [ShowMethod(nameof(GetInstantOne))]\r\n\r\n    [HideField]\r\n    public bool
+    b2;\r\n\r\n    string GetDelayedOne()\r\n        => delayed;\r\n    string GetInstantOne()\r\n       
+    => instant;\r\n}\r\n\r\n\r\n[SerializeField] HeaderAttributeExamples headerAttributeExamples
+    = new HeaderAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass HeaderAttributeExamples\r\n{\r\n   
+    [Header(\"First\")]\r\n    public string a;\r\n    public string b;\r\n    public
+    string c;\r\n\r\n    [Header(\"Second\")]\r\n    public string a2;\r\n    public
+    string b2;\r\n    public string c2;\r\n}\r\n\r\n[SerializeField] HideInInspectorAttributeExamples
+    hideInInspectorAttributeExamples = new HideInInspectorAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    HideInInspectorAttributeExamples\r\n{\r\n    [MessageBox(\"Button is hidden too\",
+    MessageBoxType.Info)]\r\n    public string a;\r\n\r\n    [Button(nameof(MyMethod))]\r\n   
+    [HideInInspector]\r\n    public string b;\r\n\r\n    [HorizontalLine]\r\n\r\n   
+    [MessageBox(\"Button is visible too\", MessageBoxType.Info)]\r\n\r\n    [Button(nameof(MyMethod))]\r\n   
+    [HideField]\r\n    public string c;\r\n\r\n    void MyMethod() { }\r\n}\r\n\r\n[SerializeField]
+    MinAttributeExamples minAttributeExamples = new MinAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    MinAttributeExamples\r\n{\r\n    [Min(0)]\r\n    public int i = 5;\r\n\r\n   
+    [Min(10)]\r\n    public float f = 5;\r\n\r\n    [Min(0)]\r\n    public Vector3
+    v = Vector3.up;\r\n}\r\n\r\n[SerializeField] MultilineAttributeExamples multilineAttributeExamples
+    = new MultilineAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass MultilineAttributeExamples\r\n{\r\n   
+    [Multiline(lines: 4)]\r\n    public string info = \"Hello World!\";\r\n}\r\n\r\n[SerializeField]
+    NonReorderableAttributeExamples nonReorderableAttributeExamples = new NonReorderableAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    NonReorderableAttributeExamples\r\n{\r\n    [Header(\"Non Reorderable List\")]\r\n   
+    [NonReorderable]\r\n    public string[] list1 = new string[] { \"Abc\", \"Def\",
+    \"Ghi\", \"Jkl\"};\r\n}\r\n\r\n[SerializeField] NonSerializedAttributeExamples
+    nonSerializedAttributeExamples = new NonSerializedAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    NonSerializedAttributeExamples\r\n{\r\n    [NonSerialized]\r\n    public int
+    myNonSerializedInt;\r\n\r\n    [HideInInspector]\r\n    public int mySerializedInt;\r\n\r\n\r\n   
+    [ShowProperty(nameof(myNonSerializedInt))]\r\n    [Space2(15)]\r\n    [ShowProperty(nameof(mySerializedInt))]\r\n   
+    [HideField] public bool _;\r\n}\r\n\r\n[SerializeField] RangeAttributeExamples
+    rangeAttributeExamples = new RangeAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    RangeAttributeExamples\r\n{\r\n    [Range(0, 10)] public int _int;\r\n    [Range(0,
+    10)] public float _float;\r\n}\r\n\r\n[SerializeField] SpaceAttributeExamples
+    spaceAttributeExamples = new SpaceAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    SpaceAttributeExamples \r\n{\r\n    public int int1;\r\n    public int int2;\r\n   
+    [Space2(20)]\r\n    public float float1;\r\n    public float float2;\r\n}\r\n\r\n[SerializeField]
+    TooltipAttributeExamples tooltipAttributeExamples = new TooltipAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    TooltipAttributeExamples \r\n{\r\n    [MessageBox(\"Hover over these fields:\",
+    MessageBoxType.Info)]\r\n\r\n    [Tooltip(\"Some Tooltip\")]\r\n    public int
+    _int;\r\n\r\n    [Tooltip(\"Some Other Tooltip\")]\r\n    [SerializeField] Abc
+    someClass;\r\n\r\n    [System.Serializable] class Abc\r\n    {\r\n        [Tooltip(\"A
+    Third Tooltip\")]\r\n        public int i;\r\n    }\r\n}\r\n\r\n[SerializeField]
+    TextAreaAttributeExamples textAreaAttributeExamples = new TextAreaAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    TextAreaAttributeExamples \r\n{\r\n    [TextArea(1, 20)]\r\n    public string
+    someString;\r\n\r\n    [TextArea(minLines: 1, maxLines: 20)]\r\n    public string
+    otherString = \"a\\nb\\nc\\nd\\ne\\nf\\ng\";\r\n}\r\n\r\n\r\n#pragma warning
+    restore CS0414\r\n#pragma warning restore IDE0052 // Remove unread private members\r\n#pragma
+    warning restore IDE0051 // Remove unused private members\r\n#pragma warning restore
+    IDE0044 // Add readonly modifier\r\n#pragma warning restore IDE0059 // Unnecessary
+    assignment of a value\r\n#pragma warning restore IDE0090 // Use 'new(...)'\r\n}\r\n}"
+  snippetPositions:
+    info: 0
+    keys:
+      info: 0
+      values:
+        list: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f000000100000001100000012000000130000001400000015000000160000001700000018000000190000001a0000001b0000001c0000001d0000001e0000001f000000200000002100000022000000230000002400000025000000260000002700000028000000290000002a0000002b0000002c0000002d0000002e0000002f000000300000003100000032000000330000003400000035000000360000003700000038000000390000003a0000003b0000003c0000003d0000003e0000003f000000400000004100000042000000430000004400000045000000460000004700000048000000490000004a0000004b000000
+      editor_input: 0
+    values:
+      list:
+      - start: 1253
+        end: 2390
+      - start: 2559
+        end: 2754
+      - start: 2934
+        end: 3164
+      - start: 3364
+        end: 3815
+      - start: 3979
+        end: 4611
+      - start: 4787
+        end: 5260
+      - start: 5434
+        end: 5681
+      - start: 5853
+        end: 6179
+      - start: 6397
+        end: 6657
+      - start: 6844
+        end: 6972
+      - start: 7143
+        end: 7439
+      - start: 7615
+        end: 8486
+      - start: 8650
+        end: 9406
+      - start: 9578
+        end: 10179
+      - start: 10355
+        end: 10812
+      - start: 10968
+        end: 11287
+      - start: 11487
+        end: 13160
+      - start: 13356
+        end: 14028
+      - start: 14194
+        end: 14503
+      - start: 14695
+        end: 15007
+      - start: 15199
+        end: 15630
+      - start: 15790
+        end: 15990
+      - start: 16146
+        end: 17384
+      - start: 17536
+        end: 18017
+      - start: 18197
+        end: 18561
+      - start: 18717
+        end: 19137
+      - start: 19317
+        end: 19539
+      - start: 19707
+        end: 20029
+      - start: 20213
+        end: 20935
+      - start: 21107
+        end: 21682
+      - start: 21866
+        end: 22310
+      - start: 22482
+        end: 22871
+      - start: 23108
+        end: 23492
+      - start: 23933
+        end: 24292
+      - start: 24456
+        end: 26503
+      - start: 26675
+        end: 26859
+      - start: 27043
+        end: 27226
+      - start: 27402
+        end: 28367
+      - start: 28547
+        end: 28842
+      - start: 29030
+        end: 29326
+      - start: 29490
+        end: 29656
+      - start: 29812
+        end: 30278
+      - start: 30430
+        end: 30502
+      - start: 30662
+        end: 31237
+      - start: 31405
+        end: 31783
+      - start: 31963
+        end: 32174
+      - start: 32338
+        end: 32503
+      - start: 32659
+        end: 32800
+      - start: 32964
+        end: 33397
+      - start: 33549
+        end: 33826
+      - start: 33998
+        end: 34333
+      - start: 34608
+        end: 34770
+      - start: 34929
+        end: 35641
+      - start: 35777
+        end: 36200
+      - start: 36344
+        end: 37003
+      - start: 37143
+        end: 37602
+      - start: 37758
+        end: 38213
+      - start: 38401
+        end: 38735
+      - start: 38919
+        end: 39332
+      - start: 39524
+        end: 40919
+      - start: 41135
+        end: 41577
+      - start: 41741
+        end: 42890
+      - start: 43078
+        end: 43432
+      - start: 44047
+        end: 44210
+      - start: 43590
+        end: 43875
+      - start: 44521
+        end: 44847
+      - start: 45013
+        end: 45196
+      - start: 45396
+        end: 45749
+      - start: 45901
+        end: 46031
+      - start: 46207
+        end: 46275
+      - start: 46471
+        end: 46603
+      - start: 46795
+        end: 47056
+      - start: 47216
+        end: 47293
+      - start: 47454
+        end: 47567
+      - start: 47736
+        end: 48047
+      - start: 48220
+        end: 48374
+    editor_keyInput: 0
+    editor_valueInput:
+      start: 0
+      end: 0
+  _: 0
+  previewObj:
+    asButtonAttributeExamples:
+      selectableBoolean: 0
+      holdDownBoolean: 0
+      myInteger: 0
+      buttonState: 2
+      myString: notSelected
+      _: 0
+    asRangeAttributeExamples:
+      positiveRange: {x: 0, y: 3.1415927}
+      negativeRange: {x: 5, y: 1}
+    assetsOnlyAttributeExamples:
+      gob1: {fileID: 0}
+      gob2: {fileID: 0}
+      chest: {fileID: 0}
+      leg: {fileID: 0}
+      cam: {fileID: 0}
+    backgroundColorAttributeExamples:
+      info1: Really Important
+      myNumber: 0
+      yourNumber: 0
+      gob: {fileID: 0}
+    buttonAttributeExamples:
+      _bool: 0
+      _number: 0
+    copyPasteAttributeExamples:
+      v1: {x: 0, y: 0, z: 1}
+      v2: {x: 1, y: 1, z: 1}
+      c1: {r: 1, g: 1, b: 1, a: 1}
+      c2: {r: 0.5, g: 0.4, b: 0.2, a: 1}
+      _string: Hello World!
+      b: 0
+    decimalsAttributeExamples:
+      oneDecimal: 0.1
+      twoDecimal: 0.02
+      onlyTens: 20
+      onlyHundreds: 300
+    delayed2AttributeExamples:
+      delayed: Edit Here
+      instant: Edit Here
+      b2: 0
+    displayAutoPropertyAttributeExamples:
+      _: 0
+    fixedValuesAttributeExamples:
+      integer: 1
+      name: Bob
+    foldoutAttributeExamples:
+      scriptable1: {fileID: 0}
+      scriptable2: {fileID: 0}
+    forceFillAttributeExamples:
+      gob1: {fileID: 0}
+      s2: 
+      s3: <undefined>
+      c: {x: 0, y: 0, z: 0}
+      gob2: {fileID: 0}
+      f: -1
+      gob: {fileID: 0}
+    getSetAttributeExamples:
+      position: {x: 0, y: 0, z: 0}
+      evenNumber: 66
+    gUIColorAttributeExamples:
+      a: 0
+      b: 0
+      s1: Hello World!
+      s2: Hello World!
+      s3: Hello World!
+      s4: Hello World!
+      s5: Hello World!
+      s6: Hello World!
+      s7: Hello World!
+      c: 0
+      d: 0
+    hideFieldAttributeExamples:
+      _: 0
+      a1: 0
+      a2: 0
+      __: 0
+      b1: 0
+      b2: 0
+    hookAttributeExamples:
+      value: 0
+    horizontalGroupAttributeExamples:
+      offlineScene:
+        name: start Scene
+        loadingTime: 5
+        prefab: {fileID: 0}
+        foo: Hello
+        bar: World
+      onlineScene:
+        name: start Scene
+        loadingTime: 5
+        prefab: {fileID: 0}
+        foo: Hello
+        bar: World
+      test: combine with a button
+      b: 0
+      hisName: James
+      hisName2: Robert
+      hisName3: Smith
+      herName: Jennifer
+      herName2: Susan
+      herName3: Miller
+    horizontalLineAttributeExamples:
+      myBool1: 1
+      myBool2: 1
+      myBool3: 1
+      myBool4: 1
+      myInt: -1
+      myFloat: -1
+      myString: <empty>
+      myString2: <empty>
+      myString3: two lines
+      myGameObject: {fileID: 0}
+    indentAttributeExamples:
+      i1: 0
+      i2: 0
+      i3: 0
+      i4: 0
+      _class:
+        i5: 0
+        i6: 0
+      i7: 0
+    inspectorIconAttributeExamples:
+      camName: Bobs cam
+      favorite: look right! (the star) ->
+      lightName: LED
+    labelSettingsAttributeExamples:
+      _short: Tired of too big label space??
+      message: Hello John!
+      message2: 
+      longString: My very long string
+    layerAttributeExamples:
+      layer: 0
+      layer1: 0
+      layer2: 0
+    maskAttributeExamples:
+      myInt: 5
+      rc: 0
+      ability: 3
+      FreezePosition: 0
+    maxAttributeExamples:
+      _int: 0
+      vector3: {x: 0, y: 0, z: 0}
+      minimum: 0
+      maximum: 1
+      _float: 0
+      rangeComparison: 0
+    messageBoxAttributeExamples:
+      myBool1: 1
+      amount1: 55
+      abc: 0
+    min2AttributeExamples:
+      _int: 0
+      minimum: 0
+      maximum: 1
+      myCappedValue: 5
+      stringMin: 5
+    multipleOfAttributeExamples:
+      _int: 6
+      _float: 1.2
+      step: 0.74
+      multipleOfStep: -0.74
+    previewAttributeExamples:
+      gob: {fileID: 0}
+      sprite: {fileID: 0}
+      icon: {fileID: 0}
+    progressBarAttributeExamples:
+      value1: 0.6
+      value2: 20
+      value3: 2
+      min: 1
+      max: 3
+    readOnlyAttributeExamples:
+      n: 0
+      gob: {fileID: 0}
+      spr: {fileID: 0}
+      info: some info
+      show: 1
+      i1: This is a very deep explanation..
+      i2: Oho, what do i see there
+      i3: Hello, World!
+    requireTypeAttributeExamples:
+      agingScript: {fileID: 0}
+      myHuman: {fileID: 0}
+    richTextAttributeExamples:
+      myRichText: We are <color=green><b>not</b></color> sad.
+      myRichtText: 'We are <color=green>green</color> with envy.
+
+
+        Hello
+        <i>World</i>'
+      noRichText: We are <color=green><b>not</b></color> sad.
+    selfFillAttributeExamples:
+      cam: {fileID: 0}
+    showAssetReferenceAttributeExamples:
+      a:
+        name: Some Custom Class
+        amount: 10
+      testClass:
+        id: 432564
+        value: 0
+    showIfAttributeExamples:
+      customColors: 0
+      headColor: {r: 1, g: 1, b: 1, a: 1}
+      bodyColor: {r: 0, g: 0, b: 0, a: 1}
+      condition1: 1
+      condition2: 0
+      cond1True: {fileID: 0}
+      someText: both conditions are true
+      material: {fileID: 0}
+      tiling: {x: 0, y: 0}
+      a: 0
+      b: 1
+      info: both are the same
+      toggle1: 0
+      float1: 0
+      float2: 0
+      playername: Bob
+      _: 0
+    showIfIsAttributeExamples:
+      labeling: 0
+      labelText: my label
+    showIfIsNotAttributeExamples:
+      labeling: 0
+      labelText: my label
+    showIfNotAttributeExamples:
+      customMaterial: {fileID: 0}
+      tiling: {x: 1, y: 1}
+      condition1: 1
+      condition2: 1
+      condition3: 0
+      notAllTrue: not all conditions are true
+      evenNumber: 1
+      value: -1
+    showMethodAttributeExamples:
+      someBool: 0
+    showPropertyAttributeExamples:
+      myClass:
+        enabled: 1
+        a: 0
+        b: 0
+    space2AttributeExamples:
+      _: 0
+    tabAttributeExamples:
+      item: {fileID: 0}
+      weight: 0
+      stats:
+        health: 79
+        stamina: 1
+        speed: 1.3
+      size: 0
+    tagAttributeExamples:
+      tag1: Player
+      tag2: 
+    titleAttributeExamples:
+      b1: 0
+      _: 0
+      b2: 0
+    toolbarAttributeExamples:
+      edit: 0
+      create: 0
+      animal: 0
+      type: 0
+    tooltipBoxAttributeExamples:
+      myGameObject: {fileID: 0}
+      myFloat: 0
+    unfoldAttributeExamples:
+      unfolded:
+        number1: 0
+        number2: 0
+    unitAttributeExamples:
+      amount: 5
+      jumpHeight: 80
+      distance: 100
+    unwrapAttributeExamples:
+      unwrapped:
+        number1: 0
+        number2: 0
+      class1:
+        number1: 0
+        number2: 0
+      wrapped:
+        number1: 0
+        number2: 0
+    uRLAttributeExamples:
+      a: 0
+      b: 0
+      c: 0
+      d: 0
+    validateAttributeExamples:
+      evenNumber: 2
+      oddNumber: 1
+    array2DExamples:
+      images:
+        rowAmount: 4
+        columnAmount: 2
+        rows:
+        - elements:
+          - {fileID: 21300000, guid: 9ce84ff0fdeb13d4a83f077d075dd9a5, type: 3}
+          - {fileID: 0}
+        - elements:
+          - {fileID: 0}
+          - {fileID: 0}
+        - elements:
+          - {fileID: 0}
+          - {fileID: 0}
+        - elements:
+          - {fileID: 0}
+          - {fileID: 0}
+      numbers:
+        rowAmount: 5
+        columnAmount: 6
+        rows:
+        - elements: 000000000000000003000000030000000300000003000000
+        - elements: 000000000200000000000000000000000000000000000000
+        - elements: 000000000000000000000000000000000000000000000000
+        - elements: 000000000000000000000000000000000000000000000000
+        - elements: 000000000000000000000000000000000000000000000000
+    dynamicSliderExamples:
+      sliderValue:
+        value: 5
+        min: 1
+        max: 10
+      value2:
+        value: 5
+        min: 1
+        max: 10
+      value3:
+        value: 5
+        min: 1
+        max: 10
+      useSlider: 0
+      slider:
+        value: 1
+        min: 0
+        max: 2
+    filePathExamples:
+      filePath:
+        path: Assets
+        assetReference: {fileID: 0}
+      meshPath:
+        path: <invalid>
+        assetReference: {fileID: 0}
+      path:
+        path: <invalid>
+        assetReference: {fileID: 0}
+    folderPathExamples:
+      folderPath:
+        path: Assets
+        assetReference: {fileID: 0}
+      path2:
+        path: <invalid>
+        assetReference: {fileID: 0}
+      path3:
+        path: Assets/Trash
+        assetReference: {fileID: 0}
+      path:
+        path: Assets
+        assetReference: {fileID: 102900000, guid: 00000000000000001000000000000000, type: 3}
+    lineGraphExamples:
+      ak47_damage:
+        _: 0
+        points:
+        - {x: 10, y: 50}
+        - {x: 20, y: 20}
+        - {x: 50, y: 10}
+        - {x: 50, y: 0}
+    messageDrawerExamples:
+      md:
+        info: 
+    reorderableDictionaryExamples:
+      dict1:
+        _: 0
+        keyValuePairs: []
+      dict2:
+        _: 0
+        keyValuePairs: []
+    serializableDateTimeExamples:
+      time1:
+        year: 2051
+        month: 12
+        day: 29
+        hour: 16
+        minute: 6
+        second: 10
+        kind: 0
+      time2:
+        year: 2021
+        month: 2
+        day: 28
+        hour: 0
+        minute: 0
+        second: 0
+        kind: 0
+      time3:
+        year: 1
+        month: 1
+        day: 1
+        hour: 0
+        minute: 0
+        second: 0
+        kind: 0
+    serializableDictionaryExamples:
+      dict1:
+        info: 0
+        keys:
+          info: 0
+          values:
+            list: 
+          editor_input: 0
+        values:
+          list: []
+        editor_keyInput: 0
+        editor_valueInput: 
+      _: 0
+      dict2:
+        info: 0
+        keys:
+          info: 0
+          values:
+            list: 
+          editor_input: 0
+        values:
+          list: []
+        editor_keyInput: 0
+        editor_valueInput:
+          name: 
+          id: 0
+      dict3:
+        info: 0
+        keys:
+          info: 0
+          values:
+            list: 
+          editor_input: 0
+        values:
+          list: []
+        editor_keyInput: 0
+        editor_valueInput: {fileID: 0}
+    serializableSortedDictionaryExamples:
+      dict1:
+        info: 0
+        keys:
+          info: 0
+          values:
+            list: 72faffff1b00000077020000f00400003b060000
+          editor_input: 0
+        values:
+          list:
+          - some random value
+          - some random value
+          - some random value
+          - some random value
+          - some random value
+        editor_keyInput: 0
+        editor_valueInput: 
+      a: 0
+    serializableSetExamples:
+      set1:
+        info: 0
+        values:
+          list: 
+        editor_input: 0
+      a: 0
+      set2:
+        info: 0
+        values:
+          list: []
+        editor_input:
+          name: 
+          id: 0
+    serializableSortedSetExamples:
+      set1:
+        info: 0
+        values:
+          list: b5ffffffb5ffffffb5ffffffb5ffffff
+        editor_input: 0
+      a: 0
+    staticsDrawerExamples:
+      hello: Hello!
+    serializableTupleExamples:
+      tuple1:
+        item1: 1
+        item2: a
+      tuple2:
+        item1: 1
+        item2: 1.5
+        item3: {fileID: 0}
+    delayedAttributeExamples:
+      delayed: Edit here
+      instant: Edit here
+      b2: 0
+    headerAttributeExamples:
+      a: 
+      b: 
+      c: 
+      a2: 
+      b2: 
+      c2: 
+    hideInInspectorAttributeExamples:
+      a: 
+      b: 
+      c: 
+    minAttributeExamples:
+      i: 5
+      f: 5
+      v: {x: 0, y: 1, z: 0}
+    multilineAttributeExamples:
+      info: Hello, World!
+    nonReorderableAttributeExamples:
+      list1: []
+    nonSerializedAttributeExamples:
+      mySerializedInt: 0
+      _: 0
+    rangeAttributeExamples:
+      _int: 0
+      _float: 0
+    spaceAttributeExamples:
+      int1: 0
+      int2: 0
+      float1: 0
+      float2: 0
+    tooltipAttributeExamples:
+      _int: 0
+      someClass:
+        i: 0
+    textAreaAttributeExamples:
+      someString: 
+      otherString: 'a
+
+        b
+
+        c
+
+        d
+
+        e
+
+        f
+
+        g'
