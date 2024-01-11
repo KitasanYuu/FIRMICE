@@ -4,7 +4,7 @@
   </a><br>
 
 <h1>FIRM ICE</h1>
-基于Unity的TPS项目
+基于Unity的TPS项目(HDRP)
 
 ![Unity](https://img.shields.io/badge/Unity-000000.svg?style=flat-square&logo=unity&logoColor=white)
 ![C#](https://img.shields.io/badge/C%20Sharp-512BD4.svg?style=flat-square&logo=csharp&logoColor=white)
@@ -34,13 +34,12 @@
 |    -ART                                             //一般的平面美术资源
 |    |    -Materials                                  //Prefab中用到的材质
 |    |    -Fonts                                      //TextMeshPro字体文件
+|    |    -Shader                                     //项目着色器
 |    -AstarNavMesh                                    //A*寻路缓存的NavMesh
 |    -Component                                       //引用的外部组件
 |    -Extenals                                        //外部Git组件
 |    |    -TextFilesForTextMeshPro                    //TextMeshPro字库
-|    -HDRPDefaultResources                            //HDRP管线默认配置
 |    -Editor                                          //UnityEditor工具
-|    -Plugins                                         //引用的外部插件
 |    -Prefab                                          //系统预制体
 |    |    -LSS                                        //LoadScene存放处
 |    |    |    -Resources
@@ -57,6 +56,9 @@
 |    |    |    -GunBattle                             //射击相关
 |    |    |    -TestScripts                           //临时测试脚本暂存
 |    |    |    -UI                                    //UI相关
+|    -Settings                                        //项目配置
+|    |    -HDRPDefaultResources                       //HDRP管线默认配置
+|    |    -XR                                         //XR默认配置
 |    -TempAsset                                       //临时文件暂存
 |    -Trash                                           //文件暂存
 ```
