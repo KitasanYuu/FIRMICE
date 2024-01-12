@@ -16,7 +16,7 @@ namespace SceneTools
         private SceneNameCapture sceneNameCapture;
 
         private bool isExitingScene = false; // 新增标志，表示是否正在退出场景
-        [SerializeField]private bool initialTargetState; // 新增变量，用于记录 target 的初始状态
+        private bool initialTargetState; // 新增变量，用于记录 target 的初始状态
 
         private void Start()
         {
