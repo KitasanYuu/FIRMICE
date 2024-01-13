@@ -15,7 +15,7 @@ MonoBehaviour:
   localizationSettings: {fileID: 11400000, guid: 2cbd73cf0fc79bf4ab2e27e18b1ba7c8, type: 2}
   languageID: CN
   languageName: Chinese
-  localizedName: CN
+  localizedName: "\u7B80\u4F53\u4E2D\u6587"
   tableList:
   - table: {fileID: 11400000, guid: c4d223e438e911a44aecec230da547ea, type: 2}
     tableContent:
@@ -36,7 +36,7 @@ MonoBehaviour:
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: AchievementCommon
-      value: "\u5E38\u89C1"
+      value: "\u666E\u901A"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: ButtonAll
@@ -68,11 +68,11 @@ MonoBehaviour:
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: ExitTitle
-      value: "\u9000\u51FA"
+      value: "\u9000\u51FA\u6E38\u620F"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: ExtrasTitle
-      value: "\u989D\u5916"
+      value: "\u989D\u5916\u5185\u5BB9"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: SettingsTitle
@@ -92,7 +92,7 @@ MonoBehaviour:
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: VisualsTitle
-      value: "\u89C6\u89C9"
+      value: "\u753B\u9762"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: MultiplayerSearchingLabel
@@ -136,11 +136,11 @@ MonoBehaviour:
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: AchievementHiddenTitle
-      value: "\u9690\u85CF\u7684\u6210\u5C31"
+      value: "\u9690\u85CF\u6210\u5C31"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: AchievementHiddenDesc
-      value: "\u8FD9\u662F\u4E00\u4E2A\u9690\u85CF\u7684\u6210\u5C31,\u5FC5\u987B\u89E3\u9501\u540E\u624D\u80FD\u9884\u89C8\u3002"
+      value: "\u8FD9\u662F\u9690\u85CF\u6210\u5C31,\u5FC5\u987B\u89E3\u9501\u540E\u624D\u80FD\u770B\u5230"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: AchievementSampleTitle
@@ -148,19 +148,11 @@ MonoBehaviour:
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: AchievementSampleDesc
-      value: "\u8FD9\u662F\u4E00\u4E2A\u4E3A\u6F14\u793A\u76EE\u7684\u5236\u4F5C\u7684\u793A\u4F8B\u6210\u5C31\u3002"
-      audioValue: {fileID: 0}
-      spriteValue: {fileID: 0}
-    - key: DiscordDescription
-      value: "\u5728Discord\u4E0A\u52A0\u5165\u6211\u4EEC"
-      audioValue: {fileID: 0}
-      spriteValue: {fileID: 0}
-    - key: TwitterDescription
-      value: "\u5728Twitter\u4E0A\u5173\u6CE8\u6211\u4EEC"
+      value: "\u8FD9\u662F\u4E00\u4E2A\u6F14\u793A\u7528\u793A\u4F8B\u6210\u5C31\u3002"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: ChapterContinue
-      value: "\u7EE7\u7EED"
+      value: "\u7EE7\u7EED\u6E38\u620F"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: ChapterPlay
@@ -224,7 +216,7 @@ MonoBehaviour:
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: ExitModalDescription
-      value: "\u60A8\u786E\u5B9A\u8981\u9000\u51FA\u5417?\u6B64\u64CD\u4F5C\u65E0\u6CD5\u64A4\u6D88\u3002"
+      value: "\u60A8\u786E\u5B9A\u8981\u9000\u51FA\u6E38\u620F\u5417\uFF1F"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: LabelOn
@@ -315,18 +307,6 @@ MonoBehaviour:
       value: "\u6E38\u620F\u6D4B\u8BD5"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
-    - key: WebsiteDescription
-      value: "\u67E5\u770B\u6211\u4EEC\u7684\u7F51\u7AD9"
-      audioValue: {fileID: 0}
-      spriteValue: {fileID: 0}
-    - key: RedditDescription
-      value: "\u5728Reddit\u4E0A\u5173\u6CE8\u6211\u4EEC"
-      audioValue: {fileID: 0}
-      spriteValue: {fileID: 0}
-    - key: YouTubeDescription
-      value: "\u5728YouTube\u4E0A\u8BA2\u9605\u6211\u4EEC"
-      audioValue: {fileID: 0}
-      spriteValue: {fileID: 0}
     - key: EnableHintsLabel
       value: "\u542F\u7528\u63D0\u793A"
       audioValue: {fileID: 0}
@@ -376,23 +356,23 @@ MonoBehaviour:
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: EnableHintsDesc
-      value: "\u7B2C\u4E00\u6B21\u73A9?\u60F3\u5B66\u4E60\u4E00\u4E9B\u65B0\u4E1C\u897F\u5417?\u5982\u679C\u662F,\u5219\u53EF\u4EE5\u542F\u7528\u6B64\u529F\u80FD\u3002\n*\u8FD9\u662F\u4E00\u4E2A\u975E\u529F\u80FD\u6027\u5360\u4F4D\u7B26\u3002"
+      value: "\u5BF9\u6E38\u620F\u64CD\u4F5C\u4E0D\u719F\u6089\uFF1F\n\u6216\u662F\u60F3\u8981\u5B66\u4E60\u66F4\u591A\u7684\u8FDB\u9636\u6280\u5DE7\uFF1F\n\u90A3\u5C31\u6253\u5F00\u8FD9\u4E2A\u9009\u9879\uFF01\n(\u5360\u4F4D\u7B26\uFF0C\u529F\u80FD\u8FD8\u6CA1\u505A\u5462)"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: EnableSubtitlesDesc
-      value: "\u5728\u5C4F\u5E55\u4E0A\u770B\u5230\u4EBA\u4EEC\u5728\u8BF4\u4EC0\u4E48\u3002\n*\u8FD9\u662F\u4E00\u4E2A\u975E\u529F\u80FD\u6027\u5360\u4F4D\u7B26\u3002"
+      value: "\u5F00\u542F\u5BF9\u8BDD\u5B57\u5E55\n(\u6CA1\u505A\u529F\u80FD)"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: LanguageDesc
-      value: "\u9009\u62E9\u60A8\u559C\u6B22\u7684\u8BED\u8A00\u3002"
+      value: "\u9009\u62E9\u60A8\u7684\u8BED\u8A00\u503E\u5411\u3002"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: UIScaleDesc
-      value: "\u592A\u5927?\u592A\u5C0F?\u8FD9\u5C31\u662F\u5979\u8BF4\u7684\u8BDD?\u597D\u5427,\u4F60\u53EF\u4EE5\u5728\u8FD9\u91CC\u7BA1\u7406UI\u5927\u5C0F\u3002"
+      value: "\u5982\u679CUI\u592A\u5927\u6216\u592A\u5C0F\uFF0C\u60A8\u53EF\u4EE5\u5728\u8FD9\u91CC\u5B9A\u4E49UI\u7684\u7F29\u653E\u7A0B\u5EA6\u3002"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: SubtitleScaleDesc
-      value: "\u592A\u5927?\u592A\u5C0F?\u8FD9\u5C31\u662F\u5979\u8BF4\u7684\u8BDD?\u597D\u5427,\u4F60\u53EF\u4EE5\u5728\u8FD9\u91CC\u7BA1\u7406\u5B57\u5E55\u5927\u5C0F\u3002\n*\u8FD9\u662F\u4E00\u4E2A\u975E\u529F\u80FD\u6027\u5360\u4F4D\u7B26\u3002"
+      value: "\u5982\u679C\u60A8\u89C9\u5F97\u5B57\u5E55\u592A\u5927\u6216\u8005\u592A\u5C0F\uFF0C\u53EF\u4EE5\u5728\u8FD9\u91CC\u81EA\u5B9A\u4E49\u5B57\u5E55\u7684\u5927\u5C0F\u3002"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: MasterVolumeDesc
@@ -456,7 +436,7 @@ MonoBehaviour:
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: WindowedLabel
-      value: "\u7A97\u53E3"
+      value: "\u7A97\u53E3\u5316"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: CreditsLogoDescription
@@ -480,7 +460,7 @@ MonoBehaviour:
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: PlayLabel
-      value: "\u73A9"
+      value: "\u6E38\u73A9"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: SearchingLabel
@@ -488,7 +468,7 @@ MonoBehaviour:
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: PauseMenuContinue
-      value: "\u7EE7\u7EED"
+      value: "\u7EE7\u7EED\u6E38\u620F"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: ExitMainMenuTitle
@@ -544,7 +524,7 @@ MonoBehaviour:
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: CamAndPlayerLabel
-      value: "\u6444\u50CF\u5934\u548C\u73A9\u5BB6"
+      value: "\u955C\u5934\u4E0E\u73A9\u5BB6\u64CD\u4F5C"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: CamSensitivityLabel
@@ -556,11 +536,11 @@ MonoBehaviour:
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: SprintModeLabel
-      value: "\u75BE\u8DD1\u6A21\u5F0F"
+      value: "\u5954\u8DD1\u6A21\u5F0F"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: SprintModeLabelDesc
-      value: "\u8BBE\u7F6E\u662F\u8981\u901A\u8FC7\u6309\u4F4F\u6309\u94AE\u8FD8\u662F\u5207\u6362\u6765\u75BE\u8DD1\u3002"
+      value: "\u60A8\u53EF\u4EE5\u9009\u62E9\u6309\u4F4F\u6309\u94AE\u6216\u662F\u70B9\u51FB\u6309\u94AE\u6765\u8FDB\u5165\u5954\u8DD1"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: SprintToggleLabel
@@ -572,11 +552,11 @@ MonoBehaviour:
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: ReverseLookLabel
-      value: "\u53CD\u5411\u67E5\u770B"
+      value: "\u53CD\u8F6C\u89C6\u89D2\u8F93\u5165"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: ReverseLookDesc
-      value: "\u542F\u7528\u65F6\u53CD\u8F6C\u6444\u50CF\u5934\u89C6\u89D2\u3002"
+      value: "\u542F\u7528\u65F6\u53CD\u8F6C\u6444\u50CF\u5934\u89C6\u89D2\u7684\u64CD\u4F5C\u8F93\u5165\u3002"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: KeyBindingsHeader
@@ -620,11 +600,11 @@ MonoBehaviour:
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: NewGameTitle
-      value: New Game
+      value: "\u65B0\u6E38\u620F"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: NewGameModalDescription
-      value: "\u60A8\u786E\u5B9A\u8981\u5F00\u59CB\u65B0\u7684\u6E38\u620F\u5417?\n\u8FD9\u5C06\u4F1A\u8986\u76D6\u60A8\u7684\u81EA\u52A8\u4FDD\u5B58\u3002"
+      value: "\u60A8\u786E\u5B9A\u8981\u5F00\u59CB\u65B0\u7684\u6E38\u620F\u5417?\n\u8FD9\u5C06\u4F1A\u8986\u76D6\u60A8\u7684\u81EA\u52A8\u5B58\u6863\u3002"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: HomeTitle
@@ -648,7 +628,7 @@ MonoBehaviour:
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: NewGameTitle
-      value: New Game
+      value: "\u65B0\u6E38\u620F"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: NewGameDescription
@@ -656,15 +636,15 @@ MonoBehaviour:
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: LoadGameTitle
-      value: Load Game
+      value: "\u8BFB\u53D6\u5B58\u6863"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: LoadGameDescription
-      value: Load your saved game
+      value: "\u8BFB\u53D6\u60A8\u5148\u524D\u4FDD\u5B58\u7684\u6E38\u620F\u8FDB\u5EA6"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: AchievementsDescription
-      value: See the achievement library
+      value: "\u67E5\u770B\u6210\u5C31"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: ControllerLayoutDescription
@@ -672,7 +652,7 @@ MonoBehaviour:
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: CreditsDescription
-      value: People who made the game
+      value: "\u5236\u4F5C\u56E2\u961F"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: PurchasedLabel
@@ -712,6 +692,6 @@ MonoBehaviour:
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
     - key: LoadTitle
-      value: Load
+      value: "\u8BFB\u53D6"
       audioValue: {fileID: 0}
       spriteValue: {fileID: 0}
