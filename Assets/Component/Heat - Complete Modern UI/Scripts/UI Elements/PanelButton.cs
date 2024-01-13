@@ -239,9 +239,24 @@ namespace Michsky.UI.Heat
             isSelected = value;
 
             if (navbar != null) { navbar.LitButtons(this); }
-            if (isSelected) { StartCoroutine("SetSelect"); onSelect.Invoke(); }
-            else { StartCoroutine("SetNormal"); }
+
+            Debug.Log(gameObject.activeSelf);
+
+            // 检查 'Extra' 游戏对象是否处于活动状态
+            if (gameObject.activeSelf)
+            {
+                if (isSelected)
+                {
+                    StartCoroutine(methodName: "SetSelect");
+                    onSelect.Invoke();
+                }
+                else
+                {
+                    StartCoroutine(methodName: "SetNormal");
+                }
+            }
         }
+
 
         IEnumerator SetDisabled()
         {
