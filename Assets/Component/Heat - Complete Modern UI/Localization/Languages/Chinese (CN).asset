@@ -1,0 +1,717 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b70abea511859e248a1cf2c44035e321, type: 3}
+  m_Name: Chinese (CN)
+  m_EditorClassIdentifier: 
+  localizationSettings: {fileID: 11400000, guid: 2cbd73cf0fc79bf4ab2e27e18b1ba7c8, type: 2}
+  languageID: CN
+  languageName: Chinese
+  localizedName: CN
+  tableList:
+  - table: {fileID: 11400000, guid: c4d223e438e911a44aecec230da547ea, type: 2}
+    tableContent:
+    - key: AchievementsTitle
+      value: "\u6210\u5C31"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: AchievementTotal
+      value: "\u603B\u8BA1"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: AchievementLegendary
+      value: "\u4F20\u5947"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: AchievementRare
+      value: "\u7A00\u6709"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: AchievementCommon
+      value: "\u5E38\u89C1"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ButtonAll
+      value: "\u5168\u90E8"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: PAK_Part1
+      value: "\u6309\u4E0B"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: PAK_Key
+      value: "\u4EFB\u610F\u952E"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: PAK_Part2
+      value: "\u5F00\u59CB"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ButtonGoBack
+      value: "\u8FD4\u56DE"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: StoryModeTitle
+      value: "\u6545\u4E8B\u6A21\u5F0F"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: MultiplayerTitle
+      value: "\u591A\u4EBA\u6A21\u5F0F"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ExitTitle
+      value: "\u9000\u51FA"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ExtrasTitle
+      value: "\u989D\u5916"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: SettingsTitle
+      value: "\u8BBE\u7F6E"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: GeneralTitle
+      value: "\u5E38\u89C4"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ControlsTitle
+      value: "\u63A7\u5236"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: AudioTitle
+      value: "\u58F0\u97F3"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: VisualsTitle
+      value: "\u89C6\u89C9"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: MultiplayerSearchingLabel
+      value: "\u641C\u7D22\u6E38\u620F\u4E2D......"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: LanguageTitle
+      value: "\u8BED\u8A00"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: NewsTitle
+      value: "\u65B0\u95FB"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ButtonMoreDetails
+      value: "\u66F4\u591A\u8BE6\u7EC6"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: NewsItemTitle1
+      value: "\u6B22\u8FCE\u6765\u5230Heat UI"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: NewsItemDescription1
+      value: "\u8FD9\u662F\u4E00\u4E2A\u9762\u677F,\u4F60\u53EF\u4EE5\u5728\u5176\u4E2D\u663E\u793A\u6700\u65B0\u7684\u66F4\u65B0\u3001\u53D8\u66F4\u65E5\u5FD7\u7B49\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: NewsItemTitle2
+      value: "\u5B8C\u5168\u53EF\u81EA\u5B9A\u4E49"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: NewsItemDescription2
+      value: "\u60A8\u53EF\u4EE5\u6DFB\u52A0\u65B0\u9879\u76EE,\u66F4\u6539\u9762\u677F\u7684\u5927\u5C0F\u6216\u901A\u8FC7\u8C03\u6574\u65B0\u95FB\u9879\u76EE\u9884\u8BBE\u6765\u66F4\u6539\u5176\u5916\u89C2\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: NewsItemTitle3
+      value: "\u8F7B\u677E\u6DFB\u52A0\u65B0\u5185\u5BB9"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: NewsItemDescription3
+      value: "\u60A8\u53EF\u4EE5\u4F7F\u7528\u6DFB\u52A0\u5230\u6ED1\u5757\u5BF9\u8C61\u4E0A\u7684\u201C\u65B0\u95FB\u6ED1\u5757\u201D\u7EC4\u4EF6\u8F7B\u677E\u6DFB\u52A0\u65B0\u7684\u6ED1\u5757\u9879\u76EE\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: AchievementHiddenTitle
+      value: "\u9690\u85CF\u7684\u6210\u5C31"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: AchievementHiddenDesc
+      value: "\u8FD9\u662F\u4E00\u4E2A\u9690\u85CF\u7684\u6210\u5C31,\u5FC5\u987B\u89E3\u9501\u540E\u624D\u80FD\u9884\u89C8\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: AchievementSampleTitle
+      value: "\u793A\u4F8B\u6210\u5C31"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: AchievementSampleDesc
+      value: "\u8FD9\u662F\u4E00\u4E2A\u4E3A\u6F14\u793A\u76EE\u7684\u5236\u4F5C\u7684\u793A\u4F8B\u6210\u5C31\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: DiscordDescription
+      value: "\u5728Discord\u4E0A\u52A0\u5165\u6211\u4EEC"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: TwitterDescription
+      value: "\u5728Twitter\u4E0A\u5173\u6CE8\u6211\u4EEC"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ChapterContinue
+      value: "\u7EE7\u7EED"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ChapterPlay
+      value: "\u73A9\u6CD5"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ChapterReplay
+      value: "\u91CD\u64AD"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ChapterCompleted
+      value: "\u5B8C\u6210"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ChapterUnlocked
+      value: "\u5DF2\u89E3\u9501"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ChapterLocked
+      value: "\u9501\u5B9A"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: Chapter1Title
+      value: "\u7B2C1\u7AE0"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: Chapter1Description
+      value: "\u8FD9\u662F\u4E00\u4E2A\u63CF\u8FF0\u5B57\u6BB5\u3002\u60A8\u53EF\u4EE5\u5728\u8FD9\u91CC\u8C08\u8BBA\u6709\u5173\u7AE0\u8282\u7684\u4E8B\u60C5\u3002\u8FD9\u662F\u4E00\u4E2A\u591A\u884C\u5B57\u6BB5,\u4F1A\u6839\u636E\u5176\u5185\u5BB9\u81EA\u52A8\u8C03\u6574\u5927\u5C0F\u3002\u60A8\u8FD8\u53EF\u4EE5\u4F7F\u7528\u4EFB\u4F55TMP\u652F\u6301\u7684\u5BCC\u6587\u672C\u3002\u60A8\u53EF\u4EE5\u4F7F\u7528\u201C\u7AE0\u8282\u7BA1\u7406\u5668\u201D\u7EC4\u4EF6\u5BF9\u7AE0\u8282\u9762\u677F\u8FDB\u884C\u4EFB\u4F55\u66F4\u6539\u3002\u522B\u62C5\u5FC3,\u5B83\u771F\u7684\u5F88\u5BB9\u6613\u4F7F\u7528!"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: Chapter2Title
+      value: "\u7B2C2\u7AE0"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: Chapter2Description
+      value: "\u8FD9\u662F\u4E00\u4E2A\u63CF\u8FF0\u5B57\u6BB5\u3002\u60A8\u53EF\u4EE5\u5728\u8FD9\u91CC\u8C08\u8BBA\u6709\u5173\u7AE0\u8282\u7684\u4E8B\u60C5\u3002\u8FD9\u662F\u4E00\u4E2A\u591A\u884C\u5B57\u6BB5,\u4F1A\u6839\u636E\u5176\u5185\u5BB9\u81EA\u52A8\u8C03\u6574\u5927\u5C0F\u3002\u60A8\u8FD8\u53EF\u4EE5\u4F7F\u7528\u4EFB\u4F55TMP\u652F\u6301\u7684\u5BCC\u6587\u672C\u3002\u60A8\u53EF\u4EE5\u4F7F\u7528\u201C\u7AE0\u8282\u7BA1\u7406\u5668\u201D\u7EC4\u4EF6\u5BF9\u7AE0\u8282\u9762\u677F\u8FDB\u884C\u4EFB\u4F55\u66F4\u6539\u3002\u522B\u62C5\u5FC3,\u5B83\u771F\u7684\u5F88\u5BB9\u6613\u4F7F\u7528!"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: Chapter3Title
+      value: "\u7B2C3\u7AE0"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: Chapter3Description
+      value: "\u8FD9\u662F\u4E00\u4E2A\u63CF\u8FF0\u5B57\u6BB5\u3002\u60A8\u53EF\u4EE5\u5728\u8FD9\u91CC\u8C08\u8BBA\u6709\u5173\u7AE0\u8282\u7684\u4E8B\u60C5\u3002\u8FD9\u662F\u4E00\u4E2A\u591A\u884C\u5B57\u6BB5,\u4F1A\u6839\u636E\u5176\u5185\u5BB9\u81EA\u52A8\u8C03\u6574\u5927\u5C0F\u3002\u60A8\u8FD8\u53EF\u4EE5\u4F7F\u7528\u4EFB\u4F55TMP\u652F\u6301\u7684\u5BCC\u6587\u672C\u3002\u60A8\u53EF\u4EE5\u4F7F\u7528\u201C\u7AE0\u8282\u7BA1\u7406\u5668\u201D\u7EC4\u4EF6\u5BF9\u7AE0\u8282\u9762\u677F\u8FDB\u884C\u4EFB\u4F55\u66F4\u6539\u3002\u522B\u62C5\u5FC3,\u5B83\u771F\u7684\u5F88\u5BB9\u6613\u4F7F\u7528!"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: Chapter4Title
+      value: "\u7B2C4\u7AE0"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: Chapter4Description
+      value: "\u8FD9\u662F\u4E00\u4E2A\u63CF\u8FF0\u5B57\u6BB5\u3002\u60A8\u53EF\u4EE5\u5728\u8FD9\u91CC\u8C08\u8BBA\u6709\u5173\u7AE0\u8282\u7684\u4E8B\u60C5\u3002\u8FD9\u662F\u4E00\u4E2A\u591A\u884C\u5B57\u6BB5,\u4F1A\u6839\u636E\u5176\u5185\u5BB9\u81EA\u52A8\u8C03\u6574\u5927\u5C0F\u3002\u60A8\u8FD8\u53EF\u4EE5\u4F7F\u7528\u4EFB\u4F55TMP\u652F\u6301\u7684\u5BCC\u6587\u672C\u3002\u60A8\u53EF\u4EE5\u4F7F\u7528\u201C\u7AE0\u8282\u7BA1\u7406\u5668\u201D\u7EC4\u4EF6\u5BF9\u7AE0\u8282\u9762\u677F\u8FDB\u884C\u4EFB\u4F55\u66F4\u6539\u3002\u522B\u62C5\u5FC3,\u5B83\u771F\u7684\u5F88\u5BB9\u6613\u4F7F\u7528!"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ButtonCancel
+      value: "\u53D6\u6D88"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ButtonConfirm
+      value: "\u786E\u8BA4"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ExitModalDescription
+      value: "\u60A8\u786E\u5B9A\u8981\u9000\u51FA\u5417?\u6B64\u64CD\u4F5C\u65E0\u6CD5\u64A4\u6D88\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: LabelOn
+      value: "\u5F00"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: LabelOff
+      value: "\u5173"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: CreditsTitle
+      value: "\u9E23\u8C22"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: SelectLabel
+      value: "\u9009\u62E9"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: NavigateLabel
+      value: "\u5BFC\u822A"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: PrevChapterLabel
+      value: "\u4E0A\u4E00\u7AE0"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: NextChapterLabel
+      value: "\u4E0B\u4E00\u7AE0"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: GoBackLabel
+      value: "\u8FD4\u56DE"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: PrevCategoryLabel
+      value: "\u4E0A\u4E00\u7C7B\u522B"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: NextCategoryLabel
+      value: "\u4E0B\u4E00\u7C7B\u522B"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: BoostCreditsLabel
+      value: "\u589E\u52A0(\u6309\u4F4F)"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: CloseLabel
+      value: "\u5173\u95ED"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ControllerLayoutTitle
+      value: "\u63A7\u5236\u5668\u5E03\u5C40"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: CreditsVoiceover
+      value: "\u914D\u97F3"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: CreditsCreatedBy
+      value: "\u5236\u4F5C"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: CreditsArtDesign
+      value: "\u7F8E\u672F\u8BBE\u8BA1"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: CreditsProgrammer
+      value: "\u7A0B\u5E8F"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: CreditsSoundDesign
+      value: "\u58F0\u97F3\u8BBE\u8BA1"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: CreditsConceptArtist
+      value: "\u6982\u5FF5\u8BBE\u8BA1"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: CreditsVFXArtist
+      value: "\u89C6\u89C9\u7279\u6548"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: CreditsUI
+      value: "\u7528\u6237\u754C\u9762"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: CreditsPlaytesters
+      value: "\u6E38\u620F\u6D4B\u8BD5"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: WebsiteDescription
+      value: "\u67E5\u770B\u6211\u4EEC\u7684\u7F51\u7AD9"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: RedditDescription
+      value: "\u5728Reddit\u4E0A\u5173\u6CE8\u6211\u4EEC"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: YouTubeDescription
+      value: "\u5728YouTube\u4E0A\u8BA2\u9605\u6211\u4EEC"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: EnableHintsLabel
+      value: "\u542F\u7528\u63D0\u793A"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: EnableTutorialsLabel
+      value: "\u542F\u7528\u6559\u7A0B"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: UIScaleLabel
+      value: "UI\u7F29\u653E"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: SubtitleScaleLabel
+      value: "\u5B57\u5E55\u7F29\u653E"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: EnableSubtitlesLabel
+      value: "\u542F\u7528\u5B57\u5E55"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: VolumeHeader
+      value: "\u97F3\u91CF"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: MasterVolumeLabel
+      value: "\u4E3B\u97F3\u91CF"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: MusicVolumeLabel
+      value: "\u97F3\u4E50\u97F3\u91CF"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: SFXVolumeLabel
+      value: "\u97F3\u6548\u97F3\u91CF"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: UIVolumeLabel
+      value: "UI\u97F3\u91CF"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: DisplayHeader
+      value: "\u663E\u793A"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ResolutionLabel
+      value: "\u5206\u8FA8\u7387"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: EnableHintsDesc
+      value: "\u7B2C\u4E00\u6B21\u73A9?\u60F3\u5B66\u4E60\u4E00\u4E9B\u65B0\u4E1C\u897F\u5417?\u5982\u679C\u662F,\u5219\u53EF\u4EE5\u542F\u7528\u6B64\u529F\u80FD\u3002\n*\u8FD9\u662F\u4E00\u4E2A\u975E\u529F\u80FD\u6027\u5360\u4F4D\u7B26\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: EnableSubtitlesDesc
+      value: "\u5728\u5C4F\u5E55\u4E0A\u770B\u5230\u4EBA\u4EEC\u5728\u8BF4\u4EC0\u4E48\u3002\n*\u8FD9\u662F\u4E00\u4E2A\u975E\u529F\u80FD\u6027\u5360\u4F4D\u7B26\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: LanguageDesc
+      value: "\u9009\u62E9\u60A8\u559C\u6B22\u7684\u8BED\u8A00\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: UIScaleDesc
+      value: "\u592A\u5927?\u592A\u5C0F?\u8FD9\u5C31\u662F\u5979\u8BF4\u7684\u8BDD?\u597D\u5427,\u4F60\u53EF\u4EE5\u5728\u8FD9\u91CC\u7BA1\u7406UI\u5927\u5C0F\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: SubtitleScaleDesc
+      value: "\u592A\u5927?\u592A\u5C0F?\u8FD9\u5C31\u662F\u5979\u8BF4\u7684\u8BDD?\u597D\u5427,\u4F60\u53EF\u4EE5\u5728\u8FD9\u91CC\u7BA1\u7406\u5B57\u5E55\u5927\u5C0F\u3002\n*\u8FD9\u662F\u4E00\u4E2A\u975E\u529F\u80FD\u6027\u5360\u4F4D\u7B26\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: MasterVolumeDesc
+      value: "\u5982\u679C\u8981\u589E\u52A0\u6216\u51CF\u5C0F\u6E38\u620F\u7684\u6574\u4F53\u97F3\u91CF,\u53EF\u4EE5\u4F7F\u7528\u6B64\u6ED1\u5757\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: MusicVolumeDesc
+      value: "\u5982\u679C\u8981\u589E\u52A0\u6216\u51CF\u5C0F\u6E38\u620F\u7684\u97F3\u4E50\u97F3\u91CF,\u53EF\u4EE5\u4F7F\u7528\u6B64\u6ED1\u5757\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: SFXVolumeDesc
+      value: "\u5982\u679C\u8981\u589E\u52A0\u6216\u51CF\u5C0F\u6E38\u620F\u7684\u97F3\u6548\u97F3\u91CF,\u53EF\u4EE5\u4F7F\u7528\u6B64\u6ED1\u5757\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: UIVolumeDesc
+      value: "\u5982\u679C\u8981\u589E\u52A0\u6216\u51CF\u5C0F\u6E38\u620F\u7684UI\u97F3\u91CF,\u53EF\u4EE5\u4F7F\u7528\u6B64\u6ED1\u5757\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ResolutionDesc
+      value: "\u66F4\u9AD8\u5206\u8FA8\u7387\u7684\u5C4F\u5E55\u80FD\u591F\u4EA7\u751F\u66F4\u6E05\u6670\u3001\u66F4\u6E05\u695A\u3001\u66F4\u7EC6\u81F4\u7684\u56FE\u50CF\u3002\u60A8\u53EF\u4EE5\u9009\u62E9\u4EFB\u4F55\u6240\u9700\u7684\u5206\u8FA8\u7387\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: SettingsDesc
+      value: "\u8C03\u6574\u4E00\u4E9B\u9009\u9879,\u4F7F\u60A8\u7684\u6E38\u620F\u4F53\u9A8C\u66F4\u51FA\u8272!\u60A8\u53EF\u4EE5\u4F7F\u7528\u9876\u90E8\u7684\u6309\u94AE\u5728\u7C7B\u522B\u4E4B\u95F4\u5207\u6362\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: VSyncLabel
+      value: "\u5782\u76F4\u540C\u6B65"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: VSyncDesc
+      value: "\u5782\u76F4\u540C\u6B65\u662F\u4E00\u79CD\u56FE\u5F62\u6280\u672F,\u5B83\u4F7F\u6E38\u620F\u7684\u5E27\u7387\u4E0E\u76D1\u89C6\u5668\u7684\u5237\u65B0\u7387\u540C\u6B65,\u4ECE\u800C\u4E3A\u9700\u8981\u5927\u91CF\u56FE\u50CF\u5904\u7406\u76843D\u6E38\u620F\u63D0\u4F9B\u5E73\u6ED1\u3001\u8FDE\u7EED\u7684\u6E38\u620F\u4F53\u9A8C\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: FrameRateLabel
+      value: "\u5C4F\u5E55\u5237\u65B0\u7387"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: FrameRateDesc
+      value: "\u9650\u5236\u753B\u9762\u5237\u65B0\u7387\u3002\u5EFA\u8BAE\u5C06\u6B64\u9009\u9879\u4E0E\u76D1\u89C6\u5668\u7684\u5237\u65B0\u7387\u5339\u914D\u3002\u8BF7\u6CE8\u610F,\u5F53\u5782\u76F4\u540C\u6B65\u542F\u7528\u65F6,\u6B64\u9009\u9879\u65E0\u6548\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: FrameRateUnlimited
+      value: "\u65E0\u9650"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: WindowModeLabel
+      value: "\u7A97\u53E3\u6A21\u5F0F"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: WindowModeDesc
+      value: "\u9009\u62E9\u9996\u9009\u7A97\u53E3\u6A21\u5F0F\u3002\u5982\u679C\u60A8\u9047\u5230\u8F93\u5165\u5EF6\u8FDF,\u53EF\u4EE5\u5C1D\u8BD5<b>\u5168\u5C4F</b>\u6A21\u5F0F\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: BorderlessLabel
+      value: "\u65E0\u8FB9\u6846"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: FullscreenLabel
+      value: "\u5168\u5C4F"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: WindowedLabel
+      value: "\u7A97\u53E3"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: CreditsLogoDescription
+      value: "\u8FD9\u91CC\u662F\u9009\u586B\u7684\u811A\u6CE8\u3002\n\u60A8\u53EF\u4EE5\u5728\u6B64\u5904\u6DFB\u52A0\u5176\u4ED6\u4FE1\u606F\u6216\u8BB8\u53EF\u8BC1\u8BE6\u7EC6\u4FE1\u606F\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: AccessibilityTitle
+      value: "\u65E0\u969C\u788D\u529F\u80FD"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: SearchLabel
+      value: "\u641C\u7D22"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: CancelSearchLabel
+      value: "\u53D6\u6D88\u641C\u7D22"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: GameModeLabel
+      value: "\u6E38\u620F\u6A21\u5F0F"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: PlayLabel
+      value: "\u73A9"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: SearchingLabel
+      value: "\u641C\u7D22\u4E2D......"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: PauseMenuContinue
+      value: "\u7EE7\u7EED"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ExitMainMenuTitle
+      value: "\u9000\u51FA\u5230\u4E3B\u83DC\u5355"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ExitMainMenuDescription
+      value: "\u60A8\u786E\u5B9A\u8981\u9000\u51FA\u5230\u4E3B\u83DC\u5355\u5417?\n\u4EFB\u4F55\u672A\u4FDD\u5B58\u7684\u8FDB\u5EA6\u90FD\u5C06\u4E22\u5931\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: QuestTextSample
+      value: "\u4EFB\u52A1\u63CF\u8FF0\u793A\u4F8B"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: NotificationTextSample
+      value: "\u5B8C\u6210\u4EFB\u52A1 <b>[+50 \u7ECF\u9A8C]</b>"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: PausedLabel
+      value: "\u5DF2\u6682\u505C"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: TextureQualityLabel
+      value: "\u7EB9\u7406\u8D28\u91CF"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: TextureQualityDesc
+      value: "\u66F4\u9AD8\u8D28\u91CF\u7684\u7EB9\u7406\u4F1A\u4EA7\u751F\u66F4\u6DF1\u5165\u7684\u7EC6\u8282,\u4F46\u4E5F\u9700\u8981\u66F4\u591A\u7684VRAM\u548C\u89C6\u9891\u5904\u7406\u786C\u4EF6\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: SettingsGraphicsLow
+      value: "\u4F4E"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: SettingsGraphicsMedium
+      value: "\u4E2D"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: SettingsGraphicsHigh
+      value: "\u9AD8"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: SettingsGraphicsUltra
+      value: "\u6781\u9AD8"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: AnisotropicFilteringLabel
+      value: "\u5404\u5411\u5F02\u6027\u8FC7\u6EE4"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: AnisotropicFilteringDesc
+      value: "\u7EB9\u7406\u8FC7\u6EE4\u4F7F\u6E38\u620F\u4E2D\u8FDC\u5904\u7684\u7269\u4F53\u770B\u8D77\u6765\u66F4\u6E05\u6670\u3002\u5B83\u901A\u8FC7\u6539\u5584\u7EB9\u7406\u5728\u9661\u89D2\u5EA6\u4E0B\u7684\u5916\u89C2\u6765\u5DE5\u4F5C\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: CamAndPlayerLabel
+      value: "\u6444\u50CF\u5934\u548C\u73A9\u5BB6"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: CamSensitivityLabel
+      value: "\u6444\u50CF\u5934\u7075\u654F\u5EA6"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: CamSensitivityDesc
+      value: "\u8C03\u6574\u6444\u50CF\u5934\u7075\u654F\u5EA6\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: SprintModeLabel
+      value: "\u75BE\u8DD1\u6A21\u5F0F"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: SprintModeLabelDesc
+      value: "\u8BBE\u7F6E\u662F\u8981\u901A\u8FC7\u6309\u4F4F\u6309\u94AE\u8FD8\u662F\u5207\u6362\u6765\u75BE\u8DD1\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: SprintToggleLabel
+      value: "\u5207\u6362"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: SprintHoldLabel
+      value: "\u6309\u4F4F"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ReverseLookLabel
+      value: "\u53CD\u5411\u67E5\u770B"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ReverseLookDesc
+      value: "\u542F\u7528\u65F6\u53CD\u8F6C\u6444\u50CF\u5934\u89C6\u89D2\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: KeyBindingsHeader
+      value: "\u6309\u952E\u7ED1\u5B9A"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: AdvancedHeader
+      value: "\u9AD8\u7EA7"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ScrollLabel
+      value: "\u6EDA\u52A8"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: LobbyLabel
+      value: "\u5927\u5385"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ReadyLabel
+      value: "\u5C31\u7EEA"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: NotReadyLabel
+      value: "\u672A\u5C31\u7EEA"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: UnreadyLabel
+      value: "\u53D6\u6D88\u5C31\u7EEA"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: PAK_Touchscreen
+      value: "\u89E6\u6478\u5C4F"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: PrevPageLabel
+      value: "\u4E0A\u4E00\u9875"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: NextPageLabel
+      value: "\u4E0B\u4E00\u9875"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: NewGameTitle
+      value: New Game
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: NewGameModalDescription
+      value: "\u60A8\u786E\u5B9A\u8981\u5F00\u59CB\u65B0\u7684\u6E38\u620F\u5417?\n\u8FD9\u5C06\u4F1A\u8986\u76D6\u60A8\u7684\u81EA\u52A8\u4FDD\u5B58\u3002"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: HomeTitle
+      value: "\u9996\u9875"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ChaptersTitle
+      value: "\u7AE0\u8282"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ShopTitle
+      value: "\u5546\u5E97"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ContinueTitle
+      value: "\u7EE7\u7EED\u6E38\u620F"
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ContinueDescription
+      value: Continue your journey
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: NewGameTitle
+      value: New Game
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: NewGameDescription
+      value: A fresh start
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: LoadGameTitle
+      value: Load Game
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: LoadGameDescription
+      value: Load your saved game
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: AchievementsDescription
+      value: See the achievement library
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ControllerLayoutDescription
+      value: See the controller mapping
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: CreditsDescription
+      value: People who made the game
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: PurchasedLabel
+      value: Purchased
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: PurchaseLabel
+      value: Purchase
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: PurchaseItemTitle
+      value: Purchase Item
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: PurchaseItemDescription
+      value: Are you sure you want to buy the item?
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: SampleShopItemTitle
+      value: Sample Title
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: SampleShopItemDescription
+      value: Shop button description here. Supports multi-line.
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: WeaponsTitle
+      value: Weapons
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: ClothesTitle
+      value: Clothes
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: VehiclesTitle
+      value: Vehicles
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}
+    - key: LoadTitle
+      value: Load
+      audioValue: {fileID: 0}
+      spriteValue: {fileID: 0}

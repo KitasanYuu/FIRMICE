@@ -15,7 +15,8 @@ MonoBehaviour:
   codeSnippetsFile: {fileID: 11500000, guid: 63b4a4613ea159c41ad5e91988bf2ea6, type: 3}
   codeSnippets: "using System;\r\nusing System.Collections.Generic;\r\nusing UnityEngine;\r\nusing
     Debug = UnityEngine.Debug;\r\nusing Object = UnityEngine.Object;\r\nusing RangeAttribute
-    = UnityEngine.RangeAttribute;\r\n\r\nnamespace CustomInspector.Documentation\r\n{\r\n   
+    = UnityEngine.RangeAttribute;\r\n\r\n#pragma warning disable 0618\r\n#pragma
+    warning disable 0649\r\n\r\nnamespace CustomInspector.Documentation\r\n{\r\n   
     [System.Serializable]\r\n    public class CodeSnippets\r\n    {\r\n#pragma warning
     disable IDE0090 // Use 'new(...)'\r\n#pragma warning disable CS0414\r\n#pragma
     warning disable IDE0052 // Remove unread private members\r\n#pragma warning disable
@@ -609,158 +610,158 @@ MonoBehaviour:
       editor_input: 0
     values:
       list:
-      - start: 1253
-        end: 2390
-      - start: 2559
-        end: 2754
-      - start: 2934
-        end: 3164
-      - start: 3364
-        end: 3815
-      - start: 3979
-        end: 4611
-      - start: 4787
-        end: 5260
-      - start: 5434
-        end: 5681
-      - start: 5853
-        end: 6179
-      - start: 6397
-        end: 6657
-      - start: 6844
-        end: 6972
-      - start: 7143
-        end: 7439
-      - start: 7615
-        end: 8486
-      - start: 8650
-        end: 9406
-      - start: 9578
-        end: 10179
-      - start: 10355
-        end: 10812
-      - start: 10968
-        end: 11287
-      - start: 11487
-        end: 13160
-      - start: 13356
-        end: 14028
-      - start: 14194
-        end: 14503
-      - start: 14695
-        end: 15007
-      - start: 15199
-        end: 15630
-      - start: 15790
-        end: 15990
-      - start: 16146
-        end: 17384
-      - start: 17536
-        end: 18017
-      - start: 18197
-        end: 18561
-      - start: 18717
-        end: 19137
-      - start: 19317
-        end: 19539
-      - start: 19707
-        end: 20029
-      - start: 20213
-        end: 20935
-      - start: 21107
-        end: 21682
-      - start: 21866
-        end: 22310
-      - start: 22482
-        end: 22871
-      - start: 23108
-        end: 23492
-      - start: 23933
-        end: 24292
-      - start: 24456
-        end: 26503
-      - start: 26675
-        end: 26859
-      - start: 27043
-        end: 27226
-      - start: 27402
-        end: 28367
-      - start: 28547
-        end: 28842
-      - start: 29030
-        end: 29326
-      - start: 29490
-        end: 29656
-      - start: 29812
-        end: 30278
-      - start: 30430
-        end: 30502
-      - start: 30662
-        end: 31237
-      - start: 31405
-        end: 31783
-      - start: 31963
-        end: 32174
-      - start: 32338
-        end: 32503
-      - start: 32659
-        end: 32800
-      - start: 32964
-        end: 33397
-      - start: 33549
-        end: 33826
-      - start: 33998
-        end: 34333
-      - start: 34608
-        end: 34770
-      - start: 34929
-        end: 35641
-      - start: 35777
-        end: 36200
-      - start: 36344
-        end: 37003
-      - start: 37143
-        end: 37602
-      - start: 37758
-        end: 38213
-      - start: 38401
-        end: 38735
-      - start: 38919
-        end: 39332
-      - start: 39524
-        end: 40919
-      - start: 41135
-        end: 41577
-      - start: 41741
-        end: 42890
-      - start: 43078
-        end: 43432
-      - start: 44047
-        end: 44210
-      - start: 43590
-        end: 43875
-      - start: 44521
-        end: 44847
-      - start: 45013
-        end: 45196
-      - start: 45396
-        end: 45749
-      - start: 45901
-        end: 46031
-      - start: 46207
-        end: 46275
-      - start: 46471
-        end: 46603
-      - start: 46795
-        end: 47056
-      - start: 47216
-        end: 47293
-      - start: 47454
-        end: 47567
-      - start: 47736
-        end: 48047
-      - start: 48220
-        end: 48374
+      - start: 1315
+        end: 2452
+      - start: 2621
+        end: 2816
+      - start: 2996
+        end: 3226
+      - start: 3426
+        end: 3877
+      - start: 4041
+        end: 4673
+      - start: 4849
+        end: 5322
+      - start: 5496
+        end: 5743
+      - start: 5915
+        end: 6241
+      - start: 6459
+        end: 6719
+      - start: 6906
+        end: 7034
+      - start: 7205
+        end: 7501
+      - start: 7677
+        end: 8548
+      - start: 8712
+        end: 9468
+      - start: 9640
+        end: 10241
+      - start: 10417
+        end: 10874
+      - start: 11030
+        end: 11349
+      - start: 11549
+        end: 13222
+      - start: 13418
+        end: 14090
+      - start: 14256
+        end: 14565
+      - start: 14757
+        end: 15069
+      - start: 15261
+        end: 15692
+      - start: 15852
+        end: 16052
+      - start: 16208
+        end: 17446
+      - start: 17598
+        end: 18079
+      - start: 18259
+        end: 18623
+      - start: 18779
+        end: 19199
+      - start: 19379
+        end: 19601
+      - start: 19769
+        end: 20091
+      - start: 20275
+        end: 20997
+      - start: 21169
+        end: 21744
+      - start: 21928
+        end: 22372
+      - start: 22544
+        end: 22933
+      - start: 23170
+        end: 23554
+      - start: 23995
+        end: 24354
+      - start: 24518
+        end: 26565
+      - start: 26737
+        end: 26921
+      - start: 27105
+        end: 27288
+      - start: 27464
+        end: 28429
+      - start: 28609
+        end: 28904
+      - start: 29092
+        end: 29388
+      - start: 29552
+        end: 29718
+      - start: 29874
+        end: 30340
+      - start: 30492
+        end: 30564
+      - start: 30724
+        end: 31299
+      - start: 31467
+        end: 31845
+      - start: 32025
+        end: 32236
+      - start: 32400
+        end: 32565
+      - start: 32721
+        end: 32862
+      - start: 33026
+        end: 33459
+      - start: 33611
+        end: 33888
+      - start: 34060
+        end: 34395
+      - start: 34670
+        end: 34832
+      - start: 34991
+        end: 35703
+      - start: 35839
+        end: 36262
+      - start: 36406
+        end: 37065
+      - start: 37205
+        end: 37664
+      - start: 37820
+        end: 38275
+      - start: 38463
+        end: 38797
+      - start: 38981
+        end: 39394
+      - start: 39586
+        end: 40981
+      - start: 41197
+        end: 41639
+      - start: 41803
+        end: 42952
+      - start: 43140
+        end: 43494
+      - start: 44109
+        end: 44272
+      - start: 43652
+        end: 43937
+      - start: 44583
+        end: 44909
+      - start: 45075
+        end: 45258
+      - start: 45458
+        end: 45811
+      - start: 45963
+        end: 46093
+      - start: 46269
+        end: 46337
+      - start: 46533
+        end: 46665
+      - start: 46857
+        end: 47118
+      - start: 47278
+        end: 47355
+      - start: 47516
+        end: 47629
+      - start: 47798
+        end: 48109
+      - start: 48282
+        end: 48436
     editor_keyInput: 0
     editor_valueInput:
       start: 0
