@@ -101,10 +101,10 @@ MonoBehaviour:
     public string name;\r\n}\r\n\r\n[SerializeField] FoldoutAttributeExamples foldoutAttributeExamples
     = new FoldoutAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass FoldoutAttributeExamples\r\n{  
     \r\n    [MessageBox(\"Please fill the 'scriptable1'-value and then click the
-    foldout to edit its values.\", MessageBoxType.Info)]\r\n    [Foldout]\r\n   
-    public ScriptableObject scriptable1;\r\n\r\n    [MessageBox(\"This is the default
-    display.\", MessageBoxType.Info)]\r\n    public ScriptableObject scriptable2;\r\n}\r\n\r\n[SerializeField]
-    ForceFillAttributeExamples forceFillAttributeExamples = new ForceFillAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
+    foldout to edit its values.\", MessageBoxType.Info)]\r\n    public ScriptableObject
+    scriptable1;\r\n\r\n    [MessageBox(\"This is the default display.\", MessageBoxType.Info)]\r\n   
+    public ScriptableObject scriptable2;\r\n}\r\n\r\n[SerializeField] ForceFillAttributeExamples
+    forceFillAttributeExamples = new ForceFillAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
     ForceFillAttributeExamples\r\n{\r\n    [ForceFill] public GameObject gob1;\r\n\r\n   
     [ForceFill, SerializeField]\r\n    string s2 = \"Make this String Empty.\";\r\n\r\n   
     [ForceFill(\"<undefined>\",\r\n               \"empty\", \"Empty\",\r\n              
@@ -373,10 +373,9 @@ MonoBehaviour:
     [Button(nameof(MyMethod))]\r\n    [Button(nameof(MyMethod))]\r\n\r\n    public
     bool _;\r\n\r\n    void MyMethod() { }\r\n}\r\n\r\n\r\n\r\n[SerializeField] TabAttributeExamples
     tabAttributeExamples = new TabAttributeExamples();\r\n\r\n[System.Serializable]\r\nclass
-    TabAttributeExamples\r\n{\r\n    [Tab(\"Inventory\")] public GameObject item;\r\n   
-    [Tab(\"Inventory\"), Min(0)] public float weight;\r\n    \r\n    [Tab(\"Stats\"),
-    Unwrap]\r\n    public Stats stats;\r\n\r\n    [Tab(InspectorIcon.Settings)]\r\n   
-    public float size;\r\n\r\n    [System.Serializable]\r\n    public class Stats\r\n   
+    TabAttributeExamples\r\n{\r\n    public GameObject item;\r\n    public float
+    weight;\r\n    \r\n    \r\n    public Stats stats;\r\n\r\n    \r\n    public
+    float size;\r\n\r\n    [System.Serializable]\r\n    public class Stats\r\n   
     {\r\n        [ProgressBar(100)]\r\n        public int health = 79;\r\n       
     [ProgressBar(1)]\r\n        public float stamina = 1;\r\n        [Min(.01f)]\r\n       
     public float speed = 1.3f;\r\n    }\r\n}\r\n\r\n[SerializeField] TagAttributeExamples
@@ -631,137 +630,137 @@ MonoBehaviour:
       - start: 6906
         end: 7034
       - start: 7205
-        end: 7501
-      - start: 7677
-        end: 8548
-      - start: 8712
-        end: 9468
-      - start: 9640
-        end: 10241
-      - start: 10417
-        end: 10874
-      - start: 11030
-        end: 11349
-      - start: 11549
-        end: 13222
-      - start: 13418
-        end: 14090
-      - start: 14256
-        end: 14565
-      - start: 14757
-        end: 15069
-      - start: 15261
-        end: 15692
-      - start: 15852
-        end: 16052
-      - start: 16208
-        end: 17446
-      - start: 17598
-        end: 18079
-      - start: 18259
-        end: 18623
-      - start: 18779
-        end: 19199
-      - start: 19379
-        end: 19601
-      - start: 19769
-        end: 20091
-      - start: 20275
-        end: 20997
-      - start: 21169
-        end: 21744
-      - start: 21928
-        end: 22372
-      - start: 22544
-        end: 22933
-      - start: 23170
-        end: 23554
-      - start: 23995
-        end: 24354
-      - start: 24518
-        end: 26565
-      - start: 26737
-        end: 26921
-      - start: 27105
-        end: 27288
-      - start: 27464
-        end: 28429
-      - start: 28609
-        end: 28904
-      - start: 29092
-        end: 29388
-      - start: 29552
-        end: 29718
-      - start: 29874
-        end: 30340
-      - start: 30492
-        end: 30564
-      - start: 30724
-        end: 31299
-      - start: 31467
-        end: 31845
-      - start: 32025
-        end: 32236
-      - start: 32400
-        end: 32565
-      - start: 32721
-        end: 32862
-      - start: 33026
-        end: 33459
-      - start: 33611
-        end: 33888
-      - start: 34060
-        end: 34395
-      - start: 34670
-        end: 34832
-      - start: 34991
-        end: 35703
-      - start: 35839
-        end: 36262
-      - start: 36406
-        end: 37065
-      - start: 37205
-        end: 37664
-      - start: 37820
-        end: 38275
-      - start: 38463
-        end: 38797
-      - start: 38981
-        end: 39394
-      - start: 39586
-        end: 40981
-      - start: 41197
-        end: 41639
-      - start: 41803
-        end: 42952
-      - start: 43140
-        end: 43494
-      - start: 44109
-        end: 44272
-      - start: 43652
-        end: 43937
-      - start: 44583
-        end: 44909
-      - start: 45075
-        end: 45258
-      - start: 45458
-        end: 45811
-      - start: 45963
-        end: 46093
-      - start: 46269
-        end: 46337
-      - start: 46533
-        end: 46665
-      - start: 46857
-        end: 47118
-      - start: 47278
-        end: 47355
-      - start: 47516
-        end: 47629
-      - start: 47798
-        end: 48109
-      - start: 48282
-        end: 48436
+        end: 7486
+      - start: 7662
+        end: 8533
+      - start: 8697
+        end: 9453
+      - start: 9625
+        end: 10226
+      - start: 10402
+        end: 10859
+      - start: 11015
+        end: 11334
+      - start: 11534
+        end: 13207
+      - start: 13403
+        end: 14075
+      - start: 14241
+        end: 14550
+      - start: 14742
+        end: 15054
+      - start: 15246
+        end: 15677
+      - start: 15837
+        end: 16037
+      - start: 16193
+        end: 17431
+      - start: 17583
+        end: 18064
+      - start: 18244
+        end: 18608
+      - start: 18764
+        end: 19184
+      - start: 19364
+        end: 19586
+      - start: 19754
+        end: 20076
+      - start: 20260
+        end: 20982
+      - start: 21154
+        end: 21729
+      - start: 21913
+        end: 22357
+      - start: 22529
+        end: 22918
+      - start: 23155
+        end: 23539
+      - start: 23980
+        end: 24339
+      - start: 24503
+        end: 26550
+      - start: 26722
+        end: 26906
+      - start: 27090
+        end: 27273
+      - start: 27449
+        end: 28414
+      - start: 28594
+        end: 28889
+      - start: 29077
+        end: 29373
+      - start: 29537
+        end: 29703
+      - start: 29859
+        end: 30228
+      - start: 30380
+        end: 30452
+      - start: 30612
+        end: 31187
+      - start: 31355
+        end: 31733
+      - start: 31913
+        end: 32124
+      - start: 32288
+        end: 32453
+      - start: 32609
+        end: 32750
+      - start: 32914
+        end: 33347
+      - start: 33499
+        end: 33776
+      - start: 33948
+        end: 34283
+      - start: 34558
+        end: 34720
+      - start: 34879
+        end: 35591
+      - start: 35727
+        end: 36150
+      - start: 36294
+        end: 36953
+      - start: 37093
+        end: 37552
+      - start: 37708
+        end: 38163
+      - start: 38351
+        end: 38685
+      - start: 38869
+        end: 39282
+      - start: 39474
+        end: 40869
+      - start: 41085
+        end: 41527
+      - start: 41691
+        end: 42840
+      - start: 43028
+        end: 43382
+      - start: 43997
+        end: 44160
+      - start: 43540
+        end: 43825
+      - start: 44471
+        end: 44797
+      - start: 44963
+        end: 45146
+      - start: 45346
+        end: 45699
+      - start: 45851
+        end: 45981
+      - start: 46157
+        end: 46225
+      - start: 46421
+        end: 46553
+      - start: 46745
+        end: 47006
+      - start: 47166
+        end: 47243
+      - start: 47404
+        end: 47517
+      - start: 47686
+        end: 47997
+      - start: 48170
+        end: 48324
     editor_keyInput: 0
     editor_valueInput:
       start: 0
@@ -1122,7 +1121,7 @@ MonoBehaviour:
         assetReference: {fileID: 0}
       path3:
         path: Assets/Trash
-        assetReference: {fileID: 0}
+        assetReference: {fileID: 102900000, guid: cbf68bef4bba28c4d8703983580d472d, type: 3}
       path:
         path: Assets
         assetReference: {fileID: 102900000, guid: 00000000000000001000000000000000, type: 3}
