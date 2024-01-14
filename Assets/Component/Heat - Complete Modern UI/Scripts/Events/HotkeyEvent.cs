@@ -240,8 +240,14 @@ namespace Michsky.UI.Heat
                 return;
 
             StopCoroutine("SetHighlight");
-            StartCoroutine("SetNormal");
+
+            // 检查 'Extra' 游戏对象是否处于活动状态
+            if (gameObject.activeSelf)
+            {
+                StartCoroutine("SetNormal");
+            }
         }
+
 
         IEnumerator LayoutFix()
         {

@@ -282,7 +282,6 @@ class FixedValuesAttributeExamples
 class FoldoutAttributeExamples
 {   
     [MessageBox("Please fill the 'scriptable1'-value and then click the foldout to edit its values.", MessageBoxType.Info)]
-    [Foldout]
     public ScriptableObject scriptable1;
 
     [MessageBox("This is the default display.", MessageBoxType.Info)]
@@ -1112,13 +1111,13 @@ class Space2AttributeExamples
 [System.Serializable]
 class TabAttributeExamples
 {
-    [Tab("Inventory")] public GameObject item;
-    [Tab("Inventory"), Min(0)] public float weight;
+    public GameObject item;
+    public float weight;
     
-    [Tab("Stats"), Unwrap]
+    
     public Stats stats;
 
-    [Tab(InspectorIcon.Settings)]
+    
     public float size;
 
     [System.Serializable]

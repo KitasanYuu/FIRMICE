@@ -13,11 +13,6 @@ MonoBehaviour:
   m_Name: Localization Settings
   m_EditorClassIdentifier: 
   languages:
-  - languageID: CN
-    languageName: Chinese
-    localizedName: CN
-    localizationLanguage: {fileID: 11400000, guid: 5f51157cedd308d44804aee1c4b57f76, type: 2}
-    isExpanded: 1
   - languageID: en-US
     languageName: English
     localizedName: English (US)
@@ -28,6 +23,21 @@ MonoBehaviour:
     localizedName: Deutsch
     localizationLanguage: {fileID: 11400000, guid: 2a9a82013d1c09f42adc6f25c4631b63, type: 2}
     isExpanded: 1
+  - languageID: JP
+    languageName: Japanese
+    localizedName: "\u65E5\u672C\u8A9E"
+    localizationLanguage: {fileID: 11400000, guid: 7eb1d3ac2441da843b4edbf8e9052875, type: 2}
+    isExpanded: 1
+  - languageID: SimpleCN
+    languageName: SimpleChinese
+    localizedName: "\u7B80\u4F53\u4E2D\u6587"
+    localizationLanguage: {fileID: 11400000, guid: 5f51157cedd308d44804aee1c4b57f76, type: 2}
+    isExpanded: 1
+  - languageID: TraditionalCN
+    languageName: TraditionalChineses
+    localizedName: "\u7E41\u9AD4\u4E2D\u6587"
+    localizationLanguage: {fileID: 11400000, guid: 3d2315ad7cfb16e43bb6afc4540a5c4f, type: 2}
+    isExpanded: 1
   - languageID: tr-TR
     languageName: Turkish
     localizedName: "T\xFCrk\xE7e"
@@ -37,6 +47,6 @@ MonoBehaviour:
   - tableID: UI
     localizationTable: {fileID: 11400000, guid: c4d223e438e911a44aecec230da547ea, type: 2}
     isExpanded: 1
-  defaultLanguageID: Chinese (CN)
-  defaultLanguageIndex: 0
+  defaultLanguageID: SimpleChinese (SimpleCN)
+  defaultLanguageIndex: 3
   enableExperimental: 0
