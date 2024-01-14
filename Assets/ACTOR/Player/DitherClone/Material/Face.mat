@@ -204,6 +204,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Main2ndTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Main3rdBlendMask:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -527,6 +531,7 @@ Material:
     - _DstBlendAlphaFA: 1
     - _DstBlendFA: 1
     - _EMISSION: 1
+    - _EMISSION2: 0
     - _ENABLEALPHAREPLACE: 0
     - _ENABLEDISSOLVE: 0
     - _ENABLEDITHER: 1
@@ -620,6 +625,7 @@ Material:
     - _LightMaxLimit: 1
     - _LightMinLimit: 0.05
     - _LinkDetailsWithBase: 1
+    - _MAIN2NDCOLOR: 0
     - _MATCAP1: 0
     - _MATCAP2: 0
     - _Main2ndDissolveNoiseStrength: 0.1
@@ -945,7 +951,7 @@ Material:
     - _DistanceFadeColor: {r: 0, g: 0, b: 0, a: 1}
     - _DistanceFadeRimColor: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
-    - _EmColor: {r: 3.9533496, g: 2.1445057, b: 2.1445057, a: 1}
+    - _EmColor: {r: 0.1872549, g: 0.101576954, b: 0.101576954, a: 1}
     - _Emission2ndBlendMask_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
     - _Emission2ndBlink: {r: 0, g: 0, b: 3.141593, a: 0}
     - _Emission2ndColor: {r: 1, g: 1, b: 1, a: 1}
