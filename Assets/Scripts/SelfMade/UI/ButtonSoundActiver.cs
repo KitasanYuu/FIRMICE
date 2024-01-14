@@ -51,7 +51,7 @@ public class ButtonSoundActiver : MonoBehaviour
 
             // 这里可以对每个PanelButton进行其他操作
             // 例如输出它们的名称
-            Debug.Log("Found PanelButton: " + panelButton.name);
+            //Debug.Log("Found PanelButton: " + panelButton.name);
         }
 
         // 遍历所有BoxButtonManager组件
@@ -68,7 +68,7 @@ public class ButtonSoundActiver : MonoBehaviour
 
             // 这里可以对每个BoxButtonManager进行其他操作
             // 例如输出它们的名称
-            Debug.Log("Found BoxButtonManager: " + boxButtonManager.name);
+            //Debug.Log("Found BoxButtonManager: " + boxButtonManager.name);
         }
 
         // 遍历所有ButtonManager组件
@@ -85,7 +85,7 @@ public class ButtonSoundActiver : MonoBehaviour
 
             // 这里可以对每个ButtonManager进行其他操作
             // 例如输出它们的名称
-            Debug.Log("Found ButtonManager: " + buttonManager.name);
+            //Debug.Log("Found ButtonManager: " + buttonManager.name);
         }
     }
 

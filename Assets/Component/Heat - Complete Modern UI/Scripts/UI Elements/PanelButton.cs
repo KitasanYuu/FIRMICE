@@ -240,7 +240,7 @@ namespace Michsky.UI.Heat
 
             if (navbar != null) { navbar.LitButtons(this); }
 
-            Debug.Log(gameObject.activeSelf);
+            //Debug.Log(gameObject.activeSelf);
 
             // 检查 'Extra' 游戏对象是否处于活动状态
             if (gameObject.activeSelf)
