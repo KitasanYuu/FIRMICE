@@ -12,6 +12,7 @@ public class FontManager : MonoBehaviour
     [HorizontalLine(1, FixedColor.Yellow, 0)]
 
     public List<TMP_FontAsset> CNfontList = new List<TMP_FontAsset>();
+    public List<TMP_FontAsset> TCNfontList = new List<TMP_FontAsset>();
     public List<TMP_FontAsset> JPfontList = new List<TMP_FontAsset>();
     public List<TMP_FontAsset> GfontList = new List<TMP_FontAsset>();
 
@@ -27,6 +28,14 @@ public class FontManager : MonoBehaviour
     public TMP_FontAsset CNsemiboldFont;
     public TMP_FontAsset CNboldFont;
     public TMP_FontAsset CNcustomFont;
+
+    [Tab("TChinese")]
+    public TMP_FontAsset TCNlightFont;
+    public TMP_FontAsset TCNregularFont;
+    public TMP_FontAsset TCNmediumFont;
+    public TMP_FontAsset TCNsemiboldFont;
+    public TMP_FontAsset TCNboldFont;
+    public TMP_FontAsset TCNcustomFont;
 
     [Tab("Japanese")]
     public TMP_FontAsset JPlightFont;
@@ -55,6 +64,7 @@ public class FontManager : MonoBehaviour
     void Awake()
     {
         CNfontList.AddRange(new TMP_FontAsset[] { CNlightFont, CNregularFont, CNmediumFont, CNsemiboldFont, CNboldFont, CNcustomFont });
+        TCNfontList.AddRange(new TMP_FontAsset[] { TCNlightFont, TCNregularFont, TCNmediumFont, TCNsemiboldFont, TCNboldFont, TCNcustomFont });
         JPfontList.AddRange(new TMP_FontAsset[] { JPlightFont, JPregularFont, JPmediumFont, JPsemiboldFont, JPboldFont, JPcustomFont });
         GfontList.AddRange(new TMP_FontAsset[] { GlightFont, GregularFont, GmediumFont, GsemiboldFont, GboldFont, GcustomFont });
 
@@ -138,6 +148,8 @@ public class FontManager : MonoBehaviour
         {
             case "简体中文":
                 return CNfontList;
+            case "繁體中文":
+                return TCNfontList;
             case "日本語":
                 return JPfontList;
             default:
