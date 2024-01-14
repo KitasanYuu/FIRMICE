@@ -14,6 +14,7 @@ namespace TargetDirDetec
         public float rayLength = 1.0f; // 射线长度
         public Dictionary<CollisionSide, Vector3> directionToVector; // 方向和射线向量对应关系
 
+        [SerializeField]
         private HitOrNot hitornot;
 
         [HideInInspector]
@@ -26,18 +27,6 @@ namespace TargetDirDetec
 
         private void Awake()
         {
-            hitornot = ColliderContainer.GetComponent<HitOrNot>();
-            boxCollider = ColliderContainer.GetComponent<BoxCollider>();
-
-            if (boxCollider == null)
-            {
-                Debug.LogError("HitCollisionDetection:没有找到 Box Collider 组件！");
-            }
-            else
-            {
-                Debug.Log("HitCollisionDetection:方向受击检测初始化完成");
-            }
-
             // 初始化方向和射线向量对应关系
             directionToVector = new Dictionary<CollisionSide, Vector3>
             {
@@ -46,6 +35,21 @@ namespace TargetDirDetec
                 { CollisionSide.Left, Vector3.left },
                 { CollisionSide.Right, Vector3.right }
             };
+        }
+
+        private void Start()
+        {
+            if (boxCollider == null && hitornot != null)
+            {
+                Debug.LogError("HitCollisionDetection:没有找到 Box Collider 组件！");
+            }
+            else
+            {
+                Debug.Log("HitCollisionDetection:方向受击检测初始化完成");
+            }
+
+            hitornot = ColliderContainer.GetComponent<HitOrNot>();
+            boxCollider = ColliderContainer.GetComponent<BoxCollider>();
         }
 
         private void Update()
