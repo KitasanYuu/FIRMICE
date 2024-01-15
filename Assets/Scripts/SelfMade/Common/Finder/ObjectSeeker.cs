@@ -1,5 +1,5 @@
-using System;
 using UnityEngine;
+using CustomInspector;
 
 namespace TargetFinding
 {
@@ -10,7 +10,7 @@ namespace TargetFinding
         public LayerMask targetLayer;
         public string targetTag = "Player";
         //[HideInInspector]
-        public GameObject targetToFollow; // 用于存储找到的目标物体
+        [ReadOnly]public GameObject targetToFollow; // 用于存储找到的目标物体
 
         private void Update()
         {
