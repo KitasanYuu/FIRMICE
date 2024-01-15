@@ -1,14 +1,15 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using CustomInspector;
 
 namespace TestField
 {
     public class DetectionScript : MonoBehaviour
     {
         public bool foundTarget;
-        public GameObject targetContainer;
-        public LayerMask obstacleLayer; // 障碍物层
+        [ReadOnly]public GameObject targetContainer;
+        public LayerMask IgnoreLayer; // 障碍物层
 
         [Header("Customize Detection Area")]
         public bool syncRadiusWithRayLength = false; // 是否同步扇形的边长为射线长度
@@ -70,6 +71,7 @@ namespace TestField
 
                 // 计算朝向目标的标准化方向向量
                 Vector3 direction = (targetPosition - origin).normalized;
+                Vector3 RayDirection = (targetPosition - origin).normalized;
 
                 // 进行旋转
                 direction = Quaternion.Euler(0f, detectionRotation, 0f) * direction;
@@ -79,13 +81,16 @@ namespace TestField
 
                 // 检测是否在扇形区域内
                 float angle = Vector3.Angle(detectionDirection, direction);
+
+                //Debug.Log(angle);
+
                 if (angle <= detectionAngle * 0.5f)
                 {
                     // 发射射线到目标
-                    Ray ray = new Ray(origin, direction);
+                    Ray ray = new Ray(origin, RayDirection);
                     RaycastHit hit;
 
-                    if (Physics.Raycast(ray, out hit, currentRayLength, ~obstacleLayer))
+                    if (Physics.Raycast(ray, out hit, currentRayLength, ~IgnoreLayer))
                     {
                         // 获取命中目标的名称
                         string hitTargetName = hit.collider.gameObject.name;
@@ -113,6 +118,7 @@ namespace TestField
             }
         }
 
+#if UNITY_EDITOR
         // 在Scene视图中显示Gizmos
         private void OnDrawGizmos()
         {
@@ -126,8 +132,8 @@ namespace TestField
             Vector3 rightDirection = rightRotation * detectionDirection;
 
             // 进行旋转
-            leftDirection = Quaternion.Euler(0f, detectionRotation, 0f) * leftDirection;
-            rightDirection = Quaternion.Euler(0f, detectionRotation, 0f) * rightDirection;
+            leftDirection = Quaternion.Euler(0f, -detectionRotation, 0f) * leftDirection;
+            rightDirection = Quaternion.Euler(0f, -detectionRotation, 0f) * rightDirection;
 
             // 遍历目标列表
             foreach (GameObject targetObject in targets)
@@ -137,6 +143,7 @@ namespace TestField
 
                 // 计算朝向目标的标准化方向向量
                 Vector3 direction = (targetPosition - origin).normalized;
+                Vector3 RayDirection = (targetPosition - origin).normalized;
 
                 // 进行旋转
                 direction = Quaternion.Euler(0f, detectionRotation, 0f) * direction;
@@ -150,13 +157,13 @@ namespace TestField
                 {
                     // 在扇形区域内，绘制蓝色射线
                     Gizmos.color = Color.yellow;
-                    Gizmos.DrawLine(origin, origin + direction * currentRayLength);
+                    Gizmos.DrawLine(origin, origin + RayDirection * currentRayLength);
                 }
                 else
                 {
                     // 不在扇形区域内，绘制黄色射线
                     Gizmos.color = Color.blue;
-                    Gizmos.DrawLine(origin, origin + direction * currentRayLength);
+                    Gizmos.DrawLine(origin, origin + RayDirection * currentRayLength);
                 }
             }
 
@@ -178,5 +185,6 @@ namespace TestField
             Handles.DrawLine(origin, leftEdge);
             Handles.DrawLine(origin, rightEdge);
         }
+#endif
     }
 }
