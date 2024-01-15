@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
+#pragma warning disable 0618
+
 namespace Michsky.UI.Heat
 {
     public class ToolsMenu : Editor
