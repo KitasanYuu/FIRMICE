@@ -5,6 +5,7 @@ using CustomInspector;
 
 namespace TestField
 {
+    [RequireComponent(typeof(BroadCasterInfoContainer))]
     public class AlertLine : MonoBehaviour
     {
         public bool foundTarget;
@@ -23,6 +24,8 @@ namespace TestField
 
         private Vector3 detectionDirection = Vector3.forward; // 扇形的方向
         private TargetContainer targetcontainer;
+
+        private BroadCasterInfoContainer broadCasterinfocontainer;
 
         private bool notarget;
         private bool targetBroadCastFound;
@@ -46,8 +49,17 @@ namespace TestField
             }
         }
 
+        private void Awake()
+        {
+            // 获取 BroadCasterInfoContainer 组件
+            broadCasterinfocontainer = GetComponent<BroadCasterInfoContainer>();
+        }
+
         private void Start()
         {
+            // 订阅事件
+            broadCasterinfocontainer.TargetReceivedChanged += OnTargetReceivedChanged;
+
             Startinit();
         }
 
@@ -157,14 +169,23 @@ namespace TestField
             }
         }
 
-        public void TargetBoardCast(GameObject newtarget)
-        {
-            targetContainer = newtarget;
-            targetBroadCastFound = true;
-            //Debug.Log(targetContainer);
 
+        private void OnTargetReceivedChanged(GameObject newTarget)
+        {
+            // 在 TargetReceived 改变时执行的逻辑
+            Debug.Log("TargetReceived changed to: " + newTarget);
+            targetContainer = newTarget;
+            targetBroadCastFound = true;
         }
 
+        // 在脚本销毁时取消订阅事件，以防止潜在的内存泄漏
+        private void OnDestroy()
+        {
+            if (broadCasterinfocontainer != null)
+            {
+                broadCasterinfocontainer.TargetReceivedChanged -= OnTargetReceivedChanged;
+            }
+        }
 
 #if UNITY_EDITOR
         // 在Scene视图中显示Gizmos

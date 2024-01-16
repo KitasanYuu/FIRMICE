@@ -38,11 +38,11 @@ namespace TestField
         {
             foreach (GameObject receiverObject in BroadCastReceiver)
             {
-                AlertLine alertLine = receiverObject.GetComponent<AlertLine>();
-                if (alertLine != null)
+                BroadCasterInfoContainer broadcasterinfocontainer = receiverObject.GetComponent<BroadCasterInfoContainer>();
+                if (broadcasterinfocontainer != null)
                 {
                     // 直接调用 AlertLine 脚本中的 TargetBoardCast 方法，将 ObjectFound 传递给它
-                    alertLine.TargetBoardCast(ObjectFound);
+                    broadcasterinfocontainer.TargetBoardCast(ObjectFound);
                 }
             }
         }
