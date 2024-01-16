@@ -10,10 +10,11 @@ namespace TestField
     {
         public bool foundTarget;
         public bool Hitbutoutrange;
-        [ReadOnly]public GameObject targetContainer;
+        [ReadOnly] public GameObject targetContainer;
         public LayerMask IgnoreLayer; // 障碍物层
 
         [Header("Customize Detection Area")]
+        public Vector3 RayStarpointOffset;
         public bool syncRadiusWithRayLength = false; // 是否同步扇形的边长为射线长度
         public float detectionAngle = 45f; // 扇形的角度
         public float detectionRadius = 10.0f; // 扇形的半径
@@ -103,6 +104,8 @@ namespace TestField
 
                 // 获取当前位置
                 Vector3 origin = transform.position;
+                // 在起始位置上添加偏移量
+                origin += RayStarpointOffset;
 
                 // 遍历目标列表
                 foreach (GameObject targetObject in targetlist)
@@ -132,9 +135,6 @@ namespace TestField
 
                     if (Physics.Raycast(ray, out hit, currentRayLength, ~IgnoreLayer))
                     {
-                        // 获取命中目标的名称
-                        string hitTargetName = hit.collider.gameObject.name;
-
                         // 检查命中目标是否为 targetContainer 或者在列表中
                         if (hit.collider.gameObject == targetContainer || targetlist.Contains(hit.collider.gameObject))
                         {
@@ -162,7 +162,7 @@ namespace TestField
                     // 在这里执行相应的逻辑
                 }
 
-                if(Hitbutoutrange)
+                if (Hitbutoutrange)
                 {
                     Debug.Log("Detected Target But Out the Range");
                 }
@@ -188,17 +188,21 @@ namespace TestField
         }
 
 #if UNITY_EDITOR
-        // 在Scene视图中显示Gizmos
         private void OnDrawGizmos()
         {
             // 获取当前位置
             Vector3 origin = transform.position;
+            origin += RayStarpointOffset;
 
             // 计算扇形的两个边缘点
             Quaternion leftRotation = Quaternion.AngleAxis(-detectionAngle * 0.5f, Vector3.up);
             Quaternion rightRotation = Quaternion.AngleAxis(detectionAngle * 0.5f, Vector3.up);
             Vector3 leftDirection = leftRotation * detectionDirection;
             Vector3 rightDirection = rightRotation * detectionDirection;
+
+            // 在 Scene 视图上绘制蓝色圆，表示 RayStarpointOffset
+            Gizmos.color = Color.blue;
+            Gizmos.DrawSphere(origin, 0.05f);
 
             // 进行旋转
             leftDirection = Quaternion.Euler(0f, -detectionRotation, 0f) * leftDirection;
@@ -224,27 +228,50 @@ namespace TestField
 
                     // 检测是否在扇形区域内
                     float angle = Vector3.Angle(detectionDirection, direction);
-                    if (angle <= detectionAngle * 0.5f)
-                    {
-                        if (foundTarget)
-                        {
-                            // 在扇形区域内检测到目标，绘制黄色射线
-                            Gizmos.color = Color.yellow;
-                            Gizmos.DrawLine(origin, origin + RayDirection * currentRayLength);
-                        }
-                        else
-                        {
-                            // 在扇形区域内未检测到目标，绘制蓝色射线
-                            Gizmos.color = Color.blue;
-                            Gizmos.DrawLine(origin, origin + RayDirection * currentRayLength);
-                        }
 
+                    // 发射射线到目标
+                    Ray ray = new Ray(origin, RayDirection);
+                    RaycastHit hit;
+                    // 计算目标点与射线的距离
+                    float distanceToTarget = Vector3.Distance(targetPosition, origin);
+                    // 判定是否在扇形区域内且距离小于等于 detectionRadius
+                    if (angle <= detectionAngle * 0.5f && distanceToTarget <= detectionRadius)
+                    {
+                        if (Physics.Raycast(ray, out hit, float.PositiveInfinity, ~IgnoreLayer))
+                        {
+                            // 检查命中目标是否为 targetContainer 或者在列表中
+                            if (hit.collider.gameObject == targetContainer || targetlist.Contains(hit.collider.gameObject))
+                            {
+                                // 在扇形区域内检测到目标，绘制黄色射线
+                                Gizmos.color = Color.yellow;
+                                Gizmos.DrawLine(origin, origin + RayDirection * currentRayLength);
+
+                                // 更新整体 foundTarget 的值
+                                foundTarget = true;
+                            }
+                            else
+                            {
+                                // 在扇形区域内未检测到目标，绘制蓝色射线
+                                Gizmos.color = Color.blue;
+                                Gizmos.DrawLine(origin, origin + RayDirection * currentRayLength);
+                            }
+                        }
                     }
                     else
                     {
-                        // 不在扇形区域内，绘制绿色色射线
-                        Gizmos.color = Color.green;
-                        Gizmos.DrawLine(origin, origin + RayDirection * currentRayLength);
+                        // 不再使用 currentRayLength 作为射线的长度
+                        Ray Gray = new Ray(origin, RayDirection.normalized * detectionRadius);
+                        RaycastHit Ghit;
+
+                        if (Physics.Raycast(Gray, out Ghit, float.PositiveInfinity, ~IgnoreLayer))
+                        {
+                                Gizmos.color = Color.green;
+                                Gizmos.DrawLine(origin, origin + RayDirection.normalized * detectionRadius);
+
+                                // 在扇形范围外检测到目标，更新整体 foundTarget 的值
+                                foundTarget = true;
+                        }
+
                     }
                 }
             }
@@ -253,20 +280,33 @@ namespace TestField
             DrawSector(origin, leftDirection, rightDirection, detectionRadius, detectionAngle);
         }
 
+
+
         // 绘制扇形的方法
         private void DrawSector(Vector3 origin, Vector3 leftDirection, Vector3 rightDirection, float radius, float angle)
-        {
-            Handles.color = Color.red;
+            {
+            origin -= RayStarpointOffset;
+            // 将原点的 Y 轴分量设置为 0
+            origin.y = 0f;
 
-            // 使用Handles.DrawWireArc来绘制扇形的圆弧
-            Handles.DrawWireArc(origin, Vector3.up, leftDirection, angle, radius);
+                Handles.color = Color.red;
 
-            // 绘制扇形两侧的连线
-            Vector3 leftEdge = origin + leftDirection * radius;
-            Vector3 rightEdge = origin + rightDirection * radius;
-            Handles.DrawLine(origin, leftEdge);
-            Handles.DrawLine(origin, rightEdge);
-        }
+                // 使用 Handles.DrawWireArc 来绘制扇形的圆弧
+                Handles.DrawWireArc(origin, Vector3.up, leftDirection, angle, radius);
+
+                // 绘制扇形两侧的连线
+                Vector3 leftEdge = origin + leftDirection * radius;
+                Vector3 rightEdge = origin + rightDirection * radius;
+
+                // 将两侧的 Y 轴分量设置为 0
+                leftEdge.y = 0f;
+                rightEdge.y = 0f;
+
+                Handles.DrawLine(origin, leftEdge);
+                Handles.DrawLine(origin, rightEdge);
+            }
+
+
 #endif
+        }
     }
-}
