@@ -28,8 +28,6 @@ namespace TestField
 
         private void OnTargetFoundChanged(GameObject newTarget)
         {
-
-            Debug.Log("1");
             ObjectFound = targetsearcharea.TargetFound;
             BroadCastReceiver = targetsearcharea.BroadCastReceiver;
             // 在 TargetFound 变化时，向 BroadCastReceiver 中的具有 AlertLine 脚本的对象发送信息
@@ -38,11 +36,8 @@ namespace TestField
 
         private void SendAlertToObjectWithAlertLine()
         {
-            Debug.Log("2");
             foreach (GameObject receiverObject in BroadCastReceiver)
             {
-                Debug.Log("3");
-
                 AlertLine alertLine = receiverObject.GetComponent<AlertLine>();
                 if (alertLine != null)
                 {

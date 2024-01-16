@@ -8,6 +8,7 @@ namespace TestField
     public class AlertLine : MonoBehaviour
     {
         public bool foundTarget;
+        public bool Hitbutoutrange;
         [ReadOnly]public GameObject targetContainer;
         public LayerMask IgnoreLayer; // 障碍物层
 
@@ -85,6 +86,7 @@ namespace TestField
         {
             if (!notarget)
             {
+                Hitbutoutrange = false;
                 foundTarget = false;
 
                 // 获取当前位置
@@ -111,19 +113,20 @@ namespace TestField
 
                     //Debug.Log(angle);
 
-                    if (angle <= detectionAngle * 0.5f)
+
+                    // 发射射线到目标
+                    Ray ray = new Ray(origin, RayDirection);
+                    RaycastHit hit;
+
+                    if (Physics.Raycast(ray, out hit, currentRayLength, ~IgnoreLayer))
                     {
-                        // 发射射线到目标
-                        Ray ray = new Ray(origin, RayDirection);
-                        RaycastHit hit;
+                        // 获取命中目标的名称
+                        string hitTargetName = hit.collider.gameObject.name;
 
-                        if (Physics.Raycast(ray, out hit, currentRayLength, ~IgnoreLayer))
+                        // 检查命中目标是否为 targetContainer 或者在列表中
+                        if (hit.collider.gameObject == targetContainer || targetlist.Contains(hit.collider.gameObject))
                         {
-                            // 获取命中目标的名称
-                            string hitTargetName = hit.collider.gameObject.name;
-
-                            // 检查命中目标是否为 targetContainer 或者在列表中
-                            if (hit.collider.gameObject == targetContainer || targetlist.Contains(hit.collider.gameObject))
+                            if (angle <= detectionAngle * 0.5f)
                             {
                                 // 这里执行侦测到目标的逻辑
                                 foundTarget = true;
@@ -131,9 +134,12 @@ namespace TestField
                             }
                             else
                             {
-                                // 这里执行未预期目标的逻辑
+                                Hitbutoutrange = true;
+                                break;
                             }
+
                         }
+
                     }
                 }
 
@@ -143,6 +149,11 @@ namespace TestField
                     Debug.Log("At least one target detected!");
                     // 在这里执行相应的逻辑
                 }
+
+                if(Hitbutoutrange)
+                {
+                    Debug.Log("Detected Target But Out the Range");
+                }
             }
         }
 
@@ -150,7 +161,7 @@ namespace TestField
         {
             targetContainer = newtarget;
             targetBroadCastFound = true;
-            Debug.Log(targetContainer);
+            //Debug.Log(targetContainer);
 
         }
 
