@@ -52,12 +52,13 @@ namespace TestField
             {
                 if (avatarController.IsCrouching)
                     TargetmovingStatus = -1;
-                else if (avatarController.Stopping)
+                else if (avatarController.Stopping || avatarController.IsJumping)
                     TargetmovingStatus = 0;
                 else if (avatarController.IsWalking)
                     TargetmovingStatus = 1;
                 else if (avatarController.IsSprinting)
                     TargetmovingStatus = 2;
+
             }
 
             if (TargetmovingStatus != PerviousTargetmovingStatus)
