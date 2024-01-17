@@ -27,9 +27,17 @@ namespace AvatarMain
         private bool MainRenderClose;
         private bool DitherChange;
 
+        private void Awake()
+        {
+
+        }
+
         // Start is called before the first frame update
         void Start()
         {
+            //启动CloneRoot
+            CloneTarget.SetActive(true);
+
             ComponentInit();
             ParameterInit();
         }

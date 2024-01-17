@@ -6,12 +6,19 @@ using UnityEngine.InputSystem;
 using RootMotion.FinalIK;
 using Detector;
 using TargetFinding;
+using CustomInspector;
 
 namespace playershooting
 {
 
     public class TPSShootController : MonoBehaviour
     {
+        [ReadOnly]
+        public bool isAiming = false;
+        [ReadOnly]
+        public bool Fire = false;
+
+        [HorizontalLine("自定义的参数",2,FixedColor.Gray)]
         // 用于瞄准的虚拟相机
         [SerializeField] private CinemachineVirtualCamera aimVirtualCamera;
         // 普通灵敏度和瞄准灵敏度
@@ -22,7 +29,6 @@ namespace playershooting
         // 用于调试显示的Transform
         [SerializeField] private Transform debugTransform;
 
-        public bool isAiming = false;
         public float targetCameraSide = 1;
         public float transitionSpeed = 0.5f; // 调整过渡速度的值
         public bool isBlocked = false;
@@ -72,6 +78,19 @@ namespace playershooting
 
         private void Update()
         {
+            AIM();
+            FIRE();
+
+        }
+
+        private void AssignAnimationIDs()
+        {
+            _animIDEnterAiming = Animator.StringToHash("EnterAiming");
+            _animIDAimStatus = Animator.StringToHash("AimStatus");
+        }
+
+        private void AIM()
+        {
             Vector3 mouseWorldPosition = Vector3.zero;
 
             _hasAnimator = TryGetComponent(out _animator);
@@ -104,7 +123,7 @@ namespace playershooting
 
                 transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * 20f);
 
-                float targetShoulderOffsetY = avatarController._isCrouching ? CrouchingY : OriginY;
+                float targetShoulderOffsetY = avatarController.IsCrouching ? CrouchingY : OriginY;
                 float transitionspeed = 5f; // 调整过渡速度
 
                 // 使用插值逐渐改变 ShoulderOffset.y 的值
@@ -127,7 +146,7 @@ namespace playershooting
                 if (_hasAnimator)
                 {
                     _animator.SetBool(_animIDEnterAiming, true);
-                    if (!avatarController._isCrouching)
+                    if (!avatarController.IsCrouching)
                     {
                         _animator.SetFloat(_animIDAimStatus, 0);
                     }
@@ -165,13 +184,11 @@ namespace playershooting
                     _animator.SetBool(_animIDEnterAiming, false);
                 }
             }
-
         }
 
-        private void AssignAnimationIDs()
+        private void FIRE()
         {
-            _animIDEnterAiming = Animator.StringToHash("EnterAiming");
-            _animIDAimStatus = Animator.StringToHash("AimStatus");
+            Fire = _input.shoot;
         }
 
         private void ShootSiteChange()

@@ -72,7 +72,7 @@ public class GUIStatusCheck : EditorWindow
         GUILayout.Space(20); // 用来添加空行
 
         EditorGUILayout.LabelField("Crouch", EditorStyles.boldLabel);
-        if (!avatarController._isCrouching)
+        if (!avatarController.IsCrouching)
         {
             Color originalColor = GUI.color;
             GUI.color = Color.gray;
