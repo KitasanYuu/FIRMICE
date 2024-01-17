@@ -8,7 +8,7 @@ namespace TargetFinding
         public Vector3 DetecCenter;
         public Vector3 DetecRange;
         public LayerMask targetLayer;
-        public string targetTag = "Player";
+        [Tag]public string targetTag = "Player";
         //[HideInInspector]
         [ReadOnly]public GameObject targetToFollow; // 用于存储找到的目标物体
 
