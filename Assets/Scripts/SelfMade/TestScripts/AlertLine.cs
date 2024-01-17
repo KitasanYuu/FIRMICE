@@ -266,7 +266,7 @@ namespace TestField
                         if (Physics.Raycast(Gray, out Ghit, float.PositiveInfinity, ~IgnoreLayer))
                         {
                                 Gizmos.color = Color.green;
-                                Gizmos.DrawLine(origin, origin + RayDirection.normalized * detectionRadius);
+                                Gizmos.DrawLine(origin, origin + RayDirection * currentRayLength);
 
                                 // 在扇形范围外检测到目标，更新整体 foundTarget 的值
                                 foundTarget = true;
