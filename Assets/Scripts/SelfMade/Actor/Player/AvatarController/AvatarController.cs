@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using Cinemachine;
 #if ENABLE_INPUT_SYSTEM 
@@ -124,7 +124,7 @@ namespace AvatarMain
         //下蹲
         private GameObject PlayerCameraRoot;
         private CharacterController _characterController;
-        public bool _isCrouching = false;
+        private bool _isCrouching = false;
         public bool cantCrouchinAir = true;
         private bool CrouchingDetect = false;//用于头顶障碍物检测
         public float OriginOffset = 1.125f;
@@ -181,6 +181,20 @@ namespace AvatarMain
         private float targetFov;
         public bool isAiming;
 
+        //拿给外部取用的参数
+        //[HideInInspector]
+        public bool IsCrouching;
+        //[HideInInspector]
+        public bool IsWalking;
+        //[HideInInspector]
+        public bool IsSprinting;
+        //[HideInInspector]
+        public bool IsJumping;
+        //[HideInInspector]
+        public bool Stopping;
+
+        //额外判断参数
+        private Vector2 INPUTSTOP = new Vector2(0, 0);
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
@@ -259,6 +273,8 @@ namespace AvatarMain
             Move();
             ModifyControllerProperties();
             PerformDetectionAndDrawGizmos();
+            ParameterRelink();
+            DebugINFO();
         }
 
         void FixedUpdate()
@@ -359,15 +375,19 @@ namespace AvatarMain
         //在各种移动速度中进行判定
         private void MoveStatus()
         {
+            IsWalking = false;
+            IsSprinting = false;
+
             if(isAiming && _input.sprint)
             {
                 targetSpeed = MoveSpeed;
             }
 
-            if (Grounded && _input.sprint && !_input.crouch && !_isCrouching && !isAiming)
+            if (Grounded && _input.sprint && !_input.crouch && !_isCrouching && !isAiming && _input.move != INPUTSTOP)
             {
                 targetSpeed = SprintSpeed;
                 airSpeed = targetSpeed;
+                IsSprinting = true;
             }
 
             if (Grounded && _input.crouch && cantCrouchinAir)
@@ -420,7 +440,7 @@ namespace AvatarMain
             }
 
             //检测若是在地面且没有输入蹲下，没有输入奔跑，不在蹲下时，将速度调整为步行速度
-            if (Grounded && !_input.crouch && !_input.sprint && !_isCrouching)
+            if (Grounded && !_input.crouch && !_input.sprint && !_isCrouching &&_input.move!=INPUTSTOP)
             {
                 if (isAiming)
                 {
@@ -432,7 +452,18 @@ namespace AvatarMain
                     targetSpeed = MoveSpeed;
                     airSpeed = targetSpeed;
                 }
+                IsWalking = true;
 
+            }
+
+            //检查是否移动
+            if(_input.move == INPUTSTOP && Grounded && !_isCrouching)
+            {
+                    Stopping = true;
+            }
+            else
+            {
+                Stopping = false;
             }
 
             //若不在地面，则取上轮if的speed为在空中的速度
@@ -612,6 +643,8 @@ namespace AvatarMain
                         _animator.SetBool(_animIDFreeFall, false);
                     }
 
+                    IsJumping = false;
+
                     // stop our velocity dropping infinitely when grounded
                     if (_verticalVelocity < 0.0f)
                     {
@@ -637,6 +670,7 @@ namespace AvatarMain
                                 _animator.SetBool(_animIDJump, true);
                             }
                         }
+                        IsJumping = true;
                         jumpTimerCurrent = jumpTimer;
                         jumpCount++;
                     }
@@ -926,6 +960,16 @@ namespace AvatarMain
         public void SetRotateOnMove(bool newRorareOnMove)
         {
             _rotationOnMove = newRorareOnMove;
+        }
+
+        private void ParameterRelink()
+        {
+            IsCrouching = _isCrouching;
+        }
+
+        private void DebugINFO()
+        {
+
         }
     }
 }

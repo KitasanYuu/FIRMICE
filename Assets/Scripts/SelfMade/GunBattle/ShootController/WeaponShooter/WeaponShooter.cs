@@ -48,7 +48,7 @@ public class WeaponShooter : MonoBehaviour
     private void FireAction()
     {
         // 开火
-        if (_input.shoot && tpsShootController.isAiming)
+        if (tpsShootController.Fire && tpsShootController.isAiming)
         {
             if (Basicinput && Tpsshootcontroller)
             {

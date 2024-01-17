@@ -11,7 +11,7 @@ namespace TargetFinding
     {
         public bool searchInactiveObjects = false; // 是否搜索未激活的物体
         public string objectNameToFind = ""; // 要查找的物体的名称
-        public string objectTagToFind = ""; // 要查找的物体的标签
+        [Tag]public string objectTagToFind = ""; // 要查找的物体的标签
         public LayerMask objectLayerToFind; // 用于存储要查找的层级
         public List<string> scenesToDeactivateScript; // 存储要禁用脚本的场景名称列表
 

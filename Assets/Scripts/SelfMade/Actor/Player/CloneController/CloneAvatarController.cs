@@ -78,7 +78,7 @@ namespace AvatarMain
                 if (_input.aim)
                 {
                     _animator.SetBool(_animIDEnterAiming, true);
-                    if (!avatarController._isCrouching)
+                    if (!avatarController.IsCrouching)
                     {
                         _animator.SetFloat(_animIDAimStatus, 0);
                     }
@@ -126,7 +126,7 @@ namespace AvatarMain
                     _animator.SetBool(_animIDFreeFall, true);
                 }
 
-                if (avatarController._isCrouching)
+                if (avatarController.IsCrouching)
                 {
                     _animator.SetBool(_animIDis_Crouching, true);
                 }

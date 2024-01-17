@@ -129,7 +129,7 @@ public class ControllerGUI : Editor
         GUILayout.Space(10); // 用来添加空行
 
         EditorGUILayout.LabelField("Crouch", EditorStyles.boldLabel);
-        avatarController._isCrouching = EditorGUILayout.Toggle(new GUIContent("isCrouching", "判断是否蹲下"), avatarController._isCrouching);
+        avatarController.IsCrouching = EditorGUILayout.Toggle(new GUIContent("isCrouching", "判断是否蹲下"), avatarController.IsCrouching);
         GUILayout.Space(10); // 用来添加空行
         avatarController.OriginOffset = EditorGUILayout.FloatField(new GUIContent("OriginOffset", "默认状态下CameraRoot与父节点的距离"), avatarController.OriginOffset);
         avatarController.CrouchingOffset = EditorGUILayout.FloatField(new GUIContent("CrouchingOffset", "下蹲时CameraRoot与父节点的距离"), avatarController.CrouchingOffset);
