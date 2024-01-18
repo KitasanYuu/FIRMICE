@@ -13,7 +13,15 @@ namespace TestField
         [Header("TargetINFO")]
         [ReadOnly] public GameObject TargetFound;
         [SerializeField]private LayerMask detectionLayer;
-        [SerializeField]private string detectionTag = "Player";
+        [Tag,SerializeField]private string detectionTag = "Player";
+
+
+        [Header("PartnerINFO")]
+        [SerializeField]
+        [FixedValues("Player", "Partner", "Enemy", "Neutral", "TrainingTarget")]
+        private string PartnerMasterID;
+        [SerializeField] private LayerMask PartnerLayer;
+        [ReadOnly] public List<GameObject> PartnerList = new List<GameObject>();
 
 
         [Header("AIReceiverINFO")]
@@ -21,8 +29,8 @@ namespace TestField
         [FixedValues("Player", "Partner", "Enemy", "Neutral", "TrainingTarget")]
         private string ReceiverMasterID;
         [SerializeField] private LayerMask ReceiverLayer;
-
         [ReadOnly] public List<GameObject> BroadCastReceiver = new List<GameObject>();
+
 
 
         [Header("Area Size")]
@@ -40,6 +48,7 @@ namespace TestField
         void Update()
         {
             SearchingReceiver();
+            PartnerSeeker();
             SearchingTarget();
         }
 
@@ -77,6 +86,40 @@ namespace TestField
             }
         }
 
+        private void PartnerSeeker()
+        {
+            Bounds boxBounds = new Bounds(transform.position + boxOffset, boxSize);
+
+            Collider[] colliders = Physics.OverlapBox(boxBounds.center, boxBounds.extents, Quaternion.identity, PartnerLayer);
+
+            PartnerList.Clear();
+
+            // 使用 HashSet 来确保每个物体只会被添加一次
+            HashSet<GameObject> uniqueObjects = new HashSet<GameObject>();
+
+            foreach (Collider collider in colliders)
+            {
+                Identity identity = collider.GetComponent<Identity>();
+
+                // 如果当前collider没有Identity脚本，则查找其父级
+                if (identity == null)
+                {
+                    Transform parent = collider.transform.parent;
+
+                    while (parent != null && identity == null)
+                    {
+                        identity = parent.GetComponent<Identity>();
+                        parent = parent.parent;
+                    }
+                }
+
+                // 添加带有Identity脚本的物体到BroadCastReceiver，确保每个物体只会被添加一次
+                if (identity != null && identity.MasterID == PartnerMasterID && uniqueObjects.Add(identity.gameObject))
+                {
+                    PartnerList.Add(identity.gameObject);
+                }
+            }
+        }
 
         private void SearchingReceiver()
         {
