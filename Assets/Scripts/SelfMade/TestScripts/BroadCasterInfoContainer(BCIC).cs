@@ -11,6 +11,8 @@ namespace TestField
         // 定义事件委托
         public Action<GameObject> TargetReceivedChanged;
         public Action<int> TargetMovingStatusChanged;
+        public Action<bool> Fire;
+        public Action<bool> Aiming;
 
         //事件传进来的参数
         [ReadOnly]
@@ -24,9 +26,9 @@ namespace TestField
         [ReadOnly]
         public int TargetmovingStatus;
         [ReadOnly]
-        public bool isAiming;
+        public bool _isAiming;
         [ReadOnly]
-        public bool Fire;
+        public bool _Fire;
 
         [ReadOnly]public AvatarController avatarController;
         [ReadOnly]public TPSShootController tpsShootController;
@@ -58,6 +60,8 @@ namespace TestField
                     TargetmovingStatus = 1;
                 else if (avatarController.IsSprinting)
                     TargetmovingStatus = 2;
+                else if (_isAiming && TargetmovingStatus == 2)
+                    TargetmovingStatus = 1;
 
             }
 
@@ -70,11 +74,24 @@ namespace TestField
 
         private void ShootStatus()
         {
+            bool PFire = _Fire;
+            bool PAim = _isAiming;
+
             if (tpsShootController != null)
             {
-                isAiming = tpsShootController.isAiming;
-                Fire = tpsShootController.Fire;
+                _isAiming = tpsShootController.isAiming;
+                _Fire = tpsShootController.Fire;
             }
+            else
+            {
+                _isAiming = false;
+                _Fire = false;
+            }
+
+            if(PFire!=_Fire)
+                OnFire(_Fire);
+            if (PAim != _isAiming)
+                OnAiming(_isAiming);
         }
 
         public void TargetBoardCast(GameObject newTarget)
@@ -105,6 +122,14 @@ namespace TestField
         {
             TargetMovingStatusChanged?.Invoke(newvalue);
         }
+        protected virtual void OnFire(bool newvalue)
+        {
+            Fire?.Invoke(newvalue);
+        }
 
+        protected virtual void OnAiming(bool newvalue)
+        {
+            Aiming?.Invoke(newvalue);
+        }
     }
 }

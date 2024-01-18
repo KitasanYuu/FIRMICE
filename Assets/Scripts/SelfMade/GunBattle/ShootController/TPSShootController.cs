@@ -188,7 +188,15 @@ namespace playershooting
 
         private void FIRE()
         {
-            Fire = _input.shoot;
+            if(isAiming)
+            {
+                Fire = _input.shoot;
+            }
+            else
+            {
+                Fire = false;
+            }
+
         }
 
         private void ShootSiteChange()
