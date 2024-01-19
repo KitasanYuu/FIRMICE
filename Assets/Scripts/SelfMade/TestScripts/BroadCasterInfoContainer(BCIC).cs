@@ -3,6 +3,8 @@ using System;
 using CustomInspector;
 using AvatarMain;
 using playershooting;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace TestField
 {
@@ -10,6 +12,7 @@ namespace TestField
     {
         // 定义事件委托
         public Action<GameObject> TargetReceivedChanged;
+        public Action<List<GameObject>> OtherReceiverChanged;
         public Action<int> TargetMovingStatusChanged;
         public Action<bool> Fire;
         public Action<bool> Aiming;
@@ -32,6 +35,7 @@ namespace TestField
 
         [ReadOnly]public AvatarController avatarController;
         [ReadOnly]public TPSShootController tpsShootController;
+        public List<GameObject> OtherReceivers = new List<GameObject>();
 
 
         void Start()
@@ -118,6 +122,12 @@ namespace TestField
             }
         }
 
+        public void OtherReceiverINFOChanged(List<GameObject> newReceiverList)
+        {
+            OtherReceivers = newReceiverList;
+            OnOtherReceiverChanged(OtherReceivers);
+        }
+
         protected virtual void OnTargetMovingStatusChanged(int newvalue)
         {
             TargetMovingStatusChanged?.Invoke(newvalue);
@@ -130,6 +140,11 @@ namespace TestField
         protected virtual void OnAiming(bool newvalue)
         {
             Aiming?.Invoke(newvalue);
+        }
+
+        protected virtual void OnOtherReceiverChanged(List<GameObject> newList)
+        {
+            OtherReceiverChanged?.Invoke(newList);
         }
     }
 }

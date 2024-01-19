@@ -41,6 +41,7 @@ namespace TestField
 
         // 事件定义
         public event Action<GameObject> TargetFoundChanged;
+        public event Action<List<GameObject>> BroadCastReceiverChanged;
 
         private GameObject previousTarget;
 
@@ -152,10 +153,19 @@ namespace TestField
                 if (identity != null && identity.MasterID == ReceiverMasterID && uniqueObjects.Add(identity.gameObject))
                 {
                     BroadCastReceiver.Add(identity.gameObject);
+
+                    // 发送通知，传递更新后的列表
+                    OnBroadCastReceiverChanged();
                 }
             }
         }
 
+
+        private void OnBroadCastReceiverChanged()
+        {
+            // 检查是否有订阅者，如果有，则调用事件通知它们列表发生了变化
+            BroadCastReceiverChanged?.Invoke(BroadCastReceiver);
+        }
 
         // 触发事件的方法
         protected virtual void OnTargetFoundChanged(GameObject newTarget)

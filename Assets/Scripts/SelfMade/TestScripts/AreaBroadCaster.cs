@@ -1,4 +1,6 @@
+using CustomInspector;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace TestField
@@ -6,25 +8,34 @@ namespace TestField
     [RequireComponent(typeof(TargetSearchArea))]
     public class AreaBoarCaster : MonoBehaviour
     {
-        private GameObject ObjectFound;
+        [SerializeField, ReadOnly] private GameObject ObjectFound;
+        [SerializeField,ReadOnly]private TargetSearchArea targetsearcharea;
+        [SerializeField, ReadOnly] private List<GameObject> BCReceiver = new List<GameObject>();
         private List<GameObject> BroadCastReceiver = new List<GameObject>();
-        private TargetSearchArea targetsearcharea;
 
         // Start is called before the first frame update
         void Start()
         {
             targetsearcharea = GetComponent<TargetSearchArea>();
 
+
+            // 订阅事件，当BroadCastReceiver变化时调用 HandleBroadCastReceiverChanged 方法
+            targetsearcharea.BroadCastReceiverChanged += HandleBroadCastReceiverChanged;
             // 订阅事件
             targetsearcharea.TargetFoundChanged += OnTargetFoundChanged;
         }
-
         // Update is called once per frame
         void Update()
         {
-            
+
         }
 
+
+        private void HandleBroadCastReceiverChanged(List<GameObject> newReceiverList)
+        {
+           BCReceiver = newReceiverList;
+            SendOtherReceiverINFO();
+        }
 
         private void OnTargetFoundChanged(GameObject newTarget)
         {
@@ -47,10 +58,26 @@ namespace TestField
             }
         }
 
+        private void SendOtherReceiverINFO()
+        {
+            foreach (GameObject receiverObject in BCReceiver)
+            {
+                List<GameObject> filteredList = BCReceiver.Where(x => x != receiverObject).ToList();
+
+                BroadCasterInfoContainer broadcasterInfoContainer = receiverObject.GetComponent<BroadCasterInfoContainer>();
+                if (broadcasterInfoContainer != null)
+                {
+                    broadcasterInfoContainer.OtherReceiverINFOChanged(filteredList);
+                }
+            }
+        }
+
+
         // 在脚本销毁时取消订阅事件，以防止潜在的内存泄漏
         private void OnDestroy()
         {
             targetsearcharea.TargetFoundChanged -= OnTargetFoundChanged;
+            targetsearcharea.BroadCastReceiverChanged -= HandleBroadCastReceiverChanged;
         }
     }
 }
