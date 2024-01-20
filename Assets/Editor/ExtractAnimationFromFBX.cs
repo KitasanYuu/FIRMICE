@@ -3,9 +3,9 @@ using UnityEditor;
 
 public class ExtractAnimationFromFBX : EditorWindow
 {
-    private Object fbxFileObject; // ÓÃÓÚ´æ´¢ÍÏ×§Ñ¡ÔñµÄÎÄ¼ş¶ÔÏó
+    private Object fbxFileObject; // ç”¨äºå­˜å‚¨æ‹–æ‹½é€‰æ‹©çš„æ–‡ä»¶å¯¹è±¡
 
-    [MenuItem("Tools/Extract Animation")]
+    [MenuItem("YuuTools/Animation/Extract Animation")]
     static void Init()
     {
         ExtractAnimationFromFBX window = (ExtractAnimationFromFBX)EditorWindow.GetWindow(typeof(ExtractAnimationFromFBX));
@@ -58,7 +58,7 @@ public class ExtractAnimationFromFBX : EditorWindow
     {
         string fbxFilePath = AssetDatabase.GetAssetPath(fbxFileObject);
 
-        // ´ÓFBXÎÄ¼ş¼ÓÔØÄ£ĞÍ
+        // ä»FBXæ–‡ä»¶åŠ è½½æ¨¡å‹
         GameObject modelObject = (GameObject)AssetDatabase.LoadAssetAtPath<GameObject>(fbxFilePath);
         if (modelObject == null)
         {
@@ -66,11 +66,11 @@ public class ExtractAnimationFromFBX : EditorWindow
             return;
         }
 
-        // ´´½¨Ò»¸öĞÂµÄ¶¯»­Æ¬¶Î
+        // åˆ›å»ºä¸€ä¸ªæ–°çš„åŠ¨ç”»ç‰‡æ®µ
         AnimationClip editableClip = new AnimationClip();
-        editableClip.name = "EditableAnimationClip"; // ÉèÖÃĞÂ¶¯»­Æ¬¶ÎµÄÃû³Æ
+        editableClip.name = "EditableAnimationClip"; // è®¾ç½®æ–°åŠ¨ç”»ç‰‡æ®µçš„åç§°
 
-        // »ñÈ¡Ä£ĞÍµÄËùÓĞAnimationClip
+        // è·å–æ¨¡å‹çš„æ‰€æœ‰AnimationClip
         AnimationClip[] animationClips = AnimationUtility.GetAnimationClips(modelObject);
         Debug.Log("Number of animation clips found: " + animationClips.Length);
 
@@ -80,20 +80,20 @@ public class ExtractAnimationFromFBX : EditorWindow
             return;
         }
 
-        // Ñ¡ÔñµÚÒ»¸ö¶¯»­Æ¬¶Î£¬²¢½«ÆäĞÅÏ¢¸´ÖÆµ½ĞÂµÄ¶¯»­Æ¬¶ÎÖĞ
+        // é€‰æ‹©ç¬¬ä¸€ä¸ªåŠ¨ç”»ç‰‡æ®µï¼Œå¹¶å°†å…¶ä¿¡æ¯å¤åˆ¶åˆ°æ–°çš„åŠ¨ç”»ç‰‡æ®µä¸­
         AnimationClip originalClip = animationClips[0];
         AnimationClipSettings clipSettings = AnimationUtility.GetAnimationClipSettings(originalClip);
         AnimationUtility.SetAnimationClipSettings(editableClip, clipSettings);
 
-        // ½«Ô­Ê¼¶¯»­Æ¬¶ÎµÄĞÅÏ¢¸´ÖÆµ½ĞÂµÄ¶¯»­Æ¬¶ÎÖĞ
+        // å°†åŸå§‹åŠ¨ç”»ç‰‡æ®µçš„ä¿¡æ¯å¤åˆ¶åˆ°æ–°çš„åŠ¨ç”»ç‰‡æ®µä¸­
         EditorUtility.CopySerialized(originalClip, editableClip);
 
-        // ±£´æĞÂµÄ¶¯»­Æ¬¶ÎÎª.assetÎÄ¼ş
+        // ä¿å­˜æ–°çš„åŠ¨ç”»ç‰‡æ®µä¸º.assetæ–‡ä»¶
         string path = "Assets/NewEditableAnimationClip.anim";
         AssetDatabase.CreateAsset(editableClip, path);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
-        Debug.Log("´´½¨¿É±à¼­µÄ¶¯»­Æ¬¶Î£º" + path);
+        Debug.Log("åˆ›å»ºå¯ç¼–è¾‘çš„åŠ¨ç”»ç‰‡æ®µï¼š" + path);
     }
 }

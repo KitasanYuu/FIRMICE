@@ -6,19 +6,21 @@ using System.Collections.Generic;
 using System;
 
 
-
 public class ChangeNamespaceScript : EditorWindow
 {
     private string selectedPath; // 新增用于存储选择的路径，可以是文件夹或文件
     private bool isSingleFileSelected;
 
     private DefaultAsset folderObject; // 通过拖拽选择的文件夹对象
-    private string targetNamespace = "YourTargetNamespace"; // 设置目标 namespace
+    private string targetNamespace = ""; // 设置目标 namespace
     private List<CSFileInfo> csFiles = new List<CSFileInfo>(); // 存储文件夹内的所有 .cs 文件信息
     private bool selectAll;
     private string[] currentNamespaces;
+    private Vector2 scrollPosition = Vector2.zero; // 新增一个 Vector2 以保存滚动位置
+    private Dictionary<string, bool> namespaceSelectionStates = new Dictionary<string, bool>();
 
-    [MenuItem("Custom/Change Namespace")]
+
+    [MenuItem("YuuTools/Change Namespace")]
     public static void ShowWindow()
     {
         ChangeNamespaceScript window = GetWindow<ChangeNamespaceScript>("Change Namespace");
@@ -82,20 +84,23 @@ public class ChangeNamespaceScript : EditorWindow
 
         if (csFiles.Count > 0)
         {
-            GUILayout.Space(10);
-
+            GUILayout.Space(10); // 添加一些空白以增加垂直间距
+            // "Change Namespace" 按钮占据一整行
             GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Change Namespace")) // 可以调整按钮的宽度
+            {
+                ChangeNamespaceInFiles();
+            }
+            GUILayout.EndHorizontal();
 
+            GUILayout.Space(25); // 添加一些空白以增加垂直间距
+
+            // 选择全部按钮
+            GUILayout.BeginHorizontal();
             if (GUILayout.Button(selectAll ? "Deselect All" : "Select All"))
             {
                 ToggleSelectAllFiles();
             }
-
-            if (GUILayout.Button("Change Namespace"))
-            {
-                ChangeNamespaceInFiles();
-            }
-
             GUILayout.EndHorizontal();
 
             DisplayCSFiles();
@@ -128,16 +133,16 @@ public class ChangeNamespaceScript : EditorWindow
         {
             if (Directory.Exists(selectedPath))
             {
+
                 string folderPath = selectedPath;
 
-                // 检查是否是空文件夹
-                if (Directory.GetFiles(folderPath, "*.cs").Length == 0)
+                RecursiveScan(folderPath);
+
+                if (csFiles.Count == 0)
                 {
-                    Debug.LogError("No C# files found in the selected folder.");
-                    return;
+                    Debug.Log("No C# files found in the selected folder.");
                 }
 
-                RecursiveScan(folderPath);
             }
             else if (File.Exists(selectedPath) && selectedPath.EndsWith(".cs"))
             {
@@ -207,6 +212,8 @@ public class ChangeNamespaceScript : EditorWindow
 
         string currentNamespace = null;
 
+        scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+
         // 显示有命名空间的文件，按照命名空间排序，数量多的在前面
         for (int i = 0; i < groupedFilesWithNamespace.Count; i++)
         {
@@ -219,6 +226,7 @@ public class ChangeNamespaceScript : EditorWindow
                     // 如果命名空间不同，且不是第一组，则插入空行和青色横线
                     GUILayout.Space(5);
                     DrawColoredLine(maxNamespaceLength, Color.gray);
+
                 }
 
                 currentNamespace = fileInfo.CurrentNamespace;
@@ -232,12 +240,18 @@ public class ChangeNamespaceScript : EditorWindow
             // 文件名和选择框
             fileInfo.Selected = GUILayout.Toggle(fileInfo.Selected || selectAll, $"{fileInfo.FileName}", GUILayout.Width(150));
 
+            // 空列，用于在文件名和命名空间之间创建间隔
+            GUILayout.Label("", GUILayout.Width(100));
+
             // 分隔符
             GUILayout.Label("-", GUILayout.Width(10));
 
             // 命名空间
             string alignedNamespace = fileInfo.CurrentNamespace.PadRight(Mathf.Max(0, maxNamespaceLength - alignmentOffset) + fileInfo.CurrentNamespace.Length - fileInfo.CurrentNamespace.Replace(" ", "").Length);
-            GUILayout.Label($"Current Namespace: {alignedNamespace}");
+
+
+            GUILayout.Label($"Namespace: {alignedNamespace}");
+
 
             // 结束水平布局
             GUILayout.EndHorizontal();
@@ -257,8 +271,12 @@ public class ChangeNamespaceScript : EditorWindow
             // 文件名和选择框
             fileInfo.Selected = GUILayout.Toggle(fileInfo.Selected || selectAll, $"{fileInfo.FileName}", GUILayout.Width(150));
 
+            // 空列，用于在文件名和命名空间之间创建间隔
+            GUILayout.Label("", GUILayout.Width(100));
+
             // 分隔符
             GUILayout.Label("-", GUILayout.Width(10));
+
 
             // 没有明确定义的话，显示 - No Defined Namespace
             GUILayout.Label("No Defined Namespace");
@@ -266,7 +284,10 @@ public class ChangeNamespaceScript : EditorWindow
             // 结束水平布局
             GUILayout.EndHorizontal();
         }
+        // 结束滚动视图
+        EditorGUILayout.EndScrollView();
     }
+
 
 
 
@@ -318,11 +339,11 @@ public class ChangeNamespaceScript : EditorWindow
                     }
 
                     // 统计移除命名空间后的空行数
-                    int emptyLinesAfterRemoval = CountEmptyLinesAfterRemoval(content, startIndex);
+                    //int emptyLinesAfterRemoval = CountEmptyLinesAfterRemoval(content, startIndex);
 
                     // 控制在两行空行
-                    int desiredEmptyLines = Mathf.Max(2, emptyLinesAfterRemoval);
-                    content = AddEmptyLines(content, startIndex, desiredEmptyLines);
+                    //int desiredEmptyLines = Mathf.Max(2, emptyLinesAfterRemoval);
+                    //content = AddEmptyLines(content, startIndex, desiredEmptyLines);
 
                     File.WriteAllText(filePath, content);
                     Debug.Log($"Namespace removed for {fileInfo.FileName}");
@@ -445,13 +466,17 @@ public class ChangeNamespaceScript : EditorWindow
                 // 获取命名空间
                 string currentNamespace = content.Substring(startIndex + 10, endIndex - startIndex - 10).Trim();
 
-                // 防止命名空间为空字符串时引发异常
-                return string.IsNullOrEmpty(currentNamespace) ? "No Defined Namespace" : currentNamespace;
+                // 检查命名空间是否存在
+                if (!string.IsNullOrEmpty(currentNamespace))
+                {
+                    return currentNamespace;
+                }
             }
         }
 
-        return "No Defined Namespace";
+        return null;
     }
+
 
 
 
@@ -482,6 +507,8 @@ public class ChangeNamespaceScript : EditorWindow
         public string FileName { get; }
         public bool Selected { get; set; }
         public string CurrentNamespace { get; }
+
+        public bool NamespaceSelected { get; set; }
 
         public CSFileInfo(string fileName, bool selected, string currentNamespace)
         {
