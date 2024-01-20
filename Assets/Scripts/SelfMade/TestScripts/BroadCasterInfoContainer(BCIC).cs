@@ -125,7 +125,7 @@ namespace TestField
         public void OtherReceiverINFOChanged(List<GameObject> newReceiverList)
         {
             OtherReceivers = newReceiverList;
-            OnOtherReceiverChanged(OtherReceivers);
+            OnOtherReceiverChanged(newReceiverList);
         }
 
         protected virtual void OnTargetMovingStatusChanged(int newvalue)
