@@ -117,6 +117,9 @@ namespace VHierarchy
         [MenuItem(dir + "Check out vFolders 2", false, 1003)]
         static void dadadssadsas() => Application.OpenURL("https://assetstore.unity.com/packages/slug/263644?aid=1100lGLBn&pubref=menucheckout");
 
+        [MenuItem(dir + "Check out vTabs 2", false, 1004)]
+        static void dadadadsssadsas() => Application.OpenURL("https://assetstore.unity.com/packages/slug/263645?aid=1100lGLBn&pubref=menucheckout");
+
 
 
 

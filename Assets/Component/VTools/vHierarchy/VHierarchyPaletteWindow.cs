@@ -181,7 +181,7 @@ namespace VHierarchy
 
                             var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(iconNameOrGuid.ToPath());
 
-                            GUI.DrawTexture(cellRect.SetSizeFromMid(iconSize), texture);
+                            GUI.DrawTexture(cellRect.SetSizeFromMid(iconSize), texture ?? Texture2D.blackTexture);
 
                         }
                         void setHovered()
