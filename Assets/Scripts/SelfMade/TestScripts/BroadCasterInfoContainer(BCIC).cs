@@ -13,6 +13,8 @@ namespace TestField
         // 定义事件委托
         public Action<GameObject> TargetReceivedChanged;
         public Action<List<GameObject>> OtherReceiverChanged;
+        public Action<List<GameObject>> HalfcoverChanged;
+        public Action<List<GameObject>> FullcoverChanged;
         public Action<int> TargetMovingStatusChanged;
         public Action<bool> Fire;
         public Action<bool> Aiming;
@@ -36,6 +38,8 @@ namespace TestField
         [ReadOnly]public AvatarController avatarController;
         [ReadOnly]public TPSShootController tpsShootController;
         public List<GameObject> OtherReceivers = new List<GameObject>();
+        public List<GameObject> FullCoverList = new List<GameObject>();
+        public List<GameObject> HalfCoverList = new List<GameObject>();
 
 
         void Start()
@@ -122,6 +126,18 @@ namespace TestField
             }
         }
 
+        public void HalfCoverChanged(List<GameObject> newHalfCoverList)
+        {
+            HalfCoverList = newHalfCoverList;
+            OnHalfCoverChanged(newHalfCoverList);
+        }
+
+        public void FullCoverChanged(List<GameObject> newFullCoverList)
+        {
+            FullCoverList = newFullCoverList;
+            OnFullCoverChanged(newFullCoverList);
+        }
+
         public void OtherReceiverINFOChanged(List<GameObject> newReceiverList)
         {
             OtherReceivers = newReceiverList;
@@ -145,6 +161,14 @@ namespace TestField
         protected virtual void OnOtherReceiverChanged(List<GameObject> newList)
         {
             OtherReceiverChanged?.Invoke(newList);
+        }
+        protected virtual void OnFullCoverChanged(List<GameObject> newList)
+        {
+            FullcoverChanged?.Invoke(newList);
+        }
+        protected virtual void OnHalfCoverChanged(List<GameObject> newList)
+        {
+            HalfcoverChanged?.Invoke(newList);
         }
     }
 }

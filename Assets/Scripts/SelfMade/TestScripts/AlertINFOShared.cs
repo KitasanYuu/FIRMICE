@@ -64,9 +64,16 @@ namespace TestField
                         {
                             AlertINFOShared AIS = target.GetComponent<AlertINFOShared>();
                             AlertLogic alertlogic = target.GetComponent<AlertLogic>();
-                            if (alertlogic != null && AL.TargetExposed && AIS.ReceiveSharedINFO)
+                            if (AIS != null)
                             {
-                                alertlogic.TargetExposed = true;
+                                if (alertlogic != null && AL.TargetExposed && AIS.ReceiveSharedINFO)
+                                {
+                                    alertlogic.TargetExposed = true;
+                                }
+                                else if (alertlogic != null && !AL.TargetExposed && AIS.ReceiveSharedINFO)
+                                {
+                                    alertlogic.TargetExposed = false;
+                                }
                             }
 
                         }
@@ -115,27 +122,31 @@ namespace TestField
             foreach (GameObject target in OtherReceiver)
             {
                 AlertINFOShared AIS = target.GetComponent<AlertINFOShared>();
-                // 计算两者之间的距离，只考虑X和Z轴
-                float distance = Vector3.Distance(new Vector3(transform.position.x, 0.0f, transform.position.z),
-                                                  new Vector3(target.transform.position.x, 0.0f, target.transform.position.z));
 
-                if (AIS.ReceiveSharedINFO)
+                if (AIS != null)
                 {
-                    if (distance <= SharedDistance)
+                    // 计算两者之间的距离，只考虑X和Z轴
+                    float distance = Vector3.Distance(new Vector3(transform.position.x, 0.0f, transform.position.z),
+                                                      new Vector3(target.transform.position.x, 0.0f, target.transform.position.z));
+
+                    if (AIS.ReceiveSharedINFO)
                     {
-                        Gizmos.color = Color.cyan;
-                        Gizmos.DrawLine(transform.position, target.transform.position);
+                        if (distance <= SharedDistance)
+                        {
+                            Gizmos.color = Color.cyan;
+                            Gizmos.DrawLine(transform.position, target.transform.position);
+                        }
+                        else
+                        {
+                            Gizmos.color = Color.grey;
+                            Gizmos.DrawLine(transform.position, target.transform.position);
+                        }
                     }
                     else
                     {
-                        Gizmos.color = Color.grey;
+                        Gizmos.color = Color.black;
                         Gizmos.DrawLine(transform.position, target.transform.position);
                     }
-                }
-                else
-                {
-                    Gizmos.color = Color.black;
-                    Gizmos.DrawLine(transform.position, target.transform.position);
                 }
             }
         }

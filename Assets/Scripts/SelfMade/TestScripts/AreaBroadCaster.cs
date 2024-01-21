@@ -1,28 +1,33 @@
 using CustomInspector;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace TestField
 {
-    [RequireComponent(typeof(TargetSearchArea))]
+    [RequireComponent(typeof(BattleAreaManager))]
     public class AreaBoarCaster : MonoBehaviour
     {
         [SerializeField, ReadOnly] private GameObject ObjectFound;
-        [SerializeField,ReadOnly]private TargetSearchArea targetsearcharea;
+        [SerializeField,ReadOnly]private BattleAreaManager BAM;
         [SerializeField, ReadOnly] private List<GameObject> BCReceiver = new List<GameObject>();
         private List<GameObject> BroadCastReceiver = new List<GameObject>();
+        [SerializeField, ReadOnly] private List<GameObject> FullCoverList = new List<GameObject>();
+        [SerializeField, ReadOnly] private List<GameObject> HalfCoverList = new List<GameObject>();
 
         // Start is called before the first frame update
         void Start()
         {
-            targetsearcharea = GetComponent<TargetSearchArea>();
+            BAM = GetComponent<BattleAreaManager>();
 
 
             // 订阅事件，当BroadCastReceiver变化时调用 HandleBroadCastReceiverChanged 方法
-            targetsearcharea.BroadCastReceiverChanged += HandleBroadCastReceiverChanged;
+            BAM.BroadCastReceiverChanged += HandleBroadCastReceiverChanged;
             // 订阅事件
-            targetsearcharea.TargetFoundChanged += OnTargetFoundChanged;
+            BAM.TargetFoundChanged += OnTargetFoundChanged;
+            BAM.FullCoverChanged += OnFullCoverChanged;
+            BAM.HalfCoverChanged += OnHalfCoverChanged;
         }
         // Update is called once per frame
         void Update()
@@ -39,10 +44,38 @@ namespace TestField
 
         private void OnTargetFoundChanged(GameObject newTarget)
         {
-            ObjectFound = targetsearcharea.TargetFound;
-            BroadCastReceiver = targetsearcharea.BroadCastReceiver;
+            ObjectFound = BAM.TargetFound;
+            BroadCastReceiver = BAM.BroadCastReceiver;
             // 在 TargetFound 变化时，向 BroadCastReceiver 中的具有 AlertLine 脚本的对象发送信息
             SendAlertToObjectWithAlertLine();
+        }
+
+        private void OnHalfCoverChanged(List<GameObject> newList)
+        {
+            HalfCoverList = newList;
+            foreach (GameObject receiverObject in BCReceiver)
+            {
+                BroadCasterInfoContainer broadcasterinfocontainer = receiverObject.GetComponent<BroadCasterInfoContainer>();
+                if (broadcasterinfocontainer != null)
+                {
+                    // 直接调用 AlertLine 脚本中的 TargetBoardCast 方法，将 ObjectFound 传递给它
+                    broadcasterinfocontainer.HalfCoverChanged(HalfCoverList);
+                }
+            }
+
+        }
+        private void OnFullCoverChanged(List<GameObject> newList)
+        {
+            FullCoverList = newList;
+            foreach (GameObject receiverObject in BCReceiver)
+            {
+                BroadCasterInfoContainer broadcasterinfocontainer = receiverObject.GetComponent<BroadCasterInfoContainer>();
+                if (broadcasterinfocontainer != null)
+                {
+                    // 直接调用 AlertLine 脚本中的 TargetBoardCast 方法，将 ObjectFound 传递给它
+                    broadcasterinfocontainer.FullCoverChanged(FullCoverList);
+                }
+            }
         }
 
         private void SendAlertToObjectWithAlertLine()
@@ -76,8 +109,10 @@ namespace TestField
         // 在脚本销毁时取消订阅事件，以防止潜在的内存泄漏
         private void OnDestroy()
         {
-            targetsearcharea.TargetFoundChanged -= OnTargetFoundChanged;
-            targetsearcharea.BroadCastReceiverChanged -= HandleBroadCastReceiverChanged;
+            BAM.TargetFoundChanged -= OnTargetFoundChanged;
+            BAM.BroadCastReceiverChanged -= HandleBroadCastReceiverChanged;
+            BAM.HalfCoverChanged -= OnHalfCoverChanged;
+            BAM.FullCoverChanged -= OnFullCoverChanged;
         }
     }
 }

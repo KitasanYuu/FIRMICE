@@ -2,21 +2,30 @@ using UnityEngine;
 using CustomInspector;
 using System.Collections.Generic;
 using System;
+using VInspector;
 
 namespace TestField
 {
-    public class TargetSearchArea : MonoBehaviour
+    public class BattleAreaManager : MonoBehaviour
     {
+        [Tab("AreaSettings")]
         [Header("AreaID")]
-        [SerializeField]private string boxIdentifier = "SearchArea";
+        [SerializeField] private string AreaID = "SearchArea";
+        [Space2(10)]
+        [Header("Area Size")]
+        [SerializeField] private Vector3 boxSize = new Vector3(1f, 1f, 1f);
 
-        [Header("TargetINFO")]
+        // 偏移量
+        [SerializeField] private Vector3 boxOffset = Vector3.zero;
+
+        [Tab("SearchingActive")]
+        [Foldout("TargetINFO")]
         [ReadOnly] public GameObject TargetFound;
         [SerializeField]private LayerMask detectionLayer;
         [Tag,SerializeField]private string detectionTag = "Player";
 
 
-        [Header("PartnerINFO")]
+        [Foldout("PartnerINFO")]
         [SerializeField]
         [FixedValues("Player", "Partner", "Enemy", "Neutral", "TrainingTarget")]
         private string PartnerMasterID;
@@ -24,24 +33,26 @@ namespace TestField
         [ReadOnly] public List<GameObject> PartnerList = new List<GameObject>();
 
 
-        [Header("AIReceiverINFO")]
+        [Foldout("AIReceiverINFO")]
         [SerializeField]
         [FixedValues("Player", "Partner", "Enemy", "Neutral", "TrainingTarget")]
         private string ReceiverMasterID;
         [SerializeField] private LayerMask ReceiverLayer;
         [ReadOnly] public List<GameObject> BroadCastReceiver = new List<GameObject>();
 
-
-
-        [Header("Area Size")]
-        [SerializeField]private Vector3 boxSize = new Vector3(1f, 1f, 1f);
-
-        // 偏移量
-        [SerializeField]private Vector3 boxOffset = Vector3.zero;
-
+        [Tab("SearchingStatic")]
+        [Foldout("CoverINFO")]
+        [SerializeField]
+        [FixedValues("Cover")]
+        private string CoverIdentity;
+        [SerializeField] private LayerMask CoverLayer;
+        [ReadOnly] public List<GameObject> FullCover = new List<GameObject>();
+        [ReadOnly] public List<GameObject> HalfCover = new List<GameObject>();
         // 事件定义
         public event Action<GameObject> TargetFoundChanged;
         public event Action<List<GameObject>> BroadCastReceiverChanged;
+        public event Action<List<GameObject>> HalfCoverChanged;
+        public event Action<List<GameObject>> FullCoverChanged;
 
         private GameObject previousTarget;
 
@@ -51,6 +62,7 @@ namespace TestField
             SearchingReceiver();
             PartnerSeeker();
             SearchingTarget();
+            CoverSearching();
         }
 
 
@@ -160,6 +172,50 @@ namespace TestField
             }
         }
 
+        private void CoverSearching()
+        {
+            Bounds boxBounds = new Bounds(transform.position + boxOffset, boxSize);
+
+            Collider[] colliders = Physics.OverlapBox(boxBounds.center, boxBounds.extents, Quaternion.identity, CoverLayer);
+
+            HalfCover.Clear();
+            FullCover.Clear();
+
+            // 使用 HashSet 来确保每个物体只会被添加一次
+            HashSet<GameObject> uniqueObjects = new HashSet<GameObject>();
+
+            foreach (Collider collider in colliders)
+            {
+                Identity identity = collider.GetComponent<Identity>();
+
+                // 如果当前collider没有Identity脚本，则查找其父级
+                if (identity == null)
+                {
+                    Transform parent = collider.transform.parent;
+
+                    while (parent != null && identity == null)
+                    {
+                        identity = parent.GetComponent<Identity>();
+                        parent = parent.parent;
+                    }
+                }
+
+                // 添加带有Identity脚本的物体到BroadCastReceiver，确保每个物体只会被添加一次
+                if (identity != null && identity.MasterID == CoverIdentity&& uniqueObjects.Add(identity.gameObject))
+                {
+                    if(identity.Covertype == "HalfCover")
+                    {
+                        HalfCover.Add(identity.gameObject);
+                        OnHalfCoverChanged();
+                    }
+                    else if(identity.Covertype == "FullCover")
+                    {
+                        FullCover.Add(identity.gameObject);
+                        OnFullCoverChanged();
+                    }
+                }
+            }
+        }
 
         private void OnBroadCastReceiverChanged()
         {
@@ -171,6 +227,17 @@ namespace TestField
         protected virtual void OnTargetFoundChanged(GameObject newTarget)
         {
             TargetFoundChanged?.Invoke(newTarget);
+        }
+
+        private void OnHalfCoverChanged()
+        {
+            HalfCoverChanged?.Invoke(HalfCover);
+
+        }
+
+        private void OnFullCoverChanged()
+        {
+            FullCoverChanged?.Invoke(FullCover);
         }
 
 #if UNITY_EDITOR
