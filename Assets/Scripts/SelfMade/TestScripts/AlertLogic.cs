@@ -232,7 +232,7 @@ namespace TestField
 
 #if UNITY_EDITOR
         // 在Scene视图中绘制警戒区域
-        void OnDrawGizmos()
+        private void OnDrawGizmos()
         {
             // 获取物体的世界坐标
             Vector3 worldPosition = transform.position;
@@ -243,7 +243,7 @@ namespace TestField
         }
 
         // 在Scene视图中绘制xz平面上的圆
-        void DrawCircleOnXZPlane(Vector3 center, float radius, int segments)
+        private void DrawCircleOnXZPlane(Vector3 center, float radius, int segments)
         {
             Handles.color = Color.white;
 
