@@ -108,6 +108,7 @@ namespace TestField
             }
         }
 
+#if UNITY_EDITOR
         // 在Scene视图中绘制射线
         private void OnDrawGizmos()
         {
@@ -157,6 +158,6 @@ namespace TestField
             Vector3 axis = Vector3.up;  // 指定轴向为y轴，即绘制在xz平面上
             Handles.DrawWireDisc(center, axis, radius);
         }
-
+#endif
     }
 }
