@@ -4,18 +4,19 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class CoverPointGenerate : MonoBehaviour
 {
-
     [SerializeField]
-    private Vector3 RectangleSize = new Vector3(5f, 0f, 3f);
-
+    private Vector2 PointNumberXZ = new Vector2(0, 0);
     [SerializeField]
-    private int numberOfPoints = 10;  // 点的数量
+    private Vector3 RectangleOffset = new Vector3(0,0,0);
+    private Vector3 RectangleSize;
 
-    private List<Vector3> generatedPoints = new List<Vector3>();
+    public List<Vector3> generatedPoints = new List<Vector3>();
 
     void OnValidate()
     {
-            GeneratePoints();
+
+        RectangleSize = new Vector3(transform.localScale.x +RectangleOffset.x, 0f + RectangleOffset.y, transform.localScale.z + RectangleOffset.z);
+        GeneratePoints();
     }
 
     void GeneratePoints()
@@ -33,27 +34,35 @@ public class CoverPointGenerate : MonoBehaviour
         Vector3 bottomRight = new Vector3(transform.position.x + halfWidth, 0f + halfHeight, transform.position.z - halfLength);
 
         // 在相邻角之间生成点
-        for (int i = 0; i < numberOfPoints; i++)
+        for (int i = 0; i < PointNumberXZ.x; i++)
         {
-            float t = i / (float)(numberOfPoints - 1);
+            float t = i / (float)(PointNumberXZ.x - 1);
             Vector3 point = Vector3.Lerp(topLeft, topRight, t);
-            generatedPoints.Add(point);
-
-            point = Vector3.Lerp(topRight, bottomRight, t);
-            generatedPoints.Add(point);
+            AddUniquePoint(point);
 
             point = Vector3.Lerp(bottomRight, bottomLeft, t);
-            generatedPoints.Add(point);
-
-            point = Vector3.Lerp(bottomLeft, topLeft, t);
-            generatedPoints.Add(point);
+            AddUniquePoint(point);
         }
 
-        // 确保生成的点数量不超过预设值
-        int excessPoints = generatedPoints.Count - numberOfPoints * 4;
-        for (int i = 0; i < excessPoints; i++)
+        // 在相邻角之间生成点
+        for (int i = 0; i < PointNumberXZ.y; i++)
         {
-            generatedPoints.RemoveAt(generatedPoints.Count - 1);
+            float t = i / (float)(PointNumberXZ.y - 1);
+            Vector3 point = Vector3.Lerp(topRight, bottomRight, t);
+            AddUniquePoint(point);
+
+            point = Vector3.Lerp(bottomLeft, topLeft, t);
+            AddUniquePoint(point);
+        }
+
+    }
+
+    void AddUniquePoint(Vector3 point)
+    {
+        // 添加唯一的点
+        if (!generatedPoints.Contains(point))
+        {
+            generatedPoints.Add(point);
         }
     }
 
