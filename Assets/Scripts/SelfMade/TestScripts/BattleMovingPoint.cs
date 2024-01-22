@@ -14,6 +14,8 @@ namespace TestField
         private GameObject Target;
         public List<GameObject> CoverList;
 
+        CoverUtility coverUtility = new CoverUtility();
+
         private void Awake()
         {
             ComponentInit();
@@ -47,7 +49,7 @@ namespace TestField
             // 执行移动逻辑，使用 CoverList 进行射线检测等
             Vector3 safeLocation = FindSafeLocation(Target, CoverList);
             SafePoint = safeLocation;
-            Debug.Log(safeLocation);
+            //Debug.Log(safeLocation);
 
             // 判断坐标是否可行
             if (IsPositionValid(safeLocation))
@@ -78,12 +80,13 @@ namespace TestField
             }
 
             // 寻找最近的掩体
-            GameObject nearestCover = FindNearestCover(coverObjects);
+            //GameObject nearestCover = FindNearestCover(coverObjects);
+            GameObject nearestCover = coverUtility.FindNearestCoverOnRoute(gameObject,target, coverObjects);
 
             if (nearestCover != null)
             {
                 // 在掩体周围生成一个点
-                Vector3 randomPointAroundCover = RandomPointBetween(nearestCover, nearestCover.transform.position, target.transform.position, 1f);
+                Vector3 randomPointAroundCover = coverUtility.RandomPointBetween(nearestCover, target.transform.position);
                 return randomPointAroundCover;
             }
             else
@@ -93,60 +96,7 @@ namespace TestField
             }
         }
 
-        private GameObject FindNearestCover(List<GameObject> coverObjects)
-        {
-            GameObject nearestCover = null;
-            float minDistance = float.MaxValue;
-            Vector3 currentPosition = transform.position;
 
-            foreach (GameObject coverObject in coverObjects)
-            {
-                float distance = Vector3.Distance(currentPosition, coverObject.transform.position);
-
-                if (distance < minDistance)
-                {
-                    minDistance = distance;
-                    nearestCover = coverObject;
-                }
-            }
-
-            return nearestCover;
-        }
-
-        private Vector3 RandomPointBetween(GameObject nearestCover, Vector3 pointA, Vector3 pointB, float distance)
-        {
-            CoverPointGenerate CPG = nearestCover.GetComponent<CoverPointGenerate>();
-            List<Vector3> validPoints = CPG.generatedPoints;
-            List<Vector3> suitablePoints = new List<Vector3>();
-
-            foreach (Vector3 coverPoint in validPoints)
-            {
-                // 发射射线，检测是否可以直接到达目标
-                RaycastHit hit;
-                if (Physics.Raycast(coverPoint, pointB - coverPoint, out hit))
-                {
-                    // 判断是否被 nearestCover 遮挡
-                    if (hit.collider.gameObject == nearestCover)
-                    {
-                        Debug.Log("Found a suitable cover point at: " + coverPoint);
-                        suitablePoints.Add(coverPoint);
-                    }
-                }
-            }
-
-            if (suitablePoints.Count > 0)
-            {
-                // 从符合条件的点中随机选择一个返回
-                Vector3 randomPoint = suitablePoints[Random.Range(0, suitablePoints.Count)];
-                return randomPoint;
-            }
-            else
-            {
-                // 如果没有找到符合条件的点，可以在这里处理
-                Debug.Log("No suitable cover point found.");
-                return Vector3.zero; // 或者返回其他值，表示未找到符合条件的点
-            }
-        }
 
 
 
