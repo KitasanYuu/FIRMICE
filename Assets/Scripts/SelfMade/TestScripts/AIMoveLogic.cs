@@ -1,3 +1,4 @@
+using CustomInspector;
 using System.Collections;
 using System.Collections.Generic;
 using TestField;
@@ -5,16 +6,22 @@ using UnityEngine;
 
 namespace TestField
 {
-
     public class AIMoveLogic : MonoBehaviour
     {
+        public bool VaildPosition;
+        [ReadOnly]public float ToTargetDistance;
+        public float VaildShootRange;
+        public bool InBattle;
+        private bool TargetExpose;
         private List<GameObject> HalfCoverList = new List<GameObject>();
         private List<GameObject> FullCoverList = new List<GameObject>();
+        private List<GameObject> CoverList = new List<GameObject>();
         private GameObject Target;
-        public List<GameObject> CoverList = new List<GameObject>();
+
         private Vector3 SafePoint;
 
 
+        private AlertLogic AL;
         private BattleMovingPoint BMP;
         private BroadCasterInfoContainer BCIC;
         private CoverUtility coverUtility = new CoverUtility();
@@ -32,16 +39,18 @@ namespace TestField
 
         private void Update()
         {
+            ParameterUpdate();
+            TargetDistanceDetect();
             if (Input.GetKeyDown(KeyCode.R))
             {
-                MoveToSafeLocation();
+                FindSafeLocation();
                 BMP?.SeekerCalcu(SafePoint);
 
             }
 
         }
 
-        private void MoveToSafeLocation()
+        private void FindSafeLocation()
         {
             if (Target == null || CoverList == null)
             {
@@ -49,16 +58,33 @@ namespace TestField
                 Debug.LogError("Target or CoverList is null.");
                 return;
             }
-            // 执行移动逻辑，使用 CoverList 进行射线检测等
+            //调用FindNearestCoverPointOnRoute回调路径上距离最短的掩体位置
             Vector3 safeLocation = coverUtility.FindNearestCoverPointOnRoute(gameObject, Target, CoverList);
             SafePoint = safeLocation;
-            //Debug.Log(safeLocation);
+        }
+
+        private void TargetDistanceDetect()
+        {
+            if (Target != null)
+            {
+
+                ToTargetDistance = Vector3.Distance(Target.transform.position, gameObject.transform.position);
+                if (ToTargetDistance > VaildShootRange)
+                {
+                    VaildPosition = false;
+                }
+                else
+                {
+                    VaildPosition = true;
+                }
+            }
         }
 
         private void ComponentInit()
         {
             BCIC = GetComponent<BroadCasterInfoContainer>();
             BMP = GetComponent<BattleMovingPoint>();
+            AL = GetComponent<AlertLogic>();
         }
 
         private void EventSubscribe()
@@ -100,6 +126,13 @@ namespace TestField
                 BCIC.HalfcoverChanged -= OnHalfCoverChanged;
                 BCIC.TargetReceivedChanged -= TargetReceived;
             }
+        }
+
+        private void ParameterUpdate()
+        {
+            TargetExpose = AL.TargetExposed;
+            if (TargetExpose)
+                InBattle = true;
         }
 
 #if UNITY_EDITOR

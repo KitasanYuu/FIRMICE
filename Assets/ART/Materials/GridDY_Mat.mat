@@ -13,6 +13,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   version: 9
+--- !u!114 &-309171629326210719
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da692e001514ec24dbc4cca1949ff7e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 13
+  hdPluginSubTargetMaterialVersions:
+    m_Keys: []
+    m_Values: 
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -20,18 +36,24 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: GridDY_Mat 1
-  m_Shader: {fileID: 4800000, guid: df12117ecd77c31469c224178886498e, type: 3}
+  m_Name: GridDY_Mat
+  m_Shader: {fileID: -6465566751694194690, guid: ade42a5baf1e50740b3c2c1e22180f6a, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _ALPHATEST_ON
+  - _DEPTHOFFSET_ON
+  - _EMISSION
+  - _ENABLEDITHER
+  - _SIX_WAY_COLOR_ABSORPTION
   m_InvalidKeywords: []
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 2450
   stringTagMap:
     MotionVector: User
+    RenderType: TransparentCutout
   disabledShaderPasses:
   - RayTracingPrepass
   - TransparentDepthPrepass
@@ -42,6 +64,10 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _AlphaMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _AlphaTexture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -119,6 +145,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _DetailNormalMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DissolveMap:
+        m_Texture: {fileID: 2800000, guid: ecee42f89d59a8745b69c4e5a43870cc, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DissolveMask:
@@ -201,6 +231,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Main2ndTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Main3rdBlendMask:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -227,6 +261,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: d9c0dd5cdac07b145be73329e489869a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTexture:
+        m_Texture: {fileID: 2800000, guid: 13830bcfb3a8e004d93ff25bad454c8a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskMap:
@@ -315,6 +353,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _RimShadeMask:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ScrollMap:
+        m_Texture: {fileID: 2800000, guid: 506d68f66151a6c4e98c7da89259765b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Shadow2ndColorTex:
@@ -412,7 +454,7 @@ Material:
     - _AlphaClip: 0
     - _AlphaClipThreshold: 0.1
     - _AlphaCutoff: 0.5
-    - _AlphaCutoffEnable: 0
+    - _AlphaCutoffEnable: 1
     - _AlphaCutoffPostpass: 0.5
     - _AlphaCutoffPrepass: 0.5
     - _AlphaCutoffShadow: 0.5
@@ -517,7 +559,7 @@ Material:
     - _CullModeForward: 2
     - _Culling: 2
     - _Cutoff: 0.5
-    - _DepthOffsetEnable: 0
+    - _DepthOffsetEnable: 1
     - _DetailAlbedoMapScale: 1
     - _DetailAlbedoScale: 1
     - _DetailNormalMapScale: 1
@@ -528,9 +570,12 @@ Material:
     - _DisplacementLockObjectScale: 1
     - _DisplacementLockTilingScale: 1
     - _DisplacementMode: 0
+    - _DissolveBorder: 0.02
     - _DissolveNoiseStrength: 0.1
+    - _DissolveRate: -1
     - _DistanceFadeMode: 0
     - _DistanceFadeRimFresnelPower: 5
+    - _Dither: 1
     - _DitherMaxValue: 255
     - _DoubleSidedEnable: 0
     - _DoubleSidedGIMode: 0
@@ -540,6 +585,11 @@ Material:
     - _DstBlendAlpha: 10
     - _DstBlendAlphaFA: 1
     - _DstBlendFA: 1
+    - _EMISSION: 1
+    - _EMISSION2: 0
+    - _ENABLEALPHAREPLACE: 0
+    - _ENABLEDISSOLVE: 0
+    - _ENABLEDITHER: 1
     - _Emission2ndBlend: 1
     - _Emission2ndBlendMode: 1
     - _Emission2ndFluorescence: 0
@@ -560,7 +610,7 @@ Material:
     - _EmissiveExposureWeight: 0
     - _EmissiveIntensity: 276.35
     - _EmissiveIntensityUnit: 0
-    - _EnableBlendModePreserveSpecularLighting: 1
+    - _EnableBlendModePreserveSpecularLighting: 0
     - _EnableFogOnTransparent: 1
     - _EnableGeometricSpecularAA: 0
     - _EnergyConservingSpecularColor: 1
@@ -623,6 +673,7 @@ Material:
     - _IDMaskPrior6: 0
     - _IDMaskPrior7: 0
     - _IDMaskPrior8: 0
+    - _INVERT: 0
     - _IgnoreEncryption: 0
     - _Intensity: 0.2
     - _InvTilingScale: 1
@@ -633,6 +684,7 @@ Material:
     - _LightMaxLimit: 1
     - _LightMinLimit: 0.05
     - _LinkDetailsWithBase: 1
+    - _MAIN2NDCOLOR: 0
     - _Main2ndDissolveNoiseStrength: 0.1
     - _Main2ndEnableLighting: 1
     - _Main2ndTexAlphaMode: 0
@@ -697,6 +749,7 @@ Material:
     - _MetallicRemapMin: 0
     - _Mode: 0
     - _MonochromeLighting: 0
+    - _MultiColorRate: 1
     - _NormalMapKwToggle: 1
     - _NormalMapSpace: 0
     - _NormalScale: 1
@@ -817,6 +870,7 @@ Material:
     - _RimShadeNormalStrength: 1
     - _RimShadowMask: 0.5
     - _RimVRParallaxStrength: 1
+    - _ScrollRate: 0.235
     - _Shadow2ndBlur: 0.1
     - _Shadow2ndBorder: 0.15
     - _Shadow2ndNormalStrength: 1
@@ -887,9 +941,11 @@ Material:
     - _TexWorldScale: 1
     - _TexWorldScaleEmissive: 1
     - _Thickness: 1
+    - _Threshold: 0
     - _Tiliing: 1
     - _TransmissionEnable: 1
     - _TransmissionMask: 1
+    - _Transparency: 0
     - _TransparentBackfaceEnable: 0
     - _TransparentCullMode: 2
     - _TransparentDepthPostpassEnable: 0
@@ -908,6 +964,7 @@ Material:
     - _UseBump2ndMap: 0
     - _UseBumpMap: 0
     - _UseClippingCanceller: 0
+    - _UseColorAbsorption: 1
     - _UseDither: 0
     - _UseEmission: 1
     - _UseEmission2nd: 0
@@ -962,7 +1019,7 @@ Material:
     - _Color2nd: {r: 1, g: 1, b: 1, a: 1}
     - _Color3rd: {r: 1, g: 1, b: 1, a: 1}
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
-    - _DissolveColor: {r: 1, g: 1, b: 1, a: 1}
+    - _DissolveColor: {r: 14.928529, g: 0, b: 0, a: 1}
     - _DissolveNoiseMask_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
     - _DissolveParams: {r: 0, g: 0, b: 0.5, a: 0.1}
     - _DissolvePos: {r: 0, g: 0, b: 0, a: 0}
@@ -970,13 +1027,14 @@ Material:
     - _DistanceFadeColor: {r: 0, g: 0, b: 0, a: 1}
     - _DistanceFadeRimColor: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
+    - _EmColor: {r: 118.03538, g: 91.74612, b: 0, a: 1}
     - _Emission2ndBlendMask_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
     - _Emission2ndBlink: {r: 0, g: 0, b: 3.141593, a: 0}
     - _Emission2ndColor: {r: 1, g: 1, b: 1, a: 1}
     - _Emission2ndMap_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionBlendMask_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionBlink: {r: 0, g: 0, b: 3.141593, a: 0}
-    - _EmissionColor: {r: 675.5878, g: 206.60068, b: 0, a: 1}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionMap_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
     - _EmissiveColor: {r: 276.35, g: 0.10089325, b: 0.10089325, a: 276.35}
     - _EmissiveColorLDR: {r: 1, g: 0.0047169924, b: 0.0047169924, a: 1}
@@ -1006,8 +1064,10 @@ Material:
     - _Main3rdTexDecalAnimation: {r: 1, g: 1, b: 1, a: 30}
     - _Main3rdTexDecalSubParam: {r: 1, g: 1, b: 0, a: 1}
     - _Main3rdTex_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
+    - _MainColor: {r: 0, g: 0, b: 0, a: 1}
     - _MainTexHSVG: {r: 0, g: 1, b: 1, a: 1}
     - _MainTex_ScrollRotate: {r: 0, g: 0, b: 0, a: 0}
+    - _Maincolor2: {r: 0, g: 0, b: 0, a: 1}
     - _MatCap2ndBlendUV1: {r: 0, g: 0, b: 0, a: 0}
     - _MatCap2ndColor: {r: 1, g: 1, b: 1, a: 1}
     - _MatCapBlendUV1: {r: 0, g: 0, b: 0, a: 0}
