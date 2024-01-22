@@ -83,7 +83,7 @@ namespace TestField
             if (nearestCover != null)
             {
                 // 在掩体周围生成一个点
-                Vector3 randomPointAroundCover = RandomPointBetween(nearestCover.transform.position, target.transform.position, 1f);
+                Vector3 randomPointAroundCover = RandomPointBetween(nearestCover, nearestCover.transform.position, target.transform.position, 1f);
                 return randomPointAroundCover;
             }
             else
@@ -113,25 +113,41 @@ namespace TestField
             return nearestCover;
         }
 
-        private Vector3 RandomPointBetween(Vector3 pointA, Vector3 pointB, float distance)
+        private Vector3 RandomPointBetween(GameObject nearestCover, Vector3 pointA, Vector3 pointB, float distance)
         {
-            // 生成一个位于 pointA 和 pointB 之间的随机点，距离 pointA 的距离为 distance
-            Vector3 direction = (pointB - pointA).normalized;
-            Vector3 randomPoint = pointA + direction * distance;
+            CoverPointGenerate CPG = nearestCover.GetComponent<CoverPointGenerate>();
+            List<Vector3> validPoints = CPG.generatedPoints;
+            List<Vector3> suitablePoints = new List<Vector3>();
 
-            // 将生成的点随机偏移一定角度，以增加随机性
-            randomPoint = Quaternion.Euler(0, Random.Range(0f, 360f), 0) * (randomPoint - pointA) + pointA;
-
-            // 射线检测
-            RaycastHit hit;
-            if (Physics.Raycast(randomPoint, pointA - randomPoint, out hit))
+            foreach (Vector3 coverPoint in validPoints)
             {
-                    return randomPoint;
+                // 发射射线，检测是否可以直接到达目标
+                RaycastHit hit;
+                if (Physics.Raycast(coverPoint, pointB - coverPoint, out hit))
+                {
+                    // 判断是否被 nearestCover 遮挡
+                    if (hit.collider.gameObject == nearestCover)
+                    {
+                        Debug.Log("Found a suitable cover point at: " + coverPoint);
+                        suitablePoints.Add(coverPoint);
+                    }
+                }
             }
 
-            // 射线未击中 pointA，重新生成
-            return RandomPointBetween(pointA, pointB, distance);
+            if (suitablePoints.Count > 0)
+            {
+                // 从符合条件的点中随机选择一个返回
+                Vector3 randomPoint = suitablePoints[Random.Range(0, suitablePoints.Count)];
+                return randomPoint;
+            }
+            else
+            {
+                // 如果没有找到符合条件的点，可以在这里处理
+                Debug.Log("No suitable cover point found.");
+                return Vector3.zero; // 或者返回其他值，表示未找到符合条件的点
+            }
         }
+
 
 
 
