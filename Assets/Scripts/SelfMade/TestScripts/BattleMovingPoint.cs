@@ -2,176 +2,162 @@ using CustomInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Pathfinding;
+using static RootMotion.FinalIK.HitReaction;
+using AvatarMain;
 
 namespace TestField
 {
     public class BattleMovingPoint : MonoBehaviour
     {
-        private List<GameObject> HalfCoverList = new List<GameObject>();
-        private List<GameObject> FullCoverList = new List<GameObject>();
-        private Vector3 SafePoint;
-        private BroadCasterInfoContainer BCIC;
-        private GameObject Target;
-        public List<GameObject> CoverList;
 
-        CoverUtility coverUtility = new CoverUtility();
+        public List<Vector3> aimPoint;
+        private bool hasReachedTargetPoint;
+        private Vector3 Destination;
 
-        private void Awake()
-        {
-            ComponentInit();
-            MergeCoverLists(); // 在 Awake 中进行 CoverList 合并的初始化
-        }
+        private float FSpeed;
+        private float FSprintSpeed;
+        public float followSpeed = 2f;
+        public float stoppingDistance = 0.5f;
+        public float accelerationDistance = 5.0f; // 你希望加速的距离阈值
+        public float CSpeed;
+
+        private Seeker seeker;
+
 
         private void Start()
         {
-            EventSubscribe();
+            seeker = GetComponent<Seeker>();
         }
 
-        private void Update()
+
+
+        void OnPathComplete(Path path)
         {
-            if (Input.GetKeyDown(KeyCode.R))
+            aimPoint = new List<Vector3>(path.vectorPath);
+        }
+
+
+
+        private void AStarMoving()
+        {
+
+            //这里用if是因为在抵达目标点一瞬间数组会只有一位数0，此时Vector3 aimPoint[1]会取不到值
+            int Count = aimPoint.Count;
+            //Debug.LogError(Count);
+
+            if (Count == 1)
             {
-                MoveToSafeLocation();
+                Destination = aimPoint[index: 0];
             }
-
-        }
-
-
-
-        private void MoveToSafeLocation()
-        {
-            if (Target == null || CoverList == null)
+            else if (Count >= 1)
             {
-                // 进行错误处理，或者直接返回
-                Debug.LogError("Target or CoverList is null.");
+                Destination = aimPoint[index: 1];
+            }
+            else if (Count == 0)
+            {
+                Debug.LogError("Follower:The List Count is 0!");
                 return;
             }
-            // 执行移动逻辑，使用 CoverList 进行射线检测等
-            Vector3 safeLocation = FindSafeLocation(Target, CoverList);
-            SafePoint = safeLocation;
-            //Debug.Log(safeLocation);
-
-            // 判断坐标是否可行
-            if (IsPositionValid(safeLocation))
+            else
             {
-                // 在这里可以执行移动逻辑，例如使用NavMeshAgent或者直接修改Transform.position
-                // MoveTo(safeLocation);
+                Debug.LogError("Follower:The List Count Take" + Count);
+            }
+
+            float distanceToTarget = CalculateTotalLength(aimPoint);
+            float currentSpeed;
+
+            //Debug.LogWarning(distanceToTarget);
+
+            if (distanceToTarget > stoppingDistance)
+            {
+                SpeedJudging();
+
+                // 计算当前速度，使其逐渐减小直到0
+                currentSpeed = followSpeed * (distanceToTarget / stoppingDistance);
+
+                if (distanceToTarget > accelerationDistance)
+                {
+                    // 如果距离小于加速的阈值距离，使用加速速度
+                    currentSpeed = FSprintSpeed;
+                }
+                else if (currentSpeed > FSpeed)
+                {
+                    currentSpeed = FSpeed;
+                }
+
+                //Debug.Log("Follower #315 CurrentSpeed:" + currentSpeed);
+
+                if (aimPoint != null && aimPoint.Count != 0)
+                {
+                    // 计算移动方向
+                    Vector3 MoveDir = (aimPoint[1] - transform.position).normalized;
+                    //Debug.Log(currentSpeed);
+
+                    CSpeed = currentSpeed;
+
+                    //移动角色
+                    transform.position = Vector3.MoveTowards(transform.position, Destination, currentSpeed * Time.deltaTime);
+                    //Debug.Log(Destination);
+
+
+                    // 使物体朝向移动方向
+                    if (MoveDir != Vector3.zero)
+                    {
+                        // 计算目标朝向
+                        Quaternion targetRotation = Quaternion.LookRotation(MoveDir);
+
+                        //Debug.LogError(targetRotation);
+                        //Debug.LogWarning(transform.rotation);
+
+                        // 使用Slerp插值来平滑地转向目标朝向
+                        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
+                    }
+
+                    //如果目标抵达了一个路径节点则将这个节点删去
+                    if (Vector3.Distance(aimPoint[1], transform.position) <= 1f)
+                    {
+                        aimPoint.RemoveAt(1);
+                    }
+                }
             }
             else
             {
-                // 如果坐标不可行，可以执行一些处理逻辑，例如选择其他目标地点
-                Debug.Log("Selected location is not valid. Choosing an alternative location.");
-
-                // 这里可以根据具体情况选择其他目标地点的算法
-                // ...
-
-                // 假设简单地选择离 Target 最近的点
-                Vector3 alternativeLocation = FindAlternativeLocation();
-                // MoveTo(alternativeLocation);
+                currentSpeed = 0;
+                CSpeed = currentSpeed;
+                //移动完成后跟随者是肯定在目标点刷新范围内的
+                hasReachedTargetPoint = true;
+                //Debug.LogWarning("REACHED TARGET POINT");
             }
         }
 
-        private Vector3 FindSafeLocation(GameObject target, List<GameObject> coverObjects)
+        //这个方法用来启动Seeker的路径计算
+        public void SeekerCalcu(Vector3 TargetPoint)
         {
-            if (coverObjects.Count == 0)
+            Vector3 TargetPosition = TargetPoint;
+            seeker.StartPath(transform.position, TargetPoint);
+
+            seeker.pathCallback += OnPathComplete; //在每次回调成功后把新路径点加在数组后面
+        }
+
+        //一个方法，用来在回调后保存Path数组的值
+        float CalculateTotalLength(List<Vector3> points)
+        {
+            float totalLength = 0f;
+
+            // 遍历点列表，计算相邻点之间的距离并相加
+            for (int i = 0; i < points.Count - 1; i++)
             {
-                Debug.LogError("No cover objects available.");
-                return Vector3.zero;
+                totalLength += Vector3.Distance(points[i], points[i + 1]);
             }
 
-            // 寻找最近的掩体
-            //GameObject nearestCover = FindNearestCover(coverObjects);
-            GameObject nearestCover = coverUtility.FindNearestCoverOnRoute(gameObject,target, coverObjects);
-
-            if (nearestCover != null)
-            {
-                // 在掩体周围生成一个点
-                Vector3 randomPointAroundCover = coverUtility.RandomPointBetween(nearestCover, target.transform.position);
-                return randomPointAroundCover;
-            }
-            else
-            {
-                Debug.LogError("No nearest cover found.");
-                return Vector3.zero;
-            }
+            return totalLength;
         }
 
-
-
-
-
-
-
-        private bool IsPositionValid(Vector3 position)
+        protected void SpeedJudging()
         {
-            // 在这里编写坐标是否可行的判定逻辑，根据实际需求返回true或false
-            // 例如，可以检查是否在可行走区域、是否超出边界等等
-            // ...
 
-            return true; // 这里是一个简单的示例，始终返回true
         }
 
-        private Vector3 FindAlternativeLocation()
-        {
-            // 这里可以根据实际需求选择其他目标地点的算法
-            // ...
-
-            // 假设简单地选择离 Target 最近的点
-            return transform.position + (Target.transform.position - transform.position).normalized * 10f; // 10f是一个简单的距离值
-        }
-
-        private void ComponentInit()
-        {
-            BCIC = GetComponent<BroadCasterInfoContainer>();
-        }
-
-        private void EventSubscribe()
-        {
-            BCIC.FullcoverChanged += OnFullCoverChanged;
-            BCIC.HalfcoverChanged += OnHalfCoverChanged;
-            BCIC.TargetReceivedChanged += TargetReceived;
-        }
-
-        private void TargetReceived(GameObject newvalue)
-        {
-            Target = newvalue;
-        }
-
-        private void OnFullCoverChanged(List<GameObject> newList)
-        {
-            FullCoverList = newList;
-            MergeCoverLists(); // 当 FullCoverList 发生变化时，重新合并 CoverList
-        }
-
-        private void OnHalfCoverChanged(List<GameObject> newList)
-        {
-            HalfCoverList = newList;
-            MergeCoverLists(); // 当 HalfCoverList 发生变化时，重新合并 CoverList
-        }
-
-        private void MergeCoverLists()
-        {
-            // 合并 FullCoverList 和 HalfCoverList 到 CoverList
-            CoverList = new List<GameObject>(FullCoverList);
-            CoverList.AddRange(HalfCoverList);
-        }
-
-        private void OnDestroy()
-        {
-            if (BCIC != null)
-            {
-                BCIC.FullcoverChanged -= OnFullCoverChanged;
-                BCIC.HalfcoverChanged -= OnHalfCoverChanged;
-                BCIC.TargetReceivedChanged -= TargetReceived;
-            }
-        }
-
-#if UNITY_EDITOR
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.green;
-            Gizmos.DrawSphere(SafePoint, 0.5f);
-        }
-#endif
     }
 }

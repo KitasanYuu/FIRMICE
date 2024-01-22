@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace TestField
@@ -8,11 +9,11 @@ namespace TestField
     {
 
         //用于查找距离自身最近的掩体
-        public GameObject FindNearestCover(GameObject selfobject,List<GameObject> coverObjects)
+        public GameObject FindNearestCover(GameObject selfobject, List<GameObject> coverObjects)
         {
             GameObject nearestCover = null;
             float minDistance = float.MaxValue;
-            Vector3 currentPosition =selfobject.transform.position;
+            Vector3 currentPosition = selfobject.transform.position;
 
             foreach (GameObject coverObject in coverObjects)
             {
@@ -29,7 +30,7 @@ namespace TestField
         }
 
         //查找距离物体至目标的直线直线距离最短的掩体
-        public GameObject FindNearestCoverOnRoute(GameObject selfobject,GameObject target, List<GameObject> coverObjects)
+        public GameObject FindNearestCoverOnRoute(GameObject selfobject, GameObject target, List<GameObject> coverObjects)
         {
             GameObject nearestCover = null;
             float minDistanceToRoute = float.MaxValue;
@@ -45,21 +46,22 @@ namespace TestField
 
                 float distance = Vector3.Cross(lineVec, pointVec).magnitude / lineVec.magnitude;
 
+                float GeneralDistance = coverToTargetDistance + distance;
+
                 if (coverToTargetDistance > minExclusionDistance)
                 {
-                    Debug.Log(coverObject + " is " + coverToTargetDistance);
+                    Debug.Log(coverObject + " is " + GeneralDistance);
 
                     // 如果距离小于当前记录的最小距离，更新记录
-                    if (distance < minDistanceToRoute)
+                    if (GeneralDistance < minDistanceToRoute)
                     {
-                        minDistanceToRoute = distance;
+                        minDistanceToRoute = GeneralDistance;
                         nearestCover = coverObject;
                     }
                 }
 
             }
-
-            return nearestCover;
+            return nearestCover;  
         }
 
 
@@ -96,6 +98,71 @@ namespace TestField
                 // 如果没有找到符合条件的点，可以在这里处理
                 Debug.Log("No suitable cover point found.");
                 return Vector3.zero; // 或者返回其他值，表示未找到符合条件的点
+            }
+        }
+
+        public void NearestVaildAttackPosition(GameObject self, List<Vector3> currentdesireCoverPosition)
+        {
+            Vector3 currentPosition = self.transform.position;
+            float nearestVaildposition = Mathf.Infinity;
+
+            foreach (Vector3 cover in currentdesireCoverPosition)
+            {
+                float nearestposition;
+                nearestposition = Vector3.Distance(currentPosition, cover);
+
+                if (nearestVaildposition > nearestposition)
+                    nearestVaildposition = nearestposition;
+            }
+        }
+
+        public Vector3 FindNearestCoverPointOnRoute(GameObject selfObject, GameObject target, List<GameObject> coverObjects)
+        {
+            if (coverObjects.Count == 0)
+            {
+                Debug.LogError("No cover objects available.");
+                return Vector3.zero;
+            }
+
+            // 寻找最近的掩体
+            //GameObject nearestCover = FindNearestCover(coverObjects);
+            GameObject nearestCoverOnRoute = FindNearestCoverOnRoute(selfObject, target, coverObjects);
+
+            if (nearestCoverOnRoute != null)
+            {
+                // 在掩体周围生成一个点
+                Vector3 randomPointAroundCover = RandomPointBetween(nearestCoverOnRoute, target.transform.position);
+                return randomPointAroundCover;
+            }
+            else
+            {
+                Debug.LogError("No nearest cover found.");
+                return Vector3.zero;
+            }
+        }
+
+        public Vector3 FindNearest(GameObject selfObject, GameObject target, List<GameObject> coverObjects)
+        {
+            if (coverObjects.Count == 0)
+            {
+                Debug.LogError("No cover objects available.");
+                return Vector3.zero;
+            }
+
+            // 寻找最近的掩体
+            GameObject nearestCover = FindNearestCover(selfObject, coverObjects);
+
+            if (nearestCover != null)
+            {
+                // 在掩体周围生成一个点
+                Vector3 randomPointAroundCover = RandomPointBetween(nearestCover, target.transform.position);
+                return randomPointAroundCover;
+            }
+            else
+            {
+                Debug.LogError("No nearest cover found.");
+                return Vector3.zero;
+
             }
         }
     }
