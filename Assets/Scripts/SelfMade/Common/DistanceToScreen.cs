@@ -1,3 +1,4 @@
+using CustomInspector;
 using UnityEngine;
 
 namespace CameraTools
@@ -7,8 +8,8 @@ namespace CameraTools
     {
         // 目标物体，通常是玩家角色或摄像机
         public Transform targetObject;
-        [HideInInspector]
-        public float DistanceToTarget;
+        
+        [ReadOnly]public float DistanceToTarget;
 
         void Update()
         {
