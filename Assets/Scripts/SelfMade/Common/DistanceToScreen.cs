@@ -26,8 +26,8 @@ namespace CameraTools
             Vector3 targetPosition = targetObject.position;
 
             // 忽略Y轴坐标
-            objectPosition.y = 0;
-            targetPosition.y = 0;
+            //objectPosition.y = 0;
+            //targetPosition.y = 0;
 
             // 计算水平平面上的距离
             float distanceToTarget = Vector3.Distance(objectPosition, targetPosition);
@@ -35,6 +35,12 @@ namespace CameraTools
 
             //// 输出距离信息
             //Debug.Log("物体与目标物体的水平距离：" + distanceToTarget);
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(transform.position, targetObject.position);
         }
     }
 }

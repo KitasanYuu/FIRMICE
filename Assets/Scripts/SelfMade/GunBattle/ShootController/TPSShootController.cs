@@ -327,7 +327,7 @@ namespace playershooting
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.cyan;
-            Gizmos.DrawSphere(DetectPoint, 0.1f);
+            //Gizmos.DrawSphere(DetectPoint, 0.1f);
             Gizmos.DrawRay(DetectPoint, TargetPoint);
         }
 #endif
