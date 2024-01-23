@@ -173,12 +173,11 @@ namespace AvatarMain
 
         public CinemachineVirtualCamera virtualCamera; // 你的Cinemachine虚拟摄像机
 
-        public float minFov = 15f; // 最小FOV
-        public float maxFov = 90f; // 最大FOV
-        public float zoomsensitivity = 10f; // 灵敏度
+        public float minDistance = 1f; // 最小FOV
+        public float maxDistance = 4f; // 最大FOV
+        public float zoomsensitivity = 5f; // 灵敏度
         public float zoomSpeed = 5f; // 缩放速度
-
-        private float targetFov;
+        private float targetDistance;
         public bool isAiming;
 
         //拿给外部取用的参数
@@ -199,6 +198,7 @@ namespace AvatarMain
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
 #endif
+        private Cinemachine3rdPersonFollow followersettings;
         private Animator _animator;
         private TPSShootController tpsshootcontroller;
         private CharacterController _controller;
@@ -224,7 +224,7 @@ namespace AvatarMain
 
         private void Awake()
         {
-
+            followersettings = virtualCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
             // get a reference to our main camera
             if (_mainCamera == null)
             {
@@ -237,10 +237,9 @@ namespace AvatarMain
             //TPS的CinemachineCamera的平滑处理
             if (virtualCamera != null)
             {
-                // 初始化目标FOV为当前摄像机的FOV
-                targetFov = virtualCamera.m_Lens.FieldOfView;
+                // 初始化目标距离为当前摄像机的距离
+                targetDistance = followersettings.CameraDistance;
             }
-
             tpsshootcontroller = GetComponent<TPSShootController>();
             _characterController = playerAmature.GetComponent<CharacterController>();
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
@@ -330,12 +329,21 @@ namespace AvatarMain
         {
             if (virtualCamera != null)
             {
-                // 根据鼠标滚轮输入更新目标FOV
-                targetFov -= Input.GetAxis("Mouse ScrollWheel") * zoomsensitivity;
-                targetFov = Mathf.Clamp(targetFov, minFov, maxFov);
+                if (!isAiming)
+                {
 
-                // 平滑地插值当前FOV到目标FOV
-                virtualCamera.m_Lens.FieldOfView = Mathf.Lerp(virtualCamera.m_Lens.FieldOfView, targetFov, zoomSpeed * Time.deltaTime);
+                    // 根据鼠标滚轮输入更新目标距离
+                    targetDistance -= Input.GetAxis("Mouse ScrollWheel") * zoomsensitivity;
+                    targetDistance = Mathf.Clamp(targetDistance, minDistance, maxDistance);
+
+                    // 平滑地插值当前距离到目标距离
+                    followersettings.CameraDistance = Mathf.Lerp(followersettings.CameraDistance, targetDistance, zoomSpeed * Time.deltaTime);
+                }
+                else
+                {
+                    followersettings.CameraDistance = maxDistance;
+                    targetDistance = maxDistance;
+                }
             }
         }
 
