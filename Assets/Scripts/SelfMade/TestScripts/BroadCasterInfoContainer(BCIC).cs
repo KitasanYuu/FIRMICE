@@ -38,9 +38,11 @@ namespace TestField
         [ReadOnly]public AvatarController avatarController;
         [ReadOnly]public TPSShootController tpsShootController;
         public List<GameObject> OtherReceivers = new List<GameObject>();
+        public List<GameObject> CoverList = new List<GameObject>();
         public List<GameObject> FullCoverList = new List<GameObject>();
         public List<GameObject> HalfCoverList = new List<GameObject>();
 
+        private bool shouldCombineLists =false;
 
         void Start()
         {
@@ -126,15 +128,28 @@ namespace TestField
             }
         }
 
+        private void CombineLists()
+        {
+            CoverList.Clear();
+            HashSet<GameObject> uniqueSet = new HashSet<GameObject>(HalfCoverList);
+            uniqueSet.UnionWith(FullCoverList);
+            CoverList = new List<GameObject>(uniqueSet);
+
+            // 合并完成后重置 shouldCombineLists 为 false
+            shouldCombineLists = false;
+        }
+
         public void HalfCoverChanged(List<GameObject> newHalfCoverList)
         {
             HalfCoverList = newHalfCoverList;
+            CombineLists();
             OnHalfCoverChanged(newHalfCoverList);
         }
 
         public void FullCoverChanged(List<GameObject> newFullCoverList)
         {
             FullCoverList = newFullCoverList;
+            CombineLists();
             OnFullCoverChanged(newFullCoverList);
         }
 
