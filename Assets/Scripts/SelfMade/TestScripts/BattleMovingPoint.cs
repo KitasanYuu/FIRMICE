@@ -1,10 +1,6 @@
-using CustomInspector;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
-using static RootMotion.FinalIK.HitReaction;
-using AvatarMain;
 
 namespace TestField
 {
@@ -12,7 +8,6 @@ namespace TestField
     {
 
         public List<Vector3> aimPoint;
-        private bool hasReachedTargetPoint;
         private Vector3 Destination;
 
         private float FSpeed;
@@ -29,14 +24,6 @@ namespace TestField
         {
             seeker = GetComponent<Seeker>();
         }
-
-
-
-        void OnPathComplete(Path path)
-        {
-            aimPoint = new List<Vector3>(path.vectorPath);
-        }
-
 
 
         private void AStarMoving()
@@ -125,11 +112,10 @@ namespace TestField
             {
                 currentSpeed = 0;
                 CSpeed = currentSpeed;
-                //移动完成后跟随者是肯定在目标点刷新范围内的
-                hasReachedTargetPoint = true;
-                //Debug.LogWarning("REACHED TARGET POINT");
             }
         }
+
+
 
         //这个方法用来启动Seeker的路径计算
         public void SeekerCalcu(Vector3 TargetPoint)
@@ -138,6 +124,11 @@ namespace TestField
             seeker.StartPath(transform.position, TargetPoint);
 
             seeker.pathCallback += OnPathComplete; //在每次回调成功后把新路径点加在数组后面
+        }
+
+        void OnPathComplete(Path path)
+        {
+            aimPoint = new List<Vector3>(path.vectorPath);
         }
 
         //一个方法，用来在回调后保存Path数组的值

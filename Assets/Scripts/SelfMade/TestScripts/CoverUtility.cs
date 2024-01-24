@@ -101,21 +101,7 @@ namespace TestField
             }
         }
 
-        public void NearestVaildAttackPosition(GameObject self, List<Vector3> currentdesireCoverPosition)
-        {
-            Vector3 currentPosition = self.transform.position;
-            float nearestVaildposition = Mathf.Infinity;
-
-            foreach (Vector3 cover in currentdesireCoverPosition)
-            {
-                float nearestposition;
-                nearestposition = Vector3.Distance(currentPosition, cover);
-
-                if (nearestVaildposition > nearestposition)
-                    nearestVaildposition = nearestposition;
-            }
-        }
-
+        //随机一个距离物体至目标的直线直线距离最短的掩体上的安全点
         public Vector3 FindNearestCoverPointOnRoute(GameObject selfObject, GameObject target, List<GameObject> coverObjects)
         {
             if (coverObjects.Count == 0)
@@ -141,7 +127,8 @@ namespace TestField
             }
         }
 
-        public Vector3 FindNearest(GameObject selfObject, GameObject target, List<GameObject> coverObjects)
+        //在最近的掩体上生成一个安全点
+        public Vector3 FindNearestCoverPoint(GameObject selfObject, GameObject target, List<GameObject> coverObjects)
         {
             if (coverObjects.Count == 0)
             {
