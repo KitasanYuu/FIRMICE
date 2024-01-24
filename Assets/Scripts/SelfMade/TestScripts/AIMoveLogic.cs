@@ -11,7 +11,6 @@ namespace TestField
         [ReadOnly]public float ToTargetDistance;
         public float VaildShootRange;
         public bool InBattle;
-        public LayerMask CoverLayer;
         private bool TargetExpose;
         private List<GameObject> HalfCoverList = new List<GameObject>();
         private List<GameObject> FullCoverList = new List<GameObject>();
@@ -19,7 +18,7 @@ namespace TestField
         private GameObject Target;
 
         private Vector3 SafePoint;
-
+        private bool FirstEnterBattle=true;
 
         private AlertLogic AL;
         private BattleMovingPoint BMP;
@@ -41,27 +40,45 @@ namespace TestField
         {
             ParameterUpdate();
             TargetDistanceDetect();
-            if (Input.GetKeyDown(KeyCode.R))
+            CombatProcessMoving();
+            //if (Input.GetKeyDown(KeyCode.R))
+            //{
+            //    FindSafeLocation();
+            //    BMP?.SeekerCalcu(SafePoint);
+            //}
+
+            if (IsDirectToTarget(Target))
             {
-                FindSafeLocation();
-                BMP?.SeekerCalcu(SafePoint);
-
+                Debug.Log("Direct To Target");
             }
-
         }
 
-        private void FindSafeLocation()
+        private void CombatProcessMoving()
         {
-            if (Target == null || CoverList == null)
+            if (InBattle)
             {
-                // 进行错误处理，或者直接返回
-                Debug.LogError("Target or CoverList is null.");
-                return;
+                if (FirstEnterBattle)
+                {
+                    Vector3 InitSafePoint = coverUtility.FindNearestCoverPoint(gameObject, Target, CoverList);
+                    BMP?.SeekerCalcu(InitSafePoint);
+                    FirstEnterBattle = false;
+                }
+                
             }
-            //调用FindNearestCoverPointOnRoute回调路径上距离最短的掩体位置
-            Vector3 safeLocation = coverUtility.FindNearestCoverPointOnRoute(gameObject, Target, CoverList);
-            SafePoint = safeLocation;
         }
+
+        //private void FindSafeLocation()
+        //{
+        //    if (Target == null || CoverList == null)
+        //    {
+        //        // 进行错误处理，或者直接返回
+        //        Debug.LogError("Target or CoverList is null.");
+        //        return;
+        //    }
+        //    //调用FindNearestCoverPointOnRoute回调路径上距离最短的掩体位置
+        //    Vector3 safeLocation = coverUtility.FindNearestCoverPointOnRoute(gameObject, Target, CoverList);
+        //    SafePoint = safeLocation;
+        //}
 
         private void TargetDistanceDetect()
         {
@@ -96,29 +113,31 @@ namespace TestField
         }
 
         //用于判定是否直接面对Target
-        bool IsDirectToTarget(GameObject Target, LayerMask CoverLayer)
+        bool IsDirectToTarget(GameObject Target)
         {
-            if (Target != null)
+            if (BCIC == null || Target == null)
             {
-                // 获取自身位置
-                Vector3 selfPosition = transform.position;
-
-                // 获取目标位置
-                Vector3 targetPosition = Target.transform.position;
-
-                // 获取从自身到目标的方向向量
-                Vector3 directionToTarget = targetPosition - selfPosition;
-
-                // 发射射线检测是否击中目标层
-                RaycastHit hitInfo;
-                bool hit = Physics.Raycast(selfPosition, directionToTarget.normalized, out hitInfo, directionToTarget.magnitude, CoverLayer);
-
-                // 如果击中目标层，返回 false，否则返回 true
-                return !hit;
+                // Handle the case where bcic or Target is null
+                return false;
             }
 
-            // 处理 Target 为 null 的情况
-            return false;
+            List<GameObject> CoverList = BCIC.CoverList;
+
+            // 获取自身位置
+            Vector3 selfPosition = transform.position;
+
+            // 获取目标位置
+            Vector3 targetPosition = Target.transform.position;
+
+            // 获取从自身到目标的方向向量
+            Vector3 directionToTarget = targetPosition - selfPosition;
+
+            // 发射射线检测是否击中CoverList
+            RaycastHit hitInfo;
+            bool hit = Physics.Raycast(selfPosition, directionToTarget.normalized, out hitInfo);
+
+            // 如果击中CoverList，返回 false，否则返回 true
+            return !hit || !CoverList.Contains(hitInfo.collider.gameObject);
         }
 
         private void ComponentInit()

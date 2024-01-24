@@ -10,8 +10,8 @@ namespace TestField
         public List<Vector3> aimPoint;
         private Vector3 Destination;
 
-        private float FSpeed;
-        private float FSprintSpeed;
+        public float FSpeed;
+        public float FSprintSpeed;
         public float followSpeed = 2f;
         public float stoppingDistance = 0.5f;
         public float accelerationDistance = 5.0f; // 你希望加速的距离阈值
@@ -25,7 +25,10 @@ namespace TestField
             seeker = GetComponent<Seeker>();
         }
 
-
+        private void Update()
+        {
+            AStarMoving();
+        }
         private void AStarMoving()
         {
 
@@ -92,13 +95,10 @@ namespace TestField
                     if (MoveDir != Vector3.zero)
                     {
                         // 计算目标朝向
-                        Quaternion targetRotation = Quaternion.LookRotation(MoveDir);
+                        //Quaternion targetRotation = Quaternion.LookRotation(MoveDir);
 
-                        //Debug.LogError(targetRotation);
-                        //Debug.LogWarning(transform.rotation);
-
-                        // 使用Slerp插值来平滑地转向目标朝向
-                        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
+                        //// 使用Slerp插值来平滑地转向目标朝向
+                        //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
                     }
 
                     //如果目标抵达了一个路径节点则将这个节点删去
