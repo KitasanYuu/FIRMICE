@@ -8,10 +8,10 @@ namespace TestField
 {
     public class AIMoveLogic : MonoBehaviour
     {
-        public bool VaildPosition;
         [ReadOnly]public float ToTargetDistance;
         public float VaildShootRange;
         public bool InBattle;
+        public LayerMask CoverLayer;
         private bool TargetExpose;
         private List<GameObject> HalfCoverList = new List<GameObject>();
         private List<GameObject> FullCoverList = new List<GameObject>();
@@ -68,7 +68,17 @@ namespace TestField
             if (Target != null)
             {
 
+
+            }
+        }
+
+        bool VaildShootingPosition()
+        {
+            bool VaildPosition;
+            if (Target != null)
+            {
                 ToTargetDistance = Vector3.Distance(Target.transform.position, gameObject.transform.position);
+                //判断目标是否在有效射程内
                 if (ToTargetDistance > VaildShootRange)
                 {
                     VaildPosition = false;
@@ -78,6 +88,37 @@ namespace TestField
                     VaildPosition = true;
                 }
             }
+            else
+            {
+                VaildPosition = false;
+            }
+            return VaildPosition;
+        }
+
+        //用于判定是否直接面对Target
+        bool IsDirectToTarget(GameObject Target, LayerMask CoverLayer)
+        {
+            if (Target != null)
+            {
+                // 获取自身位置
+                Vector3 selfPosition = transform.position;
+
+                // 获取目标位置
+                Vector3 targetPosition = Target.transform.position;
+
+                // 获取从自身到目标的方向向量
+                Vector3 directionToTarget = targetPosition - selfPosition;
+
+                // 发射射线检测是否击中目标层
+                RaycastHit hitInfo;
+                bool hit = Physics.Raycast(selfPosition, directionToTarget.normalized, out hitInfo, directionToTarget.magnitude, CoverLayer);
+
+                // 如果击中目标层，返回 false，否则返回 true
+                return !hit;
+            }
+
+            // 处理 Target 为 null 的情况
+            return false;
         }
 
         private void ComponentInit()
