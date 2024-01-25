@@ -19,7 +19,7 @@ namespace Detector
         [SerializeField] private Vector3[] rayDirectionsL; // 射线方向数组L
         [SerializeField] private Vector3[] rayDirectionsR; // 射线方向数组R
 
-
+        public bool GizmosDebug = false;
 
         private int frameCount = 0; // 当前帧计数器
         [SerializeField] private int detectionInterval = 30; // 检测间隔，每30帧进行一次检测
@@ -90,5 +90,28 @@ namespace Detector
                 Debug.LogError("RayDetec:No TPSController Found");
             }
         }
+
+#if UNITY_EDITOR
+        private void OnDrawGizmos()
+        {
+            if (GizmosDebug)
+            {
+                DrawRayGizmos(rayDirectionsL, Color.blue); // 绘制蓝色射线
+                DrawRayGizmos(rayDirectionsR, Color.red);  // 绘制红色射线
+            }
+
+        }
+
+        private void DrawRayGizmos(Vector3[] rayDirections, Color color)
+        {
+            Gizmos.color = color;
+
+            foreach (var direction in rayDirections)
+            {
+                // 使用Gizmos.DrawLine绘制射线
+                Gizmos.DrawLine(rayOrigin.position, rayOrigin.position + rayOrigin.TransformDirection(direction) * rayLength);
+            }
+        }
+#endif
     }
 }

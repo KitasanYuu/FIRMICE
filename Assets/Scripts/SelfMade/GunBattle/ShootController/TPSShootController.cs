@@ -21,7 +21,7 @@ namespace playershooting
         [HorizontalLine("自定义的参数",2,FixedColor.Gray)]
         // 用于瞄准的虚拟相机
         [SerializeField] private CinemachineVirtualCamera aimVirtualCamera;
-        [SerializeField] private GameObject AimPoint;
+        //[SerializeField] private GameObject AimPoint;
         // 普通灵敏度和瞄准灵敏度
         [SerializeField] private float normalSensitivity;
         [SerializeField] private float aimSensitivity;
@@ -105,16 +105,17 @@ namespace playershooting
 
             float minDistance = thirdPersonFollow.CameraDistance;
 
-            //Vector3 cameraPos = Camera.main.transform.position;
-            //Vector3 cameraForward = Camera.main.transform.forward;
+            Vector3 cameraPos = Camera.main.transform.position;
+            Vector3 cameraForward = Camera.main.transform.forward;
 
-            //Vector3 rayOrigin = cameraPos + cameraForward * minDistance;
+            Vector3 rayOrigin = cameraPos + cameraForward * minDistance;
+            //Vector3 rayorigin = AimPoint.transform.position;
+            //Vector3 rayOrigin = new Vector3(rayorigin.x-2.5f,rayorigin.y,rayorigin.z);
+            //DetectPoint = rayOrigin;
 
-            Vector3 rayOrigin = AimPoint.transform.position;
-            DetectPoint = rayOrigin;
             TargetPoint = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()).direction;
 
-            Ray ray = new Ray(rayOrigin, Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()).direction);
+            Ray ray = new Ray(rayOrigin, TargetPoint);
 
             if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimColliderLayerMask))
             {
