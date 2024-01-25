@@ -86,7 +86,6 @@ namespace TestField
                     // 计算移动方向
                     Vector3 MoveDir = (aimPoint[1] - transform.position).normalized;
                     //Debug.Log(currentSpeed);
-                    CSpeed = currentSpeed;
 
                     //移动角色
                     transform.position = Vector3.MoveTowards(transform.position, Destination, currentSpeed * Time.deltaTime);
@@ -124,11 +123,105 @@ namespace TestField
             {
                 HasReachedPoint = true;
                 currentSpeed = 0;
-                CSpeed = currentSpeed;
                 aimPoint.Clear();
             }
         }
 
+        //特殊移动情况，自定义速度和加速度
+        public void CustomAStarMoving(float Speed, float SprintSpeed,float FacetoForwordDir = 0, GameObject Target = null)
+        {
+            HasReachedPoint = false;
+            //这里用if是因为在抵达目标点一瞬间数组会只有一位数0，此时Vector3 aimPoint[1]会取不到值
+            int Count = aimPoint.Count;
+            //Debug.LogError(Count);
+
+            if (Count == 1)
+            {
+                Destination = aimPoint[index: 0];
+            }
+            else if (Count >= 1)
+            {
+                Destination = aimPoint[index: 1];
+            }
+            else if (Count == 0)
+            {
+                //Debug.LogError("BMP:The List Count is 0!");
+                return;
+            }
+            else
+            {
+                Debug.LogError("BMP:The List Count Take" + Count);
+            }
+
+            float distanceToTarget = CalculateTotalLength(aimPoint);
+            float currentSpeed;
+
+            //Debug.LogWarning(distanceToTarget);
+
+            if (distanceToTarget > stoppingDistance)
+            {
+                SpeedJudging();
+
+                // 计算当前速度，使其逐渐减小直到0
+                currentSpeed = Speed * (distanceToTarget / stoppingDistance);
+
+                if (distanceToTarget > accelerationDistance)
+                {
+                    // 如果距离小于加速的阈值距离，使用加速速度
+                    currentSpeed = SprintSpeed;
+                }
+                else if (currentSpeed > FSpeed)
+                {
+                    currentSpeed = SprintSpeed;
+                }
+
+                //Debug.Log("Follower #315 CurrentSpeed:" + currentSpeed);
+
+                if (aimPoint != null && aimPoint.Count != 0)
+                {
+                    // 计算移动方向
+                    Vector3 MoveDir = (aimPoint[1] - transform.position).normalized;
+                    //Debug.Log(currentSpeed);
+
+                    //移动角色
+                    transform.position = Vector3.MoveTowards(transform.position, Destination, currentSpeed * Time.deltaTime);
+                    //Debug.Log(Destination);
+
+                    if (FacetoForwordDir == 0)
+                    {
+                        // 使物体朝向移动方向
+                        if (MoveDir != Vector3.zero)
+                        {
+                            // 计算目标朝向
+                            Quaternion targetRotation = Quaternion.LookRotation(MoveDir);
+
+                            // 使用Slerp插值来平滑地转向目标朝向
+                            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
+                        }
+                    }
+                    else if (FacetoForwordDir == 1)
+                    {
+                        // 计算目标朝向
+                        Quaternion targetRotation = Quaternion.LookRotation((Target.transform.position - transform.position).normalized);
+
+                        // 使用Slerp插值来平滑地转向目标朝向
+                        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
+                    }
+
+                    //如果目标抵达了一个路径节点则将这个节点删去
+                    if (Vector3.Distance(aimPoint[1], transform.position) <= 1f)
+                    {
+                        aimPoint.RemoveAt(1);
+                    }
+                }
+            }
+            else
+            {
+                HasReachedPoint = true;
+                currentSpeed = 0;
+                aimPoint.Clear();
+            }
+        }
 
 
         //这个方法用来启动Seeker的路径计算

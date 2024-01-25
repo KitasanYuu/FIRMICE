@@ -50,7 +50,7 @@ namespace TestField
             ParameterUpdate();
             CombatProcessMoving();
             Moving(Facetoforworddir,Target);
-            FaceToTarget(Target);
+            //FaceToTarget(Target);
 
 
             if (IsDirectToTarget(Target))
@@ -64,6 +64,7 @@ namespace TestField
         {
             if (InBattle)
             {
+                //如果刚刚进入战斗则首先寻找最近的掩体的安全点
                 if (FirstEnterBattle)
                 {
                     Vector3 InitSafePoint = coverUtility.FindNearestCoverPoint(gameObject, Target, CoverList);
@@ -73,13 +74,14 @@ namespace TestField
             }
         }
 
+        //从激活后每隔固定时间(ReScanDelay)刷新一个最近掩体的安全点位移动过去
         private void PositionAdjust()
         {
             if(Target!=null && !IsMoving && InBattle)
             {
                 if (IsDirectToTarget(Target))
                 {
-                    Debug.Log("ReGenered");
+                    //Debug.Log("ReGenered");
                     Vector3 RegeneratedPoint = coverUtility.FindNearestCoverPoint(gameObject,Target, CoverList);
                     CalcuRouteMove(RegeneratedPoint);
                 }
@@ -125,7 +127,6 @@ namespace TestField
                 // 使用Slerp插值来平滑地转向目标朝向
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
             }
-
         }
 
         //传入目标点自动计算路径并开始移动
