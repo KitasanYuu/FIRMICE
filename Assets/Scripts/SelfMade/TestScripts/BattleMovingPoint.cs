@@ -32,7 +32,7 @@ namespace TestField
             
         }
 
-        public void AStarMoving()
+        public void AStarMoving(float FacetoForwordDir = 0,GameObject Target=null)
         {
             HasReachedPoint = false;
             //这里用if是因为在抵达目标点一瞬间数组会只有一位数0，此时Vector3 aimPoint[1]会取不到值
@@ -86,19 +86,28 @@ namespace TestField
                     // 计算移动方向
                     Vector3 MoveDir = (aimPoint[1] - transform.position).normalized;
                     //Debug.Log(currentSpeed);
-
                     CSpeed = currentSpeed;
 
                     //移动角色
                     transform.position = Vector3.MoveTowards(transform.position, Destination, currentSpeed * Time.deltaTime);
                     //Debug.Log(Destination);
 
+                    if (FacetoForwordDir==0)
+                    {
+                        // 使物体朝向移动方向
+                        if (MoveDir != Vector3.zero)
+                        {
+                            // 计算目标朝向
+                            Quaternion targetRotation = Quaternion.LookRotation(MoveDir);
 
-                    // 使物体朝向移动方向
-                    if (MoveDir != Vector3.zero)
+                            // 使用Slerp插值来平滑地转向目标朝向
+                            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
+                        }
+                    }
+                    else if(FacetoForwordDir==1)
                     {
                         // 计算目标朝向
-                        Quaternion targetRotation = Quaternion.LookRotation(MoveDir);
+                        Quaternion targetRotation = Quaternion.LookRotation((Target.transform.position-transform.position).normalized);
 
                         // 使用Slerp插值来平滑地转向目标朝向
                         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
