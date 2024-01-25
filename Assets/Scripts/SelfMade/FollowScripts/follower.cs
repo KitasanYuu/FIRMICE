@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using UnityEngine.AI;
 using Pathfinding;
@@ -402,6 +402,7 @@ namespace Partner
                 //移动完成后跟随者是肯定在目标点刷新范围内的
                 isInsideSector = true;
                 hasReachedTargetPoint = true;
+                aimPoint.Clear();
                 //Debug.LogWarning("REACHED TARGET POINT");
             }
         }

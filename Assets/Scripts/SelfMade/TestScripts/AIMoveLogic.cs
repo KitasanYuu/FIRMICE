@@ -1,4 +1,5 @@
 using CustomInspector;
+using Pathfinding;
 using System.Collections;
 using System.Collections.Generic;
 using TestField;
@@ -20,6 +21,10 @@ namespace TestField
         private Vector3 SafePoint;
         private bool FirstEnterBattle=true;
 
+        public bool StartMoving;
+        public bool IsMoving;
+        public bool HasExcuted;
+
         private AlertLogic AL;
         private BattleMovingPoint BMP;
         private BroadCasterInfoContainer BCIC;
@@ -39,13 +44,9 @@ namespace TestField
         private void Update()
         {
             ParameterUpdate();
-            TargetDistanceDetect();
             CombatProcessMoving();
-            //if (Input.GetKeyDown(KeyCode.R))
-            //{
-            //    FindSafeLocation();
-            //    BMP?.SeekerCalcu(SafePoint);
-            //}
+            Moving();
+
 
             if (IsDirectToTarget(Target))
             {
@@ -53,6 +54,7 @@ namespace TestField
             }
         }
 
+        //战时移动的主控
         private void CombatProcessMoving()
         {
             if (InBattle)
@@ -60,36 +62,61 @@ namespace TestField
                 if (FirstEnterBattle)
                 {
                     Vector3 InitSafePoint = coverUtility.FindNearestCoverPoint(gameObject, Target, CoverList);
-                    BMP?.SeekerCalcu(InitSafePoint);
+                    CalcuRouteMove(InitSafePoint);
                     FirstEnterBattle = false;
                 }
-                
             }
         }
 
-        //private void FindSafeLocation()
-        //{
-        //    if (Target == null || CoverList == null)
-        //    {
-        //        // 进行错误处理，或者直接返回
-        //        Debug.LogError("Target or CoverList is null.");
-        //        return;
-        //    }
-        //    //调用FindNearestCoverPointOnRoute回调路径上距离最短的掩体位置
-        //    Vector3 safeLocation = coverUtility.FindNearestCoverPointOnRoute(gameObject, Target, CoverList);
-        //    SafePoint = safeLocation;
-        //}
-
-        private void TargetDistanceDetect()
+        private void PositionAdjust()
         {
-            if (Target != null)
+            if(Target!=null && !IsMoving && InBattle)
             {
-
-
+                if (IsDirectToTarget(Target))
+                {
+                    Debug.Log("ReGenered");
+                    Vector3 RegeneratedPoint = coverUtility.FindNearestCoverPoint(gameObject,Target, CoverList);
+                    CalcuRouteMove(RegeneratedPoint);
+                }
             }
         }
 
-        bool VaildShootingPosition()
+        #region Update每帧调用的检测,行动
+        //每帧更新是否进入战斗状态
+        private void ParameterUpdate()
+        {
+            TargetExpose = AL.TargetExposed;
+            if (TargetExpose && !HasExcuted)
+            {
+                InBattle = true;
+                StartPositionAdjust(true);
+                HasExcuted = true;
+            }
+        }
+
+        //Update控制AStar移动启动，AStar到达目标点后会自动终止
+        private void Moving()
+        {
+            if (BMP != null && StartMoving)
+            {
+                Debug.Log("StartMoving");
+                BMP.AStarMoving();
+                StartMoving = !BMP.HasReachedPoint;
+            }
+            IsMoving = !BMP.HasReachedPoint;
+        }
+        #endregion
+
+        #region 需要传入物体的Function
+        //传入目标点自动计算路径并开始移动
+        private void CalcuRouteMove(Vector3 newPoint)
+        {
+            BMP?.SeekerCalcu(newPoint);
+            StartMoving = true;
+        }
+
+        //用于判断目标是否在自身有效射程内，传入目标GameObject
+        bool VaildShootingPosition(GameObject Target)
         {
             bool VaildPosition;
             if (Target != null)
@@ -139,7 +166,9 @@ namespace TestField
             // 如果击中CoverList，返回 false，否则返回 true
             return !hit || !CoverList.Contains(hitInfo.collider.gameObject);
         }
+        #endregion
 
+        #region 组件初始化，订阅管理
         private void ComponentInit()
         {
             BCIC = GetComponent<BroadCasterInfoContainer>();
@@ -153,7 +182,26 @@ namespace TestField
             BCIC.HalfcoverChanged += OnHalfCoverChanged;
             BCIC.TargetReceivedChanged += TargetReceived;
         }
+        private void OnDestroy()
+        {
+            if (BCIC != null)
+            {
+                BCIC.FullcoverChanged -= OnFullCoverChanged;
+                BCIC.HalfcoverChanged -= OnHalfCoverChanged;
+                BCIC.TargetReceivedChanged -= TargetReceived;
+            }
+        }
+        #endregion
 
+        private void StartPositionAdjust(bool newbool)
+        {
+            if (newbool)
+            {
+                InvokeRepeating("PositionAdjust", 2.0f, 10.0f);
+            }
+        }
+
+        #region 广播接收函数流程
         private void TargetReceived(GameObject newvalue)
         {
             Target = newvalue;
@@ -177,24 +225,9 @@ namespace TestField
             CoverList = new List<GameObject>(FullCoverList);
             CoverList.AddRange(HalfCoverList);
         }
+        #endregion
 
-        private void OnDestroy()
-        {
-            if (BCIC != null)
-            {
-                BCIC.FullcoverChanged -= OnFullCoverChanged;
-                BCIC.HalfcoverChanged -= OnHalfCoverChanged;
-                BCIC.TargetReceivedChanged -= TargetReceived;
-            }
-        }
-
-        private void ParameterUpdate()
-        {
-            TargetExpose = AL.TargetExposed;
-            if (TargetExpose)
-                InBattle = true;
-        }
-
+        #region Gizmos绘制
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
@@ -202,5 +235,6 @@ namespace TestField
             Gizmos.DrawSphere(SafePoint, 0.5f);
         }
 #endif
+        #endregion
     }
 }

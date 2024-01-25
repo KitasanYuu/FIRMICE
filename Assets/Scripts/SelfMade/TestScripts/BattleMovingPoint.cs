@@ -17,6 +17,8 @@ namespace TestField
         public float accelerationDistance = 5.0f; // 你希望加速的距离阈值
         public float CSpeed;
 
+        [HideInInspector] 
+        public bool HasReachedPoint;
         private Seeker seeker;
 
 
@@ -27,11 +29,12 @@ namespace TestField
 
         private void Update()
         {
-            AStarMoving();
+            
         }
-        private void AStarMoving()
-        {
 
+        public void AStarMoving()
+        {
+            HasReachedPoint = false;
             //这里用if是因为在抵达目标点一瞬间数组会只有一位数0，此时Vector3 aimPoint[1]会取不到值
             int Count = aimPoint.Count;
             //Debug.LogError(Count);
@@ -46,12 +49,12 @@ namespace TestField
             }
             else if (Count == 0)
             {
-                Debug.LogError("Follower:The List Count is 0!");
+                //Debug.LogError("BMP:The List Count is 0!");
                 return;
             }
             else
             {
-                Debug.LogError("Follower:The List Count Take" + Count);
+                Debug.LogError("BMP:The List Count Take" + Count);
             }
 
             float distanceToTarget = CalculateTotalLength(aimPoint);
@@ -95,10 +98,10 @@ namespace TestField
                     if (MoveDir != Vector3.zero)
                     {
                         // 计算目标朝向
-                        //Quaternion targetRotation = Quaternion.LookRotation(MoveDir);
+                        Quaternion targetRotation = Quaternion.LookRotation(MoveDir);
 
-                        //// 使用Slerp插值来平滑地转向目标朝向
-                        //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
+                        // 使用Slerp插值来平滑地转向目标朝向
+                        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
                     }
 
                     //如果目标抵达了一个路径节点则将这个节点删去
@@ -110,8 +113,10 @@ namespace TestField
             }
             else
             {
+                HasReachedPoint = true;
                 currentSpeed = 0;
                 CSpeed = currentSpeed;
+                aimPoint.Clear();
             }
         }
 
