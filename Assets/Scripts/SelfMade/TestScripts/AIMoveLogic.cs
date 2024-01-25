@@ -18,9 +18,13 @@ namespace TestField
         private List<GameObject> CoverList = new List<GameObject>();
         private GameObject Target;
 
+        public float ReScanDelay=5f;
+
         private Vector3 SafePoint;
         private bool FirstEnterBattle=true;
 
+        [Tooltip("在移动时的面向，0代表朝向移动方向，1代表朝向Target")]
+        public float Facetoforworddir=0;
         public bool StartMoving;
         public bool IsMoving;
         public bool HasExcuted;
@@ -45,7 +49,8 @@ namespace TestField
         {
             ParameterUpdate();
             CombatProcessMoving();
-            Moving();
+            Moving(Facetoforworddir,Target);
+            FaceToTarget(Target);
 
 
             if (IsDirectToTarget(Target))
@@ -95,12 +100,13 @@ namespace TestField
         }
 
         //Update控制AStar移动启动，AStar到达目标点后会自动终止
-        private void Moving()
+
+        private void Moving(float FacetoForwordDir = 0,GameObject Target = null)
         {
             if (BMP != null && StartMoving)
             {
                 Debug.Log("StartMoving");
-                BMP.AStarMoving();
+                BMP.AStarMoving(FacetoForwordDir,Target);
                 StartMoving = !BMP.HasReachedPoint;
             }
             IsMoving = !BMP.HasReachedPoint;
@@ -108,6 +114,20 @@ namespace TestField
         #endregion
 
         #region 需要传入物体的Function
+        //使自身朝向目标
+        private void FaceToTarget(GameObject Target)
+        {
+            if (Target != null)
+            {
+                // 计算目标朝向
+                Quaternion targetRotation = Quaternion.LookRotation((Target.transform.position - transform.position).normalized);
+
+                // 使用Slerp插值来平滑地转向目标朝向
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
+            }
+
+        }
+
         //传入目标点自动计算路径并开始移动
         private void CalcuRouteMove(Vector3 newPoint)
         {
@@ -195,9 +215,12 @@ namespace TestField
 
         private void StartPositionAdjust(bool newbool)
         {
+            // 取消之前可能存在的重复调用
+            CancelInvoke("PositionAdjust");
+
             if (newbool)
             {
-                InvokeRepeating("PositionAdjust", 2.0f, 10.0f);
+                InvokeRepeating("PositionAdjust", 2.0f, ReScanDelay);
             }
         }
 
