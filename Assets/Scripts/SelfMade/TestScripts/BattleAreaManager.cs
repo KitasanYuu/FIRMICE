@@ -27,7 +27,7 @@ namespace TestField
 
         [Foldout("PartnerINFO")]
         [SerializeField]
-        [FixedValues("Player", "Partner", "Enemy", "Neutral", "TrainingTarget")]
+        [FixedValues("Player", "Partner", "Enemy", "Neutral", "TrainingTarget", "TestPrototype")]
         private string PartnerMasterID;
         [SerializeField] private LayerMask PartnerLayer;
         [ReadOnly] public List<GameObject> PartnerList = new List<GameObject>();
@@ -35,7 +35,7 @@ namespace TestField
 
         [Foldout("AIReceiverINFO")]
         [SerializeField]
-        [FixedValues("Player", "Partner", "Enemy", "Neutral", "TrainingTarget")]
+        [FixedValues("Player", "Partner", "Enemy", "Neutral", "TrainingTarget", "TestPrototype")]
         private string ReceiverMasterID;
         [SerializeField] private LayerMask ReceiverLayer;
         [ReadOnly] public List<GameObject> BroadCastReceiver = new List<GameObject>();

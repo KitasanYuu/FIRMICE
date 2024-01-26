@@ -64,6 +64,107 @@ namespace TestField
             return nearestCover;  
         }
 
+        // 查找距离指定目标最远的掩体，并且距离在给定范围内
+        public GameObject FindFarthestCover(GameObject target, List<GameObject> coverObjects, float range)
+        {
+            GameObject farthestCover = null;
+            float maxDistance = 0f;  // 初始化最大距离为0
+
+            Vector3 currentPosition = target.transform.position;  // 获取目标位置
+
+            // 遍历所有掩体对象
+            foreach (GameObject coverObject in coverObjects)
+            {
+                // 计算目标位置到掩体对象位置的距离
+                float distance = Vector3.Distance(currentPosition, coverObject.transform.position);
+
+                // 检查距离是否在指定范围内
+                if (distance <= range)
+                {
+                    // 如果距离比当前最大距离大，则更新最大距离和最远的掩体对象
+                    if (distance > maxDistance)
+                    {
+                        maxDistance = distance;
+                        farthestCover = coverObject;
+                    }
+                }
+            }
+
+            return farthestCover;  // 返回范围内最远的掩体对象
+        }
+
+        // 查找当前掩体CoverOrigin(CO)往前推进一个掩体O3
+        public GameObject FindNextCover(GameObject selfObject, GameObject target, List<GameObject> coverObjects)
+        {
+            GameObject nearestCover = null;  // 用于存储最近的掩体对象
+            GameObject farthestCoverWithinDistanceAroundTarget = null;  // 用于存储在以O2为中心的位置找到的在O2到CO的距离范围内，且CO到O3的距离不超过O1到O2的距离的最远掩体对象
+            float minDistance = float.MaxValue;  // 初始化最小距离为正无穷大
+
+            Vector3 currentPosition = selfObject.transform.position;  // 获取自身位置
+
+            // 遍历所有掩体对象
+            foreach (GameObject coverObject in coverObjects)
+            {
+                // 计算自身位置到掩体对象位置的距离
+                float distanceToSelf = Vector3.Distance(currentPosition, coverObject.transform.position);
+
+                // 找到离自身最近的掩体
+                if (distanceToSelf < minDistance)
+                {
+                    minDistance = distanceToSelf;
+                    nearestCover = coverObject;
+                }
+            }
+
+            // 计算以O2为中心的位置到自身最近的掩体的距离
+            float distanceFromTargetToNearestCover = Vector3.Distance(target.transform.position, nearestCover.transform.position);
+
+            float maxDistanceWithinRange = 0f;  // 初始化在范围内最大距离为0
+
+            // 再次遍历所有掩体对象，找到在以O2为中心的位置找到的在O2到CO的距离范围内，且CO到O3的距离不超过O1到O2的距离的最远掩体
+            foreach (GameObject coverObject in coverObjects)
+            {
+                // 计算以O2为中心的位置到掩体对象位置的距离
+                float distanceAroundTarget = Vector3.Distance(target.transform.position, coverObject.transform.position);
+
+                // 计算CO到O3的距离
+                float distanceFromNearestToCover = Vector3.Distance(nearestCover.transform.position, coverObject.transform.position);
+
+                // 检查距离，并且排除最近的掩体
+                if (coverObject != nearestCover && distanceAroundTarget <= distanceFromTargetToNearestCover && distanceFromNearestToCover <= distanceFromTargetToNearestCover)
+                {
+                    // 如果距离在范围内并且CO到O3的距离不超过O1到O2的距离，且比当前最大距离大，则更新最大距离和最远的掩体对象
+                    if (distanceAroundTarget > maxDistanceWithinRange)
+                    {
+                        maxDistanceWithinRange = distanceAroundTarget;
+                        farthestCoverWithinDistanceAroundTarget = coverObject;
+                    }
+                }
+            }
+
+            return farthestCoverWithinDistanceAroundTarget;  // 返回在以O2为中心的位置找到的在O2到CO的距离范围内，且CO到O3的距离不超过O1到O2的距离的最远掩体对象
+        }
+
+
+        // 获取自身到掩体对象列表中第二远的掩体的距离
+        private float GetSecondFarthestDistance(GameObject selfObject, List<GameObject> coverObjects, GameObject nearestCover)
+        {
+            float maxDistance = 0f;
+            foreach (GameObject coverObject in coverObjects)
+            {
+                if (coverObject != nearestCover)
+                {
+                    float distance = Vector3.Distance(selfObject.transform.position, coverObject.transform.position);
+                    if (distance > maxDistance)
+                    {
+                        maxDistance = distance;
+                    }
+                }
+            }
+            return maxDistance;
+        }
+
+
 
         //查找掩体周围哪个点是有效的掩体点位（即物体与目标之间的射线上存在选定的掩体）
         public Vector3 RandomPointBetween(GameObject Cover, Vector3 pointB)
@@ -138,6 +239,32 @@ namespace TestField
 
             // 寻找最近的掩体
             GameObject nearestCover = FindNearestCover(selfObject, coverObjects);
+
+            if (nearestCover != null)
+            {
+                // 在掩体周围生成一个点
+                Vector3 randomPointAroundCover = RandomPointBetween(nearestCover, target.transform.position);
+                return randomPointAroundCover;
+            }
+            else
+            {
+                Debug.LogError("No nearest cover found.");
+                return Vector3.zero;
+
+            }
+        }
+
+        //在有效射程内找一个最远的掩体生成安全点
+        public Vector3 FindFarthestCoverPointInRange(GameObject target, List<GameObject> coverObjects,float range)
+        {
+            if (coverObjects.Count == 0)
+            {
+                Debug.LogError("No cover objects available.");
+                return Vector3.zero;
+            }
+
+            // 寻找最近的掩体
+            GameObject nearestCover = FindFarthestCover(target, coverObjects,range);
 
             if (nearestCover != null)
             {
