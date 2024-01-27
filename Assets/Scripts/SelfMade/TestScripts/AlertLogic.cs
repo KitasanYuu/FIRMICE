@@ -11,7 +11,7 @@ namespace TestField
     public class AlertLogic : MonoBehaviour
     {
         // 警戒度
-        [ReadOnly, SerializeField] private float CurrentAlertness;
+        [ReadOnly] public float CurrentAlertness;
         // 是否被发现
         [ReadOnly] public bool TargetExposed;
         // 用于清除目标暴露状态的标志
@@ -22,6 +22,7 @@ namespace TestField
         [Foldout("ReceivedParameters")]
         // 警戒目标
         [ReadOnly] public GameObject AlertTarget;
+        [ReadOnly] public bool RecoverProceeding;
         // 是否发现目标
         [ReadOnly] public bool TargetFound;
         // 是否发现目标但在警戒范围之外
@@ -55,6 +56,7 @@ namespace TestField
 
         // 引用AlertLine和BroadCasterInfoContainer脚本
         private AlertLine alertLine;
+        private AIMoveLogic moveLogic;
         private BroadCasterInfoContainer BCIC;
 
         private void Awake()
@@ -95,7 +97,8 @@ namespace TestField
         // 根据目标状态增加警戒度
         private void AlertnessIncrease()
         {
-            if (AlertTarget != null)
+            RecoverProceeding = moveLogic.RecoverStart;
+            if (AlertTarget != null && !RecoverProceeding)
             {
                 if (TargetFound)
                 {
@@ -125,7 +128,8 @@ namespace TestField
         // 判断是否暴露
         private void Expose()
         {
-            if (AlertTarget != null)
+            RecoverProceeding = moveLogic.RecoverStart;
+            if (AlertTarget != null && !RecoverProceeding)
             {
                 // 目标在警戒范围内且开火时，暴露状态为true
                 if (alertLine.DistanceToTarget <= alertLine.DetectionRadius && TargetFire)
@@ -145,7 +149,7 @@ namespace TestField
                     TargetExposed = true;
                 }
             }
-            else
+            else if(AlertTarget == null)
             {
                 // 没有目标时，暴露状态为false，同时警戒度逐渐回归初始值
                 TargetExposed = false;
@@ -161,7 +165,7 @@ namespace TestField
         // 警戒度在未被发现的情况下慢慢清零
         private void AlertnessRecover()
         {
-            if (!TargetFound && !FoundButOutRange)
+            if (moveLogic.RecoverStart ||!TargetFound && !FoundButOutRange)
             {
                 CurrentAlertness = Mathf.Max(CurrentAlertness - AlertnessDecreaseRate * Time.deltaTime, InitAlertness);
             }
@@ -202,6 +206,7 @@ namespace TestField
         private void ComponentInit()
         {
             alertLine = GetComponent<AlertLine>();
+            moveLogic = GetComponent<AIMoveLogic>();
             BCIC = GetComponent<BroadCasterInfoContainer>();
         }
 

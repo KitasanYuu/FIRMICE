@@ -10,7 +10,7 @@ namespace TestField
         private CoverUtility coverUtility = new CoverUtility();
         public GameObject Target;
         public List<GameObject> CoverList = new List<GameObject>();
-        private GameObject TargetCover;
+        private Vector3 TargetCover;
 
         // Start is called before the first frame update
         void Start()
@@ -24,7 +24,7 @@ namespace TestField
             CoverList = BCIC.CoverList;
             if (Input.GetKeyUp(KeyCode.R))
             {
-                TargetCover = coverUtility.FindNextCover(gameObject, Target, CoverList);
+                TargetCover = coverUtility.FindSafePointOnNextCover(gameObject, Target, CoverList,true);
             }
         }
 
@@ -34,7 +34,7 @@ namespace TestField
             if (TargetCover != null)
             {
 
-                Vector3 CoverPosition = TargetCover.transform.position;
+                Vector3 CoverPosition = TargetCover;
                 Gizmos.DrawSphere(CoverPosition, 0.5f);
             }
         }
