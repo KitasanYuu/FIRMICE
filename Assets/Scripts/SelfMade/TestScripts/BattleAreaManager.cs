@@ -13,6 +13,7 @@ namespace TestField
         [SerializeField] private string AreaID = "SearchArea";
         [Space2(10)]
         [Header("Area Size")]
+        [SerializeField] private Vector3 SafeZone = new Vector3 (1f, 1f, 1f);
         [SerializeField] private Vector3 boxSize = new Vector3(1f, 1f, 1f);
 
         // 偏移量
@@ -39,6 +40,7 @@ namespace TestField
         private string ReceiverMasterID;
         [SerializeField] private LayerMask ReceiverLayer;
         [ReadOnly] public List<GameObject> BroadCastReceiver = new List<GameObject>();
+        [ReadOnly] public List<GameObject> SBroadCastReceiver = new List<GameObject>();
 
         [Tab("SearchingStatic")]
         [Foldout("CoverINFO")]
@@ -51,14 +53,20 @@ namespace TestField
         // 事件定义
         public event Action<GameObject> TargetFoundChanged;
         public event Action<List<GameObject>> BroadCastReceiverChanged;
+        public event Action<List<GameObject>> SBroadCastReceiverChanged;
         public event Action<List<GameObject>> HalfCoverChanged;
         public event Action<List<GameObject>> FullCoverChanged;
 
         private GameObject previousTarget;
 
+        private void OnValidate()
+        {
+            SafeZone = boxSize - new Vector3(2f,2f, 2f);
+        }
 
         void Update()
         {
+            SearchingReceiverInSafeZone();
             SearchingReceiver();
             PartnerSeeker();
             SearchingTarget();
@@ -172,6 +180,43 @@ namespace TestField
             }
         }
 
+        private void SearchingReceiverInSafeZone()
+        {
+            Bounds boxBounds = new Bounds(transform.position + boxOffset, SafeZone);
+
+            Collider[] colliders = Physics.OverlapBox(boxBounds.center, boxBounds.extents, Quaternion.identity, ReceiverLayer);
+
+            SBroadCastReceiver.Clear();
+
+            // 使用 HashSet 来确保每个物体只会被添加一次
+            HashSet<GameObject> uniqueObjects = new HashSet<GameObject>();
+
+            foreach (Collider collider in colliders)
+            {
+                Identity identity = collider.GetComponent<Identity>();
+
+                // 如果当前collider没有Identity脚本，则查找其父级
+                if (identity == null)
+                {
+                    Transform parent = collider.transform.parent;
+
+                    while (parent != null && identity == null)
+                    {
+                        identity = parent.GetComponent<Identity>();
+                        parent = parent.parent;
+                    }
+                }
+
+                // 添加带有Identity脚本的物体到SBroadCastReceiver，确保每个物体只会被添加一次
+                if (identity != null && identity.MasterID == ReceiverMasterID && uniqueObjects.Add(identity.gameObject))
+                {
+                    SBroadCastReceiver.Add(identity.gameObject);
+                }
+                // 发送通知，传递更新后的列表
+                OnSBroadCastReceiverChanged();
+            }
+        }
+
         private void CoverSearching()
         {
             Bounds boxBounds = new Bounds(transform.position + boxOffset, boxSize);
@@ -223,6 +268,11 @@ namespace TestField
             BroadCastReceiverChanged?.Invoke(BroadCastReceiver);
         }
 
+        private void OnSBroadCastReceiverChanged()
+        {
+            SBroadCastReceiverChanged?.Invoke(SBroadCastReceiver);
+        }
+
         // 触发事件的方法
         protected virtual void OnTargetFoundChanged(GameObject newTarget)
         {
@@ -248,6 +298,9 @@ namespace TestField
 
             // 绘制框，考虑GameObject的位置和偏移量
             Gizmos.DrawWireCube(transform.position + boxOffset, boxSize);
+
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireCube(transform.position + boxOffset, SafeZone);
         }
 #endif
     }

@@ -13,6 +13,7 @@ namespace TestField
         [SerializeField,ReadOnly]private BattleAreaManager BAM;
         [SerializeField, ReadOnly] private List<GameObject> BCReceiver = new List<GameObject>();
         private List<GameObject> BroadCastReceiver = new List<GameObject>();
+        public List<GameObject> SBroadCastReceiver = new List<GameObject>();
         [SerializeField, ReadOnly] private List<GameObject> FullCoverList = new List<GameObject>();
         [SerializeField, ReadOnly] private List<GameObject> HalfCoverList = new List<GameObject>();
 
@@ -28,6 +29,7 @@ namespace TestField
             BAM.TargetFoundChanged += OnTargetFoundChanged;
             BAM.FullCoverChanged += OnFullCoverChanged;
             BAM.HalfCoverChanged += OnHalfCoverChanged;
+            BAM.SBroadCastReceiverChanged += OnSBroadCastReceivedChanged;
         }
         // Update is called once per frame
         void Update()
@@ -64,6 +66,7 @@ namespace TestField
             }
 
         }
+
         private void OnFullCoverChanged(List<GameObject> newList)
         {
             FullCoverList = newList;
@@ -78,15 +81,51 @@ namespace TestField
             }
         }
 
+        private void OnSBroadCastReceivedChanged(List<GameObject> newList)
+        {
+            SBroadCastReceiver = newList;
+
+            // 找到两个列表的交集，即相同的物体
+            List<GameObject> commonObjects = BroadCastReceiver.Intersect(SBroadCastReceiver).ToList();
+
+            // 遍历相同的物体，并获取每个物体上的一个组件
+            foreach (GameObject obj in commonObjects)
+            {
+                BroadCasterInfoContainer BCIC = obj.GetComponent<BroadCasterInfoContainer>();
+
+                if (BCIC != null)
+                {
+                    BCIC.NeedBackToOrigin = false;
+                    BCIC.TargetBoardCast(ObjectFound);
+                }
+            }
+
+            // 找到两个列表的并集，即所有不同的物体
+            List<GameObject> onlyInCurrent = BroadCastReceiver.Except(SBroadCastReceiver).ToList();
+            //Debug.Log(onlyInCurrent.Count);
+
+            // 遍历所有不同的物体，并获取每个物体上的一个组件
+            foreach (GameObject obj in onlyInCurrent)
+            {
+                BroadCasterInfoContainer BCIC = obj.GetComponent<BroadCasterInfoContainer>();
+
+                if (BCIC != null)
+                {
+                    BCIC.NeedBackToOrigin = true;
+                    BCIC.TargetBoardCast(null);
+                }
+            }
+        }
+
         private void SendAlertToObjectWithAlertLine()
         {
-            foreach (GameObject receiverObject in BroadCastReceiver)
+            foreach (GameObject receiverObject in SBroadCastReceiver)
             {
-                BroadCasterInfoContainer broadcasterinfocontainer = receiverObject.GetComponent<BroadCasterInfoContainer>();
-                if (broadcasterinfocontainer != null)
+                BroadCasterInfoContainer BCIC = receiverObject.GetComponent<BroadCasterInfoContainer>();
+                if (BCIC != null)
                 {
                     // 直接调用 AlertLine 脚本中的 TargetBoardCast 方法，将 ObjectFound 传递给它
-                    broadcasterinfocontainer.TargetBoardCast(ObjectFound);
+                    BCIC.TargetBoardCast(ObjectFound);
                 }
             }
         }
@@ -113,6 +152,7 @@ namespace TestField
             BAM.BroadCastReceiverChanged -= HandleBroadCastReceiverChanged;
             BAM.HalfCoverChanged -= OnHalfCoverChanged;
             BAM.FullCoverChanged -= OnFullCoverChanged;
+            BAM.SBroadCastReceiverChanged -= OnSBroadCastReceivedChanged;
         }
     }
 }

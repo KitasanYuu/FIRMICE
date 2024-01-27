@@ -19,6 +19,7 @@ namespace TestField
         public Action<bool> Fire;
         public Action<bool> Aiming;
 
+        [ReadOnly] public bool NeedBackToOrigin = false;
         //事件传进来的参数
         [ReadOnly]
         public GameObject TargetContainer;
