@@ -55,6 +55,7 @@ namespace TestField
 
         public float DetectionAngle = 45f; // 扇形的角度
         public float detectionRotation = 0f; // 扇形的旋转角度
+        private float TotalRotation;
 
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -240,8 +241,9 @@ namespace TestField
                     Vector3 direction = (targetPosition - origin).normalized;
                     Vector3 RayDirection = (targetPosition - origin).normalized;
 
+                    TotalRotation = detectionRotation + transform.rotation.eulerAngles.y;
                     // 进行旋转
-                    direction = Quaternion.Euler(0f, detectionRotation, 0f) * direction;
+                    direction = Quaternion.Euler(0f, TotalRotation, 0f) * direction;
 
                     // 计算射线的长度（使用自定义的射线长度）
                     float currentRayLength = Mathf.Min(rayLength, detectionRadius);
@@ -350,6 +352,10 @@ namespace TestField
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
+
+            TotalRotation = detectionRotation + transform.rotation.eulerAngles.y;
+            // 正确的获取y轴旋转角度方法
+
             // 获取当前位置
             Vector3 origin = transform.position;
             origin += RayStarpointOffset;
@@ -360,8 +366,8 @@ namespace TestField
             Vector3 leftDirection = leftRotation * detectionDirection;
             Vector3 rightDirection = rightRotation * detectionDirection;
             // 进行旋转
-            leftDirection = Quaternion.Euler(0f, -detectionRotation, 0f) * leftDirection;
-            rightDirection = Quaternion.Euler(0f, -detectionRotation, 0f) * rightDirection;
+            leftDirection = Quaternion.Euler(0f, TotalRotation, 0f) * leftDirection;
+            rightDirection = Quaternion.Euler(0f, TotalRotation, 0f) * rightDirection;
 
             //调试模式下计算预设点位
             // 计算扇形的两个边缘点
@@ -370,8 +376,8 @@ namespace TestField
             Vector3 LeftDirection = LeftRotation * detectionDirection;
             Vector3 RightDirection = RightRotation * detectionDirection;
             // 进行旋转
-            LeftDirection = Quaternion.Euler(0f, -detectionRotation, 0f) * LeftDirection;
-            RightDirection = Quaternion.Euler(0f, -detectionRotation, 0f) * RightDirection;
+            LeftDirection = Quaternion.Euler(0f, TotalRotation, 0f) * LeftDirection;
+            RightDirection = Quaternion.Euler(0f, TotalRotation, 0f) * RightDirection;
 
             // 在 Scene 视图上绘制蓝色圆，表示 RayStarpointOffset
             Gizmos.color = Color.blue;
