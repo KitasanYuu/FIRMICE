@@ -320,7 +320,7 @@ namespace TestField
         private void OnTargetReceivedChanged(GameObject newTarget)
         {
             // 在 TargetReceived 改变时执行的逻辑
-            Debug.Log("TargetReceived changed to: " + newTarget);
+            //Debug.Log("TargetReceived changed to: " + newTarget);
             targetContainer = newTarget;
             targetBroadCastFound = true;
         }

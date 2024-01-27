@@ -9,12 +9,17 @@ namespace TestField
 {
     public class AIMoveLogic : MonoBehaviour
     {
+        [ReadOnly] public GameObject CurrentCoverSelected;
+        private GameObject PreviousCoverSelected;
         [ReadOnly]public float ToTargetDistance;
         public float VaildShootRange;
         public bool InBattle;
         private bool TargetExpose;
+        private bool hasGeneratedPoint;
         private List<GameObject> HalfCoverList = new List<GameObject>();
         private List<GameObject> FullCoverList = new List<GameObject>();
+        public List<GameObject> OccupiedCoverList = new List<GameObject>();
+        public List<GameObject> FreeCoverList = new List<GameObject>();
         private List<GameObject> CoverList = new List<GameObject>();
         private GameObject Target;
 
@@ -55,6 +60,7 @@ namespace TestField
 
         private void Update()
         {
+            CoverOccupied();
             PositionRecover();
             ParameterUpdate();
             BattleStart();
@@ -73,7 +79,8 @@ namespace TestField
                 //如果刚刚进入战斗则首先寻找最近的掩体的安全点
                 if (FirstEnterBattle)
                 {
-                    Vector3 InitSafePoint = coverUtility.FindNearestCoverPoint(gameObject, Target, CoverList);
+                    CurrentCoverSelected = coverUtility.FindNearestCover(gameObject, FreeCoverList);
+                    Vector3 InitSafePoint = coverUtility.FindNearestCoverPoint(gameObject, Target, FreeCoverList,true,CurrentCoverSelected);
                     CCalcuRouteMove(InitSafePoint);
                     FirstEnterBattle = false;
                 }
@@ -90,10 +97,26 @@ namespace TestField
         {
             if (InBattle && !VaildShootingPosition(Target))
             {
-                Vector3 ShotinRangePoint = coverUtility.FindFarthestCoverPointInRange(gameObject, Target, CoverList, VaildShootRange);
-                Facetoforworddir = 0;
-                CCalcuRouteMove(ShotinRangePoint);
-                Debug.Log(ShotinRangePoint);
+                if(!IsMoving && !VaildShootingPosition(Target))
+                    hasGeneratedPoint =false;
+                // 只有在还没有生成过点时才重新生成
+                if (!hasGeneratedPoint)
+                {
+                    CurrentCoverSelected = coverUtility.FindFarthestCover(Target, FreeCoverList, VaildShootRange);
+                    //Debug.Log(CurrentCoverSelected);
+                    Vector3 ShotinRangePoint = coverUtility.FindFarthestCoverPointInRange(gameObject, Target, FreeCoverList, VaildShootRange,true, CurrentCoverSelected,true);
+                    //Debug.Log(ShotinRangePoint);
+                    Facetoforworddir = 0;
+                    CCalcuRouteMove(ShotinRangePoint);
+
+                    // 设置标志位，表示已经生成过点了
+                    hasGeneratedPoint = true;
+                }
+            }
+            else if(InBattle && VaildShootingPosition(Target))
+            {
+                // 如果目标在有效射击位置，则重置标志位，以便下次需要时重新生成点
+                hasGeneratedPoint = false;
             }
         }
 
@@ -104,7 +127,6 @@ namespace TestField
             {
                 if (Target != null)
                 {
-
                     // 获取自身位置和目标位置
                     Vector3 selfPosition = transform.position;
                     Vector3 targetPosition = Target.transform.position;
@@ -118,7 +140,7 @@ namespace TestField
 
                     // 确保生成的点与目标之间的距离为5
                     float distanceToTargetAfterGeneration = Vector3.Distance(generatedPoint, targetPosition);
-                    if (distanceToTargetAfterGeneration != 5f)
+                    if (distanceToTargetAfterGeneration != KeepDistanceToTarget)
                     {
                         // 如果生成的点与目标之间的距离不为5，可以根据具体需求调整生成的点的位置
                         generatedPoint = targetPosition - directionToTarget * KeepDistanceToTarget;
@@ -135,8 +157,8 @@ namespace TestField
             {
                 if (IsDirectToTarget(Target))
                 {
-                    //Debug.Log("ReGenered");
-                    Vector3 RegeneratedPoint = coverUtility.FindNearestCoverPoint(gameObject,Target, CoverList);
+                    CurrentCoverSelected = coverUtility.FindNearestCover(gameObject, FreeCoverList);
+                    Vector3 RegeneratedPoint = coverUtility.FindNearestCoverPoint(gameObject,Target, FreeCoverList,true,CurrentCoverSelected);
                     CCalcuRouteMove(RegeneratedPoint);
                 }
             }
@@ -152,6 +174,28 @@ namespace TestField
                 InBattle = true;
                 StartPositionAdjust(true);
                 HasExcuted = true;
+            }
+        }
+
+        private void CoverOccupied()
+        {
+            if (InBattle)
+            {
+                Identity ID = CurrentCoverSelected?.GetComponent<Identity>();
+                if (ID != null)
+                {
+                    ID.SetOccupiedUseage(true);
+                }
+                // 如果上一个选中的掩体不等于当前选中的掩体，执行某些操作
+                if (PreviousCoverSelected != CurrentCoverSelected&&PreviousCoverSelected != null)
+                {
+                    Identity id = PreviousCoverSelected?.GetComponent<Identity>();
+                    if (id != null)
+                    {
+                        id.SetOccupiedUseage(false);
+                    }
+                }
+                PreviousCoverSelected = CurrentCoverSelected;
             }
         }
 
@@ -172,6 +216,12 @@ namespace TestField
 
             if (RecoverStart)
             {
+                foreach (GameObject OccupiedCover in OccupiedCoverList)
+                {
+                    Identity ID = OccupiedCover.GetComponent<Identity>();
+                    if (ID != null)
+                        ID.SetOccupiedUseage(false);
+                }
                 float DistanceToOrigin = Vector3.Distance(transform.position, InitPosition);
                 if(DistanceToOrigin < 1 &&DistanceToOrigin>=0)
                     RecoverStart=false;
@@ -305,6 +355,8 @@ namespace TestField
             BCIC.FullcoverChanged += OnFullCoverChanged;
             BCIC.HalfcoverChanged += OnHalfCoverChanged;
             BCIC.TargetReceivedChanged += TargetReceived;
+            BCIC.OccupiedcoverChanged += OnOccupiedCoverChanged;
+            BCIC.FreecoverChanged += OnFreeCoverChanged;
         }
         private void OnDestroy()
         {
@@ -313,6 +365,8 @@ namespace TestField
                 BCIC.FullcoverChanged -= OnFullCoverChanged;
                 BCIC.HalfcoverChanged -= OnHalfCoverChanged;
                 BCIC.TargetReceivedChanged -= TargetReceived;
+                BCIC.OccupiedcoverChanged -= OnOccupiedCoverChanged;
+                BCIC.FreecoverChanged -= OnFreeCoverChanged;
             }
         }
         #endregion
@@ -345,12 +399,20 @@ namespace TestField
             HalfCoverList = newList;
             MergeCoverLists(); // 当 HalfCoverList 发生变化时，重新合并 CoverList
         }
+        private void OnOccupiedCoverChanged(List<GameObject> newList)
+        {
+            OccupiedCoverList = newList;
+        }
+        private void OnFreeCoverChanged(List<GameObject> newList)
+        {
+            FreeCoverList = newList;
+        }
 
         private void MergeCoverLists()
         {
             // 合并 FullCoverList 和 HalfCoverList 到 CoverList
-            CoverList = new List<GameObject>(FullCoverList);
-            CoverList.AddRange(HalfCoverList);
+            FreeCoverList = new List<GameObject>(FullCoverList);
+            FreeCoverList.AddRange(HalfCoverList);
         }
         #endregion
 

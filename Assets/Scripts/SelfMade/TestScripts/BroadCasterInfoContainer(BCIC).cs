@@ -15,6 +15,8 @@ namespace TestField
         public Action<List<GameObject>> OtherReceiverChanged;
         public Action<List<GameObject>> HalfcoverChanged;
         public Action<List<GameObject>> FullcoverChanged;
+        public Action<List<GameObject>> OccupiedcoverChanged;
+        public Action<List<GameObject>> FreecoverChanged;
         public Action<int> TargetMovingStatusChanged;
         public Action<bool> Fire;
         public Action<bool> Aiming;
@@ -42,6 +44,8 @@ namespace TestField
         public List<GameObject> CoverList = new List<GameObject>();
         public List<GameObject> FullCoverList = new List<GameObject>();
         public List<GameObject> HalfCoverList = new List<GameObject>();
+        public List<GameObject> OccupiedCoverList = new List<GameObject>();
+        public List<GameObject> FreeCoverList = new List<GameObject>();
 
         private bool shouldCombineLists =false;
 
@@ -154,6 +158,18 @@ namespace TestField
             OnFullCoverChanged(newFullCoverList);
         }
 
+        public void OccupiedCoverChanged(List<GameObject> newOccupiedCoverList)
+        {
+            OccupiedCoverList = newOccupiedCoverList;
+            OnOccupiedCoverChanged(newOccupiedCoverList);
+        }
+
+        public void FreeCoverChanged(List<GameObject> newFreeCoverList)
+        {
+            FreeCoverList = newFreeCoverList;
+            OnFreeCoverChanged(newFreeCoverList);
+        }
+
         public void OtherReceiverINFOChanged(List<GameObject> newReceiverList)
         {
             OtherReceivers = newReceiverList;
@@ -181,6 +197,14 @@ namespace TestField
         protected virtual void OnFullCoverChanged(List<GameObject> newList)
         {
             FullcoverChanged?.Invoke(newList);
+        }
+        protected virtual void OnOccupiedCoverChanged(List<GameObject> newList)
+        {
+            OccupiedcoverChanged?.Invoke(newList);
+        }
+        protected virtual void OnFreeCoverChanged(List<GameObject> newList)
+        {
+            FreecoverChanged?.Invoke(newList);
         }
         protected virtual void OnHalfCoverChanged(List<GameObject> newList)
         {

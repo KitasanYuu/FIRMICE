@@ -77,6 +77,7 @@ namespace TestField
             {
                 // 计算目标位置到掩体对象位置的距离
                 float distance = Vector3.Distance(currentPosition, coverObject.transform.position);
+                Debug.Log(coverObject+"距离"+distance);
 
                 // 检查距离是否在指定范围内
                 if (distance <= range)
@@ -220,10 +221,10 @@ namespace TestField
                     if (hit.collider.gameObject == Cover)
                     {
                         // 如果 enforceDistanceCheck 为 true，则检查距离
-                        float RouteDistance = Vector3.Distance(self.transform.position, coverPoint) + Vector3.Distance(coverPoint, target.transform.position);
-                        Debug.Log("RouteDistance"+RouteDistance);
-                        Debug.Log("DistanceToTarget"+ Vector3.Distance(self.transform.position, target.transform.position));
-                        if (!enforceDistanceCheck || (self != null && target != null && Vector3.Distance(self.transform.position, coverPoint) + Vector3.Distance(coverPoint, target.transform.position)-5f<= Vector3.Distance(self.transform.position, target.transform.position)))
+                        float distanceToSelf = Vector3.Distance(self.transform.position, coverPoint);
+                        float distanceToTarget = Vector3.Distance(self.transform.position, target.transform.position);
+
+                        if (!enforceDistanceCheck || (enforceDistanceCheck && distanceToSelf <= distanceToTarget))
                         {
                             suitablePoints.Add(coverPoint);
                         }
@@ -281,7 +282,7 @@ namespace TestField
 
 
         //随机一个距离物体至目标的直线直线距离最短的掩体上的安全点
-        public Vector3 FindNearestCoverPointOnRoute(GameObject selfObject, GameObject target, List<GameObject> coverObjects,bool EnableDistanceCheck=false)
+        public Vector3 FindNearestCoverPointOnRoute(GameObject selfObject, GameObject target, List<GameObject> coverObjects,bool UseSelfCover, bool EnableDistanceCheck=false)
         {
             if (coverObjects.Count == 0)
             {
@@ -293,8 +294,10 @@ namespace TestField
             //GameObject nearestCover = FindNearestCover(coverObjects);
             GameObject nearestCoverOnRoute = FindNearestCoverOnRoute(selfObject, target, coverObjects);
 
-            if (nearestCoverOnRoute != null)
+            if (nearestCoverOnRoute != null && !UseSelfCover)
             {
+                Identity ID = nearestCoverOnRoute.GetComponent<Identity>();
+                ID.SetOccupiedUseage(true);
                 // 在掩体周围生成一个点
                 Vector3 randomPointAroundCover = RandomPointBetween(nearestCoverOnRoute, target.transform.position,EnableDistanceCheck,selfObject,target);
                 return randomPointAroundCover;
@@ -307,7 +310,7 @@ namespace TestField
         }
 
         //在最近的掩体上生成一个安全点
-        public Vector3 FindNearestCoverPoint(GameObject selfObject, GameObject target, List<GameObject> coverObjects ,bool EnableDistanceCheck=false)
+        public Vector3 FindNearestCoverPoint(GameObject selfObject, GameObject target,List<GameObject> coverObjects, bool UseSelfCover, GameObject ChosenCover = null, bool EnableDistanceCheck=false)
         {
             if (coverObjects.Count == 0)
             {
@@ -315,13 +318,29 @@ namespace TestField
                 return Vector3.zero;
             }
 
-            // 寻找最近的掩体
-            GameObject nearestCover = FindNearestCover(selfObject, coverObjects);
-
-            if (nearestCover != null)
+            if (ChosenCover == null && !UseSelfCover)
             {
+                GameObject nearestCover = FindNearestCover(selfObject, coverObjects);
+
+                if (nearestCover != null)
+                {
+                    Identity ID = nearestCover.GetComponent<Identity>();
+                    ID.SetOccupiedUseage(true);
+                    // 在掩体周围生成一个点
+                    Vector3 randomPointAroundCover = RandomPointBetween(nearestCover, target.transform.position, EnableDistanceCheck, selfObject, target);
+                    return randomPointAroundCover;
+                }
+                else
+                {
+                    return Vector3.zero;
+                }
+            }
+            else if(ChosenCover != null)
+            {
+                Identity ID = ChosenCover.GetComponent<Identity>();
+                ID.SetOccupiedUseage(true);
                 // 在掩体周围生成一个点
-                Vector3 randomPointAroundCover = RandomPointBetween(nearestCover, target.transform.position, EnableDistanceCheck, selfObject, target);
+                Vector3 randomPointAroundCover = RandomPointBetween(ChosenCover, target.transform.position, EnableDistanceCheck, selfObject, target);
                 return randomPointAroundCover;
             }
             else
@@ -331,7 +350,7 @@ namespace TestField
         }
 
         //在有效射程内找一个最远的掩体生成安全点
-        public Vector3 FindFarthestCoverPointInRange(GameObject self,GameObject target, List<GameObject> coverObjects, float range, bool EnableDistanceCheck = false)
+        public Vector3 FindFarthestCoverPointInRange(GameObject self,GameObject target, List<GameObject> coverObjects, float range, bool UseSelfCover, GameObject CoverChosen = null, bool EnableDistanceCheck = false)
         {
             if (coverObjects.Count == 0)
             {
@@ -339,13 +358,29 @@ namespace TestField
                 return Vector3.zero;
             }
 
-            // 寻找最近的掩体
-            GameObject nearestCover = FindFarthestCover(target, coverObjects, range);
-
-            if (nearestCover != null)
+            if(CoverChosen == null && !UseSelfCover)
             {
+                GameObject nearestCover = FindFarthestCover(target, coverObjects, range);
+
+                if (nearestCover != null)
+                {
+                    Identity ID = nearestCover.GetComponent<Identity>();
+                    ID.SetOccupiedUseage(true);
+                    // 在掩体周围生成一个点
+                    Vector3 randomPointAroundCover = RandomPointBetween(nearestCover, target.transform.position, EnableDistanceCheck, self, target);
+                    return randomPointAroundCover;
+                }
+                else
+                {
+                    return Vector3.zero;
+                }
+            }
+            else if(CoverChosen != null)
+            {
+                Identity ID = CoverChosen.GetComponent<Identity>();
+                ID.SetOccupiedUseage(true);
                 // 在掩体周围生成一个点
-                Vector3 randomPointAroundCover = RandomPointBetween(nearestCover, target.transform.position,EnableDistanceCheck,self,target);
+                Vector3 randomPointAroundCover = RandomPointBetween(CoverChosen, target.transform.position, EnableDistanceCheck, self, target);
                 return randomPointAroundCover;
             }
             else
@@ -355,7 +390,7 @@ namespace TestField
         }
 
         //在下一个掩体生成安全点
-        public Vector3 FindSafePointOnNextCover(GameObject self, GameObject target, List<GameObject> coverObjects, bool EnableDistanceCheck = false)
+        public Vector3 FindSafePointOnNextCover(GameObject self, GameObject target, List<GameObject> coverObjects, bool UseSelfCover, bool EnableDistanceCheck = false)
         {
             if (coverObjects.Count == 0)
             {
@@ -368,6 +403,8 @@ namespace TestField
 
             if (nearestCover != null)
             {
+                Identity ID = nearestCover.GetComponent<Identity>();
+                ID.SetOccupiedUseage(true);
                 // 在掩体周围生成一个点
                 Vector3 randomPointAroundCover = RandomPointBetween(nearestCover, target.transform.position,EnableDistanceCheck,self,target);
                 return randomPointAroundCover;

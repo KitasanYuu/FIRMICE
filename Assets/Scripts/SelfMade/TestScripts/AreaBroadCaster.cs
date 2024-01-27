@@ -16,6 +16,8 @@ namespace TestField
         public List<GameObject> SBroadCastReceiver = new List<GameObject>();
         [SerializeField, ReadOnly] private List<GameObject> FullCoverList = new List<GameObject>();
         [SerializeField, ReadOnly] private List<GameObject> HalfCoverList = new List<GameObject>();
+        [SerializeField, ReadOnly] private List<GameObject> OccupiedCoverList = new List<GameObject>();
+        [SerializeField, ReadOnly] private List<GameObject> FreeCoverList = new List<GameObject>();
 
         // Start is called before the first frame update
         void Start()
@@ -30,6 +32,8 @@ namespace TestField
             BAM.FullCoverChanged += OnFullCoverChanged;
             BAM.HalfCoverChanged += OnHalfCoverChanged;
             BAM.SBroadCastReceiverChanged += OnSBroadCastReceivedChanged;
+            BAM.OccupiedCoverChanged += OnOccupiedCoverChanged;
+            BAM.FreeCoverChanged += OnFreeCoverChanged;
         }
         // Update is called once per frame
         void Update()
@@ -57,11 +61,11 @@ namespace TestField
             HalfCoverList = newList;
             foreach (GameObject receiverObject in BCReceiver)
             {
-                BroadCasterInfoContainer broadcasterinfocontainer = receiverObject.GetComponent<BroadCasterInfoContainer>();
-                if (broadcasterinfocontainer != null)
+                BroadCasterInfoContainer BCIC = receiverObject.GetComponent<BroadCasterInfoContainer>();
+                if (BCIC != null)
                 {
                     // 直接调用 AlertLine 脚本中的 TargetBoardCast 方法，将 ObjectFound 传递给它
-                    broadcasterinfocontainer.HalfCoverChanged(HalfCoverList);
+                    BCIC.HalfCoverChanged(HalfCoverList);
                 }
             }
 
@@ -72,11 +76,37 @@ namespace TestField
             FullCoverList = newList;
             foreach (GameObject receiverObject in BCReceiver)
             {
-                BroadCasterInfoContainer broadcasterinfocontainer = receiverObject.GetComponent<BroadCasterInfoContainer>();
-                if (broadcasterinfocontainer != null)
+                BroadCasterInfoContainer BCIC = receiverObject.GetComponent<BroadCasterInfoContainer>();
+                if (BCIC != null)
                 {
                     // 直接调用 AlertLine 脚本中的 TargetBoardCast 方法，将 ObjectFound 传递给它
-                    broadcasterinfocontainer.FullCoverChanged(FullCoverList);
+                    BCIC.FullCoverChanged(FullCoverList);
+                }
+            }
+        }
+
+        private void OnOccupiedCoverChanged(List<GameObject> newList)
+        {
+            OccupiedCoverList = newList;
+            foreach (GameObject receiverObject in BCReceiver)
+            {
+                BroadCasterInfoContainer BCIC = receiverObject.GetComponent<BroadCasterInfoContainer>();
+                if (BCIC != null)
+                {
+                    BCIC.OccupiedCoverChanged(OccupiedCoverList);
+                }
+            }
+        }
+
+        private void OnFreeCoverChanged(List<GameObject> newList)
+        {
+            FreeCoverList = newList;
+            foreach (GameObject receiverObject in BCReceiver)
+            {
+                BroadCasterInfoContainer BCIC = receiverObject.GetComponent<BroadCasterInfoContainer>();
+                if (BCIC != null)
+                {
+                    BCIC.FreeCoverChanged(FreeCoverList);
                 }
             }
         }
@@ -136,10 +166,10 @@ namespace TestField
             {
                 List<GameObject> filteredList = BCReceiver.Where(x => x != receiverObject).ToList();
 
-                BroadCasterInfoContainer broadcasterInfoContainer = receiverObject.GetComponent<BroadCasterInfoContainer>();
-                if (broadcasterInfoContainer != null)
+                BroadCasterInfoContainer BCIC = receiverObject.GetComponent<BroadCasterInfoContainer>();
+                if (BCIC != null)
                 {
-                    broadcasterInfoContainer.OtherReceiverINFOChanged(filteredList);
+                    BCIC.OtherReceiverINFOChanged(filteredList);
                 }
             }
         }
@@ -153,6 +183,8 @@ namespace TestField
             BAM.HalfCoverChanged -= OnHalfCoverChanged;
             BAM.FullCoverChanged -= OnFullCoverChanged;
             BAM.SBroadCastReceiverChanged -= OnSBroadCastReceivedChanged;
+            BAM.OccupiedCoverChanged -= OnOccupiedCoverChanged;
+            BAM.FreeCoverChanged -= OnFreeCoverChanged;
         }
     }
 }

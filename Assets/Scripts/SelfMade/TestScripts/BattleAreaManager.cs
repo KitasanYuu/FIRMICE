@@ -50,12 +50,16 @@ namespace TestField
         [SerializeField] private LayerMask CoverLayer;
         [ReadOnly] public List<GameObject> FullCover = new List<GameObject>();
         [ReadOnly] public List<GameObject> HalfCover = new List<GameObject>();
+        [ReadOnly] public List<GameObject> OccupiedCover = new List<GameObject>();
+        [ReadOnly] public List<GameObject> FreeCover = new List<GameObject>();
         // 事件定义
         public event Action<GameObject> TargetFoundChanged;
         public event Action<List<GameObject>> BroadCastReceiverChanged;
         public event Action<List<GameObject>> SBroadCastReceiverChanged;
         public event Action<List<GameObject>> HalfCoverChanged;
         public event Action<List<GameObject>> FullCoverChanged;
+        public event Action<List<GameObject>> OccupiedCoverChanged;
+        public event Action<List<GameObject>> FreeCoverChanged;
 
         private GameObject previousTarget;
 
@@ -225,6 +229,8 @@ namespace TestField
 
             HalfCover.Clear();
             FullCover.Clear();
+            OccupiedCover.Clear();
+            FreeCover.Clear();
 
             // 使用 HashSet 来确保每个物体只会被添加一次
             HashSet<GameObject> uniqueObjects = new HashSet<GameObject>();
@@ -258,6 +264,28 @@ namespace TestField
                         FullCover.Add(identity.gameObject);
                         OnFullCoverChanged();
                     }
+
+                    if (identity.CoverOccupied)
+                    {
+                        // 检查是否已经在列表中
+                        if (!OccupiedCover.Contains(identity.gameObject))
+                        {
+                            OccupiedCover.Add(identity.gameObject);
+                            OnOccupiedCoverChanged();
+                            OnFreeCoverChanged();
+                        }
+                    }
+                    else if (!identity.CoverOccupied)
+                    {
+                        // 检查是否已经在列表中
+                        if (!FreeCover.Contains(identity.gameObject))
+                        {
+                            FreeCover.Add(identity.gameObject);
+                            OnOccupiedCoverChanged();
+                            OnFreeCoverChanged();
+                        }
+                    }
+
                 }
             }
         }
@@ -288,6 +316,17 @@ namespace TestField
         private void OnFullCoverChanged()
         {
             FullCoverChanged?.Invoke(FullCover);
+        }
+
+        private void OnOccupiedCoverChanged()
+        {
+            OccupiedCoverChanged?.Invoke(OccupiedCover);
+
+        }
+
+        private void OnFreeCoverChanged()
+        {
+            FreeCoverChanged?.Invoke(FreeCover);
         }
 
 #if UNITY_EDITOR
