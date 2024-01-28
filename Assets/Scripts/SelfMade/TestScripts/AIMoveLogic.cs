@@ -31,7 +31,7 @@ namespace TestField
         private bool hasRotationed = true;
         private Vector3 InitPosition;
         private Quaternion InitRotation;
-
+        private bool isRecursing = false;
         [ReadOnly] public bool RecoverStart;
         public float KeepDistanceToTarget;
         [ReadOnly,Tooltip("在移动时的面向，0代表朝向移动方向，1代表朝向Target")]
@@ -123,32 +123,57 @@ namespace TestField
         //控制自身身位与目标固定距离
         private void ApproachingTarget(bool NoCoverNear = false)
         {
-            if (NoCoverNear)
+            if (!isRecursing)
             {
-                if (Target != null)
-                {
-                    // 获取自身位置和目标位置
-                    Vector3 selfPosition = transform.position;
-                    Vector3 targetPosition = Target.transform.position;
-
-                    // 计算自身到目标的方向向量
-                    Vector3 directionToTarget = (targetPosition - selfPosition).normalized;
-
-                    // 计算生成点的位置，确保点到自身的距离不超过目标到自身的距离
-                    float distanceToTarget = Vector3.Distance(selfPosition, targetPosition);
-                    Vector3 generatedPoint = selfPosition + directionToTarget * distanceToTarget;
-
-                    // 确保生成的点与目标之间的距离为5
-                    float distanceToTargetAfterGeneration = Vector3.Distance(generatedPoint, targetPosition);
-                    if (distanceToTargetAfterGeneration != KeepDistanceToTarget)
-                    {
-                        // 如果生成的点与目标之间的距离不为5，可以根据具体需求调整生成的点的位置
-                        generatedPoint = targetPosition - directionToTarget * KeepDistanceToTarget;
-                    }
-                    NCalcuRouteMove(generatedPoint);
-                }
+                ApproachingTargetRecursive(NoCoverNear, KeepDistanceToTarget);
             }
         }
+
+        private void ApproachingTargetRecursive(bool NoCoverNear, float currentKeepDistance)
+        {
+            if (NoCoverNear && Target != null)
+            {
+                // 获取自身位置和目标位置
+                Vector3 selfPosition = transform.position;
+                Vector3 targetPosition = Target.transform.position;
+
+                // 计算自身到目标的方向向量
+                Vector3 directionToTarget = (targetPosition - selfPosition).normalized;
+
+                // 计算生成点的位置，确保点到自身的距离不超过目标到自身的距离
+                float distanceToTarget = Vector3.Distance(selfPosition, targetPosition);
+                float currentDistance = Mathf.Min(distanceToTarget, currentKeepDistance);
+                Vector3 generatedPoint = selfPosition + directionToTarget * currentDistance;
+
+                // 确保生成的点与目标之间的距离为 currentKeepDistance
+                float distanceToTargetAfterGeneration = Vector3.Distance(generatedPoint, targetPosition);
+                if (distanceToTargetAfterGeneration != currentKeepDistance)
+                {
+                    // 如果生成的点与目标之间的距离不为 currentKeepDistance，可以根据具体需求调整生成的点的位置
+                    generatedPoint = targetPosition - directionToTarget * currentKeepDistance;
+
+
+                    // 发射射线检测是否击中非目标物体
+                    RaycastHit hit;
+                    if (Physics.Raycast(generatedPoint, directionToTarget, out hit, currentKeepDistance))
+                    {
+                        isRecursing = true;
+                        // 如果击中非目标物体，递减 currentKeepDistance 并重新生成点
+                        currentKeepDistance = Mathf.Max(0, currentKeepDistance - 1f);
+                        ApproachingTargetRecursive(true, currentKeepDistance); // 递归调用
+                        return;
+                    }
+                }
+                // 将生成的点往目标方向再靠近一个单位
+                //generatedPoint += directionToTarget;
+                NCalcuRouteMove(generatedPoint);
+                isRecursing = false;
+            }  
+        }
+
+
+
+
 
         //从激活后每隔固定时间(ReScanDelay)刷新一个最近掩体的安全点位移动过去
         private void PositionAdjust()
@@ -160,6 +185,14 @@ namespace TestField
                     CurrentCoverSelected = coverUtility.FindNearestCover(gameObject, FreeCoverList);
                     Vector3 RegeneratedPoint = coverUtility.FindNearestCoverPoint(gameObject,Target, FreeCoverList,true,CurrentCoverSelected);
                     CCalcuRouteMove(RegeneratedPoint);
+                }else if (!IsDirectToTarget(Target))
+                {
+                    CurrentCoverSelected = coverUtility.FindNearestCover(gameObject, FreeCoverList);
+                    Identity ID = CurrentCoverSelected.GetComponent<Identity>();
+                    if(ID.Covertype == "FullCover")
+                    {
+                        ApproachingTarget(true);
+                    }
                 }
             }
         }
@@ -318,11 +351,9 @@ namespace TestField
         {
             if (BCIC == null || Target == null)
             {
-                // Handle the case where bcic or Target is null
+                // Handle the case where BCIC or Target is null
                 return false;
             }
-
-            List<GameObject> CoverList = BCIC.CoverList;
 
             // 获取自身位置
             Vector3 selfPosition = transform.position;
@@ -333,13 +364,21 @@ namespace TestField
             // 获取从自身到目标的方向向量
             Vector3 directionToTarget = targetPosition - selfPosition;
 
-            // 发射射线检测是否击中CoverList
+            // 发射射线检测是否击中目标
             RaycastHit hitInfo;
-            bool hit = Physics.Raycast(selfPosition, directionToTarget.normalized, out hitInfo);
+            BoxCollider collider = GetComponent<BoxCollider>();
+            // 射线起点稍微偏移一下，以避免自身碰撞
+            Vector3 rayStart = selfPosition + directionToTarget.normalized * (collider.size.z/2);
 
-            // 如果击中CoverList，返回 false，否则返回 true
-            return !hit || !CoverList.Contains(hitInfo.collider.gameObject);
+            bool hit = Physics.Raycast(rayStart, directionToTarget.normalized, out hitInfo);
+
+            Debug.Log(hitInfo.collider.gameObject);
+
+            // 如果击中目标，返回 true，否则返回 false
+            return hit && hitInfo.collider.gameObject == Target;
         }
+
+
         #endregion
 
         #region 组件初始化，订阅管理

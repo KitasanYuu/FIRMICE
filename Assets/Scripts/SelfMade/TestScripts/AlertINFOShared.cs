@@ -74,10 +74,10 @@ namespace TestField
                                 {
                                     alertlogic.TargetExposed = true;
                                 }
-                                else if (alertlogic != null && !AL.TargetExposed && AIS.ReceiveSharedINFO)
-                                {
-                                    alertlogic.TargetExposed = false;
-                                }
+                                //else if (alertlogic != null && !AL.TargetExposed && AIS.ReceiveSharedINFO)
+                                //{
+                                //    alertlogic.TargetExposed = false;
+                                //}
                             }
 
                         }
