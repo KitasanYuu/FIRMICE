@@ -1,3 +1,4 @@
+using CustomInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,15 +8,18 @@ namespace BattleHealth
 
     public class VirtualHP : MonoBehaviour
     {
+        [SerializeField, ReadOnly] private float CurrentHP;
+        [SerializeField, ReadOnly] private float CurrentArmor;
+        [Space2(20)]
         [SerializeField]
         private float TotalHP;
-        [SerializeField]
+        [SerializeField,Tooltip("自身的减伤倍率，值越高伤害减免越高，为1时完全无敌"), Range(0, 1)]
         private float DamageReduceRate;
 
-        private float CurrentHP;
+
         public float Armor;
-        public float ArmorRate;
-        private float OriginArmor;
+        [Tooltip("护盾带来的减伤效率，值越低护盾减免越高，为0时完全无敌，为1时全伤害生效"),Range(1,0)]public float ArmorRate = 1;
+
         public List<float> damageList = new List<float>(); // 使用List来存储伤害值
 
         //public float Damage;
@@ -24,8 +28,7 @@ namespace BattleHealth
         void Start()
         {
             CurrentHP = TotalHP;
-            ArmorRate = 1 / Armor;
-            OriginArmor = Armor;
+            CurrentArmor = Armor;
         }
 
         // Update is called once per frame
@@ -48,17 +51,20 @@ namespace BattleHealth
 
             ClearDamageArray();
 
-            if (Armor > 0)
+            if(totalDamage != 0)
             {
-                CurrentHP = CurrentHP - (totalDamage * ArmorRate)* (1-DamageReduceRate);
-                Armor -= 0.1f*OriginArmor;
+                //Debug.Log(totalDamage);
+                if (CurrentArmor > 1)
+                {
+                    CurrentHP = CurrentHP - (totalDamage * ArmorRate) * (1 - DamageReduceRate);
+                    CurrentArmor -= 0.1f * CurrentArmor;
+                }
+                else if (CurrentArmor <= 1)
+                {
+                    CurrentArmor = 0;
+                    CurrentHP = CurrentHP - totalDamage * (1 - DamageReduceRate);
+                }
             }
-            else if(Armor <= 0)
-            {
-                Armor = 0;
-                CurrentHP = CurrentHP - totalDamage * (1-DamageReduceRate);
-            }
-
 
             //totalDamage = 0;
         }
