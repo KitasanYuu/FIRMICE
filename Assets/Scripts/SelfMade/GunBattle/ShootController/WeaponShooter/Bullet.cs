@@ -17,7 +17,6 @@ public class Bullet : MonoBehaviour
 
     //以下参数是测试参数
     private VirtualHP virtualhp;
-    private HitOrNot hitornot;
 
     //子弹命中后的特效
     [SerializeField] private GameObject vfxHitYellow;
@@ -51,7 +50,6 @@ public class Bullet : MonoBehaviour
             if (hitObject != null)
             {
                 DodingDamage();
-                SetHitted();
                 // 在这里可以处理目标物体的信息
                 //Debug.Log("销毁前获取到目标物体信息：" + hitObject.name);
             }
@@ -89,7 +87,6 @@ public class Bullet : MonoBehaviour
             hitObject = hitInfo.collider.gameObject;
             hasHit = true; // 设置已命中标志
             virtualhp = hitObject.GetComponent<VirtualHP>();
-            hitornot = hitObject.GetComponent<HitOrNot>();
             // 在此处可以进行命中的处理，例如播放音效、添加命中效果、处理伤害等
             //Debug.Log("命中了：" + hitObject.name);
 
@@ -108,13 +105,6 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    private void SetHitted()
-    {
-        if (hitornot != null)
-        {
-            hitornot.hitted = true;
-        }
-    }
 
     public void SetBulletSpeed(float newSpeed)
     {
