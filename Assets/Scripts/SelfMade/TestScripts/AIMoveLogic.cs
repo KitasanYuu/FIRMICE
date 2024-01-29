@@ -14,12 +14,14 @@ namespace TestField
         [ReadOnly]public float ToTargetDistance;
         public float VaildShootRange;
         public bool InBattle;
+        [Tooltip("用来指定物体在距离检测时发射的射线忽略对象层级，建议选择可能碰撞的AI层级")]
+        public LayerMask RayIgnoreLayer;
         private bool TargetExpose;
         private bool hasGeneratedPoint;
         private List<GameObject> HalfCoverList = new List<GameObject>();
         private List<GameObject> FullCoverList = new List<GameObject>();
-        public List<GameObject> OccupiedCoverList = new List<GameObject>();
-        public List<GameObject> FreeCoverList = new List<GameObject>();
+        private List<GameObject> OccupiedCoverList = new List<GameObject>();
+        private List<GameObject> FreeCoverList = new List<GameObject>();
         private List<GameObject> CoverList = new List<GameObject>();
         private GameObject Target;
 
@@ -68,7 +70,6 @@ namespace TestField
             BattleStart();
             TargetOutRange();
             Moving(Facetoforworddir,Target);
-            ApproachingTarget(NoCoverNear);
             FaceToTarget(Target);
             DistanceKeeper(Target);
 
@@ -85,6 +86,7 @@ namespace TestField
                     CurrentCoverSelected = coverUtility.FindNearestCover(gameObject, FreeCoverList);
                     Vector3 InitSafePoint = coverUtility.FindNearestCoverPoint(gameObject, Target, FreeCoverList,true,CurrentCoverSelected);
                     CCalcuRouteMove(InitSafePoint);
+                    Debug.LogWarning("BattleInit");
                     FirstEnterBattle = false;
                 }
 
@@ -111,6 +113,7 @@ namespace TestField
                     //Debug.Log(ShotinRangePoint);
                     Facetoforworddir = 0;
                     CCalcuRouteMove(ShotinRangePoint);
+                    Debug.LogWarning("TargetOu");
 
                     // 设置标志位，表示已经生成过点了
                     hasGeneratedPoint = true;
@@ -170,6 +173,7 @@ namespace TestField
                 // 将生成的点往目标方向再靠近一个单位
                 generatedPoint += directionToTarget;
                 NCalcuRouteMove(generatedPoint);
+                Debug.LogWarning("ApproachingTarget");
                 isApproachThreadRecursing = false;
                 NeedKeepDistance = true;
             }  
@@ -182,20 +186,23 @@ namespace TestField
         //从激活后每隔固定时间(ReScanDelay)刷新一个最近掩体的安全点位移动过去
         private void PositionAdjust()
         {
-            if(Target!=null && !IsMoving && InBattle)
+            if(Target!=null && !IsMoving && InBattle && !NoCoverNear)
             {
-                if (IsDirectToTarget(Target))
+                if (IsDirectToTarget(Target,RayIgnoreLayer))
                 {
                     CurrentCoverSelected = coverUtility.FindNearestCover(gameObject, FreeCoverList);
                     Vector3 RegeneratedPoint = coverUtility.FindNearestCoverPoint(gameObject,Target, FreeCoverList,true,CurrentCoverSelected);
                     CCalcuRouteMove(RegeneratedPoint);
-                }else if (!IsDirectToTarget(Target))
+                    Debug.LogWarning("PositionAdjust");
+                }
+                else if (!IsDirectToTarget(Target, RayIgnoreLayer))
                 {
                     CurrentCoverSelected = coverUtility.FindNearestCover(gameObject, FreeCoverList);
                     Identity ID = CurrentCoverSelected.GetComponent<Identity>();
                     if(ID.Covertype == "FullCover")
                     {
                         ApproachingTarget(true);
+                        Debug.LogError("PositionAdjustUsing");
                     }
                 }
             }
@@ -312,6 +319,7 @@ namespace TestField
             {
                 NoCoverNear = true;
                 ApproachingTarget(NoCoverNear);
+                Debug.LogError("CCMoveUsing");
             }
         }
 
@@ -351,11 +359,11 @@ namespace TestField
         }
 
         //用于判定是否直接面对Target
-        bool IsDirectToTarget(GameObject Target)
+        bool IsDirectToTarget(GameObject Target, LayerMask ignoreLayer)
         {
             if (BCIC == null || Target == null)
             {
-                // Handle the case where BCIC or Target is null
+                // 处理 BCIC 或 Target 为 null 的情况
                 return false;
             }
 
@@ -365,38 +373,42 @@ namespace TestField
             // 获取目标位置
             Vector3 targetPosition = Target.transform.position;
 
-            // 获取从自身到目标的方向向量
-            Vector3 directionToTarget = targetPosition - selfPosition;
-
-            // 发射射线检测是否击中目标
+            // 使用 Physics.Linecast 检测自身到目标之间的连线上是否有其他Collider，同时忽略指定层级
             RaycastHit hitInfo;
-            BoxCollider collider = GetComponent<BoxCollider>();
-            // 射线起点稍微偏移一下，以避免自身碰撞
-            Vector3 rayStart = selfPosition + directionToTarget.normalized * (collider.size.z/2);
+            bool hit = Physics.Linecast(selfPosition, targetPosition, out hitInfo, ~ignoreLayer);
 
-            bool hit = Physics.Raycast(rayStart, directionToTarget.normalized, out hitInfo);
+            // 使用 Debug.DrawLine 可视化射线，cyan 色表示碰到物体
+            Color lineColor = hit ? Color.cyan : Color.green;
+            Debug.DrawLine(selfPosition, targetPosition, lineColor);
 
-            Debug.Log(hitInfo.collider.gameObject);
+            // 如果有碰撞，打印碰到的物体信息
+            if (hit)
+            {
+                Debug.Log("射线碰到了：" + hitInfo.collider.gameObject.name);
+            }
 
-            // 如果击中目标，返回 true，否则返回 false
-            return hit && hitInfo.collider.gameObject == Target;
+            // 如果有碰撞，则返回 false，表示不是直线到目标
+            return !hit;
         }
+
+
+
 
         private void DistanceKeeper(GameObject Target)
         {
-            if (!isDistanceKeeperRecursing && !IsMoving && InBattle && NeedKeepDistance)
+            if (!isDistanceKeeperRecursing && !IsMoving && (NeedKeepDistance||NoCoverNear))
             {
-                DistanceKeeperRecursive(Target, KeepDistanceToTarget);
+                DistanceKeeperRecursive(Target, KeepDistanceToTarget,  RayIgnoreLayer);
             }
         }
 
-        private void DistanceKeeperRecursive(GameObject Target, float currentDistance)
+        private void DistanceKeeperRecursive(GameObject Target, float currentDistance, LayerMask ignoreLayer)
         {
             // 获取当前物体的位置
-            Vector3 origin = transform.position;
-
+            Vector3 SelfPosition = transform.position;
+            Vector3 origin = Target.transform.position;
             // 获取指向当前物体的方向（从B指向A）
-            Vector3 direction = origin - Target.transform.position;
+            Vector3 direction = SelfPosition - Target.transform.position;
 
             origin.y += 0.1f;
 
@@ -404,27 +416,32 @@ namespace TestField
             Ray ray = new Ray(origin, direction);
 
             // 可以在场景中可视化射线，方便调试
-            Debug.DrawRay(origin, direction, Color.red);
+            Debug.DrawRay(origin, direction, Color.yellow);
 
-            // 进行射线检测
+            // 进行射线检测，忽略指定层级的物体
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, currentDistance))
+            if (Physics.Raycast(ray, out hit, currentDistance, ~ignoreLayer))
             {
+                isDistanceKeeperRecursing = true;
                 // 如果射线击中了物体，可以在这里处理相应的逻辑
                 Debug.Log("射线击中了：" + hit.collider.gameObject.name);
 
                 // 递减 currentDistance，并递归调用 DistanceKeeperRecursive
                 float newDistance = Mathf.Max(0f, currentDistance - 1f);
-                DistanceKeeperRecursive(Target, newDistance);
+                DistanceKeeperRecursive(Target, newDistance, ignoreLayer);
                 return;
             }
 
-            Vector3 NoCollisionPoint = ray.GetPoint(currentDistance);
-            NCalcuRouteMove(NoCollisionPoint);
+            // 射线不再击中物体的情况下，获取射线的终点
+            Vector3 endPoint = ray.GetPoint(currentDistance);
+
+            // 在这里处理不再击中物体的情况，可以根据需要返回 endPoint 或执行其他逻辑
+            NCalcuRouteMove(endPoint);
+            Debug.LogWarning("DistanceKeeper");
             NeedKeepDistance = false;
-            // 返回射线不再击中物体的点
-            //return ray.GetPoint(currentDistance);
+            isDistanceKeeperRecursing = false;
         }
+
 
         #endregion
 

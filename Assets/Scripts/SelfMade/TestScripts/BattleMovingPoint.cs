@@ -17,7 +17,7 @@ namespace TestField
         public float accelerationDistance = 5.0f; // 你希望加速的距离阈值
         public float CSpeed;
 
-        [HideInInspector] 
+        [HideInInspector]
         public bool HasReachedPoint;
         private Seeker seeker;
 
@@ -29,10 +29,10 @@ namespace TestField
 
         private void Update()
         {
-            
+
         }
 
-        public void AStarMoving(float FacetoForwordDir = 0,GameObject Target=null)
+        public void AStarMoving(float FacetoForwordDir = 0, GameObject Target = null)
         {
             HasReachedPoint = false;
             //这里用if是因为在抵达目标点一瞬间数组会只有一位数0，此时Vector3 aimPoint[1]会取不到值
@@ -91,7 +91,7 @@ namespace TestField
                     transform.position = Vector3.MoveTowards(transform.position, Destination, currentSpeed * Time.deltaTime);
                     //Debug.Log(Destination);
 
-                    if (FacetoForwordDir==0)
+                    if (FacetoForwordDir == 0)
                     {
                         // 使物体朝向移动方向
                         if (MoveDir != Vector3.zero)
@@ -103,10 +103,10 @@ namespace TestField
                             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
                         }
                     }
-                    else if(FacetoForwordDir==1)
+                    else if (FacetoForwordDir == 1)
                     {
                         // 计算目标朝向
-                        Quaternion targetRotation = Quaternion.LookRotation((Target.transform.position-transform.position).normalized);
+                        Quaternion targetRotation = Quaternion.LookRotation((Target.transform.position - transform.position).normalized);
 
                         // 使用Slerp插值来平滑地转向目标朝向
                         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
@@ -128,8 +128,10 @@ namespace TestField
         }
 
         //特殊移动情况，自定义速度和加速度
-        public void CustomAStarMoving(float Speed, float SprintSpeed,float FacetoForwordDir = 0, GameObject Target = null)
+        public void CustomAStarMoving(float Speed, float SprintSpeed, float FacetoForwordDir = 0, GameObject Target = null)
         {
+
+
             HasReachedPoint = false;
             //这里用if是因为在抵达目标点一瞬间数组会只有一位数0，此时Vector3 aimPoint[1]会取不到值
             int Count = aimPoint.Count;
