@@ -10,7 +10,8 @@ namespace TestField
     public class AreaBoarCaster : MonoBehaviour
     {
         [SerializeField, ReadOnly] private GameObject ObjectFound;
-        [SerializeField,ReadOnly]private BattleAreaManager BAM;
+        [SerializeField, ReadOnly] private BattleAreaManager BAM;
+        [SerializeField, ReadOnly] private List<GameObject> Partner = new List<GameObject>();
         [SerializeField, ReadOnly] private List<GameObject> BCReceiver = new List<GameObject>();
         private List<GameObject> BroadCastReceiver = new List<GameObject>();
         public List<GameObject> SBroadCastReceiver = new List<GameObject>();
@@ -29,6 +30,7 @@ namespace TestField
             BAM.BroadCastReceiverChanged += HandleBroadCastReceiverChanged;
             // 订阅事件
             BAM.TargetFoundChanged += OnTargetFoundChanged;
+            BAM.PartnerChanged += OnPartnerChanged;
             BAM.FullCoverChanged += OnFullCoverChanged;
             BAM.HalfCoverChanged += OnHalfCoverChanged;
             BAM.SBroadCastReceiverChanged += OnSBroadCastReceivedChanged;
@@ -44,7 +46,7 @@ namespace TestField
 
         private void HandleBroadCastReceiverChanged(List<GameObject> newReceiverList)
         {
-           BCReceiver = newReceiverList;
+            BCReceiver = newReceiverList;
             SendOtherReceiverINFO();
         }
 
@@ -54,6 +56,12 @@ namespace TestField
             BroadCastReceiver = BAM.BroadCastReceiver;
             // 在 TargetFound 变化时，向 BroadCastReceiver 中的具有 AlertLine 脚本的对象发送信息
             SendAlertToObjectWithAlertLine();
+        }
+
+        private void OnPartnerChanged(List<GameObject> newList)
+        {
+            Partner = newList;
+            SendPartnerINFO();
         }
 
         private void OnHalfCoverChanged(List<GameObject> newList)
@@ -147,6 +155,18 @@ namespace TestField
             }
         }
 
+        private void SendPartnerINFO()
+        {
+            foreach (GameObject receiverObject in BCReceiver)
+            {
+                BroadCasterInfoContainer BCIC = receiverObject.GetComponent<BroadCasterInfoContainer>();
+                if (BCIC != null)
+                {
+                    BCIC.PartnerChanged(Partner);
+                }
+            }
+        }
+
         private void SendAlertToObjectWithAlertLine()
         {
             foreach (GameObject receiverObject in SBroadCastReceiver)
@@ -179,6 +199,7 @@ namespace TestField
         private void OnDestroy()
         {
             BAM.TargetFoundChanged -= OnTargetFoundChanged;
+            BAM.PartnerChanged -= OnPartnerChanged;
             BAM.BroadCastReceiverChanged -= HandleBroadCastReceiverChanged;
             BAM.HalfCoverChanged -= OnHalfCoverChanged;
             BAM.FullCoverChanged -= OnFullCoverChanged;

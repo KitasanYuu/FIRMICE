@@ -38,8 +38,9 @@ namespace TestField
         [ReadOnly]
         public bool _Fire;
 
-        [ReadOnly]public AvatarController avatarController;
-        [ReadOnly]public TPSShootController tpsShootController;
+        [ReadOnly] public AvatarController avatarController;
+        [ReadOnly] public TPSShootController tpsShootController;
+        public List<GameObject> PartnerList = new List<GameObject>();
         public List<GameObject> OtherReceivers = new List<GameObject>();
         public List<GameObject> CoverList = new List<GameObject>();
         public List<GameObject> FullCoverList = new List<GameObject>();
@@ -47,7 +48,7 @@ namespace TestField
         public List<GameObject> OccupiedCoverList = new List<GameObject>();
         public List<GameObject> FreeCoverList = new List<GameObject>();
 
-        private bool shouldCombineLists =false;
+        private bool shouldCombineLists = false;
 
         void Start()
         {
@@ -103,7 +104,7 @@ namespace TestField
                 _Fire = false;
             }
 
-            if(PFire!=_Fire)
+            if (PFire != _Fire)
                 OnFire(_Fire);
             if (PAim != _isAiming)
                 OnAiming(_isAiming);
@@ -133,6 +134,7 @@ namespace TestField
             }
         }
 
+
         private void CombineLists()
         {
             CoverList.Clear();
@@ -142,6 +144,11 @@ namespace TestField
 
             // 合并完成后重置 shouldCombineLists 为 false
             shouldCombineLists = false;
+        }
+
+        public void PartnerChanged(List<GameObject> newPartnerList)
+        {
+            PartnerList = newPartnerList;
         }
 
         public void HalfCoverChanged(List<GameObject> newHalfCoverList)

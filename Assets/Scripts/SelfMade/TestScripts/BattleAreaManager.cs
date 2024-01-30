@@ -54,6 +54,7 @@ namespace TestField
         [ReadOnly] public List<GameObject> FreeCover = new List<GameObject>();
         // 事件定义
         public event Action<GameObject> TargetFoundChanged;
+        public event Action<List<GameObject>> PartnerChanged;
         public event Action<List<GameObject>> BroadCastReceiverChanged;
         public event Action<List<GameObject>> SBroadCastReceiverChanged;
         public event Action<List<GameObject>> HalfCoverChanged;
@@ -142,6 +143,7 @@ namespace TestField
                 if (identity != null && identity.MasterID == PartnerMasterID && uniqueObjects.Add(identity.gameObject))
                 {
                     PartnerList.Add(identity.gameObject);
+                    OnPartnerChanged();
                 }
             }
         }
@@ -285,9 +287,13 @@ namespace TestField
                             OnFreeCoverChanged();
                         }
                     }
-
                 }
             }
+        }
+
+        private void OnPartnerChanged()
+        {
+            PartnerChanged?.Invoke(PartnerList);
         }
 
         private void OnBroadCastReceiverChanged()
