@@ -1,21 +1,50 @@
 using CustomInspector;
-using Pathfinding;
-using System.Collections;
 using System.Collections.Generic;
-using TestField;
 using UnityEngine;
+using VInspector;
 
 namespace TestField
 {
     public class AIMoveLogic : MonoBehaviour
     {
-        [ReadOnly] public GameObject CurrentCoverSelected;
-        private GameObject PreviousCoverSelected;
-        [ReadOnly]public float ToTargetDistance;
+        [Tooltip("指定该AI的有效射程，决定了")]
         public float VaildShootRange;
-        public bool InBattle;
         [Tooltip("用来指定物体在距离检测时发射的射线忽略对象层级，建议选择可能碰撞的AI层级")]
         public LayerMask RayIgnoreLayer;
+        [Tooltip("决定了在保持距离方法中与目标保持的特定距离")]
+        public float KeepDistanceToTarget;
+        [Tooltip("决定")]
+        public float ReScanDelay = 5f;
+
+        [Tab("ParameterCheck")]
+        [ReadOnly]
+        public GameObject CurrentCoverSelected;
+        [ReadOnly]
+        public float ToTargetDistance;
+        [SerializeField, ReadOnly]
+        private bool InBattle;
+        [ReadOnly] public bool RecoverStart;
+        [SerializeField, ReadOnly, Tooltip("在移动时的面向，0代表朝向移动方向，1代表朝向Target")]
+        private float Facetoforworddir = 0;
+        [SerializeField,ReadOnly]
+        private bool StartMoving;
+        [SerializeField, ReadOnly]
+        private bool IsMoving;
+        [SerializeField, ReadOnly]
+        private bool HasExcuted;
+        [SerializeField, ReadOnly]
+        private bool NeedKeepDistance=false;
+        [SerializeField, ReadOnly]
+        private bool isApproachThreadRecursing = false;
+        [SerializeField, ReadOnly]
+        private bool isDistanceKeeperRecursing = false;
+
+        //声明引用脚本组件
+        private AlertLogic AL;
+        private BattleMovingPoint BMP;
+        private BroadCasterInfoContainer BCIC;
+        private CoverUtility coverUtility = new CoverUtility();
+
         private bool TargetExpose;
         private bool hasGeneratedPoint;
         private List<GameObject> HalfCoverList = new List<GameObject>();
@@ -25,29 +54,14 @@ namespace TestField
         private List<GameObject> CoverList = new List<GameObject>();
         private GameObject Target;
 
-        public float ReScanDelay=5f;
 
+        private GameObject PreviousCoverSelected;
         private Vector3 SafePoint;
-        private bool FirstEnterBattle=true;
+        private bool FirstEnterBattle = true;
         private bool NoCoverNear;
         private bool hasRotationed = true;
         private Vector3 InitPosition;
         private Quaternion InitRotation;
-        [ReadOnly] public bool RecoverStart;
-        public float KeepDistanceToTarget;
-        [ReadOnly,Tooltip("在移动时的面向，0代表朝向移动方向，1代表朝向Target")]
-        public float Facetoforworddir=0;
-        public bool StartMoving;
-        public bool IsMoving;
-        public bool HasExcuted;
-        private bool NeedKeepDistance=false;
-        private bool isApproachThreadRecursing = false;
-        private bool isDistanceKeeperRecursing = false;
-
-        private AlertLogic AL;
-        private BattleMovingPoint BMP;
-        private BroadCasterInfoContainer BCIC;
-        private CoverUtility coverUtility = new CoverUtility();
 
         private void Awake()
         {
@@ -98,6 +112,7 @@ namespace TestField
             }
         }
 
+        //当目标超出有效射程时会在射程内寻找一个最远的掩体并且移动过去
         private void TargetOutRange()
         {
             if (InBattle && !VaildShootingPosition(Target))
@@ -125,62 +140,6 @@ namespace TestField
                 hasGeneratedPoint = false;
             }
         }
-
-        //控制自身身位与目标固定距离
-        private void ApproachingTarget(bool NoCoverNear = false)
-        {
-            if (!isApproachThreadRecursing)
-            {
-                ApproachingTargetRecursive(NoCoverNear, KeepDistanceToTarget);
-            }
-        }
-
-        private void ApproachingTargetRecursive(bool NoCoverNear, float currentKeepDistance)
-        {
-            if (NoCoverNear && Target != null)
-            {
-                // 获取自身位置和目标位置
-                Vector3 selfPosition = transform.position;
-                Vector3 targetPosition = Target.transform.position;
-
-                // 计算自身到目标的方向向量
-                Vector3 directionToTarget = (targetPosition - selfPosition).normalized;
-
-                // 计算生成点的位置，确保点到自身的距离不超过目标到自身的距离
-                float distanceToTarget = Vector3.Distance(selfPosition, targetPosition);
-                float currentDistance = Mathf.Min(distanceToTarget, currentKeepDistance);
-                Vector3 generatedPoint = selfPosition + directionToTarget * currentDistance;
-
-                // 确保生成的点与目标之间的距离为 currentKeepDistance
-                float distanceToTargetAfterGeneration = Vector3.Distance(generatedPoint, targetPosition);
-                if (distanceToTargetAfterGeneration != currentKeepDistance)
-                {
-                    // 如果生成的点与目标之间的距离不为 currentKeepDistance，可以根据具体需求调整生成的点的位置
-                    generatedPoint = targetPosition - directionToTarget * currentKeepDistance;
-
-
-                    // 发射射线检测是否击中非目标物体
-                    RaycastHit hit;
-                    if (Physics.Raycast(generatedPoint, directionToTarget, out hit, currentKeepDistance))
-                    {
-                        isApproachThreadRecursing = true;
-                        // 如果击中非目标物体，递减 currentKeepDistance 并重新生成点
-                        currentKeepDistance = Mathf.Max(0, currentKeepDistance - 0.5f);
-                        ApproachingTargetRecursive(true, currentKeepDistance); // 递归调用
-                        return;
-                    }
-                }
-                // 将生成的点往目标方向再靠近一个单位
-                generatedPoint += directionToTarget;
-                NCalcuRouteMove(generatedPoint);
-                Debug.LogWarning("ApproachingTarget");
-                isApproachThreadRecursing = false;
-                NeedKeepDistance = true;
-            }  
-        }
-
-
-
 
 
         //从激活后每隔固定时间(ReScanDelay)刷新一个最近掩体的安全点位移动过去
@@ -221,6 +180,7 @@ namespace TestField
             }
         }
 
+        //声明目前生成并占用的掩体，防止别的AI也将点生成在这个掩体上，造成挤兑
         private void CoverOccupied()
         {
             if (InBattle)
@@ -292,7 +252,141 @@ namespace TestField
         }
         #endregion
 
-        #region 需要传入物体的Function
+        #region 用来控制自身与目标保持距离的递归函数
+        //用来在无法直接面对目标时在预设保持距离的范围内生成一个可以直接面对目标的点
+        private void ApproachingTarget(bool NoCoverNear = false)
+        {
+            if (!isApproachThreadRecursing)
+            {
+                ApproachingTargetRecursive(NoCoverNear, KeepDistanceToTarget);
+            }
+        }
+
+        private void ApproachingTargetRecursive(bool NoCoverNear, float currentKeepDistance)
+        {
+            if (NoCoverNear && Target != null)
+            {
+                // 获取自身位置和目标位置
+                Vector3 selfPosition = transform.position;
+                Vector3 targetPosition = Target.transform.position;
+
+                // 计算自身到目标的方向向量
+                Vector3 directionToTarget = (targetPosition - selfPosition).normalized;
+
+                // 计算生成点的位置，确保点到自身的距离不超过目标到自身的距离
+                float distanceToTarget = Vector3.Distance(selfPosition, targetPosition);
+                float currentDistance = Mathf.Min(distanceToTarget, currentKeepDistance);
+                Vector3 generatedPoint = selfPosition + directionToTarget * currentDistance;
+
+                // 确保生成的点与目标之间的距离为 currentKeepDistance
+                float distanceToTargetAfterGeneration = Vector3.Distance(generatedPoint, targetPosition);
+                if (distanceToTargetAfterGeneration != currentKeepDistance)
+                {
+                    // 如果生成的点与目标之间的距离不为 currentKeepDistance，可以根据具体需求调整生成的点的位置
+                    generatedPoint = targetPosition - directionToTarget * currentKeepDistance;
+
+
+                    // 发射射线检测是否击中非目标物体
+                    RaycastHit hit;
+                    if (Physics.Raycast(generatedPoint, directionToTarget, out hit, currentKeepDistance))
+                    {
+                        isApproachThreadRecursing = true;
+                        // 如果击中非目标物体，递减 currentKeepDistance 并重新生成点
+                        currentKeepDistance = Mathf.Max(0, currentKeepDistance - 0.5f);
+                        ApproachingTargetRecursive(true, currentKeepDistance); // 递归调用
+                        return;
+                    }
+                }
+                // 将生成的点往目标方向再靠近一个单位
+                generatedPoint += directionToTarget;
+                NCalcuRouteMove(generatedPoint);
+                Debug.LogWarning("ApproachingTarget");
+                isApproachThreadRecursing = false;
+                NeedKeepDistance = true;
+            }
+        }
+
+        //用来在与目标之间没有掩体时调用，控制自身与目标的距离保持在预设距离内
+        private void DistanceKeeper(GameObject Target)
+        {
+            if (!isDistanceKeeperRecursing && !IsMoving && (NeedKeepDistance || NoCoverNear))
+            {
+                DistanceKeeperRecursive(Target, KeepDistanceToTarget, RayIgnoreLayer);
+            }
+        }
+
+        private void DistanceKeeperRecursive(GameObject Target, float currentDistance, LayerMask ignoreLayer)
+        {
+            // 获取当前物体的位置
+            Vector3 SelfPosition = transform.position;
+            Vector3 origin = Target.transform.position;
+            // 获取指向当前物体的方向（从B指向A）
+            Vector3 direction = SelfPosition - Target.transform.position;
+
+            origin.y += 0.1f;
+
+            // 创建射线，起点是A，方向是从B指向A
+            Ray ray = new Ray(origin, direction);
+
+            // 可以在场景中可视化射线，方便调试
+            Debug.DrawRay(origin, direction, Color.yellow);
+
+            // 进行射线检测，忽略指定层级的物体
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, currentDistance, ~ignoreLayer))
+            {
+                isDistanceKeeperRecursing = true;
+                // 如果射线击中了物体，可以在这里处理相应的逻辑
+                Debug.Log("射线击中了：" + hit.collider.gameObject.name);
+
+                // 递减 currentDistance，并递归调用 DistanceKeeperRecursive
+                float newDistance = Mathf.Max(0f, currentDistance - 1f);
+                DistanceKeeperRecursive(Target, newDistance, ignoreLayer);
+                return;
+            }
+
+            // 射线不再击中物体的情况下，获取射线的终点
+            Vector3 endPoint = ray.GetPoint(currentDistance);
+
+            // 在这里处理不再击中物体的情况，可以根据需要返回 endPoint 或执行其他逻辑
+            NCalcuRouteMove(endPoint);
+            Debug.LogWarning("DistanceKeeper");
+            NeedKeepDistance = false;
+            isDistanceKeeperRecursing = false;
+        }
+        #endregion
+
+        #region 计算路线移动的函数
+        //传入目标点自动计算路径并开始移动
+        private void CCalcuRouteMove(Vector3 newPoint)
+        {
+            if (newPoint != Vector3.zero)
+            {
+                NoCoverNear = false;
+                BMP?.SeekerCalcu(newPoint);
+                StartMoving = true;
+            }
+            else if (newPoint == Vector3.zero)
+            {
+                NoCoverNear = true;
+                ApproachingTarget(NoCoverNear);
+                Debug.LogError("CCMoveUsing");
+            }
+        }
+
+        //传入目标点自动计算路径并开始移动(自动保持距离用)
+        private void NCalcuRouteMove(Vector3 newPoint)
+        {
+            if (newPoint != Vector3.zero && InBattle)
+            {
+                BMP?.SeekerCalcu(newPoint);
+                Facetoforworddir = 1;
+                StartMoving = true;
+            }
+        }
+        #endregion
+
+        #region 用来判断自身状态
         //使自身朝向目标
         private void FaceToTarget(GameObject Target)
         {
@@ -305,35 +399,9 @@ namespace TestField
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
             }
         }
+        #endregion
 
-        //传入目标点自动计算路径并开始移动
-        private void CCalcuRouteMove(Vector3 newPoint)
-        {
-            if(newPoint != Vector3.zero)
-            {
-                NoCoverNear = false;
-                BMP?.SeekerCalcu(newPoint);
-                StartMoving = true;
-            }
-            else if(newPoint == Vector3.zero)
-            {
-                NoCoverNear = true;
-                ApproachingTarget(NoCoverNear);
-                Debug.LogError("CCMoveUsing");
-            }
-        }
-
-        //传入目标点自动计算路径并开始移动(自动保持距离用)
-        private void NCalcuRouteMove(Vector3 newPoint)
-        {
-            if(newPoint != Vector3.zero && InBattle)
-            {
-                BMP?.SeekerCalcu(newPoint);
-                Facetoforworddir = 1;
-                StartMoving = true;
-            }
-        }
-
+        #region 需要传入物体的Function
         //用于判断目标是否在自身有效射程内，传入目标GameObject
         bool VaildShootingPosition(GameObject Target)
         {
@@ -392,56 +460,17 @@ namespace TestField
         }
 
 
-
-
-        private void DistanceKeeper(GameObject Target)
+        //在进入战斗后自动触发，触发后每隔设定的时间会执行一次位置矫正
+        private void StartPositionAdjust(bool newbool)
         {
-            if (!isDistanceKeeperRecursing && !IsMoving && (NeedKeepDistance||NoCoverNear))
+            // 取消之前可能存在的重复调用
+            CancelInvoke("PositionAdjust");
+
+            if (newbool)
             {
-                DistanceKeeperRecursive(Target, KeepDistanceToTarget,  RayIgnoreLayer);
+                InvokeRepeating("PositionAdjust", 2.0f, ReScanDelay);
             }
         }
-
-        private void DistanceKeeperRecursive(GameObject Target, float currentDistance, LayerMask ignoreLayer)
-        {
-            // 获取当前物体的位置
-            Vector3 SelfPosition = transform.position;
-            Vector3 origin = Target.transform.position;
-            // 获取指向当前物体的方向（从B指向A）
-            Vector3 direction = SelfPosition - Target.transform.position;
-
-            origin.y += 0.1f;
-
-            // 创建射线，起点是A，方向是从B指向A
-            Ray ray = new Ray(origin, direction);
-
-            // 可以在场景中可视化射线，方便调试
-            Debug.DrawRay(origin, direction, Color.yellow);
-
-            // 进行射线检测，忽略指定层级的物体
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, currentDistance, ~ignoreLayer))
-            {
-                isDistanceKeeperRecursing = true;
-                // 如果射线击中了物体，可以在这里处理相应的逻辑
-                Debug.Log("射线击中了：" + hit.collider.gameObject.name);
-
-                // 递减 currentDistance，并递归调用 DistanceKeeperRecursive
-                float newDistance = Mathf.Max(0f, currentDistance - 1f);
-                DistanceKeeperRecursive(Target, newDistance, ignoreLayer);
-                return;
-            }
-
-            // 射线不再击中物体的情况下，获取射线的终点
-            Vector3 endPoint = ray.GetPoint(currentDistance);
-
-            // 在这里处理不再击中物体的情况，可以根据需要返回 endPoint 或执行其他逻辑
-            NCalcuRouteMove(endPoint);
-            Debug.LogWarning("DistanceKeeper");
-            NeedKeepDistance = false;
-            isDistanceKeeperRecursing = false;
-        }
-
 
         #endregion
 
@@ -473,17 +502,6 @@ namespace TestField
             }
         }
         #endregion
-
-        private void StartPositionAdjust(bool newbool)
-        {
-            // 取消之前可能存在的重复调用
-            CancelInvoke("PositionAdjust");
-
-            if (newbool)
-            {
-                InvokeRepeating("PositionAdjust", 2.0f, ReScanDelay);
-            }
-        }
 
         #region 广播接收函数流程
         private void TargetReceived(GameObject newvalue)
