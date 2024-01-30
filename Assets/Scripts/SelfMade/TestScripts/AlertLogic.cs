@@ -97,30 +97,33 @@ namespace TestField
         // 根据目标状态增加警戒度
         private void AlertnessIncrease()
         {
-            RecoverProceeding = moveLogic.RecoverStart;
-            if (AlertTarget != null && !RecoverProceeding)
+            if (moveLogic != null)
             {
-                if (TargetFound)
+                RecoverProceeding = moveLogic.RecoverStart;
+                if (AlertTarget != null && !RecoverProceeding)
                 {
-                    // 根据目标移动状态增加警戒度
-                    if (TargetMoveStatus == -1)
-                        CurrentAlertness = Mathf.Min(CurrentAlertness + CrouchIncreaseRate * Time.deltaTime, MaxAlertness);
-                    else if (TargetMoveStatus == 0 || TargetMoveStatus == 1)
-                        CurrentAlertness = Mathf.Min(CurrentAlertness + AlertnessIncreaseRate * Time.deltaTime, MaxAlertness);
-                    else if (TargetMoveStatus == 2)
-                        CurrentAlertness = Mathf.Min(CurrentAlertness + SprintIncreaseRate * Time.deltaTime, MaxAlertness);
-                }
-                else if (FoundButOutRange)
-                {
-                    // 目标在检测范围外但在检测距离内，根据目标移动状态减少警戒度
-                    if (TargetMoveStatus == -1)
-                        CurrentAlertness = Mathf.Min(CurrentAlertness + (AlertnessDecreaseRate / 10) * Time.deltaTime, MaxAlertness);
-                    else if (TargetMoveStatus == 0)
-                        CurrentAlertness = Mathf.Min(CurrentAlertness + (AlertnessIncreaseRate / 10) * Time.deltaTime, MaxAlertness);
-                    else if (TargetMoveStatus == 1)
-                        CurrentAlertness = Mathf.Min(CurrentAlertness + (AlertnessIncreaseRate / 5) * Time.deltaTime, MaxAlertness);
-                    else if (TargetMoveStatus == 2)
-                        CurrentAlertness = Mathf.Min(CurrentAlertness + (SprintIncreaseRate / 4) * Time.deltaTime, MaxAlertness);
+                    if (TargetFound)
+                    {
+                        // 根据目标移动状态增加警戒度
+                        if (TargetMoveStatus == -1)
+                            CurrentAlertness = Mathf.Min(CurrentAlertness + CrouchIncreaseRate * Time.deltaTime, MaxAlertness);
+                        else if (TargetMoveStatus == 0 || TargetMoveStatus == 1)
+                            CurrentAlertness = Mathf.Min(CurrentAlertness + AlertnessIncreaseRate * Time.deltaTime, MaxAlertness);
+                        else if (TargetMoveStatus == 2)
+                            CurrentAlertness = Mathf.Min(CurrentAlertness + SprintIncreaseRate * Time.deltaTime, MaxAlertness);
+                    }
+                    else if (FoundButOutRange)
+                    {
+                        // 目标在检测范围外但在检测距离内，根据目标移动状态减少警戒度
+                        if (TargetMoveStatus == -1)
+                            CurrentAlertness = Mathf.Min(CurrentAlertness + (AlertnessDecreaseRate / 10) * Time.deltaTime, MaxAlertness);
+                        else if (TargetMoveStatus == 0)
+                            CurrentAlertness = Mathf.Min(CurrentAlertness + (AlertnessIncreaseRate / 10) * Time.deltaTime, MaxAlertness);
+                        else if (TargetMoveStatus == 1)
+                            CurrentAlertness = Mathf.Min(CurrentAlertness + (AlertnessIncreaseRate / 5) * Time.deltaTime, MaxAlertness);
+                        else if (TargetMoveStatus == 2)
+                            CurrentAlertness = Mathf.Min(CurrentAlertness + (SprintIncreaseRate / 4) * Time.deltaTime, MaxAlertness);
+                    }
                 }
             }
         }
@@ -149,7 +152,7 @@ namespace TestField
                     TargetExposed = true;
                 }
             }
-            else if(AlertTarget == null)
+            else if (AlertTarget == null)
             {
                 // 没有目标时，暴露状态为false，同时警戒度逐渐回归初始值
                 TargetExposed = false;
@@ -165,7 +168,7 @@ namespace TestField
         // 警戒度在未被发现的情况下慢慢清零
         private void AlertnessRecover()
         {
-            if (moveLogic.RecoverStart ||!TargetFound && !FoundButOutRange)
+            if (moveLogic.RecoverStart || !TargetFound && !FoundButOutRange)
             {
                 CurrentAlertness = Mathf.Max(CurrentAlertness - AlertnessDecreaseRate * Time.deltaTime, InitAlertness);
             }
