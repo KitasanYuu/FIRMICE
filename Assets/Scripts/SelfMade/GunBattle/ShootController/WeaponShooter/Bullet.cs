@@ -5,13 +5,13 @@ using CustomInspector;
 public class Bullet : MonoBehaviour
 {
     private Rigidbody bulletRigidbody;
-    [ReadOnly] private GameObject FatherObj;
-    [ReadOnly]private float speed;
-    [ReadOnly] private LayerMask destroyOnCollisionWith; // 选择要销毁的层级
+    [SerializeField, ReadOnly] private GameObject FatherObj;
+    [SerializeField, ReadOnly] private float speed;
+    [SerializeField, ReadOnly] private LayerMask destroyOnCollisionWith; // 选择要销毁的层级
     private bool hasHit = false; // 是否已经命中
-    private float damage = 10f; // 子弹伤害值
-    [ReadOnly] private LayerMask hitLayers; // 自定义的射线检测层级
-    [ReadOnly] private float rayLength = 10f; // 自定义射线长度
+    [SerializeField,ReadOnly] private float damage = 10f; // 子弹伤害值
+    [SerializeField,ReadOnly] private LayerMask hitLayers; // 自定义的射线检测层级
+    [SerializeField,ReadOnly] private float rayLength = 10f; // 自定义射线长度
     private GameObject hitObject; // 保存命中的游戏对象
 
     //以下参数是测试参数
@@ -80,14 +80,14 @@ public class Bullet : MonoBehaviour
         Ray ray = new Ray(transform.position, transform.forward);
         RaycastHit hitInfo;
 
-        if (Physics.Raycast(ray, out hitInfo, rayLength, hitLayers))
+        if (Physics.Raycast(ray, out hitInfo, rayLength, destroyOnCollisionWith))
         {
             // 获取命中的游戏对象
             hitObject = hitInfo.collider.gameObject;
             hasHit = true; // 设置已命中标志
             virtualhp = hitObject.GetComponent<VirtualHP>();
             // 在此处可以进行命中的处理，例如播放音效、添加命中效果、处理伤害等
-            //Debug.Log("命中了：" + hitObject.name);
+            Debug.Log("命中了：" + hitObject.name);
 
 
 

@@ -25,10 +25,8 @@ public class WeaponShooter : MonoBehaviour
     //获取脚本
     private BasicInput _input;
     private TPSShootController tpsShootController;
-    private Animator _animator;
     private bool Basicinput;
     private bool Tpsshootcontroller;
-    private bool _hasanimator;
 
     // Start is called before the first frame update
     void Start()
@@ -84,6 +82,7 @@ public class WeaponShooter : MonoBehaviour
                             bullet.SetRayLength(bulletspeed * SRR);
                             bullet.SetBulletSpeed(bulletspeed);
                             bullet.SetBulletHitLayer(DestoryLayer);
+                            bullet.SetFatherObj(Shooter);
                             //Debug.Log(bulletspeed * SRR);
                             //Debug.LogError("BulletSpwaned");
                         }
@@ -111,7 +110,11 @@ public class WeaponShooter : MonoBehaviour
         {
            Shooter = FindFatherObj(true);
             if(Shooter != null)
+            {
                 ComponemetInit();
+                SRRSelecting();
+            }
+
         }
     }
 
@@ -163,7 +166,6 @@ public class WeaponShooter : MonoBehaviour
 
     private void ComponemetInit()
     {
-        _hasanimator = TryGetComponent<Animator>(out _animator);
         Basicinput = Shooter.TryGetComponent<BasicInput>(out _input);
         Tpsshootcontroller = Shooter.TryGetComponent<TPSShootController>(out tpsShootController);
 
