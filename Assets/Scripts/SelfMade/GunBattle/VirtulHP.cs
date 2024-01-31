@@ -4,10 +4,6 @@ using UnityEngine;
 
 namespace BattleHealth
 {
-    // 定义伤害事件
-    [System.Serializable]
-    public class DamageEvent : UnityEngine.Events.UnityEvent<float, GameObject> { }
-
     public class VirtualHP : MonoBehaviour
     {
         [SerializeField, ReadOnly] private float CurrentHP;
@@ -64,6 +60,11 @@ namespace BattleHealth
 
         void Update()
         {
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                PrintDamageInfo();
+            }
+            
             DamageCalculating();
 
             if (CurrentHP <= 0)
@@ -117,4 +118,8 @@ namespace BattleHealth
             damageList.Clear();
         }
     }
+
+    // 定义伤害事件
+    [System.Serializable]
+    public class DamageEvent : UnityEngine.Events.UnityEvent<float, GameObject> { }
 }
