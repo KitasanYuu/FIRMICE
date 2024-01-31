@@ -1,8 +1,6 @@
 using UnityEngine;
 using AvatarMain;
 using playershooting;
-using RootMotion.Demos;
-using UnityEngine.EventSystems;
 
 public class WeaponShooter : MonoBehaviour
 {
@@ -42,64 +40,78 @@ public class WeaponShooter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        ComponentRetake();
         FireAction();
     }
 
     private void FireAction()
     {
-        // 开火
-        if (tpsShootController.Fire && tpsShootController.isAiming)
+        if (Shooter != null)
         {
-            if (Basicinput && Tpsshootcontroller)
+            // 开火
+            if (tpsShootController.Fire && tpsShootController.isAiming)
             {
-                // 获取当前时间
-                float currentTime = Time.time;
-
-                if (currentTime - lastShootTime > fireRate)
+                if (Basicinput && Tpsshootcontroller)
                 {
-                    //// 在这里执行射线投射
-                    //Ray shootRay = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-                    //if (Physics.Raycast(shootRay, out RaycastHit shootRaycastHit))
-                    //{
-                    //    // 获取击中点的坐标
-                    //    Vector3 hitPoint = shootRaycastHit.point;
+                    // 获取当前时间
+                    float currentTime = Time.time;
 
-                    //    // 生成特效
-                    //    Instantiate(vfxHitYellow, mouseWorldPosition, Quaternion.identity);
-
-                    //    // 在这里处理射击命中的逻辑，例如对击中物体造成伤害或触发其他效果等
-                    //    Debug.Log("射击命中：" + shootRaycastHit.collider.gameObject.name + "，击中坐标：" + hitPoint);
-                    //}
-
-                    Vector3 aimDir = (tpsShootController.TmouseWorldPosition - spawnBulletPosition.position).normalized;
-                    // 生成子弹实例
-                    GameObject bulletInstance = Instantiate(bulletPrefab, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
-                    // 获取子弹脚本并设置速度
-                    Bullet bullet = bulletInstance.GetComponent<Bullet>();
-                    if (bullet != null)
+                    if (currentTime - lastShootTime > fireRate)
                     {
+                        //// 在这里执行射线投射
+                        //Ray shootRay = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+                        //if (Physics.Raycast(shootRay, out RaycastHit shootRaycastHit))
+                        //{
+                        //    // 获取击中点的坐标
+                        //    Vector3 hitPoint = shootRaycastHit.point;
 
-                        bullet.SetDamage(BulletDamage);
-                        bullet.SetRayLength(bulletspeed * SRR);
-                        bullet.SetBulletSpeed(bulletspeed);
-                        bullet.SetBulletHitLayer(DestoryLayer);
-                        //Debug.Log(bulletspeed * SRR);
-                        //Debug.LogError("BulletSpwaned");
+                        //    // 生成特效
+                        //    Instantiate(vfxHitYellow, mouseWorldPosition, Quaternion.identity);
+
+                        //    // 在这里处理射击命中的逻辑，例如对击中物体造成伤害或触发其他效果等
+                        //    Debug.Log("射击命中：" + shootRaycastHit.collider.gameObject.name + "，击中坐标：" + hitPoint);
+                        //}
+
+                        Vector3 aimDir = (tpsShootController.TmouseWorldPosition - spawnBulletPosition.position).normalized;
+                        // 生成子弹实例
+                        GameObject bulletInstance = Instantiate(bulletPrefab, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
+                        // 获取子弹脚本并设置速度
+                        Bullet bullet = bulletInstance.GetComponent<Bullet>();
+                        if (bullet != null)
+                        {
+
+                            bullet.SetDamage(BulletDamage);
+                            bullet.SetRayLength(bulletspeed * SRR);
+                            bullet.SetBulletSpeed(bulletspeed);
+                            bullet.SetBulletHitLayer(DestoryLayer);
+                            //Debug.Log(bulletspeed * SRR);
+                            //Debug.LogError("BulletSpwaned");
+                        }
+                        else
+                        {
+                            Debug.LogError("BulletTest component not found on instantiated object.");
+                        }
+
+                        if (Semi)
+                        {
+                            _input.shoot = false;
+                        }
+
+
+                        lastShootTime = currentTime;
                     }
-                    else
-                    {
-                        Debug.LogError("BulletTest component not found on instantiated object.");
-                    }
-
-                    if (Semi)
-                    {
-                        _input.shoot = false;
-                    }
-
-
-                    lastShootTime = currentTime;
                 }
             }
+        }
+    }
+
+    private void ComponentRetake()
+    {
+        if(Shooter == null)
+        {
+           Shooter = FindFatherObj(true);
+            if(Shooter != null)
+                ComponemetInit();
         }
     }
 
@@ -115,21 +127,47 @@ public class WeaponShooter : MonoBehaviour
         }
     }
 
+    public GameObject FindFatherObj(bool Start = false)
+    {
+        if (Start)
+        {
+            // 从当前物体开始查找
+            GameObject currentObject = gameObject;
+
+            // 在当前物体以及其父级中查找
+            while (currentObject != null)
+            {
+                // 在当前物体上查找TPSShootController脚本
+                TPSShootController tpsShootController = currentObject.GetComponent<TPSShootController>();
+                if (tpsShootController != null)
+                {
+                    // 如果找到，则返回当前物体
+                    return currentObject;
+                }
+
+                // 在当前物体上查找ShootController脚本
+                //ShootController shootController = currentObject.GetComponent<ShootController>();
+                //if (shootController != null)
+                //{
+                //    // 如果找到，则返回当前物体
+                //    return currentObject;
+                //}
+
+                // 继续向上查找
+                currentObject = currentObject.transform.parent?.gameObject;
+            }
+        }
+            // 如果未找到任何包含所需脚本的物体，则返回null
+            return null;
+    }
+
     private void ComponemetInit()
     {
         _hasanimator = TryGetComponent<Animator>(out _animator);
-        if (_hasanimator)
-        {
-            Basicinput = TryGetComponent<BasicInput>(out _input);
-            Tpsshootcontroller = TryGetComponent<TPSShootController>(out tpsShootController);
-        }
-        else
-        {
-            Basicinput = Shooter.TryGetComponent<BasicInput>(out _input);
-            Tpsshootcontroller = Shooter.TryGetComponent<TPSShootController>(out tpsShootController);
-        }
+        Basicinput = Shooter.TryGetComponent<BasicInput>(out _input);
+        Tpsshootcontroller = Shooter.TryGetComponent<TPSShootController>(out tpsShootController);
 
-        if(Tpsshootcontroller && Basicinput)
+        if (Tpsshootcontroller && Basicinput)
         {
             Debug.Log("BulletSpwanInitSuccess!");
         }
