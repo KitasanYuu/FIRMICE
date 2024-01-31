@@ -1,18 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using BattleHealth;
-using TargetDirDetec;
+using CustomInspector;
 
 public class Bullet : MonoBehaviour
 {
     private Rigidbody bulletRigidbody;
-    public float speed;
-    public LayerMask destroyOnCollisionWith; // 选择要销毁的层级
+    [ReadOnly] private GameObject FatherObj;
+    [ReadOnly]private float speed;
+    [ReadOnly] private LayerMask destroyOnCollisionWith; // 选择要销毁的层级
     private bool hasHit = false; // 是否已经命中
-    public float damage = 10f; // 子弹伤害值
-    public LayerMask hitLayers; // 自定义的射线检测层级
-    private float rayLength = 10f; // 自定义射线长度
+    private float damage = 10f; // 子弹伤害值
+    [ReadOnly] private LayerMask hitLayers; // 自定义的射线检测层级
+    [ReadOnly] private float rayLength = 10f; // 自定义射线长度
     private GameObject hitObject; // 保存命中的游戏对象
 
     //以下参数是测试参数
@@ -101,7 +100,7 @@ public class Bullet : MonoBehaviour
     {
         if (virtualhp != null)
         {
-            virtualhp.AddDamage(damage); // 将伤害值传递给目标脚本的方法
+            virtualhp.AddDamage(damage, FatherObj); // 将伤害值传递给目标脚本的方法
         }
     }
 
@@ -124,6 +123,11 @@ public class Bullet : MonoBehaviour
     public void SetDamage(float newDamage)
     {
         damage = newDamage;
+    }
+
+    public void SetFatherObj(GameObject fatherobj)
+    {
+        FatherObj = fatherobj;
     }
 
 #if UNITY_EDITOR
