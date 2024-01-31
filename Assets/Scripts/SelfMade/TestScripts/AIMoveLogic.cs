@@ -17,6 +17,10 @@ namespace TestField
         public float ReScanDelay = 5f;
 
         [Tab("ParameterCheck")]
+        [ReadOnly,SerializeField]
+        private bool TargetExpose;
+        [ReadOnly,SerializeField]
+        private GameObject Target;
         [ReadOnly]
         public GameObject CurrentCoverSelected;
         [ReadOnly]
@@ -45,14 +49,12 @@ namespace TestField
         private BroadCasterInfoContainer BCIC;
         private CoverUtility coverUtility = new CoverUtility();
 
-        private bool TargetExpose;
         private bool hasGeneratedPoint;
         private List<GameObject> HalfCoverList = new List<GameObject>();
         private List<GameObject> FullCoverList = new List<GameObject>();
         private List<GameObject> OccupiedCoverList = new List<GameObject>();
         private List<GameObject> FreeCoverList = new List<GameObject>();
         private List<GameObject> CoverList = new List<GameObject>();
-        private GameObject Target;
 
 
         private GameObject PreviousCoverSelected;
