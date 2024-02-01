@@ -121,22 +121,18 @@ public class ComponentCopier : EditorWindow
 
     private void CopyComponents(GameObject source, GameObject target)
     {
-        Component[] existingComponents = target.GetComponents<Component>();
-        foreach (var component in existingComponents)
-        {
-            if (!(component is Transform))
-            {
-                DestroyImmediate(component);
-            }
-        }
-
+        // 获取源对象上所有的组件
         Component[] componentsToCopy = source.GetComponents<Component>();
+
+        // 遍历源对象上的组件
         for (int i = 0; i < componentsToCopy.Length; i++)
         {
             Component component = componentsToCopy[i];
 
+            // 如果组件不是Transform，并且选中了对应的脚本（selectedScripts[i]为真）
             if (!(component is Transform) && selectedScripts[i])
             {
+                // 使用UnityEditor的工具复制和粘贴组件
                 UnityEditorInternal.ComponentUtility.CopyComponent(component);
                 UnityEditorInternal.ComponentUtility.PasteComponentAsNew(target);
             }
@@ -144,4 +140,5 @@ public class ComponentCopier : EditorWindow
 
         Debug.Log("Components copied successfully from " + source.name + " to " + target.name);
     }
+
 }
