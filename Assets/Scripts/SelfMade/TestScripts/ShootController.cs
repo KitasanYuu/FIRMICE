@@ -114,12 +114,26 @@ namespace BattleShoot
         {
             if (raycastOrigin != null)
             {
-                Ray ray = new Ray(raycastOrigin.transform.position, transform.forward);
-                if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+                if(Target != null)
                 {
-                    if (debugSphere != null)
+                    Ray ray = new Ray(raycastOrigin.transform.position, (Target.transform.position-transform.position).normalized);
+                    if (Physics.Raycast(ray, out RaycastHit hit, 100f))
                     {
-                        debugSphere.transform.position = hit.point;
+                        if (debugSphere != null)
+                        {
+                            debugSphere.transform.position = hit.point;
+                        }
+                    }
+                }
+                else
+                {
+                    Ray ray = new Ray(raycastOrigin.transform.position, transform.forward);
+                    if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+                    {
+                        if (debugSphere != null)
+                        {
+                            debugSphere.transform.position = hit.point;
+                        }
                     }
                 }
             }
