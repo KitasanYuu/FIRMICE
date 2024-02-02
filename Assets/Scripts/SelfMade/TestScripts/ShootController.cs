@@ -11,6 +11,7 @@ namespace BattleShoot
         public bool isAiming = false;
         public bool Fire = false;
 
+        [SerializeField] private LayerMask aimColliderLayerMask;
         [SerializeField] private GameObject raycastOrigin; // 新增的字段，用于指定射线的出发点
         [SerializeField] private Transform debugTransform;
         [SerializeField] private Material customMaterial;
@@ -116,19 +117,20 @@ namespace BattleShoot
             {
                 if(Target != null)
                 {
-                    Ray ray = new Ray(raycastOrigin.transform.position, (Target.transform.position-transform.position).normalized);
-                    if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+                    Ray ray = new Ray(raycastOrigin.transform.position, (Target.transform.position- raycastOrigin.transform.position).normalized);
+                    if (Physics.Raycast(ray, out RaycastHit hit, 999f,aimColliderLayerMask))
                     {
                         if (debugSphere != null)
                         {
                             debugSphere.transform.position = hit.point;
+                            Debug.Log(hit.collider.gameObject);
                         }
                     }
                 }
                 else
                 {
-                    Ray ray = new Ray(raycastOrigin.transform.position, transform.forward);
-                    if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+                    Ray ray = new Ray(raycastOrigin.transform.position, raycastOrigin.transform.forward);
+                    if (Physics.Raycast(ray, out RaycastHit hit, 999f, aimColliderLayerMask))
                     {
                         if (debugSphere != null)
                         {
