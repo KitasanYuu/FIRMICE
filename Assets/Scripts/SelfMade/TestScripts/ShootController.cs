@@ -1,10 +1,13 @@
 using UnityEngine;
+using RootMotion.FinalIK;
 using UnityEngine.Rendering.HighDefinition;
 
 namespace BattleShoot
 {
     public class ShootController : MonoBehaviour
     {
+        public GameObject Target;
+
         public bool isAiming = false;
         public bool Fire = false;
 
@@ -18,13 +21,17 @@ namespace BattleShoot
         public bool isBlocked = false;
 
         private Animator _animator;
+        private AimIK _aimIK;
+
+        private bool _hasAnimator;
+        private int AimIKParameter;
         private int _animIDEnterAiming;
         private int _animIDAimStatus;
 
         private void Start()
         {
             ComponentInit();
-            _animator = GetComponent<Animator>();
+            _hasAnimator = TryGetComponent(out _animator);
             AssignAnimationIDs();
 
             if (customMaterial == null)
@@ -55,9 +62,33 @@ namespace BattleShoot
             if (isAiming)
             {
                 RaycastDetection();
+                Vector3 DTargetPosition = Target.transform.position;
+                DTargetPosition.y = 0f;
+                Vector3 DSelfPosition = transform.position;
+                DSelfPosition.y = 0f;
+                Vector3 TargetDir = (DTargetPosition - DSelfPosition).normalized;
+                transform.forward = Vector3.Lerp(transform.forward, TargetDir, Time.deltaTime * 10f);
 
-                //Vector3 playerDirection = (PlayerPosition() - transform.position).normalized;
-                //transform.forward = Vector3.Lerp(transform.forward, playerDirection, Time.deltaTime * 5f);
+                if (_hasAnimator)
+                {
+                    _animator.SetBool(_animIDEnterAiming, true);
+                    _animator.SetFloat(_animIDAimStatus, 0);
+                }
+
+                if (AimIKParameter == 1)
+                {
+                    AimIKParameter = 1;
+                    _aimIK.enabled = true;
+                    //AimIKParameter = 0;
+                }
+            }
+            else
+            {
+                _aimIK.enabled = false;
+                if (_hasAnimator)
+                {
+                    _animator.SetBool(_animIDEnterAiming, false);
+                }
             }
         }
 
@@ -75,13 +106,9 @@ namespace BattleShoot
 
         private void ComponentInit()
         {
-            // 初始化NPC组件，可以根据需要扩展
+            _aimIK = GetComponent<AimIK>();
         }
 
-        private Vector3 PlayerPosition()
-        {
-            return Vector3.zero;
-        }
 
         private void RaycastDetection()
         {
@@ -116,11 +143,15 @@ namespace BattleShoot
                 Destroy(debugSphere.GetComponent<Collider>());
                 // 将生成的 Sphere 添加到脚本所在物体的子集
                 debugSphere.transform.parent = transform;
-
                 debugSphere.SetActive(false);
-
+                _aimIK.solver.target = debugSphere.transform;
                 debugTransform = debugSphere.transform;
             }
+        }
+
+        public void AimIKStatus(int newValue)
+        {
+            AimIKParameter = newValue;
         }
     }
 }
