@@ -6,6 +6,8 @@ namespace BattleShoot
 {
     public class ShootController : MonoBehaviour
     {
+        public bool UsingTrajectoryPredict = true;
+
         public GameObject Target;
 
         public bool isAiming = false;
@@ -28,6 +30,16 @@ namespace BattleShoot
         private int AimIKParameter;
         private int _animIDEnterAiming;
         private int _animIDAimStatus;
+
+        private Vector3 previousHitpoint;
+        private Vector3 currentHitpoint;
+
+        private WeaponShooter _weaponShooter;
+
+        [HideInInspector]
+        public Vector3 hitpoint;
+        [HideInInspector]
+        public Vector3 hitpointVelocity;
 
         private void Start()
         {
@@ -108,6 +120,7 @@ namespace BattleShoot
         private void ComponentInit()
         {
             _aimIK = GetComponent<AimIK>();
+            _weaponShooter = GetComponent<WeaponShooter>();
         }
 
 
@@ -115,16 +128,16 @@ namespace BattleShoot
         {
             if (raycastOrigin != null)
             {
-                if(Target != null)
+                HitpointVelocyCalcu();
+                if (Target != null)
                 {
                     Ray ray = new Ray(raycastOrigin.transform.position, (Target.transform.position- raycastOrigin.transform.position).normalized);
-                    if (Physics.Raycast(ray, out RaycastHit hit, 999f,aimColliderLayerMask))
+                    if (Physics.Raycast(ray, out RaycastHit hit, 999f, aimColliderLayerMask))
                     {
-                        if (debugSphere != null)
-                        {
-                            debugSphere.transform.position = hit.point;
-                            Debug.Log(hit.collider.gameObject);
-                        }
+                        //debugSphere.transform.position = hit.point;
+                        //Debug.Log(hit.collider.gameObject);
+                        hitpoint = hit.point;
+                        currentHitpoint = hit.point;
                     }
                 }
                 else
@@ -132,17 +145,41 @@ namespace BattleShoot
                     Ray ray = new Ray(raycastOrigin.transform.position, raycastOrigin.transform.forward);
                     if (Physics.Raycast(ray, out RaycastHit hit, 999f, aimColliderLayerMask))
                     {
-                        if (debugSphere != null)
-                        {
-                            debugSphere.transform.position = hit.point;
-                        }
+                        //debugSphere.transform.position = hit.point;
+                        hitpoint = hit.point;
+                        currentHitpoint = hit.point;
                     }
+                }
+                if(debugSphere!= null)
+                {
+                    DebugSphereSet();
                 }
             }
             else
             {
                 Debug.LogError("Raycast origin is not set. Please assign a GameObject to the 'raycastOrigin' field.");
             }
+        }
+
+        private void DebugSphereSet()
+        {
+            if (!UsingTrajectoryPredict)
+            {
+                debugSphere.transform.position = hitpoint;
+            }
+            else if(UsingTrajectoryPredict)
+            {
+                debugSphere.transform.position = _weaponShooter.PredictedAimPoint;
+            }
+        }
+
+        private void HitpointVelocyCalcu()
+        {
+            // 计算速度
+            hitpointVelocity = (currentHitpoint - previousHitpoint) / Time.deltaTime;
+
+            // 存储当前帧的目标点位置
+            previousHitpoint = currentHitpoint;
         }
 
         private void GenerateDebugSphere()
