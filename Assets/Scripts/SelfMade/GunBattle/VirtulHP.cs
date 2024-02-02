@@ -9,6 +9,9 @@ namespace BattleHealth
         [SerializeField, ReadOnly] private float CurrentHP;
         [SerializeField, ReadOnly] private float CurrentArmor;
         [Space2(20)]
+        public bool revive;
+        [SerializeField]
+        private bool DestoryAfterDead;
         [SerializeField]
         private float TotalHP;
         [SerializeField, Tooltip("自身的减伤倍率，值越高伤害减免越高，为1时完全无敌"), Range(0, 1)]
@@ -60,6 +63,7 @@ namespace BattleHealth
 
         void Update()
         {
+            Revive(revive);
             if (Input.GetKeyDown(KeyCode.R))
             {
                 PrintDamageInfo();
@@ -70,7 +74,10 @@ namespace BattleHealth
             if (CurrentHP <= 0)
             {
                 CurrentHP = 0;
-                //this.gameObject.SetActive(false);
+                if (DestoryAfterDead)
+                {
+                    gameObject.SetActive(false);
+                }
             }
         }
 
@@ -110,6 +117,17 @@ namespace BattleHealth
                 totalDamage += damage;
             }
             return totalDamage;
+        }
+
+        public void Revive(bool revive)
+        {
+            if (revive)
+            {
+                CurrentArmor = Armor;
+                CurrentHP = TotalHP;
+                revive = false;
+                gameObject.SetActive(true);
+            }
         }
 
         private void ClearDamageArray()
