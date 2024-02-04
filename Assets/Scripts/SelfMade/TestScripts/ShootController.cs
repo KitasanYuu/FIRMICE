@@ -18,10 +18,9 @@ namespace BattleShoot
         [SerializeField] private Transform debugTransform;
         [SerializeField] private Material customMaterial;
 
-        private GameObject debugSphere;
+        [SerializeField] private float SelfRotateSpeed=10f;
 
-        public float transitionSpeed = 0.5f;
-        public bool isBlocked = false;
+        private GameObject debugSphere;
 
         private Animator _animator;
         private AimIK _aimIK;
@@ -61,7 +60,6 @@ namespace BattleShoot
         private void Update()
         {
             AIM();
-            FIRE();
         }
 
         private void AssignAnimationIDs()
@@ -75,12 +73,16 @@ namespace BattleShoot
             if (isAiming)
             {
                 RaycastDetection();
-                Vector3 DTargetPosition = Target.transform.position;
-                DTargetPosition.y = 0f;
-                Vector3 DSelfPosition = transform.position;
-                DSelfPosition.y = 0f;
-                Vector3 TargetDir = (DTargetPosition - DSelfPosition).normalized;
-                transform.forward = Vector3.Lerp(transform.forward, TargetDir, Time.deltaTime * 10f);
+                if (Target != null)
+                {
+
+                    Vector3 DTargetPosition = Target.transform.position;
+                    DTargetPosition.y = 0f;
+                    Vector3 DSelfPosition = transform.position;
+                    DSelfPosition.y = 0f;
+                    Vector3 TargetDir = (DTargetPosition - DSelfPosition).normalized;
+                    transform.forward = Vector3.Lerp(transform.forward, TargetDir, Time.deltaTime * SelfRotateSpeed);
+                }
 
                 if (_hasAnimator)
                 {
@@ -90,9 +92,9 @@ namespace BattleShoot
 
                 if (AimIKParameter == 1)
                 {
-                    AimIKParameter = 1;
+                    //AimIKParameter = 1;
                     _aimIK.enabled = true;
-                    //AimIKParameter = 0;
+                    AimIKParameter = 0;
                 }
             }
             else
@@ -102,18 +104,6 @@ namespace BattleShoot
                 {
                     _animator.SetBool(_animIDEnterAiming, false);
                 }
-            }
-        }
-
-        private void FIRE()
-        {
-            if (isAiming)
-            {
-                //Fire = true;
-            }
-            else
-            {
-                //Fire = false;
             }
         }
 
@@ -131,7 +121,7 @@ namespace BattleShoot
                 HitpointVelocyCalcu();
                 if (Target != null)
                 {
-                    Ray ray = new Ray(raycastOrigin.transform.position, (Target.transform.position- raycastOrigin.transform.position).normalized);
+                    Ray ray = new Ray(raycastOrigin.transform.position, (Target.transform.position - raycastOrigin.transform.position).normalized);
                     if (Physics.Raycast(ray, out RaycastHit hit, 999f, aimColliderLayerMask))
                     {
                         //debugSphere.transform.position = hit.point;
@@ -142,7 +132,7 @@ namespace BattleShoot
                 }
                 else
                 {
-                    Ray ray = new Ray(raycastOrigin.transform.position, raycastOrigin.transform.forward);
+                    Ray ray = new Ray(raycastOrigin.transform.position, transform.forward.normalized);
                     if (Physics.Raycast(ray, out RaycastHit hit, 999f, aimColliderLayerMask))
                     {
                         //debugSphere.transform.position = hit.point;
@@ -150,7 +140,7 @@ namespace BattleShoot
                         currentHitpoint = hit.point;
                     }
                 }
-                if(debugSphere!= null)
+                if (debugSphere != null)
                 {
                     DebugSphereSet();
                 }
@@ -167,7 +157,7 @@ namespace BattleShoot
             {
                 debugSphere.transform.position = hitpoint;
             }
-            else if(UsingTrajectoryPredict)
+            else if (UsingTrajectoryPredict)
             {
                 debugSphere.transform.position = _weaponShooter.PredictedAimPoint;
             }

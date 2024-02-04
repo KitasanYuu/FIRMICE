@@ -3,16 +3,23 @@ using AvatarMain;
 using playershooting;
 using BattleShoot;
 using CustomInspector;
-using UnityEngine.InputSystem.XR.Haptics;
+using BattleHealth;
 
 public class WeaponShooter : MonoBehaviour
 {
     [ReadOnly, SerializeField] private bool UsingAIControl;
     [ReadOnly, SerializeField] private bool UsingMasterControl;
+
+    [SerializeField] private bool RayMethod;
+    [SerializeField] private bool InstanceMethod;
+    [Space2(20)]
+
     [SerializeField] private bool Semi;
     public GameObject Shooter;
     // 子弹预制件或游戏对象
     [SerializeField] private GameObject bulletPrefab;
+    //子弹命中后的特效
+    [SerializeField] private GameObject VFXHitEffect;
     // 子弹生成位置
     [SerializeField] private Transform spawnBulletPosition;
     // 子弹生成后的速度
@@ -27,7 +34,7 @@ public class WeaponShooter : MonoBehaviour
     float lastShootTime = 0f;
     public float fireRate = 0.5f; // 0.5秒为例，可以根据需要调整射速
 
-    private float PreviousBulletSpeed;
+    private float PreviousBulletSpeed = 0;
 
     //获取脚本
     private BasicInput _input;
@@ -68,27 +75,13 @@ public class WeaponShooter : MonoBehaviour
 
                 if (currentTime - lastShootTime > fireRate)
                 {
-                    //// 在这里执行射线投射
-                    //Ray shootRay = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-                    //if (Physics.Raycast(shootRay, out RaycastHit shootRaycastHit))
-                    //{
-                    //    // 获取击中点的坐标
-                    //    Vector3 hitPoint = shootRaycastHit.point;
-
-                    //    // 生成特效
-                    //    Instantiate(vfxHitYellow, mouseWorldPosition, Quaternion.identity);
-
-                    //    // 在这里处理射击命中的逻辑，例如对击中物体造成伤害或触发其他效果等
-                    //    Debug.Log("射击命中：" + shootRaycastHit.collider.gameObject.name + "，击中坐标：" + hitPoint);
-                    //}
-
                     Vector3 aimDir = Vector3.zero;
 
                     if (Tpsshootcontroller)
                         aimDir = (tpsShootController.TmouseWorldPosition - spawnBulletPosition.position).normalized;
-                    else if (shootcontroller && !shootController.UsingTrajectoryPredict)
+                    else if (shootcontroller && RayMethod && !shootController.UsingTrajectoryPredict)
                         aimDir = (shootController.hitpoint - spawnBulletPosition.position).normalized;
-                    else if (shootcontroller && shootController.UsingTrajectoryPredict)
+                    else if (shootcontroller && InstanceMethod && shootController.UsingTrajectoryPredict)
                     {
                         // 计算射击方向和距离
                         Vector3 shootDirection = shootController.hitpoint - spawnBulletPosition.position;
@@ -105,26 +98,46 @@ public class WeaponShooter : MonoBehaviour
                         aimDir = (predictedTargetPosition - spawnBulletPosition.position).normalized;
                     }
 
-                    // 生成子弹实例
-                    GameObject bulletInstance = Instantiate(bulletPrefab, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
-                    // 获取子弹脚本并设置速度
-                    Bullet bullet = bulletInstance.GetComponent<Bullet>();
-                    if (bullet != null)
+                    if (InstanceMethod)
                     {
+                        // 生成子弹实例
+                        GameObject bulletInstance = Instantiate(bulletPrefab, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
+                        // 获取子弹脚本并设置速度
+                        Bullet bullet = bulletInstance.GetComponent<Bullet>();
+                        if (bullet != null)
+                        {
 
-                        bullet.SetDamage(BulletDamage);
-                        bullet.SetRayLength(bulletspeed * SRR);
-                        bullet.SetBulletSpeed(bulletspeed);
-                        bullet.SetBulletHitLayer(DestoryLayer);
-                        bullet.SetFatherObj(Shooter);
-                        //Debug.Log(bulletspeed * SRR);
-                        //Debug.LogError("BulletSpwaned");
+                            bullet?.SetDamage(BulletDamage);
+                            bullet?.SetRayLength(bulletspeed * SRR);
+                            bullet?.SetBulletSpeed(bulletspeed);
+                            bullet?.SetBulletHitLayer(DestoryLayer);
+                            bullet?.SetFatherObj(Shooter);
+                            bullet?.SetVFXHitEffect(VFXHitEffect);
+                            //Debug.Log(bulletspeed * SRR);
+                            //Debug.LogError("BulletSpwaned");
+                        }
+                        else
+                        {
+                            Debug.LogError("BulletTest component not found on instantiated object.");
+                        }
                     }
-                    else
+                    else if (RayMethod)
                     {
-                        Debug.LogError("BulletTest component not found on instantiated object.");
-                    }
+                        // 在这里执行射线投射
+                        Ray shootRay = new Ray(spawnBulletPosition.position,aimDir);
+                        if (Physics.Raycast(shootRay, out RaycastHit shootRaycastHit))
+                        {
+                            // 获取击中点的坐标
+                            Vector3 hitPoint = shootRaycastHit.point;
+                            GameObject HitObject = shootRaycastHit.collider.gameObject;
+                            RayDamegeIn(HitObject);
+                            // 生成特效
+                            Instantiate(VFXHitEffect, hitPoint, Quaternion.identity);
 
+                            // 在这里处理射击命中的逻辑，例如对击中物体造成伤害或触发其他效果等
+                            Debug.Log("射击命中：" + shootRaycastHit.collider.gameObject.name + "，击中坐标：" + hitPoint);
+                        }
+                    }
                     if (Semi)
                     {
                         if (UsingMasterControl)
@@ -140,6 +153,16 @@ public class WeaponShooter : MonoBehaviour
         }
     }
 
+    private void RayDamegeIn(GameObject RayHitTarget)
+    {
+        VirtualHP virtualhp = RayHitTarget.GetComponent<VirtualHP>();
+        if(virtualhp != null)
+        {
+            virtualhp.AddDamage(BulletDamage, Shooter); // 将伤害值传递给目标脚本的方法
+        }
+    }
+
+    //用来追踪BulletSpeed有没有在途中变化
     private void BulletSpeedWatcher()
     {
         if(PreviousBulletSpeed != bulletspeed)
@@ -179,6 +202,7 @@ public class WeaponShooter : MonoBehaviour
         }
     }
 
+    //寻找带有ShootController的Shooter
     public GameObject FindFatherObj(bool Start = false)
     {
         if (Start)

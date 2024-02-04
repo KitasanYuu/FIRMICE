@@ -18,7 +18,7 @@ public class Bullet : MonoBehaviour
     private VirtualHP virtualhp;
 
     //子弹命中后的特效
-    [SerializeField] private GameObject vfxHitYellow;
+    [SerializeField] private GameObject VFXHit;
 
     private void Awake()
     {
@@ -53,7 +53,7 @@ public class Bullet : MonoBehaviour
                 //Debug.Log("销毁前获取到目标物体信息：" + hitObject.name);
             }
 
-            Instantiate(vfxHitYellow,transform.position, Quaternion.identity);
+            Instantiate(VFXHit,transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
     }
@@ -128,6 +128,11 @@ public class Bullet : MonoBehaviour
     public void SetFatherObj(GameObject fatherobj)
     {
         FatherObj = fatherobj;
+    }
+
+    public void SetVFXHitEffect(GameObject VFXHitEffect)
+    {
+        VFXHit = VFXHitEffect;
     }
 
 #if UNITY_EDITOR
