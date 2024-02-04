@@ -15,7 +15,6 @@ namespace TestField
         public float followSpeed = 2f;
         public float stoppingDistance = 0.5f;
         public float accelerationDistance = 5.0f; // 你希望加速的距离阈值
-        public float CSpeed;
 
         [HideInInspector]
         public bool HasReachedPoint;
@@ -64,8 +63,6 @@ namespace TestField
 
             if (distanceToTarget > stoppingDistance)
             {
-                SpeedJudging();
-
                 // 计算当前速度，使其逐渐减小直到0
                 currentSpeed = followSpeed * (distanceToTarget / stoppingDistance);
 
@@ -128,7 +125,7 @@ namespace TestField
         }
 
         //特殊移动情况，自定义速度和加速度
-        public void CustomAStarMoving(float Speed, float SprintSpeed, float FacetoForwordDir = 0, GameObject Target = null)
+        public void CustomAStarMoving(float CustomSpeed, float CustomSprintSpeed, float FacetoForwordDir = 0, GameObject Target = null)
         {
 
 
@@ -162,22 +159,19 @@ namespace TestField
 
             if (distanceToTarget > stoppingDistance)
             {
-                SpeedJudging();
-
                 // 计算当前速度，使其逐渐减小直到0
-                currentSpeed = Speed * (distanceToTarget / stoppingDistance);
+                currentSpeed = CustomSpeed * (distanceToTarget / stoppingDistance);
 
                 if (distanceToTarget > accelerationDistance)
                 {
                     // 如果距离小于加速的阈值距离，使用加速速度
-                    currentSpeed = SprintSpeed;
+                    currentSpeed = CustomSprintSpeed;
                 }
-                else if (currentSpeed > FSpeed)
+                else if (currentSpeed > CustomSprintSpeed)
                 {
-                    currentSpeed = SprintSpeed;
+                    currentSpeed = CustomSprintSpeed;
                 }
 
-                //Debug.Log("Follower #315 CurrentSpeed:" + currentSpeed);
 
                 if (aimPoint != null && aimPoint.Count != 0)
                 {
@@ -252,11 +246,6 @@ namespace TestField
             }
 
             return totalLength;
-        }
-
-        protected void SpeedJudging()
-        {
-
         }
 
     }

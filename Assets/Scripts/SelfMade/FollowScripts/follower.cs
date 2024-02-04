@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using TMPro;
 using AvatarMain;
 using TargetFinding;
+using VInspector;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -15,17 +16,22 @@ namespace Partner
     public class Follower : MonoBehaviour
     {
         public GameObject targetToFollow;
+        [Foldout("PointGenerateParameter")]
         public Vector3 sectorDirection = Vector3.forward;
-        public float followSpeed = 2f;
-        public float stoppingDistance = 0.5f;
         public float radius = 5f;
         public float angle = 90f;
-        public float DelayStartTime;
-        public float minDistance = 1f; // 公开的最小距离字段
+        public float minDistance = 1f; // 在目标距离内不会生成点
+
+        [Foldout("MoveParameter")]
+        public bool CopyTargetParameter;
+        public float DelayStartTime;    //延迟x秒后开始移动
+        public float followSpeed = 2f;
+        public float stoppingDistance = 0.5f;
         // 设置加速的阈值距离和加速速度
         public float accelerationDistance = 5.0f; // 你希望加速的距离阈值
         public float accelerationSpeed = 7.0f;    // 你希望达到的加速速度
         public float rotationSpeed = 5.0f;
+
         private Vector3 currentTargetPoint;
         private Vector3 lastTargetPosition;
         private bool isInsideSector;
@@ -36,13 +42,11 @@ namespace Partner
         //用来判定是否移动保底
         private bool IsMoving;
         private Vector3 lastPosition;
-        public float movementThreshold = 0.01f; // 可以调整这个阈值
+        private float movementThreshold = 0.01f; // 可以调整这个阈值
 
         //这里为了在两种跟随模式下切换设定几个中立的速度变量
         private float FSpeed;
         private float FSprintSpeed;
-        private float FCrouchingSpeed;
-        private float FAimSpeed;
 
         //直接取到AvatarController中的值
         private AvatarController avatarController;
@@ -58,10 +62,10 @@ namespace Partner
         //private NavMeshPath navMeshPath;
 
         //这里是仅用作外部调取的函数
-        public Vector3 MoveDirection;//用于外部获取角色方向
-        public Vector3 CTargetPosition;//用于外部获取目标点
-        public float CSpeed;
-        private float currentSpeed;
+        [HideInInspector] public Vector3 MoveDirection;//用于外部获取角色方向
+        [HideInInspector] public Vector3 CTargetPosition;//用于外部获取目标点
+        [HideInInspector] public float CSpeed;
+        [HideInInspector] private float currentSpeed;
 
         //测试函数
 
@@ -436,7 +440,7 @@ namespace Partner
 
         protected void SpeedJudging()
         {
-            if (avatarController != null)
+            if (avatarController != null && CopyTargetParameter)
             {
                 FSpeed = avatarController.MoveSpeed;
                 FSprintSpeed = avatarController.SprintSpeed - 1.0f;

@@ -7,7 +7,7 @@ namespace TestField
 {
     public class AIMoveLogic : MonoBehaviour
     {
-        [Tooltip("指定该AI的有效射程，决定了")]
+        [Tooltip("指定该AI的有效射程")]
         public float VaildShootRange;
         [Tooltip("用来指定物体在距离检测时发射的射线忽略对象层级，建议选择可能碰撞的AI层级")]
         public LayerMask RayIgnoreLayer;
@@ -360,7 +360,7 @@ namespace TestField
 
         #region 计算路线移动的函数
         //传入目标点自动计算路径并开始移动
-        private void CCalcuRouteMove(Vector3 newPoint)
+        private void CCalcuRouteMove(Vector3 newPoint, float MoveSpeed = 0, float SprintSpeed = 0, float AccelerationDistance = 0)
         {
             if (newPoint != Vector3.zero)
             {
