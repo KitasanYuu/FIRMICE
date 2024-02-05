@@ -98,8 +98,16 @@ public class WeaponShooter : MonoBehaviour
 
                         if (Tpsshootcontroller)
                             aimDir = (tpsShootController.TmouseWorldPosition - spawnBulletPosition.position).normalized;
-                        else if (shootcontroller && RayMethod && !shootController.UsingTrajectoryPredict)
+                        else if (shootcontroller && RayMethod)
+                        {
+                            InstanceMethod = false;
+                            shootController.UsingTrajectoryPredict = false;
                             aimDir = (shootController.hitpoint - spawnBulletPosition.position).normalized;
+                        }
+                        else if(shootcontroller && InstanceMethod && !shootController.UsingTrajectoryPredict)
+                        {
+                            aimDir = (shootController.hitpoint - spawnBulletPosition.position).normalized;
+                        }
                         else if (shootcontroller && InstanceMethod && shootController.UsingTrajectoryPredict)
                         {
                             // 计算射击方向和距离
@@ -355,14 +363,14 @@ public class WeaponShooter : MonoBehaviour
         {
             UsingMasterControl = true;
             UsingAIControl = false;
-            Debug.Log("BulletSpwanInitSuccess!" + "  " + gameObject.name + "  " + "CurrentUsingTPSMasterControl");
+            Debug.Log("BulletSpwanInitSuccess!" + "  " + gameObject.name + "  " + "CurrentUsing 'TPSMasterControl'");
         }
 
         if (shootcontroller)
         {
             UsingAIControl = true;
             UsingMasterControl = false;
-            Debug.Log("BulletSpwanInitSuccess!"+ "  " + gameObject.name + "  " + "CurrentUsingAIControl");
+            Debug.Log("BulletSpwanInitSuccess!"+ "  " + gameObject.name + "  " + "CurrentUsing 'AIControl'");
         }
     }
 }
