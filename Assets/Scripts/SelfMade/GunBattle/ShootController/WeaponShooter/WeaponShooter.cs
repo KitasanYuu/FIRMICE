@@ -42,6 +42,7 @@ public class WeaponShooter : MonoBehaviour
 
     float lastShootTime = 0f;
     public float fireRate = 0.5f; // 0.5秒为例，可以根据需要调整射速
+    private bool CanFireNow = false;
 
     private float PreviousBulletSpeed = 0;
 
@@ -91,7 +92,7 @@ public class WeaponShooter : MonoBehaviour
                     // 获取当前时间
                     float currentTime = Time.time;
 
-                    if (currentTime - lastShootTime > fireRate)
+                    if (currentTime - lastShootTime > fireRate || CanFireNow)
                     {
                         Vector3 aimDir = Vector3.zero;
 
@@ -159,6 +160,9 @@ public class WeaponShooter : MonoBehaviour
 
                             }
                         }
+
+                        CanFireNow = false;
+
                         if (Semi)
                         {
                             if (UsingMasterControl)
@@ -236,6 +240,7 @@ public class WeaponShooter : MonoBehaviour
 
         }
 
+        CanFireNow = true;
         Reloading = false;
         reloadingInProgress = false;
     }
