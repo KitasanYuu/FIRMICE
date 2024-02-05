@@ -344,22 +344,25 @@ public class WeaponShooter : MonoBehaviour
 
     private void ComponemetInit()
     {
-        Basicinput = Shooter.TryGetComponent<BasicInput>(out _input);
-        Tpsshootcontroller = Shooter.TryGetComponent<TPSShootController>(out tpsShootController);
-        shootcontroller = Shooter.TryGetComponent<ShootController>(out shootController);
+        if (Shooter != null)
+        {
+            Basicinput = Shooter.TryGetComponent<BasicInput>(out _input);
+            Tpsshootcontroller = Shooter.TryGetComponent<TPSShootController>(out tpsShootController);
+            shootcontroller = Shooter.TryGetComponent<ShootController>(out shootController);
+        }
 
         if (Tpsshootcontroller && Basicinput)
         {
             UsingMasterControl = true;
             UsingAIControl = false;
-            Debug.Log("BulletSpwanInitSuccess!" + gameObject + "CurrentUsingTPSMasterControl");
+            Debug.Log("BulletSpwanInitSuccess!" + "  " + gameObject.name + "  " + "CurrentUsingTPSMasterControl");
         }
 
         if (shootcontroller)
         {
             UsingAIControl = true;
             UsingMasterControl = false;
-            Debug.Log("BulletSpwanInitSuccess!" + gameObject + "CurrentUsingAIControl");
+            Debug.Log("BulletSpwanInitSuccess!"+ "  " + gameObject.name + "  " + "CurrentUsingAIControl");
         }
     }
 }
