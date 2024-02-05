@@ -4,17 +4,26 @@ using playershooting;
 using BattleShoot;
 using CustomInspector;
 using BattleHealth;
+using System.Linq.Expressions;
+using Unity.VisualScripting;
+using System.Collections;
 
 public class WeaponShooter : MonoBehaviour
 {
     [ReadOnly, SerializeField] private bool UsingAIControl;
     [ReadOnly, SerializeField] private bool UsingMasterControl;
 
-    [SerializeField] private bool RayMethod;
+    [SerializeField] private bool RayMethod = true;
     [SerializeField] private bool InstanceMethod;
     [Space2(20)]
 
     [SerializeField] private bool Semi;
+    [SerializeField] private int TempAmmoTotal;
+    [SerializeField] private bool LimitAmmo = true;
+    [SerializeField, ShowIf(nameof(LimitAmmo))] private int defaultBulletCount;
+    [ReadOnly, SerializeField, ShowIf(nameof(LimitAmmo))] private int CurrentBulletCount;
+
+    [Space2(20)]
     public GameObject Shooter;
     // 子弹预制件或游戏对象
     [SerializeField] private GameObject bulletPrefab;
@@ -36,6 +45,11 @@ public class WeaponShooter : MonoBehaviour
 
     private float PreviousBulletSpeed = 0;
 
+    private bool Reloading = false;
+    private bool reloadingInProgress = false;
+    public float reloadDuration = 2.0f; // 将重新加载的持续时间设为公共属性
+    public float FastreloadDuration = 1.0f; // 将重新加载的持续时间设为公共属性
+
     //获取脚本
     private BasicInput _input;
     private ShootController shootController;
@@ -50,9 +64,10 @@ public class WeaponShooter : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PreviousBulletSpeed = bulletspeed;
+        ParameterInit();
         ComponemetInit();
         SRRSelecting();
+
     }
 
     // Update is called once per frame
@@ -61,6 +76,7 @@ public class WeaponShooter : MonoBehaviour
         ComponentRetake();
         BulletSpeedWatcher();
         FireAction();
+        ReloadProgress();
     }
 
     private void FireAction()
@@ -70,93 +86,171 @@ public class WeaponShooter : MonoBehaviour
             // 开火
             if ((UsingAIControl && shootController.Fire && shootController.isAiming) || (UsingMasterControl && tpsShootController.Fire && tpsShootController.isAiming))
             {
-                // 获取当前时间
-                float currentTime = Time.time;
-
-                if (currentTime - lastShootTime > fireRate)
+                if (CurrentBulletCount > 0)
                 {
-                    Vector3 aimDir = Vector3.zero;
+                    // 获取当前时间
+                    float currentTime = Time.time;
 
-                    if (Tpsshootcontroller)
-                        aimDir = (tpsShootController.TmouseWorldPosition - spawnBulletPosition.position).normalized;
-                    else if (shootcontroller && RayMethod && !shootController.UsingTrajectoryPredict)
-                        aimDir = (shootController.hitpoint - spawnBulletPosition.position).normalized;
-                    else if (shootcontroller && InstanceMethod && shootController.UsingTrajectoryPredict)
+                    if (currentTime - lastShootTime > fireRate)
                     {
-                        // 计算射击方向和距离
-                        Vector3 shootDirection = shootController.hitpoint - spawnBulletPosition.position;
-                        float shootDistance = shootDirection.magnitude;
+                        Vector3 aimDir = Vector3.zero;
 
-                        // 计算子弹的飞行时间
-                        float bulletTravelTime = shootDistance / bulletspeed;
-
-                        // 预测目标位置，同时考虑 X、Y 和 Z 轴上的移动
-                        Vector3 predictedTargetPosition = shootController.hitpoint + bulletTravelTime * shootController.hitpointVelocity;
-                        PredictedAimPoint = predictedTargetPosition;
-
-                        // 重新计算 aimDir
-                        aimDir = (predictedTargetPosition - spawnBulletPosition.position).normalized;
-                    }
-
-                    if (InstanceMethod)
-                    {
-                        // 生成子弹实例
-                        GameObject bulletInstance = Instantiate(bulletPrefab, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
-                        // 获取子弹脚本并设置速度
-                        Bullet bullet = bulletInstance.GetComponent<Bullet>();
-                        if (bullet != null)
+                        if (Tpsshootcontroller)
+                            aimDir = (tpsShootController.TmouseWorldPosition - spawnBulletPosition.position).normalized;
+                        else if (shootcontroller && RayMethod && !shootController.UsingTrajectoryPredict)
+                            aimDir = (shootController.hitpoint - spawnBulletPosition.position).normalized;
+                        else if (shootcontroller && InstanceMethod && shootController.UsingTrajectoryPredict)
                         {
+                            // 计算射击方向和距离
+                            Vector3 shootDirection = shootController.hitpoint - spawnBulletPosition.position;
+                            float shootDistance = shootDirection.magnitude;
 
-                            bullet?.SetDamage(BulletDamage);
-                            bullet?.SetRayLength(bulletspeed * SRR);
-                            bullet?.SetBulletSpeed(bulletspeed);
-                            bullet?.SetBulletHitLayer(DestoryLayer);
-                            bullet?.SetFatherObj(Shooter);
-                            bullet?.SetVFXHitEffect(VFXHitEffect);
-                            //Debug.Log(bulletspeed * SRR);
-                            //Debug.LogError("BulletSpwaned");
+                            // 计算子弹的飞行时间
+                            float bulletTravelTime = shootDistance / bulletspeed;
+
+                            // 预测目标位置，同时考虑 X、Y 和 Z 轴上的移动
+                            Vector3 predictedTargetPosition = shootController.hitpoint + bulletTravelTime * shootController.hitpointVelocity;
+                            PredictedAimPoint = predictedTargetPosition;
+
+                            // 重新计算 aimDir
+                            aimDir = (predictedTargetPosition - spawnBulletPosition.position).normalized;
                         }
-                        else
+
+                        if (InstanceMethod)
                         {
-                            Debug.LogError("BulletTest component not found on instantiated object.");
+                            CurrentBulletCount--;
+                            // 生成子弹实例
+                            GameObject bulletInstance = Instantiate(bulletPrefab, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
+                            // 获取子弹脚本并设置速度
+                            Bullet bullet = bulletInstance.GetComponent<Bullet>();
+                            if (bullet != null)
+                            {
+
+                                bullet?.SetDamage(BulletDamage);
+                                bullet?.SetRayLength(bulletspeed * SRR);
+                                bullet?.SetBulletSpeed(bulletspeed);
+                                bullet?.SetBulletHitLayer(DestoryLayer);
+                                bullet?.SetFatherObj(Shooter);
+                                bullet?.SetVFXHitEffect(VFXHitEffect);
+                                //Debug.Log(bulletspeed * SRR);
+                                //Debug.LogError("BulletSpwaned");
+                            }
+                            else
+                            {
+                                Debug.LogError("BulletTest component not found on instantiated object.");
+                            }
                         }
-                    }
-                    else if (RayMethod)
-                    {
-                        // 在这里执行射线投射
-                        Ray shootRay = new Ray(spawnBulletPosition.position,aimDir);
-                        if (Physics.Raycast(shootRay, out RaycastHit shootRaycastHit))
+                        else if (RayMethod)
                         {
-                            // 获取击中点的坐标
-                            Vector3 hitPoint = shootRaycastHit.point;
-                            GameObject HitObject = shootRaycastHit.collider.gameObject;
-                            RayDamegeIn(HitObject);
-                            // 生成特效
-                            Instantiate(VFXHitEffect, hitPoint, Quaternion.identity);
+                            // 在这里执行射线投射
+                            Ray shootRay = new Ray(spawnBulletPosition.position, aimDir);
+                            if (Physics.Raycast(shootRay, out RaycastHit shootRaycastHit))
+                            {
+                                // 获取击中点的坐标
+                                Vector3 hitPoint = shootRaycastHit.point;
+                                GameObject HitObject = shootRaycastHit.collider.gameObject;
+                                RayDamegeIn(HitObject);
+                                // 生成特效
+                                Instantiate(VFXHitEffect, hitPoint, Quaternion.identity);
+                                // 在这里处理射击命中的逻辑，例如对击中物体造成伤害或触发其他效果等
+                                Debug.Log("射击命中：" + shootRaycastHit.collider.gameObject.name + "，击中坐标：" + hitPoint);
+                                // 只在尚未命中过的情况下执行一次
+                                CurrentBulletCount--;
 
-                            // 在这里处理射击命中的逻辑，例如对击中物体造成伤害或触发其他效果等
-                            Debug.Log("射击命中：" + shootRaycastHit.collider.gameObject.name + "，击中坐标：" + hitPoint);
+                            }
                         }
-                    }
-                    if (Semi)
-                    {
-                        if (UsingMasterControl)
+                        if (Semi)
                         {
-                            _input.shoot = false;
+                            if (UsingMasterControl)
+                            {
+                                _input.shoot = false;
+                            }
                         }
+
+
+                        lastShootTime = currentTime;
                     }
-
-
-                    lastShootTime = currentTime;
+                }
+                else
+                {
+                    ReloadProgress(true);
                 }
             }
         }
     }
 
+    #region 子弹的Reload逻辑
+    private void ReloadProgress(bool ReloadStart = false)
+    {
+        if (!Reloading && !reloadingInProgress && (Input.GetKeyDown(KeyCode.R) || ReloadStart))
+        {
+            if (CurrentBulletCount < defaultBulletCount)
+            {
+                StartCoroutine(ReloadCoroutine());
+            }
+        }
+    }
+
+    private IEnumerator ReloadCoroutine()
+    {
+        Reloading = true;
+        reloadingInProgress = true;
+
+        int missingBulletCount = defaultBulletCount - CurrentBulletCount;
+
+        if (TempAmmoTotal >= missingBulletCount)
+        {
+            if(CurrentBulletCount == 0)
+            {
+                // 模拟延迟后执行重新加载的逻辑
+                yield return new WaitForSeconds(reloadDuration);
+
+                TempAmmoTotal -= defaultBulletCount;
+                CurrentBulletCount = defaultBulletCount;
+            }
+            else if(CurrentBulletCount > 0)
+            {
+                yield return new WaitForSeconds(FastreloadDuration);
+                TempAmmoTotal -= missingBulletCount;
+                CurrentBulletCount += missingBulletCount;
+            }
+
+        }
+        else if (TempAmmoTotal > 0 && TempAmmoTotal < missingBulletCount)
+        {
+            if(CurrentBulletCount == 0)
+            {
+                // 模拟延迟后执行重新加载的逻辑
+                yield return new WaitForSeconds(reloadDuration);
+
+                CurrentBulletCount += TempAmmoTotal;
+                TempAmmoTotal = 0;
+            }
+            else if(CurrentBulletCount > 0)
+            {
+                yield return new WaitForSeconds(FastreloadDuration);
+
+                CurrentBulletCount += TempAmmoTotal;
+                TempAmmoTotal = 0;
+            }
+
+        }
+
+        Reloading = false;
+        reloadingInProgress = false;
+    }
+
+#endregion
+
+    private void BulletRefresh(int newvalue)
+    {
+        CurrentBulletCount = newvalue;
+    }
+
     private void RayDamegeIn(GameObject RayHitTarget)
     {
         VirtualHP virtualhp = RayHitTarget.GetComponent<VirtualHP>();
-        if(virtualhp != null)
+        if (virtualhp != null)
         {
             virtualhp.AddDamage(BulletDamage, Shooter); // 将伤害值传递给目标脚本的方法
         }
@@ -165,7 +259,7 @@ public class WeaponShooter : MonoBehaviour
     //用来追踪BulletSpeed有没有在途中变化
     private void BulletSpeedWatcher()
     {
-        if(PreviousBulletSpeed != bulletspeed)
+        if (PreviousBulletSpeed != bulletspeed)
         {
             SRRSelecting();
             PreviousBulletSpeed = bulletspeed;
@@ -174,10 +268,10 @@ public class WeaponShooter : MonoBehaviour
 
     private void ComponentRetake()
     {
-        if(Shooter == null)
+        if (Shooter == null)
         {
-           Shooter = FindFatherObj(true);
-            if(Shooter != null)
+            Shooter = FindFatherObj(true);
+            if (Shooter != null)
             {
                 ComponemetInit();
                 SRRSelecting();
@@ -233,8 +327,14 @@ public class WeaponShooter : MonoBehaviour
                 currentObject = currentObject.transform.parent?.gameObject;
             }
         }
-            // 如果未找到任何包含所需脚本的物体，则返回null
-            return null;
+        // 如果未找到任何包含所需脚本的物体，则返回null
+        return null;
+    }
+
+    private void ParameterInit()
+    {
+        CurrentBulletCount = defaultBulletCount;
+        PreviousBulletSpeed = bulletspeed;
     }
 
     private void ComponemetInit()
@@ -247,14 +347,14 @@ public class WeaponShooter : MonoBehaviour
         {
             UsingMasterControl = true;
             UsingAIControl = false;
-            Debug.Log("BulletSpwanInitSuccess!"+gameObject+ "CurrentUsingTPSMasterControl");
+            Debug.Log("BulletSpwanInitSuccess!" + gameObject + "CurrentUsingTPSMasterControl");
         }
 
         if (shootcontroller)
         {
             UsingAIControl = true;
             UsingMasterControl = false;
-            Debug.Log("BulletSpwanInitSuccess!"+gameObject+ "CurrentUsingAIControl");
+            Debug.Log("BulletSpwanInitSuccess!" + gameObject + "CurrentUsingAIControl");
         }
     }
 }
