@@ -47,20 +47,52 @@ public void LoadCSV(string csvFileName)
     data[fileNameWithoutExtension] = dataList;
 }
 
-private object ParseValue(string type, string valueString)
-{
-    // 根据变量类型进行解析，并返回相应的数据类型
-    switch (type)
+    private object ParseValue(string type, string valueString)
     {
-        case "int":
-            return int.Parse(valueString);
-        case "float":
-            return float.Parse(valueString);
-        case "string":
-        default:
-            return valueString;
+        // 根据变量类型进行解析，并返回相应的数据类型
+        switch (type)
+        {
+            case "int":
+                return int.Parse(valueString);
+            case "float":
+                return float.Parse(valueString);
+            case "bool":
+                return bool.Parse(valueString);
+            case "Vector2": // 解析 Vector2 类型
+                string[] components = valueString.Trim('(', ')').Split(',');
+                if (components.Length == 2)
+                {
+                    float x = float.Parse(components[0]);
+                    float y = float.Parse(components[1]);
+                    return new Vector2(x, y);
+                }
+                else
+                {
+                    //Debug.LogError("Invalid Vector2 format: " + valueString);
+                    return Vector2.zero; // 或者返回其他默认值
+                }
+            case "Vector3": // 解析 Vector3 类型
+                components = valueString.Trim('(', ')').Split(',');
+                if (components.Length == 3)
+                {
+                    float x = float.Parse(components[0]);
+                    float y = float.Parse(components[1]);
+                    float z = float.Parse(components[2]);
+                    return new Vector3(x, y, z);
+                }
+                else
+                {
+                    //Debug.LogError("Invalid Vector3 format: " + valueString);
+                    return Vector3.zero; // 或者返回其他默认值
+                }
+            case "string":
+            default:
+                return valueString;
+        }
     }
-}
+
+
+
 
 
     public Dictionary<string, object> GetDataByID(string csvFileName, string id)
@@ -75,7 +107,7 @@ private object ParseValue(string type, string valueString)
             foreach (var entry in data[csvFileName])
             {
                 // 这里假设 ID 是字符串类型
-                if (entry.ContainsKey("ID") && entry["ID"].ToString() == id)
+                if (entry.ContainsKey("GID") && entry["GID"].ToString() == id)
                     return entry;
             }
         }
