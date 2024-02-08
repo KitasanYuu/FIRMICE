@@ -44,7 +44,7 @@ namespace TestField
         private bool isDistanceKeeperRecursing = false;
 
         //声明引用脚本组件
-        private AlertLogic AL;
+        private AlertCore AC;
         private BattleMovingPoint BMP;
         private BroadCasterInfoContainer BCIC;
         private CoverUtility coverUtility = new CoverUtility();
@@ -173,7 +173,7 @@ namespace TestField
         //每帧更新是否进入战斗状态
         private void ParameterUpdate()
         {
-            TargetExpose = AL.TargetExposed;
+            TargetExpose = AC.TargetExposed;
             if (TargetExpose && !HasExcuted)
             {
                 InBattle = true;
@@ -212,8 +212,8 @@ namespace TestField
             {
                 HasExcuted = false;
                 InBattle = false;
-                AL.CurrentAlertness = 0;
-                AL.TargetExposed = false;
+                AC.CurrentAlertness = 0;
+                AC.TargetExposed = false;
                 Facetoforworddir = 0;
                 CCalcuRouteMove(InitPosition);
                 RecoverStart = true;
@@ -311,7 +311,7 @@ namespace TestField
         //用来在与目标之间没有掩体时调用，控制自身与目标的距离保持在预设距离内
         private void DistanceKeeper(GameObject Target)
         {
-            if (!isDistanceKeeperRecursing && !IsMoving && (NeedKeepDistance || NoCoverNear))
+            if (Target != null && !isDistanceKeeperRecursing && !IsMoving && (NeedKeepDistance || NoCoverNear))
             {
                 DistanceKeeperRecursive(Target, KeepDistanceToTarget, RayIgnoreLayer);
             }
@@ -485,7 +485,7 @@ namespace TestField
         {
             BCIC = GetComponent<BroadCasterInfoContainer>();
             BMP = GetComponent<BattleMovingPoint>();
-            AL = GetComponent<AlertLogic>();
+            AC = GetComponent<AlertCore>();
         }
 
         private void EventSubscribe()
