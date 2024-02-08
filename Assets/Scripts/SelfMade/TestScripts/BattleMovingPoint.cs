@@ -102,8 +102,13 @@ namespace TestField
                     }
                     else if (FacetoForwordDir == 1)
                     {
+                        Vector3 TargetPosition = Target.transform.position;
+                        TargetPosition.y = 0;
+                        Vector3 SelfPosition = transform.position;
+                        SelfPosition.y = 0;
+
                         // 计算目标朝向
-                        Quaternion targetRotation = Quaternion.LookRotation((Target.transform.position - transform.position).normalized);
+                        Quaternion targetRotation = Quaternion.LookRotation((TargetPosition - SelfPosition).normalized);
 
                         // 使用Slerp插值来平滑地转向目标朝向
                         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
