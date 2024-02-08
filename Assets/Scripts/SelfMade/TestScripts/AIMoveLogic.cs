@@ -327,7 +327,7 @@ namespace TestField
 
             origin.y += 0.1f;
 
-            // 创建射线，起点是A，方向是从B指向A
+            // 创建射线，起点是B，方向是从B指向A
             Ray ray = new Ray(origin, direction);
 
             // 可以在场景中可视化射线，方便调试

@@ -10,11 +10,12 @@ namespace TestField
     [RequireComponent(typeof(BroadCasterInfoContainer))]
     public class AlertCore : MonoBehaviour
     {
-        [Tab("AlertRangeSettings")]
+        [Tab("AlertRange")]
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
         [HorizontalLine("Debug", 2, FixedColor.Gray)]
         public bool EnableGizmozOfAlertRange = false;
+        [Tooltip("这个只是用来启用接收端口，让你可以在非运行状态下能够在Gizmos上画出警戒线")]
+        public bool TestRay = false;
 
         [HorizontalLine("ParameterView", 2, FixedColor.Gray)]
         [ReadOnly] public bool foundTarget;
@@ -23,12 +24,11 @@ namespace TestField
         [ReadOnly] public int TargetMovingStatus;
         [CustomInspector.ShowIf(nameof(TestRay), style = DisabledStyle.GreyedOut)] public GameObject targetContainer;
         public List<GameObject> targetlist = new List<GameObject>();
-        [Space2(20)]
-        public bool TestRay = false;
 
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
         [HorizontalLine("SyncRangeSettings", 2, FixedColor.Gray)]
+        [Tooltip("指的是目标在不同状态下是否会影响警戒圈的范围")]
         public bool UsingSyncAlertRange;
 
         [SerializeField, CustomInspector.ShowIf(nameof(UsingSyncAlertRange))]
@@ -63,52 +63,62 @@ namespace TestField
         public float detectionRotation = 0f; // 扇形的旋转角度
         private float TotalRotation;
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        [Tab("AlertLogicSettings")]
+        [Tab("AlertLogic")]
         [HorizontalLine("Debug", 2, FixedColor.Gray)]
         public bool EnableGizmosOfAlertLogic = false;
+        // 用于清除目标暴露状态的标志
+        public bool TempClearExposeStatus;
 
+        [HorizontalLine("ParameterView", 2, FixedColor.Gray)]
         // 警戒度
         [ReadOnly] public float CurrentAlertness;
         // 是否被发现
         [ReadOnly] public bool TargetExposed;
-        // 用于清除目标暴露状态的标志
-        public bool TempClearExposeStatus;
 
         [Space2(10)]
 
-        [Foldout("ReceivedParameters")]
         [ReadOnly] public bool RecoverProceeding;
         // 是否瞄准目标
         [ReadOnly] public bool TargetAiming;
         // 是否开火
         [ReadOnly] public bool TargetFire;
+        //只是一个占位符，未来可能会适配角色特殊技能
+        [Tooltip("只是一个占位符，未来可能会适配角色特殊技能")]
+        [ReadOnly] public bool TargetOTA;
         // 目标的移动状态
         [ReadOnly] public int TargetMoveStatus;
 
         [Space2(10)]
 
-        [Foldout("Alertness Settings")]
+        [HorizontalLine("AlertLogicSettings", 2, FixedColor.Gray)]
         // 初始警戒度
+        [Tooltip("警戒度的下限")]
         [SerializeField] private float InitAlertness = 0;
         // 最大警戒度
+        [Tooltip("警戒度的上限")]
         [SerializeField] private float MaxAlertness;
         // 警戒度增加速率
+        [Tooltip("在正常情况下警戒度增加的速度")]
         [Range(0, 100), SerializeField] private float AlertnessIncreaseRate;
         // 蹲伏状态时的警戒度增加速率
+        [Tooltip("在目标潜伏时警戒度增加的速度")]
         [Range(0, 100), SerializeField] private float CrouchIncreaseRate;
         // 冲刺状态时的警戒度增加速率
+        [Tooltip("在目标冲刺时警戒度增加的速度")]
         [Range(0, 100), SerializeField] private float SprintIncreaseRate;
         [Space2(10)]
         // 警戒度减少速率
         [Range(0, 100), SerializeField] private float AlertnessDecreaseRate;
         [Space2(10)]
         // 瞬间发现区域
+        [Tooltip("在这个范围内会直接被发现，一般不要设的太大，会出现奇怪的问题")]
         public float DeathZone;
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Tab("INFOShared")]
         [HorizontalLine("Debug", 2, FixedColor.Gray)]
         public bool EnableGizmosOfINFOShare = false;
 
+        [HorizontalLine("INFOShareSettings", 2, FixedColor.Gray)]
         public bool ReceiveSharedINFO;
         public float SharedDistance;
         [ReadOnly, SerializeField] private List<GameObject> OtherReceiver = new List<GameObject>();
@@ -136,6 +146,7 @@ namespace TestField
         //调试模式
         private bool EditorMode = true;
 
+        #region 验证参数是否合法
         // 在编辑器中即时更新
         private void OnValidate()
         {
@@ -154,12 +165,11 @@ namespace TestField
                 RayLength = Mathf.Min(RayLength, DetectionRadius);
             }
         }
+        #endregion
 
         private void Awake()
         {
-            // 获取 BroadCasterInfoContainer 组件
-            BCIC = GetComponent<BroadCasterInfoContainer>();
-            moveLogic = GetComponent<AIMoveLogic>();
+            ComponentInit();
         }
 
         private void Start()
@@ -172,10 +182,21 @@ namespace TestField
 
         private void Update()
         {
+            AlertRange();
+            AlertLogic();
+            AlertINFOShare();
+        }
+
+        #region 不同功能在Update中的调用
+        private void AlertRange()
+        {
             TargetRetake();
             SyncAlertRange();
             DetectTargets();
+        }
 
+        private void AlertLogic()
+        {
             // 临时清除目标暴露状态
             TempClear();
             // 增加警戒度
@@ -184,9 +205,13 @@ namespace TestField
             Expose();
             // 警戒度恢复
             AlertnessRecover();
+        }
 
+        private void AlertINFOShare()
+        {
             ShareTargetComfirm();
         }
+        #endregion
 
         private void Startinit()
         {
@@ -214,6 +239,7 @@ namespace TestField
             }
         }
 
+        #region 原AlertLine实现功能：判定Target是否进入了警戒范围
         //Ray和扇形范围对于Target的不同状态预设处理
         private void SyncAlertRange()
         {
@@ -377,7 +403,9 @@ namespace TestField
                 TempClearExposeStatus = false;
             }
         }
+        #endregion
 
+        #region 原AlertLogic实现功能：根据进入范围的目标状态修正警戒度
         // 根据目标状态增加警戒度
         private void AlertnessIncrease()
         {
@@ -431,7 +459,7 @@ namespace TestField
                 }
 
                 // 警戒度达到99.0时，暴露状态为true
-                if (CurrentAlertness >= 99.0f)
+                if (CurrentAlertness >= MaxAlertness-1f)
                 {
                     TargetExposed = true;
                 }
@@ -443,8 +471,8 @@ namespace TestField
                 if (CurrentAlertness != 0)
                 {
                     CurrentAlertness = Mathf.Lerp(CurrentAlertness, InitAlertness, Time.deltaTime * 10f);
-                    if (CurrentAlertness < 1)
-                        CurrentAlertness = 0;
+                    if (CurrentAlertness < InitAlertness + 1)
+                        CurrentAlertness = InitAlertness;
                 }
             }
         }
@@ -457,7 +485,9 @@ namespace TestField
                 CurrentAlertness = Mathf.Max(CurrentAlertness - AlertnessDecreaseRate * Time.deltaTime, InitAlertness);
             }
         }
+        #endregion
 
+        #region 原AlertINFOShared实现功能：在目标暴露的时候向周围其他目标广播目标
         private void ShareTargetComfirm()
         {
             // 在Update中发射射线，设置足够大的射线长度
@@ -508,8 +538,14 @@ namespace TestField
                 }
             }
         }
+        #endregion
 
-
+        #region 组件初始化，订阅管理
+        private void ComponentInit()
+        {
+            BCIC = GetComponent<BroadCasterInfoContainer>();
+            moveLogic = GetComponent<AIMoveLogic>();
+        }
 
         private void OnTargetReceivedChanged(GameObject newTarget)
         {
@@ -562,6 +598,7 @@ namespace TestField
                 BCIC.OtherReceiverChanged -= OnOtherReceiverChanged;
             }
         }
+        #endregion
 
         #region 绘制可视化部分
 #if UNITY_EDITOR
