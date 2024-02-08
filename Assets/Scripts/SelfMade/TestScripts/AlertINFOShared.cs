@@ -116,44 +116,44 @@ namespace TestField
         // 在Scene视图中绘制射线
         private void OnDrawGizmos()
         {
-            //// 获取物体的世界坐标
-            //Vector3 worldPosition = transform.position;
-            //worldPosition.y = 0.0f;
+            // 获取物体的世界坐标
+            Vector3 worldPosition = transform.position;
+            worldPosition.y = 0.0f;
 
-            //// 绘制在xz平面上的圆
-            //DrawCircleOnXZPlane(worldPosition, SharedDistance, 360);
+            // 绘制在xz平面上的圆
+            DrawCircleOnXZPlane(worldPosition, SharedDistance, 360);
 
-            //// 遍历列表中的每个目标物体
-            //foreach (GameObject target in OtherReceiver)
-            //{
-            //    AlertINFOShared AIS = target.GetComponent<AlertINFOShared>();
+            // 遍历列表中的每个目标物体
+            foreach (GameObject target in OtherReceiver)
+            {
+                AlertINFOShared AIS = target.GetComponent<AlertINFOShared>();
 
-            //    if (AIS != null)
-            //    {
-            //        // 计算两者之间的距离，只考虑X和Z轴
-            //        float distance = Vector3.Distance(new Vector3(transform.position.x, 0.0f, transform.position.z),
-            //                                          new Vector3(target.transform.position.x, 0.0f, target.transform.position.z));
+                if (AIS != null)
+                {
+                    // 计算两者之间的距离，只考虑X和Z轴
+                    float distance = Vector3.Distance(new Vector3(transform.position.x, 0.0f, transform.position.z),
+                                                      new Vector3(target.transform.position.x, 0.0f, target.transform.position.z));
 
-            //        if (AIS.ReceiveSharedINFO)
-            //        {
-            //            if (distance <= SharedDistance)
-            //            {
-            //                Gizmos.color = Color.cyan;
-            //                Gizmos.DrawLine(transform.position, target.transform.position);
-            //            }
-            //            else
-            //            {
-            //                Gizmos.color = Color.grey;
-            //                Gizmos.DrawLine(transform.position, target.transform.position);
-            //            }
-            //        }
-            //        else
-            //        {
-            //            Gizmos.color = Color.black;
-            //            Gizmos.DrawLine(transform.position, target.transform.position);
-            //        }
-            //    }
-            //}
+                    if (AIS.ReceiveSharedINFO)
+                    {
+                        if (distance <= SharedDistance)
+                        {
+                            Gizmos.color = Color.cyan;
+                            Gizmos.DrawLine(transform.position, target.transform.position);
+                        }
+                        else
+                        {
+                            Gizmos.color = Color.grey;
+                            Gizmos.DrawLine(transform.position, target.transform.position);
+                        }
+                    }
+                    else
+                    {
+                        Gizmos.color = Color.black;
+                        Gizmos.DrawLine(transform.position, target.transform.position);
+                    }
+                }
+            }
 
             foreach (GameObject target in OtherReceiver)
             {
@@ -161,7 +161,6 @@ namespace TestField
                 Ray ray = new Ray(transform.position, target.transform.position - transform.position);
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawRay(ray);
-
 
             }
         }
