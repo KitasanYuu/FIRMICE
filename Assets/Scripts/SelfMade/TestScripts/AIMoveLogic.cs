@@ -124,7 +124,7 @@ namespace TestField
                 // 只有在还没有生成过点时才重新生成
                 if (!hasGeneratedPoint)
                 {
-                    CurrentCoverSelected = coverUtility.FindFarthestCover(Target, FreeCoverList, VaildShootRange);
+                    CurrentCoverSelected = coverUtility.FindFarthestCover(gameObject,Target, FreeCoverList, VaildShootRange);
                     //Debug.Log(CurrentCoverSelected);
                     Vector3 ShotinRangePoint = coverUtility.FindFarthestCoverPointInRange(gameObject, Target, FreeCoverList, VaildShootRange,true, CurrentCoverSelected,true);
                     //Debug.Log(ShotinRangePoint);
@@ -190,7 +190,7 @@ namespace TestField
                 Identity ID = CurrentCoverSelected?.GetComponent<Identity>();
                 if (ID != null)
                 {
-                    ID.SetOccupiedUseage(true);
+                    ID.SetOccupiedUseage(true,gameObject);
                 }
                 // 如果上一个选中的掩体不等于当前选中的掩体，执行某些操作
                 if (PreviousCoverSelected != CurrentCoverSelected&&PreviousCoverSelected != null)
@@ -198,7 +198,7 @@ namespace TestField
                     Identity id = PreviousCoverSelected?.GetComponent<Identity>();
                     if (id != null)
                     {
-                        id.SetOccupiedUseage(false);
+                        id.SetOccupiedUseage(false,null);
                     }
                 }
                 PreviousCoverSelected = CurrentCoverSelected;
@@ -226,7 +226,7 @@ namespace TestField
                 {
                     Identity ID = OccupiedCover.GetComponent<Identity>();
                     if (ID != null)
-                        ID.SetOccupiedUseage(false);
+                        ID.SetOccupiedUseage(false,null);
                 }
                 float DistanceToOrigin = Vector3.Distance(transform.position, InitPosition);
                 if(DistanceToOrigin < 1 &&DistanceToOrigin>=0)
