@@ -8,12 +8,12 @@ namespace TestField
     public class AIMoveLogic : MonoBehaviour
     {
         [Tooltip("指定该AI的有效射程")]
-        public float VaildShootRange;
+        public float ValidShootRange;
         [Tooltip("用来指定物体在距离检测时发射的射线忽略对象层级，建议选择可能碰撞的AI层级")]
         public LayerMask RayIgnoreLayer;
         [Tooltip("决定了在保持距离方法中与目标保持的特定距离")]
         public float KeepDistanceToTarget;
-        [Tooltip("决定")]
+        [Tooltip("决定了每隔多少时间重新寻找一次安全点位")]
         public float ReScanDelay = 5f;
 
         [Tab("ParameterCheck")]
@@ -48,6 +48,7 @@ namespace TestField
         private BattleMovingPoint BMP;
         private BroadCasterInfoContainer BCIC;
         private CoverUtility coverUtility = new CoverUtility();
+        private AIFunction aif = new AIFunction();
 
         private bool hasGeneratedPoint;
         private List<GameObject> HalfCoverList = new List<GameObject>();
@@ -117,16 +118,17 @@ namespace TestField
         //当目标超出有效射程时会在射程内寻找一个最远的掩体并且移动过去
         private void TargetOutRange()
         {
-            if (InBattle && !VaildShootingPosition(Target))
+            bool inValidShootPosition = aif.ValidShootPosition(gameObject, Target, ValidShootRange);
+            if (InBattle && !inValidShootPosition)
             {
-                if(!IsMoving && !VaildShootingPosition(Target))
+                if(!IsMoving)
                     hasGeneratedPoint =false;
                 // 只有在还没有生成过点时才重新生成
                 if (!hasGeneratedPoint)
                 {
-                    CurrentCoverSelected = coverUtility.FindFarthestCover(gameObject,Target, FreeCoverList, VaildShootRange);
+                    CurrentCoverSelected = coverUtility.FindFarthestCover(gameObject,Target, FreeCoverList, ValidShootRange);
                     //Debug.Log(CurrentCoverSelected);
-                    Vector3 ShotinRangePoint = coverUtility.FindFarthestCoverPointInRange(gameObject, Target, FreeCoverList, VaildShootRange,true, CurrentCoverSelected,true);
+                    Vector3 ShotinRangePoint = coverUtility.FindFarthestCoverPointInRange(gameObject, Target, FreeCoverList, ValidShootRange,true, CurrentCoverSelected,true);
                     //Debug.Log(ShotinRangePoint);
                     Facetoforworddir = 0;
                     CCalcuRouteMove(ShotinRangePoint);
@@ -136,7 +138,7 @@ namespace TestField
                     hasGeneratedPoint = true;
                 }
             }
-            else if(InBattle && VaildShootingPosition(Target))
+            else if(InBattle && inValidShootPosition)
             {
                 // 如果目标在有效射击位置，则重置标志位，以便下次需要时重新生成点
                 hasGeneratedPoint = false;
@@ -147,16 +149,17 @@ namespace TestField
         //从激活后每隔固定时间(ReScanDelay)刷新一个最近掩体的安全点位移动过去
         private void PositionAdjust()
         {
+            bool isDirectToTarget = aif.IsDirectToTarget(gameObject, Target, RayIgnoreLayer);
             if(Target!=null && !IsMoving && InBattle && !NoCoverNear)
             {
-                if (IsDirectToTarget(Target,RayIgnoreLayer))
+                if (isDirectToTarget)
                 {
                     CurrentCoverSelected = coverUtility.FindNearestCover(gameObject, FreeCoverList);
                     Vector3 RegeneratedPoint = coverUtility.FindNearestCoverPoint(gameObject,Target, FreeCoverList,true,CurrentCoverSelected);
                     CCalcuRouteMove(RegeneratedPoint);
                     Debug.LogWarning("PositionAdjust");
                 }
-                else if (!IsDirectToTarget(Target, RayIgnoreLayer))
+                else if (!isDirectToTarget)
                 {
                     CurrentCoverSelected = coverUtility.FindNearestCover(gameObject, FreeCoverList);
                     Identity ID = CurrentCoverSelected.GetComponent<Identity>();
@@ -408,64 +411,6 @@ namespace TestField
         #endregion
 
         #region 需要传入物体的Function
-        //用于判断目标是否在自身有效射程内，传入目标GameObject
-        bool VaildShootingPosition(GameObject Target)
-        {
-            bool VaildPosition;
-            if (Target != null)
-            {
-                ToTargetDistance = Vector3.Distance(Target.transform.position, gameObject.transform.position);
-                //判断目标是否在有效射程内
-                if (ToTargetDistance > VaildShootRange)
-                {
-                    VaildPosition = false;
-                }
-                else
-                {
-                    VaildPosition = true;
-                }
-            }
-            else
-            {
-                VaildPosition = false;
-            }
-            return VaildPosition;
-        }
-
-        //用于判定是否直接面对Target
-        bool IsDirectToTarget(GameObject Target, LayerMask ignoreLayer)
-        {
-            if (BCIC == null || Target == null)
-            {
-                // 处理 BCIC 或 Target 为 null 的情况
-                return false;
-            }
-
-            // 获取自身位置
-            Vector3 selfPosition = transform.position;
-
-            // 获取目标位置
-            Vector3 targetPosition = Target.transform.position;
-
-            // 使用 Physics.Linecast 检测自身到目标之间的连线上是否有其他Collider，同时忽略指定层级
-            RaycastHit hitInfo;
-            bool hit = Physics.Linecast(selfPosition, targetPosition, out hitInfo, ~ignoreLayer);
-
-            // 使用 Debug.DrawLine 可视化射线，cyan 色表示碰到物体
-            Color lineColor = hit ? Color.cyan : Color.green;
-            Debug.DrawLine(selfPosition, targetPosition, lineColor);
-
-            // 如果有碰撞，打印碰到的物体信息
-            if (hit)
-            {
-                Debug.Log("射线碰到了：" + hitInfo.collider.gameObject.name);
-            }
-
-            // 如果有碰撞，则返回 false，表示不是直线到目标
-            return !hit;
-        }
-
-
         //在进入战斗后自动触发，触发后每隔设定的时间会执行一次位置矫正
         private void StartPositionAdjust(bool newbool)
         {
