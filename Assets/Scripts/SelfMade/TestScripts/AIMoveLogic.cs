@@ -65,6 +65,7 @@ namespace TestField
         private bool hasRotationed = true;
         private Vector3 InitPosition;
         private Quaternion InitRotation;
+        private int Movemode;
 
         private void Awake()
         {
@@ -86,9 +87,23 @@ namespace TestField
             ParameterUpdate();
             BattleStart();
             TargetOutRange();
-            Moving(Facetoforworddir,Target);
+            Moving(Movemode, Facetoforworddir,Target);
             FaceToTarget(Target);
             DistanceKeeper(Target);
+        }
+
+        private void StatusController()
+        {
+
+        }
+
+        private void InBattleLogic()
+        {
+
+        }
+
+        private void WonderingLogic()
+        {
 
         }
 
@@ -132,7 +147,7 @@ namespace TestField
                     //Debug.Log(ShotinRangePoint);
                     Facetoforworddir = 0;
                     CCalcuRouteMove(ShotinRangePoint);
-                    Debug.LogWarning("TargetOu");
+                    Debug.LogWarning("TargetOutRange");
 
                     // 设置标志位，表示已经生成过点了
                     hasGeneratedPoint = true;
@@ -245,12 +260,12 @@ namespace TestField
         }
 
         //Update控制AStar移动启动，AStar到达目标点后会自动终止
-        private void Moving(float FacetoForwordDir = 0,GameObject Target = null)
+        private void Moving(int Movemode = 1, float FacetoForwordDir = 0,GameObject Target = null)
         {
             if (BMP != null && StartMoving)
             {
                 //Debug.Log("StartMoving");
-                BMP.AStarMoving(FacetoForwordDir,Target);
+                BMP.AStarMoving(Movemode,FacetoForwordDir, Target);
                 StartMoving = !BMP.HasReachedPoint;
             }
             IsMoving = !BMP.HasReachedPoint;
