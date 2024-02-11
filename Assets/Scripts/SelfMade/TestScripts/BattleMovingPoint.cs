@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
+using VInspector;
+using CustomInspector;
 
 namespace TestField
 {
@@ -15,6 +17,13 @@ namespace TestField
         public float AimSpeed;
         public float stoppingDistance = 0.5f;
         public float accelerationDistance = 5.0f; // 你希望加速的距离阈值
+
+        [Foldout("Debug")]
+        //MoveMode用于对应三种状态移动速度，0为正常移速，1为瞄准时的速度，2为全速冲刺的速度
+        [ReadOnly, SerializeField] private int MoveMode;
+        [ReadOnly, SerializeField] private float FacetoForwardDir;
+        [ReadOnly, SerializeField] private GameObject Target;
+
 
         [HideInInspector]
         public bool HasReachedPoint;
@@ -31,7 +40,7 @@ namespace TestField
 
         }
 
-        public void AStarMoving(int MoveMode,float FacetoForwordDir = 0, GameObject Target = null)
+        public void AStarMoving()
         {
             HasReachedPoint = false;
             //这里用if是因为在抵达目标点一瞬间数组会只有一位数0，此时Vector3 aimPoint[1]会取不到值
@@ -90,7 +99,7 @@ namespace TestField
                     transform.position = Vector3.MoveTowards(transform.position, Destination, currentSpeed * Time.deltaTime);
                     //Debug.Log(Destination);
 
-                    if (FacetoForwordDir == 0)
+                    if (FacetoForwardDir == 0)
                     {
                         // 使物体朝向移动方向
                         if (MoveDir != Vector3.zero)
@@ -102,7 +111,7 @@ namespace TestField
                             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
                         }
                     }
-                    else if (FacetoForwordDir == 1)
+                    else if (FacetoForwardDir == 1)
                     {
                         Vector3 TargetPosition = Target.transform.position;
                         TargetPosition.y = 0;
@@ -129,6 +138,13 @@ namespace TestField
                 currentSpeed = 0;
                 aimPoint.Clear();
             }
+        }
+
+        public void SetMoveParameter(int movemode, float facetoforwardDir = 0, GameObject target = null)
+        {
+            MoveMode = movemode;
+            FacetoForwardDir = facetoforwardDir;
+            Target = target;
         }
 
         //这个方法用来启动Seeker的路径计算

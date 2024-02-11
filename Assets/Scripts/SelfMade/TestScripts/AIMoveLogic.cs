@@ -67,6 +67,13 @@ namespace TestField
         private Quaternion InitRotation;
         private int Movemode;
 
+        //随便写的两个占位函数方便管理
+        private float facetotarget = 1;
+        private float facetoforward = 0;
+        private int normalspeed = 0;
+        private int aimspeed = 1;
+        private int sprintspeed = 2;
+
         private void Awake()
         {
             InitPosition = transform.position;
@@ -87,7 +94,7 @@ namespace TestField
             ParameterUpdate();
             BattleStart();
             TargetOutRange();
-            Moving(Movemode, Facetoforworddir,Target);
+            Moving();
             FaceToTarget(Target);
             DistanceKeeper(Target);
         }
@@ -117,7 +124,7 @@ namespace TestField
                 {
                     CurrentCoverSelected = coverUtility.FindNearestCover(gameObject, FreeCoverList);
                     Vector3 InitSafePoint = coverUtility.FindNearestCoverPoint(gameObject, Target, FreeCoverList,true,CurrentCoverSelected);
-                    CCalcuRouteMove(InitSafePoint);
+                    CCalcuRouteMove(InitSafePoint,sprintspeed,facetoforward);
                     Debug.LogWarning("BattleInit");
                     FirstEnterBattle = false;
                 }
@@ -146,7 +153,7 @@ namespace TestField
                     Vector3 ShotinRangePoint = coverUtility.FindFarthestCoverPointInRange(gameObject, Target, FreeCoverList, ValidShootRange,true, CurrentCoverSelected,true);
                     //Debug.Log(ShotinRangePoint);
                     Facetoforworddir = 0;
-                    CCalcuRouteMove(ShotinRangePoint);
+                    CCalcuRouteMove(ShotinRangePoint,sprintspeed,facetoforward);
                     Debug.LogWarning("TargetOutRange");
 
                     // 设置标志位，表示已经生成过点了
@@ -171,7 +178,7 @@ namespace TestField
                 {
                     CurrentCoverSelected = coverUtility.FindNearestCover(gameObject, FreeCoverList);
                     Vector3 RegeneratedPoint = coverUtility.FindNearestCoverPoint(gameObject,Target, FreeCoverList,true,CurrentCoverSelected);
-                    CCalcuRouteMove(RegeneratedPoint);
+                    CCalcuRouteMove(RegeneratedPoint,aimspeed,facetotarget,Target);
                     Debug.LogWarning("PositionAdjust");
                 }
                 else if (!isDirectToTarget)
@@ -233,7 +240,7 @@ namespace TestField
                 AC.CurrentAlertness = 0;
                 AC.TargetExposed = false;
                 Facetoforworddir = 0;
-                CCalcuRouteMove(InitPosition);
+                CCalcuRouteMove(InitPosition,sprintspeed, facetoforward);
                 RecoverStart = true;
                 hasRotationed = false;
             }
@@ -260,12 +267,12 @@ namespace TestField
         }
 
         //Update控制AStar移动启动，AStar到达目标点后会自动终止
-        private void Moving(int Movemode = 1, float FacetoForwordDir = 0,GameObject Target = null)
+        private void Moving()
         {
             if (BMP != null && StartMoving)
             {
                 //Debug.Log("StartMoving");
-                BMP.AStarMoving(Movemode,FacetoForwordDir, Target);
+                BMP.AStarMoving();
                 StartMoving = !BMP.HasReachedPoint;
             }
             IsMoving = !BMP.HasReachedPoint;
@@ -319,7 +326,7 @@ namespace TestField
                 }
                 // 将生成的点往目标方向再靠近一个单位
                 generatedPoint += directionToTarget;
-                NCalcuRouteMove(generatedPoint);
+                NCalcuRouteMove(generatedPoint,sprintspeed,facetoforward);
                 Debug.LogWarning("ApproachingTarget");
                 isApproachThreadRecursing = false;
                 NeedKeepDistance = true;
@@ -369,7 +376,7 @@ namespace TestField
             Vector3 endPoint = ray.GetPoint(currentDistance);
 
             // 在这里处理不再击中物体的情况，可以根据需要返回 endPoint 或执行其他逻辑
-            NCalcuRouteMove(endPoint);
+            NCalcuRouteMove(endPoint,aimspeed,facetotarget,Target);
             Debug.LogWarning("DistanceKeeper");
             NeedKeepDistance = false;
             isDistanceKeeperRecursing = false;
@@ -378,11 +385,12 @@ namespace TestField
 
         #region 计算路线移动的函数
         //传入目标点自动计算路径并开始移动
-        private void CCalcuRouteMove(Vector3 newPoint, float MoveSpeed = 0, float SprintSpeed = 0, float AccelerationDistance = 0)
+        private void CCalcuRouteMove(Vector3 newPoint,int movemode,float facetotarget =0 ,GameObject target = null)
         {
             if (newPoint != Vector3.zero)
             {
                 NoCoverNear = false;
+                BMP?.SetMoveParameter(movemode, facetotarget, target);
                 BMP?.SeekerCalcu(newPoint);
                 StartMoving = true;
             }
@@ -395,10 +403,11 @@ namespace TestField
         }
 
         //传入目标点自动计算路径并开始移动(自动保持距离用)
-        private void NCalcuRouteMove(Vector3 newPoint)
+        private void NCalcuRouteMove(Vector3 newPoint, int movemode, float facetotarget = 0, GameObject target = null)
         {
             if (newPoint != Vector3.zero && InBattle)
             {
+                BMP?.SetMoveParameter(movemode, facetotarget, target);
                 BMP?.SeekerCalcu(newPoint);
                 Facetoforworddir = 1;
                 StartMoving = true;
