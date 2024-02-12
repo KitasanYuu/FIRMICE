@@ -127,7 +127,7 @@ namespace TestField
         //申明外部脚本引用
         private TargetContainer targetcontainer;
         private BroadCasterInfoContainer BCIC;
-        private AIMoveLogic moveLogic;
+        private HumanoidMoveLogic HmoveLogic;
 
         //动态范围的参数
         private float _TRayLength;
@@ -409,9 +409,9 @@ namespace TestField
         // 根据目标状态增加警戒度
         private void AlertnessIncrease()
         {
-            if (moveLogic != null)
+            if (HmoveLogic != null)
             {
-                RecoverProceeding = moveLogic.RecoverStart;
+                RecoverProceeding = HmoveLogic.RecoverStart;
                  if (targetContainer != null && !RecoverProceeding)
                 {
                     if (foundTarget)
@@ -443,7 +443,7 @@ namespace TestField
         // 判断是否暴露
         private void Expose()
         {
-            RecoverProceeding = moveLogic.RecoverStart;
+            RecoverProceeding = HmoveLogic.RecoverStart;
             if (targetContainer != null && !RecoverProceeding)
             {
                 // 目标在警戒范围内且开火时，暴露状态为true
@@ -480,7 +480,7 @@ namespace TestField
         // 警戒度在未被发现的情况下慢慢清零
         private void AlertnessRecover()
         {
-            if (moveLogic.RecoverStart || !foundTarget && !Hitbutoutrange)
+            if (HmoveLogic.RecoverStart || !foundTarget && !Hitbutoutrange)
             {
                 CurrentAlertness = Mathf.Max(CurrentAlertness - AlertnessDecreaseRate * Time.deltaTime, InitAlertness);
             }
@@ -544,7 +544,7 @@ namespace TestField
         private void ComponentInit()
         {
             BCIC = GetComponent<BroadCasterInfoContainer>();
-            moveLogic = GetComponent<AIMoveLogic>();
+            HmoveLogic = GetComponent<HumanoidMoveLogic>();
         }
 
         private void OnTargetReceivedChanged(GameObject newTarget)

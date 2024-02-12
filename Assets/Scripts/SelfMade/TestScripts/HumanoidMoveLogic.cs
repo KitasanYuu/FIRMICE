@@ -5,7 +5,7 @@ using VInspector;
 
 namespace TestField
 {
-    public class AIMoveLogic : MonoBehaviour
+    public class HumanoidMoveLogic : AIMove
     {
         [Tooltip("指定该AI的有效射程")]
         public float ValidShootRange;
@@ -45,7 +45,7 @@ namespace TestField
 
         //声明引用脚本组件
         private AlertCore AC;
-        private BattleMovingPoint BMP;
+        private AIMoveManager AMM;
         private BroadCasterInfoContainer BCIC;
         private CoverUtility coverUtility = new CoverUtility();
         private AIFunction aif = new AIFunction();
@@ -269,13 +269,13 @@ namespace TestField
         //Update控制AStar移动启动，AStar到达目标点后会自动终止
         private void Moving()
         {
-            if (BMP != null && StartMoving)
+            if (AMM != null && StartMoving)
             {
                 //Debug.Log("StartMoving");
-                BMP.AStarMoving();
-                StartMoving = !BMP.HasReachedPoint;
+                AMM.AStarMoving();
+                StartMoving = !AMM.HasReachedPoint;
             }
-            IsMoving = !BMP.HasReachedPoint;
+            IsMoving = !AMM.HasReachedPoint;
         }
         #endregion
 
@@ -390,8 +390,8 @@ namespace TestField
             if (newPoint != Vector3.zero)
             {
                 NoCoverNear = false;
-                BMP?.SetMoveParameter(movemode, facetotarget, target);
-                BMP?.SeekerCalcu(newPoint);
+                AMM?.SetMoveParameter(movemode, facetotarget, target);
+                AMM?.SeekerCalcu(newPoint);
                 StartMoving = true;
             }
             else if (newPoint == Vector3.zero)
@@ -407,8 +407,8 @@ namespace TestField
         {
             if (newPoint != Vector3.zero && InBattle)
             {
-                BMP?.SetMoveParameter(movemode, facetotarget, target);
-                BMP?.SeekerCalcu(newPoint);
+                AMM?.SetMoveParameter(movemode, facetotarget, target);
+                AMM?.SeekerCalcu(newPoint);
                 Facetoforworddir = 1;
                 StartMoving = true;
             }
@@ -453,7 +453,7 @@ namespace TestField
         private void ComponentInit()
         {
             BCIC = GetComponent<BroadCasterInfoContainer>();
-            BMP = GetComponent<BattleMovingPoint>();
+            AMM = GetComponent<AIMoveManager>();
             AC = GetComponent<AlertCore>();
         }
 

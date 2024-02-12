@@ -6,7 +6,7 @@ using CustomInspector;
 
 namespace TestField
 {
-    public class BattleMovingPoint : MonoBehaviour
+    public class AIMoveManager : AIMove
     {
 
         public List<Vector3> aimPoint;

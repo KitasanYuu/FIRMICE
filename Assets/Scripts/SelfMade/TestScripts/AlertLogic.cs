@@ -56,7 +56,7 @@ namespace TestField
 
         // 引用AlertLine和BroadCasterInfoContainer脚本
         private AlertLine alertLine;
-        private AIMoveLogic moveLogic;
+        private HumanoidMoveLogic HmoveLogic;
         private BroadCasterInfoContainer BCIC;
 
         private void Awake()
@@ -97,9 +97,9 @@ namespace TestField
         // 根据目标状态增加警戒度
         private void AlertnessIncrease()
         {
-            if (moveLogic != null)
+            if (HmoveLogic != null)
             {
-                RecoverProceeding = moveLogic.RecoverStart;
+                RecoverProceeding = HmoveLogic.RecoverStart;
                 if (AlertTarget != null && !RecoverProceeding)
                 {
                     if (TargetFound)
@@ -131,7 +131,7 @@ namespace TestField
         // 判断是否暴露
         private void Expose()
         {
-            RecoverProceeding = moveLogic.RecoverStart;
+            RecoverProceeding = HmoveLogic.RecoverStart;
             if (AlertTarget != null && !RecoverProceeding)
             {
                 // 目标在警戒范围内且开火时，暴露状态为true
@@ -168,7 +168,7 @@ namespace TestField
         // 警戒度在未被发现的情况下慢慢清零
         private void AlertnessRecover()
         {
-            if (moveLogic.RecoverStart || !TargetFound && !FoundButOutRange)
+            if (HmoveLogic.RecoverStart || !TargetFound && !FoundButOutRange)
             {
                 CurrentAlertness = Mathf.Max(CurrentAlertness - AlertnessDecreaseRate * Time.deltaTime, InitAlertness);
             }
@@ -209,7 +209,7 @@ namespace TestField
         private void ComponentInit()
         {
             alertLine = GetComponent<AlertLine>();
-            moveLogic = GetComponent<AIMoveLogic>();
+            HmoveLogic = GetComponent<HumanoidMoveLogic>();
             BCIC = GetComponent<BroadCasterInfoContainer>();
         }
 
