@@ -18,8 +18,8 @@ public class WeaponShooter : MonoBehaviour
     [Space2(20)]
 
     [SerializeField] private bool Semi;
-    [SerializeField] private int TempAmmoTotal;
     [SerializeField] private bool LimitAmmo = true;
+    [SerializeField, ShowIf(nameof(LimitAmmo))] private int TempAmmoTotal;
     [SerializeField, ShowIf(nameof(LimitAmmo))] private int defaultBulletCount;
     [ReadOnly, SerializeField, ShowIf(nameof(LimitAmmo))] private int CurrentBulletCount;
 
@@ -87,7 +87,7 @@ public class WeaponShooter : MonoBehaviour
             // 开火
             if ((UsingAIControl && shootController.Fire && shootController.isAiming) || (UsingMasterControl && tpsShootController.Fire && tpsShootController.isAiming))
             {
-                if (CurrentBulletCount > 0)
+                if (!LimitAmmo || CurrentBulletCount > 0)
                 {
                     // 获取当前时间
                     float currentTime = Time.time;
@@ -127,7 +127,14 @@ public class WeaponShooter : MonoBehaviour
 
                         if (InstanceMethod)
                         {
-                            CurrentBulletCount--;
+                            if (LimitAmmo && CurrentBulletCount > 0)
+                            {
+                                CurrentBulletCount--;
+                            }
+                            else if (CurrentBulletCount <= 0)
+                            {
+                                CurrentBulletCount = 0;
+                            }
                             // 生成子弹实例
                             GameObject bulletInstance = Instantiate(bulletPrefab, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
                             // 获取子弹脚本并设置速度
@@ -163,9 +170,16 @@ public class WeaponShooter : MonoBehaviour
                                 Instantiate(VFXHitEffect, hitPoint, Quaternion.identity);
                                 // 在这里处理射击命中的逻辑，例如对击中物体造成伤害或触发其他效果等
                                 Debug.Log("射击命中：" + shootRaycastHit.collider.gameObject.name + "，击中坐标：" + hitPoint);
-                                // 只在尚未命中过的情况下执行一次
-                                CurrentBulletCount--;
 
+                                if (LimitAmmo && CurrentBulletCount > 0)
+                                {
+                                    // 只在尚未命中过的情况下执行一次
+                                    CurrentBulletCount--;
+                                }
+                                else if(CurrentBulletCount <= 0)
+                                {
+                                    CurrentBulletCount = 0;
+                                }
                             }
                         }
 
@@ -194,11 +208,14 @@ public class WeaponShooter : MonoBehaviour
     #region 子弹的Reload逻辑
     private void ReloadProgress(bool ReloadStart = false)
     {
-        if (!Reloading && !reloadingInProgress && (Input.GetKeyDown(KeyCode.R) || ReloadStart))
+        if (LimitAmmo)
         {
-            if (CurrentBulletCount < defaultBulletCount)
+            if (!Reloading && !reloadingInProgress && (Input.GetKeyDown(KeyCode.R) || ReloadStart))
             {
-                StartCoroutine(ReloadCoroutine());
+                if (CurrentBulletCount < defaultBulletCount)
+                {
+                    StartCoroutine(ReloadCoroutine());
+                }
             }
         }
     }
