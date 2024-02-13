@@ -1,19 +1,18 @@
 using UnityEngine;
 using System.Collections;
-using UnityEngine.AI;
 using Pathfinding;
 using System.Collections.Generic;
-using TMPro;
 using AvatarMain;
 using TargetFinding;
 using VInspector;
+using TestField;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 namespace Partner
 {
-    public class Follower : MonoBehaviour
+    public class AIFollower : AIMove
     {
         public GameObject targetToFollow;
         [Foldout("PointGenerateParameter")]
@@ -36,8 +35,6 @@ namespace Partner
         private Vector3 lastTargetPosition;
         private bool isInsideSector;
         private bool canGeneratePoint;
-        private bool hasReachedTargetPoint = true; // 初始设为true，以允许首次目标点的设置
-        private Vector3 Destination;
 
         //用来判定是否移动保底
         private bool IsMoving;
@@ -71,7 +68,7 @@ namespace Partner
 
         void Start()
         {
-            GetComponent();
+            ComponentInit();
             FollowTargetInit();
 
             lastPosition = transform.position;
@@ -85,29 +82,74 @@ namespace Partner
                 RetakeTarget();
             }
 
-            CanISpwanTargetPoint();
-            SeekerCalcu();
-            MovingStart();
-            MovingAnimProtect();
-
+            Move();
         }
 
-        //这个方法用来启动Seeker的路径计算
-        private void SeekerCalcu()
+        #region 移动调用的方法
+        private void Move()
         {
-            if (targetToFollow != null)
-            {
-                Vector3 TargetPosition = targetToFollow.transform.TransformPoint(currentTargetPoint);
-                seeker.StartPath(transform.position, TargetPosition);
+            MoveCalcu();
+            MovingStart();
+            MovingAnimProtect();
+        }
 
-                seeker.pathCallback += OnPathComplete; //在每次回调成功后把新路径点加在数组后面
+        //用来判定启动协程计时执行Move的函数
+        private void MovingStart()
+        {
+            if (targetToFollow != null && !isInsideSector && !IsInvoking("MoveAfterDelay"))
+            {
+                StartCoroutine(MoveAfterDelay(DelayStartTime)); // x 是延迟时间，以秒为单位
             }
         }
 
-        //一个方法，用来在回调后保存Path数组的值
-        void OnPathComplete(Path path)
+        //对移动使用数据的运算
+        private void MoveCalcu()
         {
-            aimPoint = new List<Vector3>(path.vectorPath);
+            CanISpwanTargetPoint();
+
+            Vector3 TargetPoint = targetToFollow.transform.TransformPoint(currentTargetPoint);
+            SeekerCalcu(TargetPoint);
+
+            SpeedJudging();
+
+            float distanceToTarget = CalculateTotalLength(RoutePoint);
+            // 计算当前速度，使其逐渐减小直到0
+            currentSpeed = followSpeed * (distanceToTarget / stoppingDistance);
+
+            if (distanceToTarget > accelerationDistance)
+            {
+                // 如果距离小于加速的阈值距离，使用加速速度
+                currentSpeed = FSprintSpeed;
+            }
+            else if (currentSpeed > FSpeed)
+            {
+                currentSpeed = FSpeed;
+            }
+
+            if (HasReachedPoint)
+            {
+                currentSpeed = 0;
+                isInsideSector = true;
+                PHasReachedPoint = true;
+            }
+
+            CSpeed = currentSpeed;
+            SetPMoveParameter(currentSpeed);
+
+        }
+
+        protected void SpeedJudging()
+        {
+            if (avatarController != null && CopyTargetParameter)
+            {
+                FSpeed = avatarController.MoveSpeed;
+                FSprintSpeed = avatarController.SprintSpeed - 1.0f;
+            }
+            else
+            {
+                FSpeed = followSpeed;
+                FSprintSpeed = accelerationSpeed;
+            }
         }
 
         //协程计时x秒后执行移动操作
@@ -116,7 +158,7 @@ namespace Partner
             yield return new WaitForSeconds(delay);
 
             //下面是移动方法的调用
-            AStarMoving();
+            PAStarMoving();
 
             //MoveTowardsTarget();
 
@@ -125,52 +167,35 @@ namespace Partner
             //hasReachedTargetPoint = true;
         }
 
-        //用于在Start方法中获取当前物体上的组件
-        private void GetComponent()
+        private void MovingAnimProtect()
         {
-            //navMeshAgent = GetComponent<NavMeshAgent>();
-            //navMeshPath = new NavMeshPath();
-
-
-            seeker = GetComponent<Seeker>();
-            if (targetToFollow != null)
+            // 检查角色位置是否发生了显著变化
+            if (Vector3.Distance(transform.position, lastPosition) > movementThreshold)
             {
-                avatarController = targetToFollow.GetComponent<AvatarController>();
-                Debug.Log("Follower - AvatarController Initialized!");
+                IsMoving = true;
             }
             else
             {
-                NeedtoRetakeTarget = true;
+                IsMoving = false;
             }
 
-        }
+            //Debug.Log("Follower Moving:" + IsMoving);
+            // 更新最后的位置
+            lastPosition = transform.position;
 
-        private void RetakeTarget()
-        {
-            ObjectSeeker objectseeker = GetComponent<ObjectSeeker>();
-            objectseeker.StartSeek(true);
-            if (objectseeker.targetToFollow != null)
+            if (IsMoving)
             {
-                targetToFollow = objectseeker.targetToFollow;
-                avatarController = targetToFollow.GetComponent<AvatarController>();
-                Debug.Log("FollowerRebinded");
-                GetComponent();
-                FollowTargetInit();
-                NeedtoRetakeTarget = false;
+                return;
             }
-        }
-
-        //用于在Star方法中初始化随机跟随目标的生成
-        private void FollowTargetInit()
-        {
-            if (targetToFollow != null)
+            else
             {
-                lastTargetPosition = targetToFollow.transform.position;
-                //isInsideSector = true;
-                UpdateTargetPoint();
+                CSpeed = 0;
             }
         }
 
+        #endregion
+
+        #region Follow移动点生成
         //这个是用来判定跟随者是否已经进入了会刷新随机目标点的自定义范围内
         protected bool IsInSector(Vector3 position)
         {
@@ -209,12 +234,12 @@ namespace Partner
                     if (canGeneratePoint && !isInsideSector)
                     {
                         //Debug.Log("Allow to Spwan Point");
-                        if (hasReachedTargetPoint)
+                        if (PHasReachedPoint)
                         {
                             // 只有在到达当前目标点后，才更新下一个目标点
                             UpdateTargetPoint();
                             //Debug.LogError("PointSpwan" + currentTargetPoint);
-                            hasReachedTargetPoint = false; // 重置标记
+                            PHasReachedPoint = false; // 重置标记
                         }
                         canGeneratePoint = false;
                     }
@@ -260,215 +285,58 @@ namespace Partner
             return randomPoint;
         }
 
-        //用来判定启动协程计时执行Move的函数
-        private void MovingStart()
+        #endregion
+
+        #region 组件初始化&重新获取
+        //用于在Start方法中获取当前物体上的组件
+        private void ComponentInit()
         {
-            if (targetToFollow!=null && !isInsideSector && !IsInvoking("MoveAfterDelay"))
+            //navMeshAgent = GetComponent<NavMeshAgent>();
+            //navMeshPath = new NavMeshPath();
+
+            seeker = GetComponent<Seeker>();
+            SetSeekerComponent(seeker);
+            if (targetToFollow != null)
             {
-                StartCoroutine(MoveAfterDelay(DelayStartTime)); // x 是延迟时间，以秒为单位
-            }
-        }
-
-        //正式的Move移动函数，只能和A*用一个，放弃维护了xx
-        void MoveTowardsTarget()
-        {
-            Vector3 worldTargetPoint = targetToFollow.transform.TransformPoint(currentTargetPoint);
-
-            //角色的Container的Y轴本来就应该处在0，如果强行把Y轴变为0在用Rotation转向时会出错
-            //worldTargetPoint.y = transform.position.y; // 忽略 Y 轴的变化
-
-            float distanceToTarget = Vector3.Distance(transform.position, worldTargetPoint);
-            float currentSpeed;
-
-            if (distanceToTarget > stoppingDistance)
-            {
-                // 计算当前速度，使其逐渐减小直到0
-                currentSpeed = followSpeed * (distanceToTarget / stoppingDistance);
-
-                if (distanceToTarget > accelerationDistance)
-                {
-                    // 如果距离小于加速的阈值距离，使用加速速度
-                    currentSpeed = accelerationSpeed;
-                }
-                else if (currentSpeed > followSpeed)
-                {
-                    currentSpeed = followSpeed;
-                }
-
-                // 计算移动方向
-                Vector3 moveDirection = (worldTargetPoint - transform.position).normalized;
-
-                // 使用计算的速度移动物体
-                transform.position = Vector3.MoveTowards(transform.position, worldTargetPoint, currentSpeed * Time.deltaTime);
-
-                // 使物体朝向移动方向
-                if (moveDirection != Vector3.zero)
-                {
-                    // 计算目标朝向
-                    Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-
-                    // 使用Slerp插值来平滑地转向目标朝向
-                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-                    MoveDirection = moveDirection;
-                }
-            }
-
-        }
-
-        //使用A*寻路移动的功能
-        private void AStarMoving()
-        {
-            IsMoving = true;
-
-            //这里用if是因为在抵达目标点一瞬间数组会只有一位数0，此时Vector3 aimPoint[1]会取不到值
-            int Count = aimPoint.Count;
-            //Debug.LogError(Count);
-
-            if (Count == 1)
-            {
-                Destination = aimPoint[index: 0];
-            }
-            else if (Count >= 1)
-            {
-                Destination = aimPoint[index: 1];
-            }
-            else if (Count == 0)
-            {
-                Debug.LogError("Follower:The List Count is 0!");
-                return;
+                avatarController = targetToFollow.GetComponent<AvatarController>();
+                Debug.Log("Follower - AvatarController Initialized!");
             }
             else
             {
-                Debug.LogError("Follower:The List Count Take" + Count);
+                NeedtoRetakeTarget = true;
             }
 
-            float distanceToTarget = CalculateTotalLength(aimPoint);
-            float currentSpeed;
-
-            //Debug.LogWarning(distanceToTarget);
-
-            if (distanceToTarget > stoppingDistance)
-            {
-                SpeedJudging();
-
-                // 计算当前速度，使其逐渐减小直到0
-                currentSpeed = followSpeed * (distanceToTarget / stoppingDistance);
-
-                if (distanceToTarget > accelerationDistance)
-                {
-                    // 如果距离小于加速的阈值距离，使用加速速度
-                    currentSpeed = FSprintSpeed;
-                }
-                else if (currentSpeed > FSpeed)
-                {
-                    currentSpeed = FSpeed;
-                }
-
-                //Debug.Log("Follower #315 CurrentSpeed:" + currentSpeed);
-
-                if (aimPoint != null && aimPoint.Count != 0)
-                {
-                    // 计算移动方向
-                    Vector3 MoveDir = (aimPoint[1] - transform.position).normalized;
-                    //Debug.Log(currentSpeed);
-
-                    CSpeed = currentSpeed;
-
-                    //移动角色
-                    transform.position = Vector3.MoveTowards(transform.position, Destination, currentSpeed * Time.deltaTime);
-                    //Debug.Log(Destination);
-
-
-                    // 使物体朝向移动方向
-                    if (MoveDir != Vector3.zero)
-                    {
-                        // 计算目标朝向
-                        Quaternion targetRotation = Quaternion.LookRotation(MoveDir);
-
-                        //Debug.LogError(targetRotation);
-                        //Debug.LogWarning(transform.rotation);
-
-                        // 使用Slerp插值来平滑地转向目标朝向
-                        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
-                    }
-
-                    //如果目标抵达了一个路径节点则将这个节点删去
-                    if (Vector3.Distance(aimPoint[1], transform.position) <= 1f)
-                    {
-                        aimPoint.RemoveAt(1);
-                    }
-                }
-            }
-            else
-            {
-                currentSpeed = 0;
-                CSpeed = currentSpeed;
-                //移动完成后跟随者是肯定在目标点刷新范围内的
-                isInsideSector = true;
-                hasReachedTargetPoint = true;
-                aimPoint.Clear();
-                //Debug.LogWarning("REACHED TARGET POINT");
-            }
         }
 
-        private void MovingAnimProtect()
+
+        //用于在Star方法中初始化随机跟随目标的生成
+        private void FollowTargetInit()
         {
-            // 检查角色位置是否发生了显著变化
-            if (Vector3.Distance(transform.position, lastPosition) > movementThreshold)
+            if (targetToFollow != null)
             {
-                IsMoving = true;
+                lastTargetPosition = targetToFollow.transform.position;
+                //isInsideSector = true;
+                UpdateTargetPoint();
             }
-            else
-            {
-                IsMoving = false;
-            }
-
-            //Debug.Log("Follower Moving:" + IsMoving);
-            // 更新最后的位置
-            lastPosition = transform.position;
-
-            if (IsMoving)
-            {
-                return;
-            }
-            else
-            {
-                CSpeed = 0;
-            }
-
         }
 
-        protected void SpeedJudging()
+        private void RetakeTarget()
         {
-            if (avatarController != null && CopyTargetParameter)
+            ObjectSeeker objectseeker = GetComponent<ObjectSeeker>();
+            objectseeker.StartSeek(true);
+            if (objectseeker.targetToFollow != null)
             {
-                FSpeed = avatarController.MoveSpeed;
-                FSprintSpeed = avatarController.SprintSpeed - 1.0f;
+                targetToFollow = objectseeker.targetToFollow;
+                avatarController = targetToFollow.GetComponent<AvatarController>();
+                Debug.Log("FollowerRebinded");
+                ComponentInit();
+                FollowTargetInit();
+                NeedtoRetakeTarget = false;
             }
-            else
-            {
-                FSpeed = followSpeed;
-                FSprintSpeed = accelerationSpeed;
-            }
-
-
         }
+        #endregion
 
-        //用来计算A*路径上的总长度函数
-        float CalculateTotalLength(List<Vector3> points)
-        {
-            float totalLength = 0f;
-
-            // 遍历点列表，计算相邻点之间的距离并相加
-            for (int i = 0; i < points.Count - 1; i++)
-            {
-                totalLength += Vector3.Distance(points[i], points[i + 1]);
-            }
-
-            return totalLength;
-        }
-
-
+        #region Gizmos绘制
 #if UNITY_EDITOR
         //下面是Gizmos上的绘制，仅在编辑视角生效
         void OnDrawGizmos()
@@ -534,5 +402,53 @@ namespace Partner
 #endif
 
 #endif
+        #endregion
+
+        #region 已弃用移动方法
+        //正式的Move移动函数，只能和A*用一个，放弃维护了xx
+        void MoveTowardsTarget()
+        {
+            Vector3 worldTargetPoint = targetToFollow.transform.TransformPoint(currentTargetPoint);
+
+            //角色的Container的Y轴本来就应该处在0，如果强行把Y轴变为0在用Rotation转向时会出错
+            //worldTargetPoint.y = transform.position.y; // 忽略 Y 轴的变化
+
+            float distanceToTarget = Vector3.Distance(transform.position, worldTargetPoint);
+            float currentSpeed;
+
+            if (distanceToTarget > stoppingDistance)
+            {
+                // 计算当前速度，使其逐渐减小直到0
+                currentSpeed = followSpeed * (distanceToTarget / stoppingDistance);
+
+                if (distanceToTarget > accelerationDistance)
+                {
+                    // 如果距离小于加速的阈值距离，使用加速速度
+                    currentSpeed = accelerationSpeed;
+                }
+                else if (currentSpeed > followSpeed)
+                {
+                    currentSpeed = followSpeed;
+                }
+
+                // 计算移动方向
+                Vector3 moveDirection = (worldTargetPoint - transform.position).normalized;
+
+                // 使用计算的速度移动物体
+                transform.position = Vector3.MoveTowards(transform.position, worldTargetPoint, currentSpeed * Time.deltaTime);
+
+                // 使物体朝向移动方向
+                if (moveDirection != Vector3.zero)
+                {
+                    // 计算目标朝向
+                    Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+
+                    // 使用Slerp插值来平滑地转向目标朝向
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+                    MoveDirection = moveDirection;
+                }
+            }
+        }
+        #endregion
     }
 }

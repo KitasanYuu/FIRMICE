@@ -13,7 +13,7 @@ using UnityEngine.Experimental.GlobalIllumination;
 public class AstarMovingTest : MonoBehaviour
 {
     Seeker seeker;
-    Follower follower;
+    AIFollower follower;
 
     public List<Vector3> aimPoint;
 
