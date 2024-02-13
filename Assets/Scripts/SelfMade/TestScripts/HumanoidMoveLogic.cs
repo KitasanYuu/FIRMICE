@@ -1,4 +1,5 @@
 using CustomInspector;
+using Pathfinding;
 using System.Collections.Generic;
 using UnityEngine;
 using VInspector;
@@ -7,6 +8,11 @@ namespace TestField
 {
     public class HumanoidMoveLogic : AIMove
     {
+        public float NormalSpeed;
+        public float SprintSpeed;
+        public float AimSpeed;
+        public float stoppingDistance;
+
         [Tooltip("指定该AI的有效射程")]
         public float ValidShootRange;
         [Tooltip("用来指定物体在距离检测时发射的射线忽略对象层级，建议选择可能碰撞的AI层级")]
@@ -45,8 +51,8 @@ namespace TestField
 
         //声明引用脚本组件
         private AlertCore AC;
-        private AIMoveManager AMM;
         private BroadCasterInfoContainer BCIC;
+        private Seeker seeker;
         private CoverUtility coverUtility = new CoverUtility();
         private AIFunction aif = new AIFunction();
 
@@ -65,7 +71,6 @@ namespace TestField
         private bool hasRotationed = true;
         private Vector3 InitPosition;
         private Quaternion InitRotation;
-        private int Movemode;
 
         //随便写的两个占位函数方便管理
         private float facetotarget = 1;
@@ -89,24 +94,22 @@ namespace TestField
 
         private void Update()
         {
-            CoverOccupied();
-            PositionRecover();
-            ParameterUpdate();
-            BattleStart();
-            TargetOutRange();
+            InBattleLogic();
             Moving();
-            FaceToTarget(Target);
-            DistanceKeeper(Target);
-        }
-
-        private void StatusController()
-        {
-
         }
 
         private void InBattleLogic()
         {
-
+            ParameterUpdate();
+            if (InBattle)
+            {
+                BattleStart();
+                TargetOutRange();
+                FaceToTarget(Target);
+                DistanceKeeper(Target);
+                CoverOccupied();
+            }
+            PositionRecover();
         }
 
         private void WonderingLogic()
@@ -269,15 +272,15 @@ namespace TestField
         //Update控制AStar移动启动，AStar到达目标点后会自动终止
         private void Moving()
         {
-            if (AMM != null && StartMoving)
+            if (StartMoving)
             {
                 //Debug.Log("StartMoving");
-                AMM.AStarMoving();
-                StartMoving = !AMM.HasReachedPoint;
+                AStarMoving();
+                StartMoving = !HasReachedPoint;
             }
-            IsMoving = !AMM.HasReachedPoint;
+            IsMoving = !HasReachedPoint;
         }
-        #endregion
+        #endregion 
 
         #region 用来控制自身与目标保持距离的递归函数
         //用来在无法直接面对目标时在预设保持距离的范围内生成一个可以直接面对目标的点
@@ -390,8 +393,8 @@ namespace TestField
             if (newPoint != Vector3.zero)
             {
                 NoCoverNear = false;
-                AMM?.SetMoveParameter(movemode, facetotarget, target);
-                AMM?.SeekerCalcu(newPoint);
+                SetMoveParameter(movemode, facetotarget, target);
+                SeekerCalcu(newPoint);
                 StartMoving = true;
             }
             else if (newPoint == Vector3.zero)
@@ -407,8 +410,8 @@ namespace TestField
         {
             if (newPoint != Vector3.zero && InBattle)
             {
-                AMM?.SetMoveParameter(movemode, facetotarget, target);
-                AMM?.SeekerCalcu(newPoint);
+                SetMoveParameter(movemode, facetotarget, target);
+                SeekerCalcu(newPoint);
                 Facetoforworddir = 1;
                 StartMoving = true;
             }
@@ -453,8 +456,10 @@ namespace TestField
         private void ComponentInit()
         {
             BCIC = GetComponent<BroadCasterInfoContainer>();
-            AMM = GetComponent<AIMoveManager>();
             AC = GetComponent<AlertCore>();
+            seeker = GetComponent<Seeker>();
+            SetSeekerComponent(seeker);
+            SetMoveBasicParameter(NormalSpeed, AimSpeed, SprintSpeed, stoppingDistance);
         }
 
         private void EventSubscribe()
