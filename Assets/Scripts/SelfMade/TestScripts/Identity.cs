@@ -1,6 +1,4 @@
 using CustomInspector;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TestField
@@ -11,9 +9,9 @@ namespace TestField
         private string MasterIdentity;
         [SerializeField, FixedValues("null","FullCover", "HalfCover"),ShowIf(nameof(CoverSerizes))]
         private string CoverType;
-        [ShowIf(nameof(CoverSerizes))]
+        [ReadOnly,ShowIf(nameof(CoverSerizes))]
         public bool CoverOccupied;
-        [ShowIf(nameof(CoverSerizes))]
+        [ReadOnly,ShowIf(nameof(CoverSerizes))]
         public GameObject Occupier;
 
         public bool CoverSerizes() => MasterIdentity == "Cover";
@@ -43,13 +41,14 @@ namespace TestField
             }
         }
 
-        public void SetOccupiedUseage(bool isOccupied=false)
+        public void SetOccupiedUseage(bool isOccupied=false,GameObject COccupier = null)
         {
             if (isOccupied)
                 OccupiedInit = false;
             else
                 OccupiedInit = true;
             CoverOccupied = isOccupied;
+            Occupier = COccupier;
         }
 
         private void CoverTypeUpdate()

@@ -15,6 +15,8 @@ namespace TestField
             float minDistance = float.MaxValue;
             Vector3 currentPosition = selfobject.transform.position;
 
+            coverObjects = OccupyCheck(coverObjects, selfobject);
+
             foreach (GameObject coverObject in coverObjects)
             {
                 float distance = Vector3.Distance(currentPosition, coverObject.transform.position);
@@ -37,6 +39,8 @@ namespace TestField
             Vector3 linePoint = selfobject.transform.position; // 当前位置为直线上一点
             Vector3 lineVec = target.transform.position - selfobject.transform.position; // 方向向量
             float minExclusionDistance = 3f;
+
+            coverObjects = OccupyCheck(coverObjects, selfobject);
 
             foreach (GameObject coverObject in coverObjects)
             {
@@ -65,13 +69,14 @@ namespace TestField
         }
 
         // 查找距离指定目标最远的掩体，并且距离在给定范围内
-        public GameObject FindFarthestCover(GameObject target, List<GameObject> coverObjects, float range)
+        public GameObject FindFarthestCover(GameObject selfObject,GameObject target, List<GameObject> coverObjects, float range)
         {
             GameObject farthestCover = null;
             float maxDistance = 0f;  // 初始化最大距离为0
 
             Vector3 currentPosition = target.transform.position;  // 获取目标位置
 
+            coverObjects = OccupyCheck(coverObjects, selfObject);
             // 遍历所有掩体对象
             foreach (GameObject coverObject in coverObjects)
             {
@@ -103,6 +108,9 @@ namespace TestField
 
             Vector3 currentPosition = selfObject.transform.position;  // 获取自身位置
             float DTS = 0;
+
+            coverObjects = OccupyCheck(coverObjects, selfObject);
+
             // 遍历所有掩体对象
             foreach (GameObject coverObject in coverObjects)
             {
@@ -297,7 +305,7 @@ namespace TestField
             if (nearestCoverOnRoute != null && !UseSelfCover)
             {
                 Identity ID = nearestCoverOnRoute.GetComponent<Identity>();
-                ID.SetOccupiedUseage(true);
+                ID.SetOccupiedUseage(true,selfObject);
                 // 在掩体周围生成一个点
                 Vector3 randomPointAroundCover = RandomPointBetween(nearestCoverOnRoute, target.transform.position,EnableDistanceCheck,selfObject,target);
                 return randomPointAroundCover;
@@ -325,7 +333,7 @@ namespace TestField
                 if (nearestCover != null)
                 {
                     Identity ID = nearestCover.GetComponent<Identity>();
-                    ID.SetOccupiedUseage(true);
+                    ID.SetOccupiedUseage(true,selfObject);
                     // 在掩体周围生成一个点
                     Vector3 randomPointAroundCover = RandomPointBetween(nearestCover, target.transform.position, EnableDistanceCheck, selfObject, target);
                     return randomPointAroundCover;
@@ -338,7 +346,7 @@ namespace TestField
             else if(ChosenCover != null)
             {
                 Identity ID = ChosenCover.GetComponent<Identity>();
-                ID.SetOccupiedUseage(true);
+                ID.SetOccupiedUseage(true,selfObject);
                 // 在掩体周围生成一个点
                 Vector3 randomPointAroundCover = RandomPointBetween(ChosenCover, target.transform.position, EnableDistanceCheck, selfObject, target);
                 return randomPointAroundCover;
@@ -360,12 +368,12 @@ namespace TestField
 
             if(CoverChosen == null && !UseSelfCover)
             {
-                GameObject nearestCover = FindFarthestCover(target, coverObjects, range);
+                GameObject nearestCover = FindFarthestCover(self, target, coverObjects, range);
 
                 if (nearestCover != null)
                 {
                     Identity ID = nearestCover.GetComponent<Identity>();
-                    ID.SetOccupiedUseage(true);
+                    ID.SetOccupiedUseage(true,self);
                     // 在掩体周围生成一个点
                     Vector3 randomPointAroundCover = RandomPointBetween(nearestCover, target.transform.position, EnableDistanceCheck, self, target);
                     return randomPointAroundCover;
@@ -404,7 +412,7 @@ namespace TestField
             if (nearestCover != null)
             {
                 Identity ID = nearestCover.GetComponent<Identity>();
-                ID.SetOccupiedUseage(true);
+                ID.SetOccupiedUseage(true,self);
                 // 在掩体周围生成一个点
                 Vector3 randomPointAroundCover = RandomPointBetween(nearestCover, target.transform.position,EnableDistanceCheck,self,target);
                 return randomPointAroundCover;
@@ -413,6 +421,30 @@ namespace TestField
             {
                 return Vector3.zero;
             }
+        }
+
+        //用于占用检查
+        public List<GameObject> OccupyCheck(List<GameObject> gameObjectList, GameObject targetGameObject)
+        {
+            // 创建一个新的列表用于存放符合条件的 GameObject
+            List<GameObject> newList = new List<GameObject>();
+
+            // 遍历原始列表中的每个 GameObject
+            foreach (GameObject obj in gameObjectList)
+            {
+                // 获取当前 GameObject 的 Identity 组件
+                Identity ID = obj.GetComponent<Identity>();
+
+                // 如果 Identity 组件存在，且 Occupier 不是目标 GameObject 或者 Occupier 为 null
+                if (ID != null && (ID.Occupier == targetGameObject || ID.Occupier == null))
+                {
+                    // 将符合条件的 GameObject 添加到新的列表中
+                    newList.Add(obj);
+                }
+            }
+
+            // 返回新的列表
+            return newList;
         }
     }
 }
