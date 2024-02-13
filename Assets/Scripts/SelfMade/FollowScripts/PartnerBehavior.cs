@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Partner
@@ -12,7 +10,7 @@ namespace Partner
 
         //初始化脚本
         private Animator _animator;
-        private Follower follower;
+        private AIFollower follower;
 
         private bool _hasAnimator;
 
@@ -30,7 +28,7 @@ namespace Partner
         private void Start()
         {
             AssignAnimationIDs();
-            follower = GetComponent<Follower>();
+            follower = GetComponent<AIFollower>();
 
             _hasAnimator = TryGetComponent(out _animator);
 
