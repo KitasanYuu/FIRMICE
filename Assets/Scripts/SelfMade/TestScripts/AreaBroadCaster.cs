@@ -12,6 +12,7 @@ namespace TestField
         [SerializeField, ReadOnly] private GameObject ObjectFound;
         [SerializeField, ReadOnly] private BattleAreaManager BAM;
         [SerializeField, ReadOnly] private List<GameObject> Partner = new List<GameObject>();
+        [SerializeField, ReadOnly] private List<GameObject> Neutral = new List<GameObject>();
         [SerializeField, ReadOnly] private List<GameObject> BCReceiver = new List<GameObject>();
         private List<GameObject> BroadCastReceiver = new List<GameObject>();
         public List<GameObject> SBroadCastReceiver = new List<GameObject>();
@@ -24,26 +25,20 @@ namespace TestField
         void Start()
         {
             BAM = GetComponent<BattleAreaManager>();
+            EventSubscribe();
 
 
-            // 订阅事件，当BroadCastReceiver变化时调用 HandleBroadCastReceiverChanged 方法
-            BAM.BroadCastReceiverChanged += HandleBroadCastReceiverChanged;
-            // 订阅事件
-            BAM.TargetFoundChanged += OnTargetFoundChanged;
-            BAM.PartnerChanged += OnPartnerChanged;
-            BAM.FullCoverChanged += OnFullCoverChanged;
-            BAM.HalfCoverChanged += OnHalfCoverChanged;
-            BAM.SBroadCastReceiverChanged += OnSBroadCastReceivedChanged;
-            BAM.OccupiedCoverChanged += OnOccupiedCoverChanged;
-            BAM.FreeCoverChanged += OnFreeCoverChanged;
         }
+
+
+
         // Update is called once per frame
         void Update()
         {
 
         }
 
-
+        #region 信息接收
         private void HandleBroadCastReceiverChanged(List<GameObject> newReceiverList)
         {
             BCReceiver = newReceiverList;
@@ -62,6 +57,11 @@ namespace TestField
         {
             Partner = newList;
             SendPartnerINFO();
+        }
+
+        private void OnNeutralChanged(List<GameObject> newList)
+        {
+            Neutral = newList;
         }
 
         private void OnHalfCoverChanged(List<GameObject> newList)
@@ -155,6 +155,9 @@ namespace TestField
             }
         }
 
+        #endregion
+
+        #region 信息发送
         private void SendPartnerINFO()
         {
             foreach (GameObject receiverObject in BCReceiver)
@@ -162,7 +165,7 @@ namespace TestField
                 BroadCasterInfoContainer BCIC = receiverObject.GetComponent<BroadCasterInfoContainer>();
                 if (BCIC != null)
                 {
-                    BCIC.PartnerChanged(Partner);
+                    BCIC.EnemeyPoolChanged(Partner);
                 }
             }
         }
@@ -194,6 +197,23 @@ namespace TestField
             }
         }
 
+        #endregion
+
+        #region 事件订阅处理
+        private void EventSubscribe()
+        {
+            // 订阅事件，当BroadCastReceiver变化时调用 HandleBroadCastReceiverChanged 方法
+            BAM.BroadCastReceiverChanged += HandleBroadCastReceiverChanged;
+            // 订阅事件
+            BAM.TargetFoundChanged += OnTargetFoundChanged;
+            BAM.PartnerChanged += OnPartnerChanged;
+            BAM.FullCoverChanged += OnFullCoverChanged;
+            BAM.HalfCoverChanged += OnHalfCoverChanged;
+            BAM.SBroadCastReceiverChanged += OnSBroadCastReceivedChanged;
+            BAM.OccupiedCoverChanged += OnOccupiedCoverChanged;
+            BAM.FreeCoverChanged += OnFreeCoverChanged;
+            BAM.NeutralChanged += OnNeutralChanged;
+        }
 
         // 在脚本销毁时取消订阅事件，以防止潜在的内存泄漏
         private void OnDestroy()
@@ -206,6 +226,9 @@ namespace TestField
             BAM.SBroadCastReceiverChanged -= OnSBroadCastReceivedChanged;
             BAM.OccupiedCoverChanged -= OnOccupiedCoverChanged;
             BAM.FreeCoverChanged -= OnFreeCoverChanged;
+            BAM.NeutralChanged -= OnNeutralChanged;
         }
+
+        #endregion
     }
 }

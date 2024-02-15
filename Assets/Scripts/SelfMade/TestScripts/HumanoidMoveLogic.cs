@@ -466,7 +466,7 @@ namespace TestField
         {
             BCIC.FullcoverChanged += OnFullCoverChanged;
             BCIC.HalfcoverChanged += OnHalfCoverChanged;
-            BCIC.TargetReceivedChanged += TargetReceived;
+            BCIC.AlertTargetReceivedChanged += TargetReceived;
             BCIC.OccupiedcoverChanged += OnOccupiedCoverChanged;
             BCIC.FreecoverChanged += OnFreeCoverChanged;
         }
@@ -476,7 +476,7 @@ namespace TestField
             {
                 BCIC.FullcoverChanged -= OnFullCoverChanged;
                 BCIC.HalfcoverChanged -= OnHalfCoverChanged;
-                BCIC.TargetReceivedChanged -= TargetReceived;
+                BCIC.AlertTargetReceivedChanged -= TargetReceived;
                 BCIC.OccupiedcoverChanged -= OnOccupiedCoverChanged;
                 BCIC.FreecoverChanged -= OnFreeCoverChanged;
             }

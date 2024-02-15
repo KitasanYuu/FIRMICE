@@ -579,7 +579,7 @@ namespace TestField
         // 订阅事件
         private void EventSubscribe()
         {
-            BCIC.TargetReceivedChanged += OnTargetReceivedChanged;
+            BCIC.AlertTargetReceivedChanged += OnTargetReceivedChanged;
             BCIC.TargetMovingStatusChanged += OnTargetMovingStatusChanged;
             BCIC.Fire += OnFire;
             BCIC.Aiming += OnAiming;
@@ -591,7 +591,7 @@ namespace TestField
         {
             if (BCIC != null)
             {
-                BCIC.TargetReceivedChanged -= OnTargetReceivedChanged;
+                BCIC.AlertTargetReceivedChanged -= OnTargetReceivedChanged;
                 BCIC.TargetMovingStatusChanged -= OnTargetMovingStatusChanged;
                 BCIC.Fire -= OnFire;
                 BCIC.Aiming -= OnAiming;

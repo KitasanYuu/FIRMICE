@@ -4,8 +4,6 @@ using playershooting;
 using BattleShoot;
 using CustomInspector;
 using BattleHealth;
-using System.Linq.Expressions;
-using Unity.VisualScripting;
 using System.Collections;
 
 public class WeaponShooter : MonoBehaviour

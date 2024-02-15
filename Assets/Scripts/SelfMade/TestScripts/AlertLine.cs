@@ -334,7 +334,7 @@ namespace TestField
         // 订阅事件
         private void EventSubscribe()
         {
-            broadCasterinfocontainer.TargetReceivedChanged += OnTargetReceivedChanged;
+            broadCasterinfocontainer.AlertTargetReceivedChanged += OnTargetReceivedChanged;
             broadCasterinfocontainer.TargetMovingStatusChanged += OnTargetMovingStatusChanged;
         }
 
@@ -343,7 +343,7 @@ namespace TestField
         {
             if (broadCasterinfocontainer != null)
             {
-                broadCasterinfocontainer.TargetReceivedChanged -= OnTargetReceivedChanged;
+                broadCasterinfocontainer.AlertTargetReceivedChanged -= OnTargetReceivedChanged;
                 broadCasterinfocontainer.TargetMovingStatusChanged -= OnTargetMovingStatusChanged;
             }
 

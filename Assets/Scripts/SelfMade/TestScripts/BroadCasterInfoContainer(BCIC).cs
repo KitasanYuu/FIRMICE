@@ -3,7 +3,6 @@ using System;
 using CustomInspector;
 using AvatarMain;
 using playershooting;
-using NUnit.Framework;
 using System.Collections.Generic;
 
 namespace TestField
@@ -11,7 +10,7 @@ namespace TestField
     public class BroadCasterInfoContainer : MonoBehaviour
     {
         // 定义事件委托
-        public Action<GameObject> TargetReceivedChanged;
+        public Action<GameObject> AlertTargetReceivedChanged;
         public Action<List<GameObject>> OtherReceiverChanged;
         public Action<List<GameObject>> HalfcoverChanged;
         public Action<List<GameObject>> FullcoverChanged;
@@ -119,7 +118,7 @@ namespace TestField
                 TargetReceived = TargetContainer;
 
                 // 触发事件通知其他脚本
-                TargetReceivedChanged?.Invoke(TargetReceived);
+                AlertTargetReceivedChanged?.Invoke(TargetReceived);
 
                 if (TargetReceived != null)
                 {
@@ -146,9 +145,9 @@ namespace TestField
             shouldCombineLists = false;
         }
 
-        public void PartnerChanged(List<GameObject> newPartnerList)
+        public void EnemeyPoolChanged(List<GameObject> newTargetPool)
         {
-            PartnerList = newPartnerList;
+            PartnerList = newTargetPool;
         }
 
         public void HalfCoverChanged(List<GameObject> newHalfCoverList)

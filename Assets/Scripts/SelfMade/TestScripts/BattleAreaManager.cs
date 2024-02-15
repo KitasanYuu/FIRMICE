@@ -33,6 +33,12 @@ namespace TestField
         [SerializeField] private LayerMask PartnerLayer;
         [ReadOnly] public List<GameObject> PartnerList = new List<GameObject>();
 
+        [Foldout("NeutralINFO")]
+        [SerializeField]
+        [FixedValues("Player", "Partner", "Enemy", "Neutral", "TrainingTarget", "TestPrototype")]
+        private string NeutralMasterID;
+        [SerializeField] private LayerMask NeutralLayer;
+        [ReadOnly] public List<GameObject> NeutralList = new List<GameObject>();
 
         [Foldout("AIReceiverINFO")]
         [SerializeField]
@@ -55,6 +61,7 @@ namespace TestField
         // 事件定义
         public event Action<GameObject> TargetFoundChanged;
         public event Action<List<GameObject>> PartnerChanged;
+        public event Action<List<GameObject>> NeutralChanged;
         public event Action<List<GameObject>> BroadCastReceiverChanged;
         public event Action<List<GameObject>> SBroadCastReceiverChanged;
         public event Action<List<GameObject>> HalfCoverChanged;
@@ -76,6 +83,7 @@ namespace TestField
             PartnerSeeker();
             SearchingTarget();
             CoverSearching();
+            NeutralSeeker();
         }
 
 
@@ -144,6 +152,42 @@ namespace TestField
                 {
                     PartnerList.Add(identity.gameObject);
                     OnPartnerChanged();
+                }
+            }
+        }
+
+        private void NeutralSeeker()
+        {
+            Bounds boxBounds = new Bounds(transform.position + boxOffset, boxSize);
+
+            Collider[] colliders = Physics.OverlapBox(boxBounds.center, boxBounds.extents, Quaternion.identity, NeutralLayer);
+
+            NeutralList.Clear();
+
+            // 使用 HashSet 来确保每个物体只会被添加一次
+            HashSet<GameObject> uniqueObjects = new HashSet<GameObject>();
+
+            foreach (Collider collider in colliders)
+            {
+                Identity identity = collider.GetComponent<Identity>();
+
+                // 如果当前collider没有Identity脚本，则查找其父级
+                if (identity == null)
+                {
+                    Transform parent = collider.transform.parent;
+
+                    while (parent != null && identity == null)
+                    {
+                        identity = parent.GetComponent<Identity>();
+                        parent = parent.parent;
+                    }
+                }
+
+                // 添加带有Identity脚本的物体到BroadCastReceiver，确保每个物体只会被添加一次
+                if (identity != null && identity.MasterID == NeutralMasterID && uniqueObjects.Add(identity.gameObject))
+                {
+                    NeutralList.Add(identity.gameObject);
+                    OnNeutralChanged();
                 }
             }
         }
@@ -294,6 +338,11 @@ namespace TestField
         private void OnPartnerChanged()
         {
             PartnerChanged?.Invoke(PartnerList);
+        }
+
+        private void OnNeutralChanged()
+        {
+            NeutralChanged?.Invoke(NeutralList);
         }
 
         private void OnBroadCastReceiverChanged()
