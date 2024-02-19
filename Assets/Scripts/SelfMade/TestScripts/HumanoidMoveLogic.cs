@@ -81,6 +81,9 @@ namespace TestField
         private int aimspeed = 1;
         private int sprintspeed = 2;
 
+        //
+        private bool RecoverComplete;
+
         private void Awake()
         {
             InitPosition = transform.position;
@@ -98,11 +101,17 @@ namespace TestField
         {
             InBattleLogic();
             Moving();
+
+            if (Target != null)
+            {
+                Debug.LogError(Target.transform.position);
+            }
         }
 
         private void InBattleLogic()
         {
-            ParameterUpdate();
+            EnterBattleParameterUpdate();
+            OutBattleParameterUpdate();
             if (InBattle)
             {
                 BattleStart();
@@ -130,11 +139,13 @@ namespace TestField
                     CurrentCoverSelected = coverUtility.FindNearestCover(gameObject, FreeCoverList);
                     Vector3 InitSafePoint = coverUtility.FindNearestCoverPoint(gameObject, Target, FreeCoverList,true,CurrentCoverSelected);
                     CCalcuRouteMove(InitSafePoint,sprintspeed,facetoforward);
+                    NiBuXuTiQianBian = true;
                     Debug.LogWarning("BattleInit");
                     FirstEnterBattle = false;
+                    RecoverComplete = false;
                 }
-
-                if (!IsMoving)
+                
+                if (!IsMoving && !FirstEnterBattle && !NiBuXuTiQianBian)
                 {
                     Facetoforworddir = 1;
                 }
@@ -201,7 +212,7 @@ namespace TestField
 
         #region Update每帧调用的检测,行动
         //每帧更新是否进入战斗状态
-        private void ParameterUpdate()
+        private void EnterBattleParameterUpdate()
         {
             TargetExpose = AC.TargetExposed;
             if (TargetExpose && !HasExcuted)
@@ -209,6 +220,25 @@ namespace TestField
                 InBattle = true;
                 StartPositionAdjust(true);
                 HasExcuted = true;
+            }
+        }
+
+        private void OutBattleParameterUpdate()
+        {
+            if (Target == null || BCIC.NeedBackToOrigin)
+            {
+                CurrentCoverSelected = null;
+                HasExcuted = false;
+                InBattle = false;
+                AC.CurrentAlertness = 0;
+                AC.TargetExposed = false;
+                Facetoforworddir = 0;
+                FirstEnterBattle = true;
+                NeedKeepDistance = false;
+                hasRotationed = false;
+                RecoverStart = true;
+                
+                
             }
         }
 
@@ -238,20 +268,15 @@ namespace TestField
         //用于目标脱离后的归位
         private void PositionRecover()
         {
-            if(Target ==null || BCIC.NeedBackToOrigin)
-            {
-                HasExcuted = false;
-                InBattle = false;
-                AC.CurrentAlertness = 0;
-                AC.TargetExposed = false;
-                Facetoforworddir = 0;
-                CCalcuRouteMove(InitPosition,sprintspeed, facetoforward);
-                RecoverStart = true;
-                hasRotationed = false;
-            }
-
             if (RecoverStart)
             {
+                if (!RecoverComplete)
+                {
+                    //RoutePoint.Clear();
+                    CCalcuRouteMove(InitPosition, sprintspeed, facetoforward);
+                    RecoverComplete = true;
+                }
+
                 foreach (GameObject OccupiedCover in OccupiedCoverList)
                 {
                     Identity ID = OccupiedCover.GetComponent<Identity>();
@@ -259,8 +284,10 @@ namespace TestField
                         ID.SetOccupiedUseage(false,null);
                 }
                 float DistanceToOrigin = Vector3.Distance(transform.position, InitPosition);
-                if(DistanceToOrigin < 1 &&DistanceToOrigin>=0)
-                    RecoverStart=false;
+                if(DistanceToOrigin < 1 && DistanceToOrigin >= 0)
+                {
+                    RecoverStart = false;
+                }
             }
 
             if (!IsMoving && !hasRotationed)
@@ -424,18 +451,21 @@ namespace TestField
         //使自身朝向目标
         private void FaceToTarget(GameObject Target)
         {
+
             if (Target != null && Facetoforworddir == 1)
             {
                 Vector3 TargetPosition = Target.transform.position;
                 TargetPosition.y = 0;
                 Vector3 SelfPosition = transform.position;
                 SelfPosition.y = 0;
+
                 // 计算目标朝向
                 Quaternion targetRotation = Quaternion.LookRotation((TargetPosition - SelfPosition).normalized);
 
                 // 使用Slerp插值来平滑地转向目标朝向
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
             }
+
         }
         #endregion
 
@@ -448,7 +478,7 @@ namespace TestField
 
             if (newbool)
             {
-                InvokeRepeating("PositionAdjust", 2.0f, ReScanDelay);
+                InvokeRepeating("PositionAdjust", 5.0f, ReScanDelay);
             }
         }
 

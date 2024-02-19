@@ -8,7 +8,6 @@ namespace TestField
 {
     public class AIMove : MonoBehaviour
     {
-        [HideInInspector]
         public List<Vector3> RoutePoint;
         private Vector3 Destination;
  
@@ -33,6 +32,9 @@ namespace TestField
         public bool PHasReachedPoint = true;
         private Seeker SEEKER;
 
+        //我急了
+        [HideInInspector]
+        public bool NiBuXuTiQianBian = true;
 
         private void Start()
         {
@@ -134,12 +136,26 @@ namespace TestField
                     {
                         RoutePoint.RemoveAt(1);
                     }
+
+                    NiBuXuTiQianBian = false;
                 }
             }
             else
             {
                 HasReachedPoint = true;
                 RoutePoint.Clear();
+
+                Vector3 TargetPosition = target.transform.position;
+                TargetPosition.y = 0;
+                Vector3 SelfPosition = transform.position;
+                SelfPosition.y = 0;
+
+                // 计算目标朝向
+                Quaternion targetRotation = Quaternion.LookRotation((TargetPosition - SelfPosition).normalized);
+
+                // 使用Slerp插值来平滑地转向目标朝向
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
+
             }
         }
 
