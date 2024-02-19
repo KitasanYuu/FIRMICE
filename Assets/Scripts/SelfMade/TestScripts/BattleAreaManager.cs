@@ -120,6 +120,7 @@ namespace TestField
             }
         }
 
+        //用于查找该片区域内的Partner标签物体
         private void PartnerSeeker()
         {
             Bounds boxBounds = new Bounds(transform.position + boxOffset, boxSize);
@@ -156,6 +157,7 @@ namespace TestField
             }
         }
 
+        //用于查找该片区域内的中立单位
         private void NeutralSeeker()
         {
             Bounds boxBounds = new Bounds(transform.position + boxOffset, boxSize);
@@ -192,6 +194,7 @@ namespace TestField
             }
         }
 
+        //搜索要向哪些目标设置目标信息
         private void SearchingReceiver()
         {
             Bounds boxBounds = new Bounds(transform.position + boxOffset, boxSize);

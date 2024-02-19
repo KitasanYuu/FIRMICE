@@ -10,6 +10,7 @@ namespace TestField
     public class BroadCasterInfoContainer : MonoBehaviour
     {
         // 定义事件委托
+        public Action<List<GameObject>> AttackTargetListChanged;
         public Action<GameObject> AlertTargetReceivedChanged;
         public Action<List<GameObject>> OtherReceiverChanged;
         public Action<List<GameObject>> HalfcoverChanged;
@@ -39,6 +40,7 @@ namespace TestField
 
         [ReadOnly] public AvatarController avatarController;
         [ReadOnly] public TPSShootController tpsShootController;
+        public List<GameObject> AttackTargetList = new List<GameObject>();
         public List<GameObject> PartnerList = new List<GameObject>();
         public List<GameObject> OtherReceivers = new List<GameObject>();
         public List<GameObject> CoverList = new List<GameObject>();
@@ -109,7 +111,7 @@ namespace TestField
                 OnAiming(_isAiming);
         }
 
-        public void TargetBoardCast(GameObject newTarget)
+        public void SetAlertTarget(GameObject newTarget)
         {
             // 如果新目标与当前目标不同，触发事件
             if (newTarget != TargetContainer)
@@ -133,6 +135,11 @@ namespace TestField
             }
         }
 
+        public void SetAttackTargetList(List<GameObject> newList)
+        {
+            AttackTargetList = newList;
+            OnAttackTargetChanged(newList);
+        }
 
         private void CombineLists()
         {
@@ -215,6 +222,11 @@ namespace TestField
         protected virtual void OnHalfCoverChanged(List<GameObject> newList)
         {
             HalfcoverChanged?.Invoke(newList);
+        }
+
+        protected virtual void OnAttackTargetChanged(List<GameObject> newList)
+        {
+            AttackTargetListChanged?.Invoke(newList);
         }
     }
 }

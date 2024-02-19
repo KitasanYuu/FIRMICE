@@ -8,7 +8,7 @@ namespace TestField
 {
     public class AIMove : MonoBehaviour
     {
-
+        [HideInInspector]
         public List<Vector3> RoutePoint;
         private Vector3 Destination;
  

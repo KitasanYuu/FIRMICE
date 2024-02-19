@@ -11,6 +11,7 @@ namespace TestField
     {
         [SerializeField, ReadOnly] private GameObject ObjectFound;
         [SerializeField, ReadOnly] private BattleAreaManager BAM;
+        [SerializeField, ReadOnly] private List<GameObject> AttackTargetList = new List<GameObject>();
         [SerializeField, ReadOnly] private List<GameObject> Partner = new List<GameObject>();
         [SerializeField, ReadOnly] private List<GameObject> Neutral = new List<GameObject>();
         [SerializeField, ReadOnly] private List<GameObject> BCReceiver = new List<GameObject>();
@@ -26,8 +27,6 @@ namespace TestField
         {
             BAM = GetComponent<BattleAreaManager>();
             EventSubscribe();
-
-
         }
 
 
@@ -37,6 +36,22 @@ namespace TestField
         {
 
         }
+
+        #region 信息预处理
+
+        private void AreaTargetUnion()
+        {
+            AttackTargetList.Clear();
+            if(Partner.Count > 0 )
+                AttackTargetList.AddRange(Partner);
+            if (Neutral.Count > 0)
+                AttackTargetList.AddRange(Neutral);
+            if(ObjectFound != null)
+                AttackTargetList.Add(ObjectFound);
+            SendAttackTargetList();
+        }
+
+        #endregion
 
         #region 信息接收
         private void HandleBroadCastReceiverChanged(List<GameObject> newReceiverList)
@@ -49,6 +64,7 @@ namespace TestField
         {
             ObjectFound = BAM.TargetFound;
             BroadCastReceiver = BAM.BroadCastReceiver;
+            AreaTargetUnion();
             // 在 TargetFound 变化时，向 BroadCastReceiver 中的具有 AlertLine 脚本的对象发送信息
             SendAlertToObjectWithAlertLine();
         }
@@ -56,12 +72,14 @@ namespace TestField
         private void OnPartnerChanged(List<GameObject> newList)
         {
             Partner = newList;
+            AreaTargetUnion();
             SendPartnerINFO();
         }
 
         private void OnNeutralChanged(List<GameObject> newList)
         {
             Neutral = newList;
+            AreaTargetUnion();
         }
 
         private void OnHalfCoverChanged(List<GameObject> newList)
@@ -134,7 +152,7 @@ namespace TestField
                 if (BCIC != null)
                 {
                     BCIC.NeedBackToOrigin = false;
-                    BCIC.TargetBoardCast(ObjectFound);
+                    BCIC.SetAlertTarget(ObjectFound);
                 }
             }
 
@@ -150,7 +168,7 @@ namespace TestField
                 if (BCIC != null)
                 {
                     BCIC.NeedBackToOrigin = true;
-                    BCIC.TargetBoardCast(null);
+                    BCIC.SetAlertTarget(null);
                 }
             }
         }
@@ -178,7 +196,20 @@ namespace TestField
                 if (BCIC != null)
                 {
                     // 直接调用 AlertLine 脚本中的 TargetBoardCast 方法，将 ObjectFound 传递给它
-                    BCIC.TargetBoardCast(ObjectFound);
+                    BCIC.SetAlertTarget(ObjectFound);
+                }
+            }
+        }
+
+        private void SendAttackTargetList()
+        {
+            foreach (GameObject receiverObject in SBroadCastReceiver)
+            {
+                BroadCasterInfoContainer BCIC = receiverObject.GetComponent<BroadCasterInfoContainer>();
+                if (BCIC != null)
+                {
+                    // 直接调用 AlertLine 脚本中的 TargetBoardCast 方法，将 ObjectFound 传递给它
+                    BCIC.SetAttackTargetList(AttackTargetList);
                 }
             }
         }

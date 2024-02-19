@@ -8,11 +8,13 @@ namespace TestField
 {
     public class HumanoidMoveLogic : AIMove
     {
+        [HorizontalLine("MoveSettings", 2, FixedColor.Gray)]
         public float NormalSpeed;
         public float SprintSpeed;
         public float AimSpeed;
         public float stoppingDistance;
 
+        [HorizontalLine("DifferentiatingSettings", 2, FixedColor.Gray)]
         [Tooltip("指定该AI的有效射程")]
         public float ValidShootRange;
         [Tooltip("用来指定物体在距离检测时发射的射线忽略对象层级，建议选择可能碰撞的AI层级")]
@@ -22,7 +24,7 @@ namespace TestField
         [Tooltip("决定了每隔多少时间重新寻找一次安全点位")]
         public float ReScanDelay = 5f;
 
-        [Tab("ParameterCheck")]
+        [Foldout("ParameterCheck")]
         [ReadOnly,SerializeField]
         private bool TargetExpose;
         [ReadOnly,SerializeField]

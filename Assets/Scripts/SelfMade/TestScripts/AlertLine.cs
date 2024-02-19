@@ -66,7 +66,7 @@ namespace TestField
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //申明外部脚本引用
         private TargetContainer targetcontainer;
-        private BroadCasterInfoContainer broadCasterinfocontainer;
+        private BroadCasterInfoContainer BCIC;
 
         //动态范围的参数
         private float _TRayLength;
@@ -107,7 +107,7 @@ namespace TestField
         private void Awake()
         {
             // 获取 BroadCasterInfoContainer 组件
-            broadCasterinfocontainer = GetComponent<BroadCasterInfoContainer>();
+            BCIC = GetComponent<BroadCasterInfoContainer>();
         }
 
         private void Start()
@@ -334,17 +334,17 @@ namespace TestField
         // 订阅事件
         private void EventSubscribe()
         {
-            broadCasterinfocontainer.AlertTargetReceivedChanged += OnTargetReceivedChanged;
-            broadCasterinfocontainer.TargetMovingStatusChanged += OnTargetMovingStatusChanged;
+            BCIC.AlertTargetReceivedChanged += OnTargetReceivedChanged;
+            BCIC.TargetMovingStatusChanged += OnTargetMovingStatusChanged;
         }
 
         // 在脚本销毁时取消订阅事件，以防止潜在的内存泄漏
         private void OnDestroy()
         {
-            if (broadCasterinfocontainer != null)
+            if (BCIC != null)
             {
-                broadCasterinfocontainer.AlertTargetReceivedChanged -= OnTargetReceivedChanged;
-                broadCasterinfocontainer.TargetMovingStatusChanged -= OnTargetMovingStatusChanged;
+                BCIC.AlertTargetReceivedChanged -= OnTargetReceivedChanged;
+                BCIC.TargetMovingStatusChanged -= OnTargetMovingStatusChanged;
             }
 
         }
