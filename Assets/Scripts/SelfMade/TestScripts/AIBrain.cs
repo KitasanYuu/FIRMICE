@@ -1,5 +1,3 @@
-using CustomInspector;
-using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,8 +5,11 @@ namespace TestField
 {
     public class AIBrain : MonoBehaviour
     {
+        public GameObject CurrentTarget;
         public List<GameObject> AttackTarget;
+        public Dictionary<string, float> directory = new Dictionary<string, float>();
 
+        private AIFunction aif = new AIFunction();
         private BroadCasterInfoContainer BCIC;
 
         void Start()
@@ -19,7 +20,8 @@ namespace TestField
 
         void Update()
         {
-
+            if(AttackTarget!= null)
+               CurrentTarget =  aif.CurrentSelectedAttackTarget(gameObject,AttackTarget);
         }
 
         private void OnAttackTargetListChanged(List<GameObject> newList)

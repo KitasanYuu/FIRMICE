@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace TestField
@@ -62,6 +63,40 @@ namespace TestField
             // 如果有碰撞，则返回 false，表示不是直线到目标
             return !hit;
         }
+
+        public GameObject CurrentSelectedAttackTarget(GameObject SelfObject, List<GameObject> AttackTargetList)
+        {
+            GameObject SelectTarget = null;
+            float maxDependValue = float.MaxValue; // 初始化最大 DependValue 值为最小可能值
+            CSVReader csvreader = new CSVReader();
+            csvreader.LoadCSV("Identity.csv");
+
+            foreach (GameObject Target in AttackTargetList)
+            {
+                Identity ID = Target.GetComponent<Identity>();
+                if (ID != null)
+                {
+                    string MasterID = ID.MasterID;
+                    var IDData = csvreader.GetDataByID("Identity", MasterID);
+                    if (IDData != null)
+                    {
+                        float CharaterPriority = (float)IDData["CharacterPriority"];
+                        float DistancetoSelf = Vector3.Distance(SelfObject.transform.position, Target.transform.position);
+                        float DependValue = DistancetoSelf / CharaterPriority;
+                        // 如果当前 DependValue 大于最大值，则更新最大值和选择目标
+                        if (DependValue < maxDependValue)
+                        {
+                            maxDependValue = DependValue;
+                            SelectTarget = Target;
+                            //Debug.LogWarning("Current Target is " + Target.name + "Distance is"+DistancetoSelf+"CharacterPriority"+CharaterPriority+ "DependValue is" + DependValue);
+                        }
+                    }
+                }
+            }
+
+            return SelectTarget;
+        }
+
     }
 
 }

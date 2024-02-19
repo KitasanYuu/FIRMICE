@@ -5,7 +5,7 @@ namespace TestField
 {
     public class Identity : MonoBehaviour
     {
-        [SerializeField, FixedValues("Player", "Partner", "Enemy", "Neutral", "TrainingTarget","TestPrototype","Cover")]
+        [SerializeField, FixedValues("Player", "Partner", "Ally","Enemy","Neutral", "TrainingTarget","TestPrototype","Cover")]
         private string MasterIdentity;
         [SerializeField, FixedValues("null","FullCover", "HalfCover"),ShowIf(nameof(CoverSerizes))]
         private string CoverType;

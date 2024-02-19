@@ -28,21 +28,21 @@ namespace TestField
 
         [Foldout("PartnerINFO")]
         [SerializeField]
-        [FixedValues("Player", "Partner", "Enemy", "Neutral", "TrainingTarget", "TestPrototype")]
+        [FixedValues("Player", "Partner", "Ally", "Enemy", "Neutral", "TrainingTarget", "TestPrototype")]
         private string PartnerMasterID;
         [SerializeField] private LayerMask PartnerLayer;
         [ReadOnly] public List<GameObject> PartnerList = new List<GameObject>();
 
         [Foldout("NeutralINFO")]
         [SerializeField]
-        [FixedValues("Player", "Partner", "Enemy", "Neutral", "TrainingTarget", "TestPrototype")]
+        [FixedValues("Player", "Partner", "Ally", "Enemy", "Neutral", "TrainingTarget", "TestPrototype")]
         private string NeutralMasterID;
         [SerializeField] private LayerMask NeutralLayer;
         [ReadOnly] public List<GameObject> NeutralList = new List<GameObject>();
 
         [Foldout("AIReceiverINFO")]
         [SerializeField]
-        [FixedValues("Player", "Partner", "Enemy", "Neutral", "TrainingTarget", "TestPrototype")]
+        [FixedValues("Player", "Partner", "Ally", "Enemy", "Neutral", "TrainingTarget", "TestPrototype")]
         private string ReceiverMasterID;
         [SerializeField] private LayerMask ReceiverLayer;
         [ReadOnly] public List<GameObject> BroadCastReceiver = new List<GameObject>();
