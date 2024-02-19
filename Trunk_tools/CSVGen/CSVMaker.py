@@ -4,7 +4,7 @@ import os
 import time
 
 # 允许的Unity数据类型列表
-UNITY_DATATYPES = ["int", "float", "string", "bool", "Vector2", "Vector3", "Quaternion", "Color"]
+UNITY_DATATYPES = ["int", "float", "string", "bool", "Vector2", "Vector3", "Quaternion", "Color",'None']
 
 # 读取Excel文件
 def read_excel(file_path):
@@ -15,13 +15,13 @@ def read_excel(file_path):
     variable_datatypes = []
 
     # 获取变量名列表和参数类型列表（跳过第一个单元格）
-    variable_names = [cell.value for cell in ws[3][1:]]
-    variable_datatypes = [str(cell.value).lower() for cell in ws[2][1:]]  # 将数据类型转换为小写形式
+    variable_names = [cell.value for cell in ws[4][1:]]
+    variable_datatypes = [str(cell.value).lower() for cell in ws[3][1:]]  # 将数据类型转换为小写形式
 
     # 将数据类型转换为大写形式
     variable_datatypes = [datatype.capitalize() for datatype in variable_datatypes]
 
-    # 检查第二行的数据类型是否正确填写
+    # 检查第三行的数据类型是否正确填写
     invalid_datatypes = {}
     for idx, datatype in enumerate(variable_datatypes):
         if datatype.lower() not in [unity_type.lower() for unity_type in UNITY_DATATYPES]:
@@ -30,10 +30,8 @@ def read_excel(file_path):
     if invalid_datatypes:
         raise ValueError("Invalid datatypes specified in Excel sheet: {}".format(invalid_datatypes))
 
-
-
-    # 遍历每一行（从第五行开始是实际数据）
-    for row_idx in range(5, ws.max_row + 1):
+    # 遍历每一行（从第六行开始是实际数据）
+    for row_idx in range(6, ws.max_row + 1):
         weapon_info = {}
 
         # 遍历每一列
