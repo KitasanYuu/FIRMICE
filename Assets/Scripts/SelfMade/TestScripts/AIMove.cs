@@ -62,8 +62,8 @@ namespace TestField
             }
             else if (Count == 0)
             {
-                //Debug.LogError("BMP:The List Count is 0!");
                 return;
+                //Debug.LogError("BMP:The List Count is 0!");
             }
             else
             {
@@ -144,18 +144,6 @@ namespace TestField
             {
                 HasReachedPoint = true;
                 RoutePoint.Clear();
-
-                Vector3 TargetPosition = target.transform.position;
-                TargetPosition.y = 0;
-                Vector3 SelfPosition = transform.position;
-                SelfPosition.y = 0;
-
-                // 计算目标朝向
-                Quaternion targetRotation = Quaternion.LookRotation((TargetPosition - SelfPosition).normalized);
-
-                // 使用Slerp插值来平滑地转向目标朝向
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
-
             }
         }
 
