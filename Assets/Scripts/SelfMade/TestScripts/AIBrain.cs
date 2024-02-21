@@ -68,8 +68,11 @@ namespace TestField
 
         private void OnDestroy()
         {
-            BCIC.AlertTargetReceivedChanged -= OnAlertTargetChanged;
-            BCIC.AttackTargetListChanged -= OnAttackTargetListChanged;
+            if (BCIC != null)
+            {
+                BCIC.AlertTargetReceivedChanged -= OnAlertTargetChanged;
+                BCIC.AttackTargetListChanged -= OnAttackTargetListChanged;
+            }
         }
         #endregion
     }
