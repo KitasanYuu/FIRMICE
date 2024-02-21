@@ -386,11 +386,15 @@ namespace TestField
 
         private void DistanceKeeperRecursive(GameObject Target, float currentDistance, LayerMask ignoreLayer)
         {
+            // 创建一个新的位置向量，忽略Y轴
+            Vector3 selfPositionXZ = new Vector3(transform.position.x, 0f, transform.position.z);
+
             // 获取当前物体的位置
             Vector3 SelfPosition = transform.position;
+            Vector3 TargetPosition = Target.transform.position;
             Vector3 origin = Target.transform.position;
             // 获取指向当前物体的方向（从B指向A）
-            Vector3 direction = SelfPosition - Target.transform.position;
+            Vector3 direction = SelfPosition - TargetPosition;
 
             origin.y += 0.1f;
 
@@ -416,6 +420,12 @@ namespace TestField
 
             // 射线不再击中物体的情况下，获取射线的终点
             Vector3 endPoint = ray.GetPoint(currentDistance);
+
+            //Debug.Log(gameObject.name + " " + Vector3.Distance(selfPositionXZ, endPoint));
+
+            // 如果目标物体在XZ平面上与当前物体的距离小于阈值，直接返回，不再执行后续逻辑
+            if (Vector3.Distance(selfPositionXZ, endPoint) <= 0.6f)
+                return;
 
             // 在这里处理不再击中物体的情况，可以根据需要返回 endPoint 或执行其他逻辑
             NCalcuRouteMove(endPoint, aimspeed, facetotarget, Target);
