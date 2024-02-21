@@ -13,7 +13,7 @@ namespace TestField
         [SerializeField] private string AreaID = "SearchArea";
         [Space2(10)]
         [Header("Area Size")]
-        [SerializeField] private Vector3 SafeZone = new Vector3 (1f, 1f, 1f);
+        [SerializeField] private Vector3 SafeZone = new Vector3(1f, 1f, 1f);
         [SerializeField] private Vector3 boxSize = new Vector3(1f, 1f, 1f);
 
         // 偏移量
@@ -22,8 +22,8 @@ namespace TestField
         [Tab("SearchingActive")]
         [Foldout("TargetINFO")]
         [ReadOnly] public GameObject TargetFound;
-        [SerializeField]private LayerMask detectionLayer;
-        [Tag,SerializeField]private string detectionTag = "Player";
+        [SerializeField] private LayerMask detectionLayer;
+        [Tag, SerializeField] private string detectionTag = "Player";
 
 
         [Foldout("PartnerINFO")]
@@ -32,6 +32,8 @@ namespace TestField
         private string PartnerMasterID;
         [SerializeField] private LayerMask PartnerLayer;
         [ReadOnly] public List<GameObject> PartnerList = new List<GameObject>();
+        private HashSet<GameObject> lastPartnerSet = new HashSet<GameObject>();
+
 
         [Foldout("NeutralINFO")]
         [SerializeField]
@@ -39,6 +41,7 @@ namespace TestField
         private string NeutralMasterID;
         [SerializeField] private LayerMask NeutralLayer;
         [ReadOnly] public List<GameObject> NeutralList = new List<GameObject>();
+        private HashSet<GameObject> lastNeutralSet = new HashSet<GameObject>();
 
         [Foldout("AIReceiverINFO")]
         [SerializeField]
@@ -73,7 +76,7 @@ namespace TestField
 
         private void OnValidate()
         {
-            SafeZone = boxSize - new Vector3(2f,2f, 2f);
+            SafeZone = boxSize - new Vector3(2f, 2f, 2f);
         }
 
         void Update()
@@ -120,7 +123,6 @@ namespace TestField
             }
         }
 
-        //用于查找该片区域内的Partner标签物体
         private void PartnerSeeker()
         {
             Bounds boxBounds = new Bounds(transform.position + boxOffset, boxSize);
@@ -129,14 +131,12 @@ namespace TestField
 
             PartnerList.Clear();
 
-            // 使用 HashSet 来确保每个物体只会被添加一次
-            HashSet<GameObject> uniqueObjects = new HashSet<GameObject>();
+            HashSet<GameObject> currentPartnerSet = new HashSet<GameObject>();
 
             foreach (Collider collider in colliders)
             {
                 Identity identity = collider.GetComponent<Identity>();
 
-                // 如果当前collider没有Identity脚本，则查找其父级
                 if (identity == null)
                 {
                     Transform parent = collider.transform.parent;
@@ -148,13 +148,20 @@ namespace TestField
                     }
                 }
 
-                // 添加带有Identity脚本的物体到BroadCastReceiver，确保每个物体只会被添加一次
-                if (identity != null && identity.MasterID == PartnerMasterID && uniqueObjects.Add(identity.gameObject))
+                if (identity != null && identity.MasterID == PartnerMasterID && currentPartnerSet.Add(identity.gameObject))
                 {
                     PartnerList.Add(identity.gameObject);
-                    OnPartnerChanged();
                 }
             }
+
+            // 使用SetComparison来比较两个HashSet是否相等
+            if (!currentPartnerSet.SetEquals(lastPartnerSet))
+            {
+                OnPartnerChanged();
+            }
+
+            //最后，更新lastPartnerSet
+            lastPartnerSet = currentPartnerSet;
         }
 
         //用于查找该片区域内的中立单位
@@ -167,7 +174,7 @@ namespace TestField
             NeutralList.Clear();
 
             // 使用 HashSet 来确保每个物体只会被添加一次
-            HashSet<GameObject> uniqueObjects = new HashSet<GameObject>();
+            HashSet<GameObject> currentNeutralSet = new HashSet<GameObject>();
 
             foreach (Collider collider in colliders)
             {
@@ -186,12 +193,19 @@ namespace TestField
                 }
 
                 // 添加带有Identity脚本的物体到BroadCastReceiver，确保每个物体只会被添加一次
-                if (identity != null && identity.MasterID == NeutralMasterID && uniqueObjects.Add(identity.gameObject))
+                if (identity != null && identity.MasterID == NeutralMasterID && currentNeutralSet.Add(identity.gameObject))
                 {
                     NeutralList.Add(identity.gameObject);
-                    OnNeutralChanged();
                 }
             }
+
+            // 使用SetComparison来比较两个HashSet是否相等
+            if (!currentNeutralSet.SetEquals(lastPartnerSet))
+            {
+                OnNeutralChanged();
+            }
+
+            lastNeutralSet = currentNeutralSet;
         }
 
         //搜索要向哪些目标设置目标信息
@@ -301,14 +315,14 @@ namespace TestField
                 }
 
                 // 添加带有Identity脚本的物体到BroadCastReceiver，确保每个物体只会被添加一次
-                if (identity != null && identity.MasterID == CoverIdentity&& uniqueObjects.Add(identity.gameObject))
+                if (identity != null && identity.MasterID == CoverIdentity && uniqueObjects.Add(identity.gameObject))
                 {
-                    if(identity.Covertype == "HalfCover")
+                    if (identity.Covertype == "HalfCover")
                     {
                         HalfCover.Add(identity.gameObject);
                         OnHalfCoverChanged();
                     }
-                    else if(identity.Covertype == "FullCover")
+                    else if (identity.Covertype == "FullCover")
                     {
                         FullCover.Add(identity.gameObject);
                         OnFullCoverChanged();
