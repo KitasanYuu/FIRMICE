@@ -108,10 +108,10 @@ namespace TestField
             InBattleLogic();
             Moving();
 
-            if (Target != null)
-            {
-                Debug.LogError(Target.transform.position);
-            }
+            //if (Target != null)
+            //{
+            //    Debug.LogError(Target.transform.position);
+            //}
         }
 
         private void InBattleLogic()

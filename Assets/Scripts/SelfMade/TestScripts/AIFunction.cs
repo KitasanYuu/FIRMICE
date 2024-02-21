@@ -6,7 +6,7 @@ namespace TestField
     public class AIFunction
     {
         //用于判断目标是否在自身有效射程内，传入目标GameObject
-        public bool ValidShootPosition(GameObject SelfObject ,GameObject Target,float ValidShootRange)
+        public bool ValidShootPosition(GameObject SelfObject, GameObject Target, float ValidShootRange)
         {
             bool ValidPosition = false;
             if (Target != null)
@@ -31,7 +31,7 @@ namespace TestField
         }
 
         //用于判定是否直接面对Target
-        public bool IsDirectToTarget(GameObject selfObject,GameObject Target, LayerMask ignoreLayer)
+        public bool IsDirectToTarget(GameObject selfObject, GameObject Target, LayerMask ignoreLayer)
         {
             BroadCasterInfoContainer BCIC = selfObject.GetComponent<BroadCasterInfoContainer>();
             if (BCIC == null || Target == null)
@@ -66,35 +66,42 @@ namespace TestField
 
         public GameObject CurrentSelectedAttackTarget(GameObject SelfObject, List<GameObject> AttackTargetList)
         {
-            GameObject SelectTarget = null;
-            float maxDependValue = float.MaxValue; // 初始化最大 DependValue 值为最小可能值
-            CSVReader csvreader = new CSVReader();
-            csvreader.LoadCSV("Identity.csv");
-
-            foreach (GameObject Target in AttackTargetList)
+            if (AttackTargetList.Count > 0)
             {
-                Identity ID = Target.GetComponent<Identity>();
-                if (ID != null)
+                GameObject SelectTarget = null;
+                float maxDependValue = float.MaxValue; // 初始化最大 DependValue 值为最小可能值
+                CSVReader csvreader = new CSVReader();
+                csvreader.LoadCSV("Identity.csv");
+
+                foreach (GameObject Target in AttackTargetList)
                 {
-                    string MasterID = ID.MasterID;
-                    var IDData = csvreader.GetDataByID("Identity", MasterID);
-                    if (IDData != null)
+                    Identity ID = Target.GetComponent<Identity>();
+                    if (ID != null)
                     {
-                        float CharaterPriority = (float)IDData["CharacterPriority"];
-                        float DistancetoSelf = Vector3.Distance(SelfObject.transform.position, Target.transform.position);
-                        float DependValue = DistancetoSelf / CharaterPriority;
-                        // 如果当前 DependValue 大于最大值，则更新最大值和选择目标
-                        if (DependValue < maxDependValue)
+                        string MasterID = ID.MasterID;
+                        var IDData = csvreader.GetDataByID("Identity", MasterID);
+                        if (IDData != null)
                         {
-                            maxDependValue = DependValue;
-                            SelectTarget = Target;
-                            //Debug.LogWarning("Current Target is " + Target.name + "Distance is"+DistancetoSelf+"CharacterPriority"+CharaterPriority+ "DependValue is" + DependValue);
+                            float CharaterPriority = (float)IDData["CharacterPriority"];
+                            float DistancetoSelf = Vector3.Distance(SelfObject.transform.position, Target.transform.position);
+                            float DependValue = DistancetoSelf / CharaterPriority;
+                            // 如果当前 DependValue 大于最大值，则更新最大值和选择目标
+                            if (DependValue < maxDependValue)
+                            {
+                                maxDependValue = DependValue;
+                                SelectTarget = Target;
+                                //Debug.LogWarning("Current Target is " + Target.name + "Distance is"+DistancetoSelf+"CharacterPriority"+CharaterPriority+ "DependValue is" + DependValue);
+                            }
                         }
                     }
                 }
+                return SelectTarget;
             }
-
-            return SelectTarget;
+            else
+            {
+                Debug.LogWarning("AIF:CurrentSelectedAttackTarget Found AttackTargetList Number:" + AttackTargetList.Count);
+                return null;
+            }
         }
 
     }

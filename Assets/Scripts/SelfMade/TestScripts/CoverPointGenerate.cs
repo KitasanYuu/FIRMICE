@@ -1,3 +1,4 @@
+using CustomInspector;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,6 +14,9 @@ public class CoverPointGenerate : MonoBehaviour
     public List<Vector3> generatedPoints = new List<Vector3>();
     public List<Vector3> CoverCornorList = new List<Vector3>();
     public List<Vector3> desiredPoints = new List<Vector3>();
+
+    [Space2(20)]
+    public bool GizmosDebug = false;
 
     void OnValidate()
     {
@@ -147,8 +151,6 @@ public class CoverPointGenerate : MonoBehaviour
     }
 
 
-
-
     void AddUniquePoint(Vector3 point)
     {
         if (!generatedPoints.Contains(point))
@@ -165,25 +167,33 @@ public class CoverPointGenerate : MonoBehaviour
         }
     }
 
+    public void DebugGizmosSet(bool newboolean)
+    {
+        GizmosDebug = newboolean;
+    }
+
 #if UNITY_EDITOR
 
     void OnDrawGizmos()
     {
-        foreach (Vector3 point in generatedPoints)
+        if (GizmosDebug)
         {
-            Gizmos.color = Color.gray;
-            Gizmos.DrawSphere(point, 0.1f);
-        }
-        foreach (Vector3 point in CoverCornorList)
-        {
-            Gizmos.color = Color.yellow; 
-            Gizmos.DrawSphere(point, 0.1f);
-        }
+            foreach (Vector3 point in generatedPoints)
+            {
+                Gizmos.color = Color.gray;
+                Gizmos.DrawSphere(point, 0.1f);
+            }
+            foreach (Vector3 point in CoverCornorList)
+            {
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawSphere(point, 0.1f);
+            }
 
-        foreach (Vector3 point in desiredPoints)
-        {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawSphere(point, 0.1f);
+            foreach (Vector3 point in desiredPoints)
+            {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawSphere(point, 0.1f);
+            }
         }
     }
 #endif

@@ -49,8 +49,6 @@ namespace TestField
         public List<GameObject> OccupiedCoverList = new List<GameObject>();
         public List<GameObject> FreeCoverList = new List<GameObject>();
 
-        private bool shouldCombineLists = false;
-
         void Start()
         {
             // 在 Start 方法中进行其他初始化操作
@@ -148,8 +146,6 @@ namespace TestField
             uniqueSet.UnionWith(FullCoverList);
             CoverList = new List<GameObject>(uniqueSet);
 
-            // 合并完成后重置 shouldCombineLists 为 false
-            shouldCombineLists = false;
         }
 
         public void EnemeyPoolChanged(List<GameObject> newTargetPool)
