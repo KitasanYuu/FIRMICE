@@ -87,9 +87,12 @@ namespace Partner
         #region 移动调用的方法
         private void Move()
         {
-            MoveCalcu();
-            MovingStart();
-            MovingAnimProtect();
+            if(targetToFollow!= null)
+            {
+                MoveCalcu();
+                MovingStart();
+                MovingAnimProtect();
+            }
         }
 
         //用来判定启动协程计时执行Move的函数
