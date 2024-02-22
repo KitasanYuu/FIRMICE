@@ -52,7 +52,6 @@ namespace Partner
 
         //以下是Astar算法所用的参数
         private Seeker seeker;
-        public List<Vector3> aimPoint;
 
         //这些是之前用NavMesh导航时所用的参数，现在使用Astar算法后弃用
         //private NavMeshAgent navMeshAgent;
@@ -130,7 +129,6 @@ namespace Partner
             {
                 currentSpeed = 0;
                 isInsideSector = true;
-                PHasReachedPoint = true;
             }
 
             CSpeed = currentSpeed;
@@ -234,19 +232,19 @@ namespace Partner
                     if (canGeneratePoint && !isInsideSector)
                     {
                         //Debug.Log("Allow to Spwan Point");
-                        if (PHasReachedPoint)
+                        if (HasReachedPoint)
                         {
                             // 只有在到达当前目标点后，才更新下一个目标点
                             UpdateTargetPoint();
                             //Debug.LogError("PointSpwan" + currentTargetPoint);
-                            PHasReachedPoint = false; // 重置标记
+                            HasReachedPoint = false; // 重置标记
                         }
                         canGeneratePoint = false;
                     }
                 }
                 else if (!hasMoved)
                 {
-                    if (!isInsideSector)
+                    if (!IsInSector(transform.position))
                     {
                         isInsideSector = false;
                     }

@@ -28,8 +28,6 @@ namespace TestField
         [HideInInspector]
         public bool HasReachedPoint = true;
         //跟随用移动判定
-        [HideInInspector]
-        public bool PHasReachedPoint = true;
         private Seeker SEEKER;
 
         //我急了
@@ -225,7 +223,7 @@ namespace TestField
             }
             else
             {
-                PHasReachedPoint = true;
+                HasReachedPoint = true;
                 RoutePoint.Clear();
             }
         }
@@ -258,6 +256,11 @@ namespace TestField
             SEEKER.StartPath(transform.position, TargetPoint);
 
             SEEKER.pathCallback += OnPathComplete; //在每次回调成功后把新路径点加在数组后面
+
+            if(RoutePoint.Count > 0)
+            {
+                HasReachedPoint = false;
+            }
         }
 
         public void OnPathComplete(Path path)

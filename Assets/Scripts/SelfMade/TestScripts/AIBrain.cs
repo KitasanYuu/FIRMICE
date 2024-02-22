@@ -8,7 +8,6 @@ namespace TestField
         public GameObject CurrentTarget;
         public List<GameObject> AttackTarget;
         public bool focusonplayer;
-        public Dictionary<string, float> directory = new Dictionary<string, float>();
 
         private GameObject AlertTarget;
 
