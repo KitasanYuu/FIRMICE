@@ -59,6 +59,7 @@ namespace TestField
 
         //声明引用脚本组件
         private AlertCore AC;
+        private AIBrain AIB;
         private BroadCasterInfoContainer BCIC;
         private Seeker seeker;
         private CoverUtility coverUtility = new CoverUtility();
@@ -512,6 +513,7 @@ namespace TestField
         {
             BCIC = GetComponent<BroadCasterInfoContainer>();
             AC = GetComponent<AlertCore>();
+            AIB = GetComponent<AIBrain>();
             seeker = GetComponent<Seeker>();
             SetSeekerComponent(seeker);
             SetMoveBasicParameter(NormalSpeed, AimSpeed, SprintSpeed, stoppingDistance);
@@ -521,7 +523,7 @@ namespace TestField
         {
             BCIC.FullcoverChanged += OnFullCoverChanged;
             BCIC.HalfcoverChanged += OnHalfCoverChanged;
-            BCIC.AlertTargetReceivedChanged += TargetReceived;
+            AIB.AttackTargetChanged += TargetReceived;
             BCIC.OccupiedcoverChanged += OnOccupiedCoverChanged;
             BCIC.FreecoverChanged += OnFreeCoverChanged;
         }
@@ -531,7 +533,7 @@ namespace TestField
             {
                 BCIC.FullcoverChanged -= OnFullCoverChanged;
                 BCIC.HalfcoverChanged -= OnHalfCoverChanged;
-                BCIC.AlertTargetReceivedChanged -= TargetReceived;
+                AIB.AttackTargetChanged -= TargetReceived;
                 BCIC.OccupiedcoverChanged -= OnOccupiedCoverChanged;
                 BCIC.FreecoverChanged -= OnFreeCoverChanged;
             }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ namespace TestField
     public class AIBrain : MonoBehaviour
     {
         public GameObject CurrentTarget;
+        private GameObject PreviousTarget;
         public List<GameObject> AttackTarget;
         public bool focusonplayer;
 
@@ -13,6 +15,9 @@ namespace TestField
 
         private AIFunction aif = new AIFunction();
         private BroadCasterInfoContainer BCIC;
+        private AlertCore AC;
+
+        public Action<GameObject> AttackTargetChanged;
 
         void Start()
         {
@@ -35,8 +40,14 @@ namespace TestField
             else
             {
                 CurrentTarget = aif.CurrentSelectedAttackTarget(gameObject, AttackTarget);
+                if(CurrentTarget != PreviousTarget)
+                {
+                    OnAttackTargetChanged(CurrentTarget);
+                    PreviousTarget = CurrentTarget;
+
+                    Debug.Log(CurrentTarget);
+                }
             }
-            Debug.Log(CurrentTarget);
         }
 
         #region 接收广播值
@@ -53,10 +64,20 @@ namespace TestField
 
         #endregion
 
+        #region 广播
+
+        protected virtual void OnAttackTargetChanged(GameObject TargetObject)
+        {
+            AttackTargetChanged?.Invoke(TargetObject);
+        }
+
+        #endregion
+
         #region 组件初始化&订阅管理
         private void ComponentInit()
         {
             BCIC = GetComponent<BroadCasterInfoContainer>();
+            AC = GetComponent<AlertCore>();
         }
 
         private void EventSubscribe()
