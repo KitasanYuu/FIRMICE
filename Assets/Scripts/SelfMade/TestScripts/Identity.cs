@@ -7,6 +7,8 @@ namespace TestField
     {
         [SerializeField, FixedValues("Player", "Partner", "Ally","Enemy","Neutral", "TrainingTarget","TestPrototype","Cover")]
         private string MasterIdentity;
+        [ShowIf(nameof(CidShow))]
+        public string Cid;
         [SerializeField, FixedValues("null","FullCover", "HalfCover"),ShowIf(nameof(CoverSerizes))]
         private string CoverType;
         [ReadOnly,ShowIf(nameof(CoverSerizes))]
@@ -14,6 +16,7 @@ namespace TestField
         [ReadOnly,ShowIf(nameof(CoverSerizes))]
         public GameObject Occupier;
 
+        public bool CidShow() => MasterIdentity != "Cover";
         public bool CoverSerizes() => MasterIdentity == "Cover";
 
         [HideInInspector]
