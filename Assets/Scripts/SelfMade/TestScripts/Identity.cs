@@ -5,8 +5,10 @@ namespace TestField
 {
     public class Identity : MonoBehaviour
     {
-        [SerializeField, FixedValues("Player", "Partner", "Ally","Enemy","Neutral", "TrainingTarget","TestPrototype","Cover")]
+        [SerializeField, FixedValues("Player", "Partner", "Ally","Enemy","Neutral", "TrainingTarget","TestPrototype","Cover","Custom")]
         private string MasterIdentity;
+        [SerializeField,ShowIf(nameof(ShowCustomOps))]
+        private string CustomMasterIdentity;
         [ShowIf(nameof(CidShow))]
         public string Cid;
         [SerializeField, FixedValues("null","FullCover", "HalfCover"),ShowIf(nameof(CoverSerizes))]
@@ -16,6 +18,7 @@ namespace TestField
         [ReadOnly,ShowIf(nameof(CoverSerizes))]
         public GameObject Occupier;
 
+        public bool ShowCustomOps() => MasterIdentity == "Custom";
         public bool CidShow() => MasterIdentity != "Cover";
         public bool CoverSerizes() => MasterIdentity == "Cover";
 
@@ -28,14 +31,30 @@ namespace TestField
         // Start is called before the first frame update
         void Start()
         {
-            MasterID = MasterIdentity;
+            if(ShowCustomOps())
+            {
+                MasterID = CustomMasterIdentity;
+            }
+            else
+            {
+                MasterID = MasterIdentity;
+            }
+
             Covertype = CoverType;
         }
 
         // Update is called once per frame
         void Update()
         {
-            MasterID = MasterIdentity;
+            if (ShowCustomOps())
+            {
+                MasterID = CustomMasterIdentity;
+            }
+            else
+            {
+                MasterID = MasterIdentity;
+            }
+
             Covertype = CoverType;
             CoverTypeUpdate();
             if (OccupiedInit)
@@ -60,6 +79,13 @@ namespace TestField
             {
                 CoverType = null;
             }
+        }
+
+        //提供方法从外部修改MasterID
+        public void SetMasterID(string FixedMasterID)
+        {
+            MasterIdentity = "Custom";
+            CustomMasterIdentity = FixedMasterID;
         }
     }
 }
