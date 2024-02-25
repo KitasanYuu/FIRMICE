@@ -60,6 +60,7 @@ namespace BattleShoot
         private void Update()
         {
             AIM();
+            CanIFire();
         }
 
         private void AssignAnimationIDs()
@@ -148,6 +149,45 @@ namespace BattleShoot
             else
             {
                 Debug.LogError("Raycast origin is not set. Please assign a GameObject to the 'raycastOrigin' field.");
+            }
+        }
+
+        private void CanIFire()
+        {
+            if (raycastOrigin != null)
+            {
+                if (Target != null)
+                {
+                    // 创建一个射线，从源到目标
+                    Ray ray = new Ray(raycastOrigin.transform.position, (Target.transform.position - raycastOrigin.transform.position).normalized);
+
+                    // 设定射线的最大长度为源和目标之间的距离
+                    float maxDistance = Vector3.Distance(raycastOrigin.transform.position, Target.transform.position);
+
+                    RaycastHit hitInfo;
+                    if (Physics.Raycast(ray, out hitInfo, maxDistance))
+                    {
+                        // 判断击中的目标是否就是预期的Target 或者其父物体
+                        Transform currentTransform = hitInfo.transform;
+                        while (currentTransform != null)
+                        {
+                            if (currentTransform == Target.transform)
+                            {
+                                Fire = true;
+                                Debug.Log("Can Fire");
+                                return;
+                            }
+                            currentTransform = currentTransform.parent;
+                        }
+                        Fire = false;
+                        Debug.Log("Cannot Fire");
+                    }
+                    else
+                    {
+                        Fire = false;
+                        Debug.Log("Cannot Fire");
+                    }
+                }
             }
         }
 
