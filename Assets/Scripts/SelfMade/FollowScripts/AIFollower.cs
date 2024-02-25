@@ -324,13 +324,10 @@ namespace Partner
         private void RetakeTarget()
         {
             ObjectSeeker objectseeker = GetComponent<ObjectSeeker>();
-            if (objectseeker != null)
+            if (objectseeker == null)
             {
-                Vector3 DetectCenter = Vector3.zero;
-                Vector3 DetectRange = new Vector3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity);
                 objectseeker = gameObject.AddComponent<ObjectSeeker>();
-                objectseeker.DetecCenter = DetectCenter;
-                objectseeker.DetecRange = DetectRange;
+                objectseeker.UseGlobalSearch = true;
                 objectseeker.targetTag = "Player";
                 objectseeker.targetLayer = LayerMask.GetMask("Player");
             }
