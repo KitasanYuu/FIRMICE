@@ -195,7 +195,7 @@ if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
     # 构建输入文件夹的相对路径
-    input_folder_name = os.path.normpath(os.path.join(script_dir, '../'))
+    input_folder_name = os.path.normpath(os.path.join(script_dir, '../Table'))
 
     # 构建输出文件夹的相对路径
     output_folder_name = os.path.normpath(os.path.join(script_dir, '../../Assets/Data/Table'))

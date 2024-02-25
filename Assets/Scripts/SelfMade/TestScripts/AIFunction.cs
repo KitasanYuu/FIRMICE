@@ -104,23 +104,6 @@ namespace TestField
             }
         }
 
-        public void GainSelfMoveScriptType(GameObject SelfObject)
-        {
-            Identity ID = SelfObject.GetComponent<Identity>();
-            if(ID != null)
-            {
-                string cid = ID.Cid;
-                if(cid != null)
-                {
-
-                }
-                else
-                {
-                    Debug.LogError("AIFGainSelfMoveScriptType:" + SelfObject.name + "has no CID!");
-                }
-            }
-                
-        }
 
     }
 
