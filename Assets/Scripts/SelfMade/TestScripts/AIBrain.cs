@@ -39,13 +39,14 @@ namespace TestField
             else
             {
                 CurrentTarget = aif.CurrentSelectedAttackTarget(gameObject, AttackTarget);
-                if(CurrentTarget != PreviousTarget)
-                {
-                    OnAttackTargetChanged(CurrentTarget);
-                    PreviousTarget = CurrentTarget;
+            }
 
-                    Debug.Log(CurrentTarget);
-                }
+            if (CurrentTarget != PreviousTarget)
+            {
+                OnAttackTargetChanged(CurrentTarget);
+                PreviousTarget = CurrentTarget;
+
+                Debug.Log(CurrentTarget);
             }
         }
 

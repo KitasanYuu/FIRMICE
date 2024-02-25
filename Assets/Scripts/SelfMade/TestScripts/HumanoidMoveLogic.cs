@@ -379,6 +379,7 @@ namespace TestField
         //用来在与目标之间没有掩体时调用，控制自身与目标的距离保持在预设距离内
         private void DistanceKeeper(GameObject Target)
         {
+            ToTargetDistance = Vector3.Distance(TargetPosition, transform.position);
             if (Target != null && !isDistanceKeeperRecursing && !IsMoving && (NeedKeepDistance || NoCoverNear))
             {
                 DistanceKeeperRecursive(Target, KeepDistanceToTarget, RayIgnoreLayer);
