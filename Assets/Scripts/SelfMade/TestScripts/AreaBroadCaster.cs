@@ -42,11 +42,12 @@ namespace TestField
         private void AreaTargetUnion()
         {
             AttackTargetList.Clear();
-            if(Partner.Count > 0 )
+
+            if (Partner.Count > 0)
                 AttackTargetList.AddRange(Partner);
             if (Neutral.Count > 0)
                 AttackTargetList.AddRange(Neutral);
-            if(ObjectFound != null)
+            if (ObjectFound != null)
                 AttackTargetList.Add(ObjectFound);
             SendAttackTargetList();
         }

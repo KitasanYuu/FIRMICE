@@ -200,7 +200,7 @@ namespace TestField
             }
 
             // 使用SetComparison来比较两个HashSet是否相等
-            if (!currentNeutralSet.SetEquals(lastPartnerSet))
+            if (!currentNeutralSet.SetEquals(lastNeutralSet))
             {
                 OnNeutralChanged();
             }

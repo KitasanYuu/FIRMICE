@@ -27,8 +27,7 @@ namespace TestField
 
         void Update()
         {
-            if(Input.GetKeyDown(KeyCode.R))
-               TargetSelect();
+              TargetSelect();
         }
 
         private void TargetSelect()
