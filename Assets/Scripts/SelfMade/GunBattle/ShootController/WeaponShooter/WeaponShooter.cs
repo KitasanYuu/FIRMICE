@@ -5,6 +5,7 @@ using BattleShoot;
 using CustomInspector;
 using BattleHealth;
 using System.Collections;
+using TestField;
 
 public class WeaponShooter : MonoBehaviour
 {
@@ -57,12 +58,15 @@ public class WeaponShooter : MonoBehaviour
     private bool Tpsshootcontroller;
     private bool shootcontroller;
 
+    private GameObject BulletContainer;
+
     [HideInInspector]
     public Vector3 PredictedAimPoint;
 
     // Start is called before the first frame update
     void Start()
     {
+        ContainerInit();
         ParameterInit();
         ComponemetInit();
         SRRSelecting();
@@ -134,7 +138,7 @@ public class WeaponShooter : MonoBehaviour
                                 CurrentBulletCount = 0;
                             }
                             // 生成子弹实例
-                            GameObject bulletInstance = Instantiate(bulletPrefab, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
+                            GameObject bulletInstance = Instantiate(bulletPrefab, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up),BulletContainer.transform);
                             // 获取子弹脚本并设置速度
                             Bullet bullet = bulletInstance.GetComponent<Bullet>();
                             if (bullet != null)
@@ -165,9 +169,9 @@ public class WeaponShooter : MonoBehaviour
                                 GameObject HitObject = shootRaycastHit.collider.gameObject;
                                 RayDamegeIn(HitObject);
                                 // 生成特效
-                                Instantiate(VFXHitEffect, hitPoint, Quaternion.identity);
+                                Instantiate(VFXHitEffect, hitPoint, Quaternion.identity,BulletContainer.transform);
                                 // 在这里处理射击命中的逻辑，例如对击中物体造成伤害或触发其他效果等
-                                Debug.Log("射击命中：" + shootRaycastHit.collider.gameObject.name + "，击中坐标：" + hitPoint);
+                                //Debug.Log("射击命中：" + shootRaycastHit.collider.gameObject.name + "，击中坐标：" + hitPoint);
 
                                 if (LimitAmmo && CurrentBulletCount > 0)
                                 {
@@ -302,6 +306,7 @@ public class WeaponShooter : MonoBehaviour
             if (Shooter != null)
             {
                 ComponemetInit();
+                ContainerInit();
                 SRRSelecting();
             }
 
@@ -386,6 +391,28 @@ public class WeaponShooter : MonoBehaviour
             UsingAIControl = true;
             UsingMasterControl = false;
             Debug.Log("BulletSpwanInitSuccess!"+ "  " + gameObject.name + "  " + "CurrentUsing 'AIControl'");
+        }
+    }
+
+    private void ContainerInit()
+    {
+        if(Shooter != null)
+        {
+            string ContainerName = "VFXBulletContainer";
+
+            Transform existingObject = Shooter.transform.Find(ContainerName);
+            if(existingObject == null)
+            {
+                GameObject VFXBulletContainer = new GameObject(ContainerName);
+                BulletContainer = VFXBulletContainer;
+                VFXBulletContainer.transform.SetParent(Shooter.transform);
+
+                // 添加组件
+                Identity ID = VFXBulletContainer.AddComponent<Identity>();
+                ID.SetMasterID(ContainerName);
+                Counter counter = VFXBulletContainer.AddComponent<Counter>();
+
+            }
         }
     }
 }

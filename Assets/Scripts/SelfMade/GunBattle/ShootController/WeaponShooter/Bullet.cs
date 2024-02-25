@@ -53,7 +53,8 @@ public class Bullet : MonoBehaviour
                 //Debug.Log("销毁前获取到目标物体信息：" + hitObject.name);
             }
 
-            Instantiate(VFXHit,transform.position, Quaternion.identity);
+            Instantiate(VFXHit,transform.position, Quaternion.identity,transform.parent);
+            //Debug.Log(collision.gameObject.name);
             Destroy(gameObject);
         }
     }
@@ -134,6 +135,7 @@ public class Bullet : MonoBehaviour
     {
         VFXHit = VFXHitEffect;
     }
+
 
 #if UNITY_EDITOR
     // 在编辑器中使用Gizmos显示射线
