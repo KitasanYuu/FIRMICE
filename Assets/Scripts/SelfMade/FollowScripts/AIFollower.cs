@@ -324,6 +324,16 @@ namespace Partner
         private void RetakeTarget()
         {
             ObjectSeeker objectseeker = GetComponent<ObjectSeeker>();
+            if (objectseeker != null)
+            {
+                Vector3 DetectCenter = Vector3.zero;
+                Vector3 DetectRange = new Vector3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity);
+                objectseeker = gameObject.AddComponent<ObjectSeeker>();
+                objectseeker.DetecCenter = DetectCenter;
+                objectseeker.DetecRange = DetectRange;
+                objectseeker.targetTag = "Player";
+                objectseeker.targetLayer = LayerMask.GetMask("Player");
+            }
             objectseeker.StartSeek(true);
             if (objectseeker.targetToFollow != null)
             {
@@ -333,6 +343,7 @@ namespace Partner
                 ComponentInit();
                 FollowTargetInit();
                 NeedtoRetakeTarget = false;
+                Destroy(objectseeker);
             }
         }
         #endregion
