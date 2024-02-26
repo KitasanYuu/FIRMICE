@@ -10,20 +10,31 @@ namespace TestField
     {
         public List<Vector3> RoutePoint;
         private Vector3 Destination;
- 
-        private float Normalspeed;
-        private float Sprintspeed;
-        private float Aimspeed;
-        private float stoppingdistance;
+
+        [HideInInspector]
+        public float Normalspeed;
+        [HideInInspector]
+        public float Sprintspeed;
+        [HideInInspector]
+        public float Aimspeed;
+        [HideInInspector]
+        public float stoppingdistance;
 
         //跟随参数
-        private float PCurrentSpeed;
+        [HideInInspector]
+        public float PCurrentSpeed;
 
         //MoveMode用于对应三种状态移动速度，0为正常移速，1为瞄准时的速度，2为全速冲刺的速度
-        private int movemode;
-        private float FacetoForwardDir;
+        [HideInInspector]
+        public int movemode;
+        [HideInInspector]
+        public float FacetoForwardDir;
+        [HideInInspector]
+        public bool facetoTarget;
         private GameObject target;
 
+        [HideInInspector]
+        public bool RecoverStart;
 
         [HideInInspector]
         public bool HasReachedPoint = true;
@@ -101,7 +112,7 @@ namespace TestField
                     //移动角色
                     transform.position = Vector3.MoveTowards(transform.position, Destination, currentSpeed * Time.deltaTime);
                     //Debug.Log("!");
-                    Debug.Log(Destination);
+                    //Debug.Log(Destination);
 
                     if (FacetoForwardDir == 0)
                     {
@@ -186,7 +197,7 @@ namespace TestField
                     //移动角色
                     transform.position = Vector3.MoveTowards(transform.position, Destination, PCurrentSpeed * Time.deltaTime);
                     //Debug.Log("!");
-                    Debug.Log(Destination);
+                    //Debug.Log(Destination);
 
                     if (FacetoForwardDir == 0)
                     {
@@ -247,6 +258,11 @@ namespace TestField
         public void SetPMoveParameter(float currentSpeed)
         {
             PCurrentSpeed = currentSpeed;
+        }
+
+        public void SetSelfFaceInfo(bool newbool)
+        {
+            facetoTarget = newbool;
         }
 
         //这个方法用来启动Seeker的路径计算

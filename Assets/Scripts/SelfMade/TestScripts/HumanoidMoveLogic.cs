@@ -35,7 +35,6 @@ namespace TestField
         public float ToTargetDistance;
         [SerializeField, ReadOnly]
         private bool InBattle;
-        [ReadOnly] public bool RecoverStart;
         [SerializeField, ReadOnly, Tooltip("在移动时的面向，0代表朝向移动方向，1代表朝向Target")]
         private float Facetoforworddir = 0;
         [SerializeField, ReadOnly]
@@ -244,6 +243,7 @@ namespace TestField
                 NeedKeepDistance = false;
                 hasRotationed = false;
                 RecoverStart = true;
+                SetSelfFaceInfo(false);
 
 
             }
@@ -478,7 +478,7 @@ namespace TestField
             SelfPosition = Vector3.zero;
             if (Target != null && Facetoforworddir == 1)
             {
-
+                SetSelfFaceInfo(true);
                 TargetPosition = Target.transform.position;
                 TargetPosition.y = 0;
                 SelfPosition = transform.position;
@@ -489,6 +489,10 @@ namespace TestField
 
                 // 使用Slerp插值来平滑地转向目标朝向
                 transform.rotation = Quaternion.Slerp(transform.rotation, TargetRotation, 5 * Time.deltaTime);
+            }
+            else
+            {
+                SetSelfFaceInfo(false);
             }
 
         }
