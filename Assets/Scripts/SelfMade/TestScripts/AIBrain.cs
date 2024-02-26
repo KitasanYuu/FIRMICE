@@ -15,6 +15,7 @@ namespace TestField
 
         private AIFunction aif = new AIFunction();
         private BroadCasterInfoContainer BCIC;
+        private AIMove AiM;
         private AlertCore AC;
 
         public Action<GameObject> AttackTargetChanged;
@@ -28,6 +29,7 @@ namespace TestField
         void Update()
         {
               TargetSelect();
+            Debug.Log("AIMFaceToTarget"+AiM.facetoTarget);
         }
 
         private void TargetSelect()
@@ -78,6 +80,7 @@ namespace TestField
         {
             BCIC = GetComponent<BroadCasterInfoContainer>();
             AC = GetComponent<AlertCore>();
+            AiM = aif.GainSelfMoveScriptType(gameObject) as AIMove;
         }
 
         private void EventSubscribe()

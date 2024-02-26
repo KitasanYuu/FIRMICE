@@ -104,6 +104,49 @@ namespace TestField
             }
         }
 
+        public MonoBehaviour GainSelfMoveScriptType(GameObject SelfObject)
+        {
+            CSVReader csvreader = new CSVReader();
+            Identity ID = SelfObject.GetComponent<Identity>();
+            if (ID != null)
+            {
+                string cid = ID.Cid;
+                if (cid != null)
+                {
+                    var CharacterInfo = csvreader.GetDataByID("CharacterID", cid);
+                     if (CharacterInfo != null)
+                    {
+                        int CharacterType = (int)CharacterInfo["CharacterType"];
+                        switch (CharacterType)
+                        {
+                            case 1:
+                                return SelfObject.GetComponent<HumanoidMoveLogic>();
+                            case 2:
+                                return SelfObject.GetComponent<NonHumanoidMoveLogic>();
+                            default:
+                                Debug.LogError("AIFGainSelfMoveScriptType:"+SelfObject.name+"Invalid CharacterType");
+                                return null;
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("AIFGainSelfMoveScriptType: NO CharacterID Found!");
+                        return null;
+                    }
+                }
+                else
+                {
+                    Debug.LogError("AIFGainSelfMoveScriptType:" + SelfObject.name + "has no CID!");
+                    return null;
+                }
+            }
+            else
+            {
+                Debug.LogError("AIFGainSelfMoveScriptType:" + SelfObject.name + "has no Identity Component!");
+                return null;
+            }
+
+        }
 
     }
 
