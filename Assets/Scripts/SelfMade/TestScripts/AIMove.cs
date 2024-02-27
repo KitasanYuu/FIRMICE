@@ -8,35 +8,38 @@ namespace TestField
 {
     public class AIMove : MonoBehaviour
     {
+        [Tab("AIMoveParameter")]
         public List<Vector3> RoutePoint;
         private Vector3 Destination;
 
-        [HideInInspector]
+        [ReadOnly]
         public float Normalspeed;
-        [HideInInspector]
+        [ReadOnly]
         public float Sprintspeed;
-        [HideInInspector]
+        [ReadOnly]
         public float Aimspeed;
-        [HideInInspector]
+        [ReadOnly]
         public float stoppingdistance;
 
         //跟随参数
-        [HideInInspector]
+        [ReadOnly]
         public float PCurrentSpeed;
 
         //MoveMode用于对应三种状态移动速度，0为正常移速，1为瞄准时的速度，2为全速冲刺的速度
-        [HideInInspector]
+        [ReadOnly]
         public int movemode;
-        [HideInInspector]
-        public float FacetoForwardDir;
-        [HideInInspector]
-        public bool facetoTarget;
+        [ReadOnly]
+        public bool FacetoTarget;
+        [ReadOnly]
+        public bool DynamicFaceToMoveDir;
+        [ReadOnly]
+        private bool StaticFaceToMoveDir;
         private GameObject target;
 
-        [HideInInspector]
+        [ReadOnly]
         public bool RecoverStart;
 
-        [HideInInspector]
+        [ReadOnly]
         public bool HasReachedPoint = true;
         //跟随用移动判定
         private Seeker SEEKER;
@@ -114,7 +117,7 @@ namespace TestField
                     //Debug.Log("!");
                     //Debug.Log(Destination);
 
-                    if (FacetoForwardDir == 0)
+                    if (DynamicFaceToMoveDir)
                     {
                         // 使物体朝向移动方向
                         if (MoveDir != Vector3.zero)
@@ -126,7 +129,7 @@ namespace TestField
                             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
                         }
                     }
-                    else if (FacetoForwardDir == 1)
+                    else if (!DynamicFaceToMoveDir)
                     {
                         Vector3 TargetPosition = target.transform.position;
                         TargetPosition.y = 0;
@@ -199,7 +202,7 @@ namespace TestField
                     //Debug.Log("!");
                     //Debug.Log(Destination);
 
-                    if (FacetoForwardDir == 0)
+                    if (DynamicFaceToMoveDir)
                     {
                         // 使物体朝向移动方向
                         if (MoveDir != Vector3.zero)
@@ -211,7 +214,7 @@ namespace TestField
                             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
                         }
                     }
-                    else if (FacetoForwardDir == 1)
+                    else if (!DynamicFaceToMoveDir)
                     {
                         Vector3 TargetPosition = target.transform.position;
                         TargetPosition.y = 0;
@@ -239,10 +242,19 @@ namespace TestField
             }
         }
 
-        public void SetMoveParameter(int movemode, float facetoforwardDir = 0, GameObject target = null)
+        public void IsFaceToTarget()
+        {
+            if (!DynamicFaceToMoveDir || !StaticFaceToMoveDir)
+                FacetoTarget = true;
+            else
+                FacetoTarget = false;
+
+        }
+
+        public void SetMoveParameter(int movemode, bool facetoforwardDir = true, GameObject target = null)
         {
             this.movemode = movemode;
-            FacetoForwardDir = facetoforwardDir;
+            DynamicFaceToMoveDir = facetoforwardDir;
             this.target = target;
 
         }
@@ -255,14 +267,15 @@ namespace TestField
             stoppingdistance = stopdistance;
         }
 
-        public void SetPMoveParameter(float currentSpeed)
+        public void SetPMoveParameter(float currentSpeed, bool FacetoMoveDir)
         {
             PCurrentSpeed = currentSpeed;
+            DynamicFaceToMoveDir = FacetoMoveDir;
         }
 
         public void SetSelfFaceInfo(bool newbool)
         {
-            facetoTarget = newbool;
+            StaticFaceToMoveDir = newbool;
         }
 
         //这个方法用来启动Seeker的路径计算

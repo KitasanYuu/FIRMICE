@@ -8,6 +8,7 @@ namespace TestField
 {
     public class HumanoidMoveLogic : AIMove
     {
+        [Tab("MoveLogic")]
         [HorizontalLine("MoveSettings", 2, FixedColor.Gray)]
         public float NormalSpeed;
         public float SprintSpeed;
@@ -35,8 +36,8 @@ namespace TestField
         public float ToTargetDistance;
         [SerializeField, ReadOnly]
         private bool InBattle;
-        [SerializeField, ReadOnly, Tooltip("在移动时的面向，0代表朝向移动方向，1代表朝向Target")]
-        private float Facetoforworddir = 0;
+        [SerializeField, ReadOnly, Tooltip("在移动时的面向，true代表朝向移动方向，false代表朝向Target")]
+        private bool FacetoMoveDir = true;
         [SerializeField, ReadOnly]
         private bool StartMoving;
         [SerializeField, ReadOnly]
@@ -81,8 +82,8 @@ namespace TestField
         private Quaternion InitRotation;
 
         //随便写的两个占位函数方便管理
-        private float facetotarget = 1;
-        private float facetoforward = 0;
+        private bool facetotarget =false;
+        private bool facetoforward = true;
         private int normalspeed = 0;
         private int aimspeed = 1;
         private int sprintspeed = 2;
@@ -105,6 +106,7 @@ namespace TestField
 
         private void Update()
         {
+            IsFaceToTarget();
             InBattleLogic();
             Moving();
 
@@ -153,7 +155,7 @@ namespace TestField
 
                 if (!IsMoving && !FirstEnterBattle && !NiBuXuTiQianBian)
                 {
-                    Facetoforworddir = 1;
+                    FacetoMoveDir = false;
                 }
 
             }
@@ -174,7 +176,7 @@ namespace TestField
                     //Debug.Log(CurrentCoverSelected);
                     Vector3 ShotinRangePoint = coverUtility.FindFarthestCoverPointInRange(gameObject, Target, FreeCoverList, ValidShootRange, true, CurrentCoverSelected, true);
                     //Debug.Log(ShotinRangePoint);
-                    Facetoforworddir = 0;
+                    FacetoMoveDir = true;
                     CCalcuRouteMove(ShotinRangePoint, sprintspeed, facetoforward);
                     Debug.LogWarning("TargetOutRange");
 
@@ -238,12 +240,12 @@ namespace TestField
                 InBattle = false;
                 AC.CurrentAlertness = 0;
                 AC.TargetExposed = false;
-                Facetoforworddir = 0;
+                FacetoMoveDir = true;
                 FirstEnterBattle = true;
                 NeedKeepDistance = false;
                 hasRotationed = false;
                 RecoverStart = true;
-                SetSelfFaceInfo(false);
+                SetSelfFaceInfo(facetoforward);
 
 
             }
@@ -439,12 +441,12 @@ namespace TestField
 
         #region 计算路线移动的函数
         //传入目标点自动计算路径并开始移动
-        private void CCalcuRouteMove(Vector3 newPoint, int movemode, float facetotarget = 0, GameObject target = null)
+        private void CCalcuRouteMove(Vector3 newPoint, int movemode, bool facetomovedir = true, GameObject target = null)
         {
             if (newPoint != Vector3.zero)
             {
                 NoCoverNear = false;
-                SetMoveParameter(movemode, facetotarget, target);
+                SetMoveParameter(movemode, facetomovedir, target);
                 SeekerCalcu(newPoint);
                 StartMoving = true;
             }
@@ -457,13 +459,13 @@ namespace TestField
         }
 
         //传入目标点自动计算路径并开始移动(自动保持距离用)
-        private void NCalcuRouteMove(Vector3 newPoint, int movemode, float facetotarget = 0, GameObject target = null)
+        private void NCalcuRouteMove(Vector3 newPoint, int movemode, bool facetomovedir = true, GameObject target = null)
         {
             if (newPoint != Vector3.zero && InBattle)
             {
-                SetMoveParameter(movemode, facetotarget, target);
+                SetMoveParameter(movemode, facetomovedir, target);
                 SeekerCalcu(newPoint);
-                Facetoforworddir = 1;
+                FacetoMoveDir = false;
                 StartMoving = true;
             }
         }
@@ -476,9 +478,9 @@ namespace TestField
             TargetPosition = Vector3.zero;
             TargetRotation = Quaternion.identity;
             SelfPosition = Vector3.zero;
-            if (Target != null && Facetoforworddir == 1)
+            if (Target != null && !FacetoMoveDir)
             {
-                SetSelfFaceInfo(true);
+                SetSelfFaceInfo(facetotarget);
                 TargetPosition = Target.transform.position;
                 TargetPosition.y = 0;
                 SelfPosition = transform.position;
@@ -492,7 +494,7 @@ namespace TestField
             }
             else
             {
-                SetSelfFaceInfo(false);
+                SetSelfFaceInfo(facetoforward);
             }
 
         }

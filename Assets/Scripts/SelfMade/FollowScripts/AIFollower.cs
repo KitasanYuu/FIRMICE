@@ -135,7 +135,7 @@ namespace Partner
             }
 
             CSpeed = currentSpeed;
-            SetPMoveParameter(currentSpeed);
+            SetPMoveParameter(currentSpeed,true);
 
         }
 

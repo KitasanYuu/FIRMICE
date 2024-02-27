@@ -28,13 +28,13 @@ namespace TestField
 
         void Update()
         {
-              TargetSelect();
-            Debug.Log("AIMFaceToTarget"+AiM.facetoTarget);
+            TargetSelect();
+            //Debug.Log("AIMFaceToTarget" + AiM.facetoTarget);
         }
 
         private void TargetSelect()
         {
-            if(focusonplayer)
+            if (focusonplayer)
             {
                 CurrentTarget = AlertTarget;
             }
