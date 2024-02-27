@@ -10,7 +10,6 @@ public class ComponentCopier : EditorWindow
     private Vector2 scrollPositionTarget;
 
     private bool[] selectedScripts;
-    private bool isConfirmationNeeded = false;
 
     [MenuItem("YuuTools/ComponentEditor/Component Copier")]
     public static void ShowWindow()
