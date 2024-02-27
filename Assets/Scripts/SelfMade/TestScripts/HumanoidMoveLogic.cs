@@ -118,7 +118,6 @@ namespace TestField
 
         private void InBattleLogic()
         {
-            EnterBattleParameterUpdate();
             OutBattleParameterUpdate();
             if (InBattle)
             {
@@ -208,7 +207,7 @@ namespace TestField
                 else if (!isDirectToTarget)
                 {
                     CurrentCoverSelected = coverUtility.FindNearestCover(gameObject, FreeCoverList);
-                    Identity ID = CurrentCoverSelected.GetComponent<Identity>();
+                    Identity ID = CurrentCoverSelected?.GetComponent<Identity>();
                     if (ID.Covertype == "FullCover")
                     {
                         ApproachingTarget(true);
@@ -222,7 +221,6 @@ namespace TestField
         //每帧更新是否进入战斗状态
         private void EnterBattleParameterUpdate()
         {
-            TargetExpose = AC.TargetExposed;
             if (TargetExpose && !HasExcuted)
             {
                 InBattle = true;
@@ -239,15 +237,13 @@ namespace TestField
                 HasExcuted = false;
                 InBattle = false;
                 AC.CurrentAlertness = 0;
-                AC.TargetExposed = false;
+                AC.O_ExposeStatusSet(false);
                 FacetoMoveDir = true;
                 FirstEnterBattle = true;
                 NeedKeepDistance = false;
                 hasRotationed = false;
                 RecoverStart = true;
                 SetSelfFaceInfo(facetoforward);
-
-
             }
         }
 
@@ -530,9 +526,11 @@ namespace TestField
         {
             BCIC.FullcoverChanged += OnFullCoverChanged;
             BCIC.HalfcoverChanged += OnHalfCoverChanged;
-            AIB.AttackTargetChanged += TargetReceived;
             BCIC.OccupiedcoverChanged += OnOccupiedCoverChanged;
             BCIC.FreecoverChanged += OnFreeCoverChanged;
+            AIB.AttackTargetChanged += TargetReceived;
+            AC.ExposeStatusChanged += OnTargetExposeStatusChanged;
+
         }
         private void OnDestroy()
         {
@@ -540,9 +538,10 @@ namespace TestField
             {
                 BCIC.FullcoverChanged -= OnFullCoverChanged;
                 BCIC.HalfcoverChanged -= OnHalfCoverChanged;
-                AIB.AttackTargetChanged -= TargetReceived;
                 BCIC.OccupiedcoverChanged -= OnOccupiedCoverChanged;
                 BCIC.FreecoverChanged -= OnFreeCoverChanged;
+                AIB.AttackTargetChanged -= TargetReceived;
+                AC.ExposeStatusChanged -= OnTargetExposeStatusChanged;
             }
         }
         #endregion
@@ -573,12 +572,20 @@ namespace TestField
             FreeCoverList = newList;
         }
 
+        private void OnTargetExposeStatusChanged(bool ExposeStatus)
+        {
+            TargetExpose = ExposeStatus;
+            EnterBattleParameterUpdate();
+        }
+
         private void MergeCoverLists()
         {
             // 合并 FullCoverList 和 HalfCoverList 到 CoverList
             FreeCoverList = new List<GameObject>(FullCoverList);
             FreeCoverList.AddRange(HalfCoverList);
         }
+
+
         #endregion
 
         #region Gizmos绘制

@@ -1,3 +1,4 @@
+using CustomInspector;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,8 @@ namespace TestField
     public class AIBrain : MonoBehaviour
     {
         public GameObject CurrentTarget;
+        [ReadOnly]
+        public bool TargetExposed;
         private GameObject PreviousTarget;
         public List<GameObject> AttackTarget;
         public bool focusonplayer;
@@ -29,7 +32,8 @@ namespace TestField
         void Update()
         {
             TargetSelect();
-            //Debug.Log("AIMFaceToTarget" + AiM.facetoTarget);
+            ShootCondition();
+
         }
 
         private void TargetSelect()
@@ -52,6 +56,17 @@ namespace TestField
             }
         }
 
+        private void ShootCondition()
+        {
+            if(AiM != null)
+            {
+                if (AiM.FacetoTarget)
+                {
+
+                }
+            }
+        }
+
         #region 接收广播值
 
         private void OnAttackTargetListChanged(List<GameObject> newList)
@@ -62,6 +77,11 @@ namespace TestField
         private void OnAlertTargetChanged(GameObject newGameObject)
         {
             AlertTarget = newGameObject;
+        }
+
+        private void OnTargetExposeStatusChanged(bool ExposeStatus)
+        {
+            TargetExposed = ExposeStatus;
         }
 
         #endregion
@@ -85,6 +105,7 @@ namespace TestField
 
         private void EventSubscribe()
         {
+            AC.ExposeStatusChanged += OnTargetExposeStatusChanged;
             BCIC.AlertTargetReceivedChanged += OnAlertTargetChanged;
             BCIC.AttackTargetListChanged += OnAttackTargetListChanged;
         }
@@ -93,6 +114,7 @@ namespace TestField
         {
             if (BCIC != null)
             {
+                AC.ExposeStatusChanged -= OnTargetExposeStatusChanged;
                 BCIC.AlertTargetReceivedChanged -= OnAlertTargetChanged;
                 BCIC.AttackTargetListChanged -= OnAttackTargetListChanged;
             }

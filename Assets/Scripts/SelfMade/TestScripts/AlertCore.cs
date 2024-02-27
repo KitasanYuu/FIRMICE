@@ -74,6 +74,7 @@ namespace TestField
         [ReadOnly] public float CurrentAlertness;
         // 是否被发现
         [ReadOnly] public bool TargetExposed;
+        private bool ExposedStatusContainer;
 
         [Space2(10)]
 
@@ -143,6 +144,9 @@ namespace TestField
         private bool notarget;
         private bool targetBroadCastFound;
 
+        //广播事件
+        public Action<bool> ExposeStatusChanged;
+
         //调试模式
         private bool EditorMode = true;
 
@@ -198,7 +202,7 @@ namespace TestField
         private void AlertLogic()
         {
             // 临时清除目标暴露状态
-            TempClear();
+            //TempClear();
             // 增加警戒度
             AlertnessIncrease();
             // 判断是否被发现
@@ -227,6 +231,8 @@ namespace TestField
                 targetlist = null;
                 notarget = true;
             }
+
+            ExposedStatusContainer = !TargetExposed;
         }
 
         //在BCIC接收到Area广播物体时重新初始化对象
@@ -395,14 +401,14 @@ namespace TestField
             }
         }
 
-        private void TempClear()
-        {
-            if (TempClearExposeStatus || Input.GetKey(KeyCode.Backspace))
-            {
-                TargetExposed = false;
-                TempClearExposeStatus = false;
-            }
-        }
+        //private void TempClear()
+        //{
+        //    if (TempClearExposeStatus || Input.GetKey(KeyCode.Backspace))
+        //    {
+        //        TargetExposed = false;
+        //        TempClearExposeStatus = false;
+        //    }
+        //}
         #endregion
 
         #region 原AlertLogic实现功能：根据进入范围的目标状态修正警戒度
@@ -475,6 +481,13 @@ namespace TestField
                         CurrentAlertness = InitAlertness;
                 }
             }
+
+            if (TargetExposed != ExposedStatusContainer)
+            {
+                OnTargetExposeStatusChanged(TargetExposed);
+                ExposedStatusContainer = TargetExposed;
+            }
+
         }
 
         // 警戒度在未被发现的情况下慢慢清零
@@ -525,7 +538,7 @@ namespace TestField
                             {
                                 if (AC != null && TargetExposed && AC.ReceiveSharedINFO)
                                 {
-                                    AC.TargetExposed = true;
+                                    AC.O_ExposeStatusSet(true);
                                 }
                                 //else if (alertlogic != null && !AL.TargetExposed && AIS.ReceiveSharedINFO)
                                 //{
@@ -538,6 +551,23 @@ namespace TestField
                 }
             }
         }
+
+        //外部可以访问并修改ExposeStatus的方法
+        public void O_ExposeStatusSet(bool ExposeStatus)
+        {
+            TargetExposed = ExposeStatus;
+            OnTargetExposeStatusChanged(ExposeStatus);
+        }
+
+        #endregion
+
+        #region 广播
+
+        protected virtual void OnTargetExposeStatusChanged(bool newExposeStatus)
+        {
+            ExposeStatusChanged?.Invoke(newExposeStatus);
+        }
+
         #endregion
 
         #region 组件初始化，订阅管理
