@@ -1,25 +1,26 @@
 #pragma warning disable 0618
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TargetFinding;
 using AvatarMain;
-using Unity.VisualScripting;
+using CustomInspector;
 
 public class CursorManager : MonoBehaviour
 {
     [SerializeField]
     private GameObject PauseMenu;
+    [SerializeField, ReadOnly]
+    private GameObject Player;
     private TargetSeeker targetseeker;
     private BasicInput basicinput;
-    private GameObject Player;
 
-    // ĞÂÔö±êÖ¾±äÁ¿
+    // æ–°å¢æ ‡å¿—å˜é‡
     private bool overrideCursorLock = false;
 
-    // ĞÂÔö¹«¹²ÁĞ±í£¬´æ´¢ĞèÒª¹â±êËø¶¨Ä£Ê½ÎªNoneµÄ³¡¾°Ãû
+    // æ–°å¢å…¬å…±åˆ—è¡¨ï¼Œå­˜å‚¨éœ€è¦å…‰æ ‡é”å®šæ¨¡å¼ä¸ºNoneçš„åœºæ™¯å
     public List<string> scenesWithOverride = new List<string>();
+    public List<string> scenesDisablePlayerSearch = new List<string>();
 
     private bool MenuOpen;
 
@@ -91,22 +92,38 @@ public class CursorManager : MonoBehaviour
 
     private void Finding()
     {
-        if (Player == null)
-        {
-            targetseeker.SetStatus(true);
-        }
-
-        if (targetseeker.foundObject != null)
-        {
-            Player = targetseeker.foundObject;
-            targetseeker.SetStatus(false);
-            basicinput = Player.GetComponent<BasicInput>();
-        }
-
-        // »ñÈ¡µ±Ç°³¡¾°Ãû
+        // è·å–å½“å‰åœºæ™¯å
         string currentScene = SceneManager.GetActiveScene().name;
 
-        // ¸ù¾İ³¡¾°Ãû¼ì²éÊÇ·ñĞèÒª¸²¸Ç¹â±êËø¶¨Ä£Ê½
+        if(!scenesDisablePlayerSearch.Contains(currentScene))
+        {
+            if (Player == null)
+            {
+                if (targetseeker == null)
+                {
+                    targetseeker = gameObject.AddComponent<TargetSeeker>();
+                    targetseeker.objectTagToFind = "Player";
+                    targetseeker.objectLayerToFind = LayerMask.GetMask("Player");
+                }
+            }
+
+            if (targetseeker.foundObject != null)
+            {
+                Player = targetseeker.foundObject;
+                basicinput = Player.GetComponent<BasicInput>();
+
+                if (targetseeker != null)
+                    Destroy(targetseeker);
+            }
+        }
+
+        if (scenesDisablePlayerSearch.Contains(currentScene))
+        {
+            if(targetseeker!= null)
+                Destroy (targetseeker);
+        }
+
+        // æ ¹æ®åœºæ™¯åæ£€æŸ¥æ˜¯å¦éœ€è¦è¦†ç›–å…‰æ ‡é”å®šæ¨¡å¼
         if (scenesWithOverride.Contains(currentScene))
         {
             overrideCursorLock = true;

@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using Cinemachine;
 using AvatarMain;
@@ -55,6 +54,7 @@ namespace playershooting
         public int AimIKParameter;
 
         //这些是实例化生成后查找物体用的参数
+        private LayerMask corshairLayer;
         private string corshairtag = "Corshair";
         private string corshairname = "Corshair";
         private bool searchInactiveObjects = true;
@@ -285,16 +285,27 @@ namespace playershooting
             if (corshair == null)
             {
                 TargetSeeker targetseeker = GetComponent<TargetSeeker>();
+                if(targetseeker == null)
+                {
+                    targetseeker = gameObject.AddComponent<TargetSeeker>();
+                }
+
                 if (targetseeker != null)
                 {
-                    targetseeker.objectTagToFind = corshairtag;
+                    //targetseeker.objectTagToFind = corshairtag;
+                    targetseeker.objectLayerToFind = LayerMask.GetMask("UI");
                     targetseeker.objectNameToFind = corshairname;
                     targetseeker.searchInactiveObjects = searchInactiveObjects;
-                    targetseeker.SetStatus(true);
+                    //targetseeker.SetStatus(true);
                     if (targetseeker.foundObject != null)
                     {
                         corshair = targetseeker.foundObject;
-                        targetseeker.SetStatus(false);
+                        if (corshair.activeSelf)
+                        {
+                            corshair.SetActive(false);
+                        }
+                        //targetseeker.SetStatus(false);
+                        Destroy(targetseeker);
                     }
                 }
             }
@@ -307,6 +318,9 @@ namespace playershooting
             _input = GetComponent<BasicInput>();
             rayDectec = GetComponent<RayDectec>();
             thirdPersonFollow = aimVirtualCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
+
+            if(corshair == null)
+                FindCorshair();
         }
 
         private Vector3 CalculateTargetPosition(float cameraSide)

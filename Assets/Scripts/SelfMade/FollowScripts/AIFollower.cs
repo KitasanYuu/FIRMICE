@@ -14,6 +14,7 @@ namespace Partner
 {
     public class AIFollower : AIMove
     {
+        [Tab("FollowerParamter")]
         public GameObject targetToFollow;
         [Foldout("PointGenerateParameter")]
         public Vector3 sectorDirection = Vector3.forward;

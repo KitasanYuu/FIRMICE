@@ -13,40 +13,34 @@ namespace TargetFinding
         public string objectNameToFind = ""; // 要查找的物体的名称
         [Tag]public string objectTagToFind = ""; // 要查找的物体的标签
         public LayerMask objectLayerToFind; // 用于存储要查找的层级
-        public List<string> scenesToDeactivateScript; // 存储要禁用脚本的场景名称列表
 
         [ReadOnly] public GameObject foundObject; // 用于存储找到的物体的引用
-        private string currentSceneName; // 用于存储当前场景名称
 
         private void Start()
         {
-            // 获取初始场景的名称
-            currentSceneName = SceneManager.GetActiveScene().name;
+
         }
 
         private void Update()
         {
-            if (!scenesToDeactivateScript.Contains(currentSceneName))
+            int conditionsMet = 0;
+
+            if (!string.IsNullOrEmpty(objectTagToFind))
+                conditionsMet++;
+
+            if (objectLayerToFind != 0)
+                conditionsMet++;
+
+            if (!string.IsNullOrEmpty(objectNameToFind))
+                conditionsMet++;
+
+            if (conditionsMet >= 2)
             {
-                int conditionsMet = 0;
-
-                if (!string.IsNullOrEmpty(objectTagToFind))
-                    conditionsMet++;
-
-                if (objectLayerToFind != 0)
-                    conditionsMet++;
-
-                if (!string.IsNullOrEmpty(objectNameToFind))
-                    conditionsMet++;
-
-                if (conditionsMet >= 2)
-                {
-                    ObjectFinding();
-                }
-                else
-                {
-                    Debug.LogError($"脚本在物体: {gameObject.name} 上执行搜索时，至少需要输入两项条件才能执行搜索！");
-                }
+                ObjectFinding();
+            }
+            else
+            {
+                Debug.LogError($"脚本在物体: {gameObject.name} 上执行搜索时，至少需要输入两项条件才能执行搜索！");
             }
         }
 
@@ -85,24 +79,6 @@ namespace TargetFinding
             enabled = startStatus;
         }
 
-        // 在场景切换后调用
-        private void OnSceneChanged(Scene scene, LoadSceneMode mode)
-        {
-            // 更新当前场景名称
-            currentSceneName = scene.name;
-        }
-
-        private void OnEnable()
-        {
-            // 注册场景切换回调
-            SceneManager.sceneLoaded += OnSceneChanged;
-        }
-
-        private void OnDisable()
-        {
-            // 取消注册场景切换回调
-            SceneManager.sceneLoaded -= OnSceneChanged;
-        }
     }
 }
 

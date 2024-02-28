@@ -78,7 +78,7 @@ namespace SceneTools
 
         private void Update()
         {
-            Debug.LogWarning(target.active);
+            //Debug.LogWarning(target.active);
         }
     }
 }
