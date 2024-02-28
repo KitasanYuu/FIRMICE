@@ -82,6 +82,11 @@ public class WeaponShooter : MonoBehaviour
         ReloadProgress();
     }
 
+    private void OnEnable()
+    {
+        ContainerInit();
+    }
+
     private void FireAction()
     {
         if (Shooter != null)
@@ -100,7 +105,7 @@ public class WeaponShooter : MonoBehaviour
 
                         if (Tpsshootcontroller)
                             aimDir = (tpsShootController.TmouseWorldPosition - spawnBulletPosition.position).normalized;
-                        else if (shootcontroller && RayMethod)
+                        else if (shootcontroller && RayMethod && ! InstanceMethod)
                         {
                             InstanceMethod = false;
                             shootController.UsingTrajectoryPredict = false;

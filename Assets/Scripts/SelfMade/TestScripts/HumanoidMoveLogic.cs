@@ -211,7 +211,7 @@ namespace TestField
                     if (ID.Covertype == "FullCover")
                     {
                         ApproachingTarget(true);
-                        Debug.LogError("PositionAdjustUsing");
+                        //Debug.LogError("PositionAdjustUsing");
                     }
                 }
             }
@@ -410,7 +410,7 @@ namespace TestField
             {
                 isDistanceKeeperRecursing = true;
                 // 如果射线击中了物体，可以在这里处理相应的逻辑
-                Debug.Log("射线击中了：" + hit.collider.gameObject.name);
+                //Debug.Log("射线击中了：" + hit.collider.gameObject.name);
 
                 // 递减 currentDistance，并递归调用 DistanceKeeperRecursive
                 float newDistance = Mathf.Max(0f, currentDistance - 1f);

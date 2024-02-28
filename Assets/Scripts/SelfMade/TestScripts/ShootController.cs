@@ -1,7 +1,7 @@
 using UnityEngine;
 using RootMotion.FinalIK;
-using UnityEngine.Rendering.HighDefinition;
 using CustomInspector;
+using System.Collections.Generic;
 using TestField;
 
 namespace BattleShoot
@@ -11,6 +11,8 @@ namespace BattleShoot
         public bool UsingTrajectoryPredict = true;
 
         public GameObject Target;
+        private GameObject TargetPre;
+        private List<GameObject> TargetHitPoint = new List<GameObject>();
 
         public bool isAiming = false;
         [ReadOnly]
@@ -28,8 +30,10 @@ namespace BattleShoot
 
         private GameObject debugSphere;
 
+        private AIFunction aif = new AIFunction();
         private Animator _animator;
         private AimIK _aimIK;
+        private TargetContainer targetcontainer;
 
         private bool _hasAnimator;
         private int AimIKParameter;
@@ -61,6 +65,8 @@ namespace BattleShoot
 
         private void Update()
         {
+            Target = aif.GetAvailableShootPoint(raycastOrigin, gameObject, TargetPre, aimColliderLayerMask);
+            Debug.Log(Target?.name);
             AIM();
             FireCondition();
         }
@@ -115,11 +121,12 @@ namespace BattleShoot
                 HitpointVelocyCalcu();
                 if (Target != null)
                 {
+                    Debug.Log("1");
                     Ray ray = new Ray(raycastOrigin.transform.position, (Target.transform.position - raycastOrigin.transform.position).normalized);
                     if (Physics.Raycast(ray, out RaycastHit hit, 999f, aimColliderLayerMask))
                     {
                         //debugSphere.transform.position = hit.point;
-                        //Debug.Log(hit.collider.gameObject);
+                        Debug.Log(hit.collider.gameObject);
                         hitpoint = hit.point;
                         currentHitpoint = hit.point;
                     }
@@ -164,22 +171,31 @@ namespace BattleShoot
                         Transform currentTransform = hitInfo.transform;
                         while (currentTransform != null)
                         {
-                            if (currentTransform == Target.transform)
+                            if (currentTransform == TargetPre.transform)
                             {
                                 LocalFire = true;
                                 Debug.Log("Can Fire");
-                                return;
+                                break;
                             }
                             currentTransform = currentTransform.parent;
                         }
-                        LocalFire = false;
-                        Debug.Log("Cannot Fire");
+
+                        if(currentTransform != TargetPre.transform)
+                        {
+                            LocalFire = false;
+                            Debug.Log("Cannot Fire");
+                        }
                     }
                     else
                     {
                         LocalFire = false;
                         Debug.Log("Cannot Fire");
                     }
+                }
+                else
+                {
+                    LocalFire = false;
+                    Debug.Log("Cannot Fire");
                 }
             }
 
@@ -296,7 +312,8 @@ namespace BattleShoot
 
         public void SetCurrentAttackTarget(GameObject CurrentTarget)
         {
-            Target = CurrentTarget;
+            TargetPre = CurrentTarget;
+            targetcontainer = TargetPre?.GetComponent<TargetContainer>();
         }
 
         public void SetAssetFireComfirm(bool FireConfirm)

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
+using static RootMotion.FinalIK.HitReaction;
 
 namespace TestField
 {
@@ -57,7 +59,7 @@ namespace TestField
             // 如果有碰撞，打印碰到的物体信息
             if (hit)
             {
-                Debug.Log("射线碰到了：" + hitInfo.collider.gameObject.name);
+                //Debug.Log("射线碰到了：" + hitInfo.collider.gameObject.name);
             }
 
             // 如果有碰撞，则返回 false，表示不是直线到目标
@@ -148,6 +150,52 @@ namespace TestField
 
         }
 
+
+        public GameObject GetAvailableShootPoint(GameObject raycastOrigin, GameObject SelfObject, GameObject Target, LayerMask aimColliderLayerMask)
+        {
+            if (raycastOrigin != null)
+            {
+
+                TargetContainer TC = Target?.GetComponent<TargetContainer>();
+                if (TC != null)
+                {
+                    foreach (GameObject go in TC.targets)
+                    {
+                        Ray ray = new Ray(raycastOrigin.transform.position, (go.transform.position - raycastOrigin.transform.position).normalized);
+                        if (Physics.Raycast(ray, out RaycastHit hit, 999f, aimColliderLayerMask))
+                        {
+                            // 判断击中的目标是否就是预期的Target 或者其父物体
+                            Transform currentTransform = hit.transform;
+                            while (currentTransform != null)
+                            {
+                                if (currentTransform == Target.transform)
+                                {
+                                    return go;
+                                }
+                                currentTransform = currentTransform.parent;
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogError("AIF GetAvailableShootPoint:Ray Do Not Hit AnyThing");
+                            return null;
+                        }
+                    }
+                    Debug.LogError("AIF GetAvailableShootPoint:No Available ShootPoint In targetList");
+                    return null;
+                }
+                else
+                {
+                    Debug.LogError("AIF GetAvailableShootPoint:Select Target Has No TargetContainer");
+                    return null;
+                }
+            }
+            else
+            {
+                Debug.LogError("AIF GetAvailableShootPoint:Raycast origin is not set. Please assign a GameObject to the 'raycastOrigin' field.");
+                return null;
+            }
+        }
     }
 
 }
