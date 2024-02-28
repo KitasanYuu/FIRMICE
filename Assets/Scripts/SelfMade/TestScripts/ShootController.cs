@@ -1,6 +1,8 @@
 using UnityEngine;
 using RootMotion.FinalIK;
 using UnityEngine.Rendering.HighDefinition;
+using CustomInspector;
+using TestField;
 
 namespace BattleShoot
 {
@@ -11,7 +13,10 @@ namespace BattleShoot
         public GameObject Target;
 
         public bool isAiming = false;
+        [ReadOnly]
         public bool Fire = false;
+        private bool AssetFireConfirm;
+        private bool LocalFire;
 
         [SerializeField] private LayerMask aimColliderLayerMask;
         [SerializeField] private GameObject raycastOrigin; // 新增的字段，用于指定射线的出发点
@@ -40,33 +45,23 @@ namespace BattleShoot
         [HideInInspector]
         public Vector3 hitpointVelocity;
 
-        private void Start()
+        private void Awake()
         {
             ComponentInit();
-            _hasAnimator = TryGetComponent(out _animator);
+        }
+
+        private void Start()
+        {
             AssignAnimationIDs();
+            DebugSphereInit();
+            EventSubscribe();
 
-            if (customMaterial == null)
-            {
-                customMaterial = new Material(Shader.Find("HDRP/Lit"));
-            }
-
-            if (debugTransform == null)
-            {
-                GenerateDebugSphere();
-            }
         }
 
         private void Update()
         {
             AIM();
-            CanIFire();
-        }
-
-        private void AssignAnimationIDs()
-        {
-            _animIDEnterAiming = Animator.StringToHash("EnterAiming");
-            _animIDAimStatus = Animator.StringToHash("AimStatus");
+            FireCondition();
         }
 
         private void AIM()
@@ -91,29 +86,26 @@ namespace BattleShoot
                     _animator.SetFloat(_animIDAimStatus, 0);
                 }
 
-                if (AimIKParameter == 1)
+                if(_aimIK != null)
                 {
-                    //AimIKParameter = 1;
-                    _aimIK.enabled = true;
-                    AimIKParameter = 0;
+                    if (AimIKParameter == 1)
+                    {
+                        //AimIKParameter = 1;
+                        _aimIK.enabled = true;
+                        AimIKParameter = 0;
+                    }
                 }
             }
             else
             {
-                _aimIK.enabled = false;
+                if(_aimIK != null)
+                    _aimIK.enabled = false;
                 if (_hasAnimator)
                 {
                     _animator.SetBool(_animIDEnterAiming, false);
                 }
             }
         }
-
-        private void ComponentInit()
-        {
-            _aimIK = GetComponent<AimIK>();
-            _weaponShooter = GetComponent<WeaponShooter>();
-        }
-
 
         private void RaycastDetection()
         {
@@ -152,7 +144,7 @@ namespace BattleShoot
             }
         }
 
-        private void CanIFire()
+        private void FireCondition()
         {
             if (raycastOrigin != null)
             {
@@ -173,21 +165,56 @@ namespace BattleShoot
                         {
                             if (currentTransform == Target.transform)
                             {
-                                Fire = true;
+                                LocalFire = true;
                                 Debug.Log("Can Fire");
                                 return;
                             }
                             currentTransform = currentTransform.parent;
                         }
-                        Fire = false;
+                        LocalFire = false;
                         Debug.Log("Cannot Fire");
                     }
                     else
                     {
-                        Fire = false;
+                        LocalFire = false;
                         Debug.Log("Cannot Fire");
                     }
                 }
+            }
+
+            if(LocalFire && AssetFireConfirm)
+            {
+                Fire = true;
+            }
+            else
+            {
+                Fire = false;
+            }
+        }
+
+        //计算目标两帧内的移动速度
+        private void HitpointVelocyCalcu()
+        {
+            // 计算速度
+            hitpointVelocity = (currentHitpoint - previousHitpoint) / Time.deltaTime;
+
+            // 存储当前帧的目标点位置
+            previousHitpoint = currentHitpoint;
+        }
+
+
+        #region 对于射击判定Sphere执行的代码
+
+        private void DebugSphereInit()
+        {
+            if (customMaterial == null)
+            {
+                customMaterial = new Material(Shader.Find("HDRP/Lit"));
+            }
+
+            if (debugTransform == null)
+            {
+                GenerateDebugSphere();
             }
         }
 
@@ -201,15 +228,6 @@ namespace BattleShoot
             {
                 debugSphere.transform.position = _weaponShooter.PredictedAimPoint;
             }
-        }
-
-        private void HitpointVelocyCalcu()
-        {
-            // 计算速度
-            hitpointVelocity = (currentHitpoint - previousHitpoint) / Time.deltaTime;
-
-            // 存储当前帧的目标点位置
-            previousHitpoint = currentHitpoint;
         }
 
         private void GenerateDebugSphere()
@@ -227,14 +245,64 @@ namespace BattleShoot
                 // 将生成的 Sphere 添加到脚本所在物体的子集
                 debugSphere.transform.parent = transform;
                 debugSphere.SetActive(false);
-                _aimIK.solver.target = debugSphere.transform;
+                if(_aimIK != null)
+                {
+                    _aimIK.solver.target = debugSphere.transform;
+                }
                 debugTransform = debugSphere.transform;
             }
+        }
+
+        #endregion
+
+        #region 组件参数初始化
+
+        private void ComponentInit()
+        {
+            _aimIK = GetComponent<AimIK>();
+            _weaponShooter = GetComponent<WeaponShooter>();
+            _hasAnimator = TryGetComponent(out _animator);
+        }
+
+        private void AssignAnimationIDs()
+        {
+            _animIDEnterAiming = Animator.StringToHash("EnterAiming");
+            _animIDAimStatus = Animator.StringToHash("AimStatus");
+        }
+
+        #endregion
+
+        #region 广播订阅&摧毁
+        
+        private void EventSubscribe()
+        {
+
+        }
+
+        private void OnDestroy()
+        {
+
+        }
+
+        #endregion
+
+        #region 接收广播的参数
+
+
+        #endregion
+
+        #region 外部修改参数的方法
+
+        public void SetAssetFireComfirm(bool FireConfirm)
+        {
+            AssetFireConfirm = FireConfirm;
         }
 
         public void AimIKStatus(int newValue)
         {
             AimIKParameter = newValue;
         }
+
+        #endregion
     }
 }

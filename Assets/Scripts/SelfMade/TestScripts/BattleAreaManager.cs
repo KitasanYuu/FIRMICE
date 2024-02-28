@@ -10,7 +10,7 @@ namespace TestField
     {
         [Tab("AreaSettings")]
         [Header("AreaID")]
-        [SerializeField] private string AreaID = "SearchArea";
+        public string AreaID = "SearchArea";
         [Space2(10)]
         [Header("Area Size")]
         [SerializeField] private Vector3 SafeZone = new Vector3(1f, 1f, 1f);

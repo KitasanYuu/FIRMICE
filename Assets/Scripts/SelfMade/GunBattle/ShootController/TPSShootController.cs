@@ -54,8 +54,6 @@ namespace playershooting
         public int AimIKParameter;
 
         //这些是实例化生成后查找物体用的参数
-        private LayerMask corshairLayer;
-        private string corshairtag = "Corshair";
         private string corshairname = "Corshair";
         private bool searchInactiveObjects = true;
 

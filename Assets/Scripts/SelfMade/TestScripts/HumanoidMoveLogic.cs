@@ -59,7 +59,7 @@ namespace TestField
 
         //声明引用脚本组件
         private AlertCore AC;
-        private AIBrain AIB;
+        private E_AIBrain EAIB;
         private BroadCasterInfoContainer BCIC;
         private Seeker seeker;
         private CoverUtility coverUtility = new CoverUtility();
@@ -147,7 +147,7 @@ namespace TestField
                     Vector3 InitSafePoint = coverUtility.FindNearestCoverPoint(gameObject, Target, FreeCoverList, true, CurrentCoverSelected);
                     CCalcuRouteMove(InitSafePoint, sprintspeed, facetoforward);
                     NiBuXuTiQianBian = true;
-                    Debug.LogWarning("BattleInit");
+                    //Debug.LogWarning("BattleInit");
                     FirstEnterBattle = false;
                     RecoverComplete = false;
                 }
@@ -177,7 +177,7 @@ namespace TestField
                     //Debug.Log(ShotinRangePoint);
                     FacetoMoveDir = true;
                     CCalcuRouteMove(ShotinRangePoint, sprintspeed, facetoforward);
-                    Debug.LogWarning("TargetOutRange");
+                    //Debug.LogWarning("TargetOutRange");
 
                     // 设置标志位，表示已经生成过点了
                     hasGeneratedPoint = true;
@@ -202,7 +202,7 @@ namespace TestField
                     CurrentCoverSelected = coverUtility.FindNearestCover(gameObject, FreeCoverList);
                     Vector3 RegeneratedPoint = coverUtility.FindNearestCoverPoint(gameObject, Target, FreeCoverList, true, CurrentCoverSelected);
                     CCalcuRouteMove(RegeneratedPoint, aimspeed, facetotarget, Target);
-                    Debug.LogWarning("PositionAdjust");
+                    //Debug.LogWarning("PositionAdjust");
                 }
                 else if (!isDirectToTarget)
                 {
@@ -231,7 +231,7 @@ namespace TestField
 
         private void OutBattleParameterUpdate()
         {
-            if (Target == null || BCIC.NeedBackToOrigin)
+            if ((Target == null || BCIC.NeedBackToOrigin) && EAIB.AttackTarget.Count ==0)
             {
                 CurrentCoverSelected = null;
                 HasExcuted = false;
@@ -368,7 +368,7 @@ namespace TestField
                 // 将生成的点往目标方向再靠近一个单位
                 generatedPoint += directionToTarget;
                 NCalcuRouteMove(generatedPoint, sprintspeed, facetoforward);
-                Debug.LogWarning("ApproachingTarget");
+                //Debug.LogWarning("ApproachingTarget");
                 isApproachThreadRecursing = false;
                 NeedKeepDistance = true;
             }
@@ -429,7 +429,7 @@ namespace TestField
 
             // 在这里处理不再击中物体的情况，可以根据需要返回 endPoint 或执行其他逻辑
             NCalcuRouteMove(endPoint, aimspeed, facetotarget, Target);
-            Debug.LogWarning("DistanceKeeper");
+            //Debug.LogWarning("DistanceKeeper");
             NeedKeepDistance = false;
             isDistanceKeeperRecursing = false;
         }
@@ -450,7 +450,7 @@ namespace TestField
             {
                 NoCoverNear = true;
                 ApproachingTarget(NoCoverNear);
-                Debug.LogError("CCMoveUsing");
+                //Debug.LogError("CCMoveUsing");
             }
         }
 
@@ -516,7 +516,7 @@ namespace TestField
         {
             BCIC = GetComponent<BroadCasterInfoContainer>();
             AC = GetComponent<AlertCore>();
-            AIB = GetComponent<AIBrain>();
+            EAIB = GetComponent<E_AIBrain>();
             seeker = GetComponent<Seeker>();
             SetSeekerComponent(seeker);
             SetMoveBasicParameter(NormalSpeed, AimSpeed, SprintSpeed, stoppingDistance);
@@ -528,7 +528,7 @@ namespace TestField
             BCIC.HalfcoverChanged += OnHalfCoverChanged;
             BCIC.OccupiedcoverChanged += OnOccupiedCoverChanged;
             BCIC.FreecoverChanged += OnFreeCoverChanged;
-            AIB.AttackTargetChanged += TargetReceived;
+            EAIB.AttackTargetChanged += TargetReceived;
             AC.ExposeStatusChanged += OnTargetExposeStatusChanged;
 
         }
@@ -540,7 +540,7 @@ namespace TestField
                 BCIC.HalfcoverChanged -= OnHalfCoverChanged;
                 BCIC.OccupiedcoverChanged -= OnOccupiedCoverChanged;
                 BCIC.FreecoverChanged -= OnFreeCoverChanged;
-                AIB.AttackTargetChanged -= TargetReceived;
+                EAIB.AttackTargetChanged -= TargetReceived;
                 AC.ExposeStatusChanged -= OnTargetExposeStatusChanged;
             }
         }
