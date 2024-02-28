@@ -55,6 +55,7 @@ namespace TestField
 
             if (CurrentTarget != PreviousTarget)
             {
+                shootcontroller.SetCurrentAttackTarget(CurrentTarget);
                 OnAttackTargetChanged(CurrentTarget);
                 PreviousTarget = CurrentTarget;
 

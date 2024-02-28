@@ -17,6 +17,7 @@ namespace BattleShoot
         public bool Fire = false;
         private bool AssetFireConfirm;
         private bool LocalFire;
+        private bool AnimFireReady;
 
         [SerializeField] private LayerMask aimColliderLayerMask;
         [SerializeField] private GameObject raycastOrigin; // 新增的字段，用于指定射线的出发点
@@ -182,7 +183,7 @@ namespace BattleShoot
                 }
             }
 
-            if(LocalFire && AssetFireConfirm)
+            if(LocalFire && AssetFireConfirm && AnimFireReady)
             {
                 Fire = true;
             }
@@ -293,9 +294,22 @@ namespace BattleShoot
 
         #region 外部修改参数的方法
 
+        public void SetCurrentAttackTarget(GameObject CurrentTarget)
+        {
+            Target = CurrentTarget;
+        }
+
         public void SetAssetFireComfirm(bool FireConfirm)
         {
             AssetFireConfirm = FireConfirm;
+        }
+
+        public void AimSet(int newValue)
+        {
+            if (newValue == 0)
+                AnimFireReady = false;
+            else if(newValue == 1)
+                AnimFireReady = true;
         }
 
         public void AimIKStatus(int newValue)
