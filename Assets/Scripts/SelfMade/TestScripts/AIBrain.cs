@@ -10,6 +10,9 @@ namespace TestField
         public GameObject CurrentTarget;
         [ReadOnly]
         public bool TargetExposed;
+        [ReadOnly]
+        public bool CanFire;
+        private bool PreviousCanFireStatus;
         private GameObject PreviousTarget;
         public List<GameObject> AttackTarget;
         public bool focusonplayer;
@@ -22,9 +25,10 @@ namespace TestField
         private AlertCore AC;
 
         public Action<GameObject> AttackTargetChanged;
-
+        public Action<bool> AbleToFireChanged;
         void Start()
         {
+            ParameterInit();
             ComponentInit();
             EventSubscribe();
         }
@@ -60,9 +64,19 @@ namespace TestField
         {
             if(AiM != null)
             {
-                if (AiM.FacetoTarget)
+                if (AiM.FacetoTarget && TargetExposed)
                 {
+                    CanFire = true;
+                }
+                else
+                {
+                    CanFire = false;
+                }
 
+                if(PreviousCanFireStatus != CanFire)
+                {
+                    OnFireConditionChanged(CanFire);
+                    PreviousCanFireStatus = CanFire;
                 }
             }
         }
@@ -93,9 +107,20 @@ namespace TestField
             AttackTargetChanged?.Invoke(TargetObject);
         }
 
+        protected virtual void OnFireConditionChanged(bool CanFire)
+        {
+            AbleToFireChanged?.Invoke(CanFire);
+        }
+
         #endregion
 
-        #region 组件初始化&订阅管理
+        #region 组件参数初始化&订阅管理
+
+        private void ParameterInit()
+        {
+            PreviousCanFireStatus = !CanFire;
+        }
+
         private void ComponentInit()
         {
             BCIC = GetComponent<BroadCasterInfoContainer>();
