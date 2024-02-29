@@ -291,7 +291,7 @@ namespace TestField
                             ID.SetOccupiedUseage(false, null);
                     }
                     float DistanceToOrigin = Vector3.Distance(transform.position, InitPosition);
-                    if (DistanceToOrigin < 1 && DistanceToOrigin >= 0)
+                    if ((HasReachedPoint || DistanceToOrigin < 1) && DistanceToOrigin >= 0)
                     {
                         RecoverStart = false;
                     }
