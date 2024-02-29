@@ -1,3 +1,4 @@
+using TestField;
 using UnityEngine;
 
 namespace TargetDirDetec
@@ -17,6 +18,12 @@ namespace TargetDirDetec
         {
             if ((targetLayer.value & 1 << collision.gameObject.layer) != 0)
             {
+                Identity ID = collision.gameObject.GetComponent<Identity>();
+                if (ID != null)
+                {
+                    
+                }
+
                 // 将相对位置转换到本地坐标系
                 Vector3 relativePosition = transform.InverseTransformPoint(collision.contacts[0].point);
                 Debug.Log(collision.gameObject);
