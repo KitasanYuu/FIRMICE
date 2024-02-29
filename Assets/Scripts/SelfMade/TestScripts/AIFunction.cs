@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using UnityEditor.PackageManager;
 using UnityEngine;
-using static RootMotion.FinalIK.HitReaction;
 
 namespace TestField
 {
@@ -10,7 +8,7 @@ namespace TestField
         //用于判断目标是否在自身有效射程内，传入目标GameObject
         public bool ValidShootPosition(GameObject SelfObject, GameObject Target, float ValidShootRange)
         {
-            bool ValidPosition = false;
+            bool ValidPosition;
             if (Target != null)
             {
                 float ToTargetDistance;

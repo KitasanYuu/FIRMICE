@@ -321,7 +321,12 @@ namespace BattleShoot
             AssetFireConfirm = FireConfirm;
         }
 
-        public void AimSet(int newValue)
+        public void AimStatusSet(bool newbool)
+        {
+            isAiming = newbool;
+        }
+
+        public void AnimAimSet(int newValue)
         {
             if (newValue == 0)
                 AnimFireReady = false;
