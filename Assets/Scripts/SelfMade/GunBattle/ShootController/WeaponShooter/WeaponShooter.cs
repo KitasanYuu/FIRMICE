@@ -153,7 +153,7 @@ public class WeaponShooter : MonoBehaviour
                                 bullet?.SetRayLength(bulletspeed * SRR);
                                 bullet?.SetBulletSpeed(bulletspeed);
                                 bullet?.SetBulletHitLayer(DestoryLayer);
-                                bullet?.SetFatherObj(Shooter);
+                                bullet?.SetShooter(Shooter);
                                 bullet?.SetVFXHitEffect(VFXHitEffect);
                                 //Debug.Log(bulletspeed * SRR);
                                 //Debug.LogError("BulletSpwaned");

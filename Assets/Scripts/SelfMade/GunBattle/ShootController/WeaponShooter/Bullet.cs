@@ -5,7 +5,7 @@ using CustomInspector;
 public class Bullet : MonoBehaviour
 {
     private Rigidbody bulletRigidbody;
-    [SerializeField, ReadOnly] private GameObject FatherObj;
+    [ReadOnly] public GameObject Shooter;
     [SerializeField, ReadOnly] private float speed;
     [SerializeField, ReadOnly] private LayerMask destroyOnCollisionWith; // 选择要销毁的层级
     private bool hasHit = false; // 是否已经命中
@@ -18,7 +18,7 @@ public class Bullet : MonoBehaviour
     private VirtualHP virtualhp;
 
     //子弹命中后的特效
-    [SerializeField] private GameObject VFXHit;
+    [SerializeField,ReadOnly] private GameObject VFXHit;
 
     private void Awake()
     {
@@ -101,7 +101,7 @@ public class Bullet : MonoBehaviour
     {
         if (virtualhp != null)
         {
-            virtualhp.AddDamage(damage, FatherObj); // 将伤害值传递给目标脚本的方法
+            virtualhp.AddDamage(damage, Shooter); // 将伤害值传递给目标脚本的方法
         }
     }
 
@@ -126,9 +126,9 @@ public class Bullet : MonoBehaviour
         damage = newDamage;
     }
 
-    public void SetFatherObj(GameObject fatherobj)
+    public void SetShooter(GameObject fatherobj)
     {
-        FatherObj = fatherobj;
+        Shooter = fatherobj;
     }
 
     public void SetVFXHitEffect(GameObject VFXHitEffect)
