@@ -113,7 +113,7 @@ namespace TestField
                 string cid = ID.Cid;
                 if (cid != null)
                 {
-                    var CharacterInfo = csvreader.GetDataByID("CharacterID", cid);
+                    var CharacterInfo = csvreader.GetDataByID("role", cid);
                      if (CharacterInfo != null)
                     {
                         int CharacterType = (int)CharacterInfo["CharacterType"];
@@ -130,7 +130,7 @@ namespace TestField
                     }
                     else
                     {
-                        Debug.LogError("AIFGainSelfMoveScriptType: NO CharacterID Found!");
+                        Debug.LogError("AIFGainSelfMoveScriptType:"+ SelfObject.name +"Cid Not Found in Role!");
                         return null;
                     }
                 }
@@ -148,7 +148,7 @@ namespace TestField
 
         }
 
-
+        //用于获取目标物体身上的点是否能够被射中
         public GameObject GetAvailableShootPoint(GameObject raycastOrigin, GameObject SelfObject, GameObject Target, LayerMask aimColliderLayerMask)
         {
             if (raycastOrigin != null)
@@ -194,6 +194,42 @@ namespace TestField
                 return null;
             }
         }
+
+        //获取Actor所属阵营
+        public int GetActorCamp(GameObject gameObject)
+        {
+            CSVReader csvreader = new CSVReader();
+            Identity ID = gameObject.GetComponent<Identity>();
+            if(ID != null)
+            {
+                string CampName = ID.MasterID;
+                if(CampName != null)
+                {
+                    var CampInfo = csvreader.GetDataByID("Identity", CampName);
+                    if(CampInfo != null)
+                    {
+                        int camp = (int)CampInfo["Camp"];
+                        return camp;
+                    }
+                    else
+                    {
+                        Debug.LogError("AIF:GetActorCamp" + gameObject.name + "Cannot Find Camp:"+CampName+"in Identity!");
+                        return 0;
+                    }
+                }
+                else
+                {
+                    Debug.LogError("AIF:GetActorCamp" + gameObject.name + "Master ID is Null!");
+                    return 0;
+                }
+            }
+            else
+            {
+                Debug.LogError("AIF:GetActorCamp" + gameObject.name + "has no Identity Component Found!");
+                return 0;
+            }
+        }
+
     }
 
 }
