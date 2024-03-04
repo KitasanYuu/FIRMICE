@@ -12,6 +12,8 @@ public class WeaponShooter : MonoBehaviour
     [ReadOnly, SerializeField] private bool UsingAIControl;
     [ReadOnly, SerializeField] private bool UsingMasterControl;
 
+    [ReadOnly] public Vector3 AimDir;
+
     [SerializeField] private bool RayMethod = true;
     [SerializeField] private bool InstanceMethod;
     [Space2(20)]
@@ -31,6 +33,8 @@ public class WeaponShooter : MonoBehaviour
     // 子弹生成位置
     [SerializeField] private Transform spawnBulletPosition;
     // 子弹生成后的速度
+    [Tooltip("决定了射击精度，数值越大精度越偏"),Range(0,1)]public float shootingAccuracy = 0.3f; // 调整这个值来控制射击的精度
+    private float shootingAccuracyScale = 0.1f; // 缩放因子，用于将用户输入的值缩放到 0 到 1 的范围内
     [SerializeField] public float bulletspeed;
     [SerializeField] public LayerMask DestoryLayer;
     [SerializeField] public float BulletDamage;
@@ -131,6 +135,19 @@ public class WeaponShooter : MonoBehaviour
                             // 重新计算 aimDir
                             aimDir = (predictedTargetPosition - spawnBulletPosition.position).normalized;
                         }
+
+                        if (shootController)
+                        {
+                            float scaledShootingAccuracy = Mathf.Clamp01(shootingAccuracy * shootingAccuracyScale);
+                            Vector3 randomOffset = Random.insideUnitSphere * scaledShootingAccuracy;
+                            aimDir += randomOffset;
+
+                            // 确保在射击前将 aimDir 归一化
+                            aimDir.Normalize();
+
+                            AimDir = aimDir;
+                        }
+
 
                         if (InstanceMethod)
                         {
