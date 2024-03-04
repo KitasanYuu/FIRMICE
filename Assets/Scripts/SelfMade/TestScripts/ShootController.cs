@@ -241,7 +241,7 @@ namespace BattleShoot
             {
                 debugSphere.transform.position = hitpoint;
             }
-            else if (UsingTrajectoryPredict)
+            else if (UsingTrajectoryPredict && _weaponShooter != null)
             {
                 debugSphere.transform.position = _weaponShooter.PredictedAimPoint;
             }
@@ -290,7 +290,7 @@ namespace BattleShoot
         #endregion
 
         #region 广播订阅&摧毁
-        
+
         private void EventSubscribe()
         {
 
@@ -337,6 +337,11 @@ namespace BattleShoot
         public void AimIKStatus(int newValue)
         {
             AimIKParameter = newValue;
+        }
+
+        public void GetWeaponShooter(WeaponShooter weaponshooter)
+        {
+            _weaponShooter = weaponshooter;
         }
 
         #endregion

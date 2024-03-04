@@ -393,6 +393,7 @@ public class WeaponShooter : MonoBehaviour
 
         if (shootcontroller)
         {
+            shootController.GetWeaponShooter(this);
             UsingAIControl = true;
             UsingMasterControl = false;
             Debug.Log("BulletSpwanInitSuccess!"+ "  " + gameObject.name + "  " + "CurrentUsing 'AIControl'");
