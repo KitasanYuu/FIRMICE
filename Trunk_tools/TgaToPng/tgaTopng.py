@@ -101,6 +101,13 @@ def tga_to_png(input_folder, keep_original=False, traverse_folder=False):
                     with Image.open(input_path) as img:
                         img.save(output_path, 'PNG')
 
+                    # 添加要删除的文件路径
+                    if delete_original:
+                        files_to_delete.append(input_path)
+                        meta_file = os.path.splitext(input_path)[0] + '.meta'
+                        if os.path.exists(meta_file):
+                            files_to_delete.append(meta_file)
+
                     # 显示处理完成的文件名、大小和用时
                     input_size = os.path.getsize(input_path) / 1024  # 将字节转换为KB
                     output_size = os.path.getsize(output_path) / 1024  # 将字节转换为KB
