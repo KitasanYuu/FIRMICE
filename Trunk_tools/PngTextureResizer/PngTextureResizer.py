@@ -41,15 +41,39 @@ def confirm_resize(folder_path, target_size):
     """
     print(f"将要处理的文件夹：{folder_path}")
 
-    for filename in os.listdir(folder_path):
-        if filename.lower().endswith('.png'):
-            with Image.open(os.path.join(folder_path, filename)) as image:
-                print(f"{filename}: 当前尺寸为 {image.size[0]}x{image.size[1]}")
-    
+    png_files = []
+    traverse_folders = input("是否遍历当前文件夹及其所有子文件夹？(y/n): ").lower() == 'y'
+    print("=====================================================================================================")
+
+    if traverse_folders:
+        for subdir, _, files in os.walk(folder_path):
+            for file in files:
+                if file.lower().endswith('.png'):
+                    png_files.append(os.path.join(subdir, file))
+    else:
+        for filename in os.listdir(folder_path):
+            if filename.lower().endswith('.png'):
+                png_files.append(os.path.join(folder_path, filename))
+
+    if not png_files:
+        print("=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=")
+        print("没有找到可处理的PNG文件。请检查文件夹路径或确认文件夹中是否包含PNG文件。")
+        print("=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=")
+
+        return False, False
+
+    for filename in png_files:
+        with Image.open(filename) as image:
+            print(f"{os.path.relpath(filename, folder_path)}: 当前尺寸为 {image.size[0]}x{image.size[1]}")
+
+    print("=====================================================================================================")
+    print(f"共有{len(png_files)}个待处理文件。")
     print(f"所有PNG图片将被调整到的目标尺寸：{target_size}x{target_size}")
     print("=====================================================================================================")
 
-    return input("\n确认要继续吗？(y/n): ").lower() == 'y'
+    confirm_resize_choice = input("确认要继续吗？(y/n): ").lower() == 'y'
+    
+    return confirm_resize_choice, traverse_folders
     
 def resize_image(input_image_path, size):
     start_time = time.time()  # 开始时间
@@ -77,30 +101,47 @@ def resize_image(input_image_path, size):
     return original_size, new_size, processing_time
 
 def resize_images_in_folder(folder_path, size):
-    if not confirm_resize(folder_path, size):
+    confirmation, traverse_folders = confirm_resize(folder_path, size)
+
+    if not confirmation:
         print("操作已取消。")
         return
     
-    png_files = [f for f in os.listdir(folder_path) if f.lower().endswith('.png')]
+    png_files = []
+
+    if traverse_folders:
+        for subdir, _, files in os.walk(folder_path):
+            for file in files:
+                if file.lower().endswith('.png'):
+                    png_files.append(os.path.join(subdir, file))
+    else:
+        for filename in os.listdir(folder_path):
+            if filename.lower().endswith('.png'):
+                png_files.append(os.path.join(folder_path, filename))
+
     total_files = len(png_files)
-    
+
     if total_files == 0:
-        print("没有找到可处理的PNG文件。")
+        print("=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=")
+        print("没有找到可处理的PNG文件。请检查文件夹路径或确认文件夹中是否包含PNG文件。")
+        print("=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=!=")
         return
     
     print("=====================================================================================================")
     print("=====================================================================================================")
-    print(f"\n开始处理{total_files}个文件...\n")
+    print(f"开始处理{total_files}个文件...\n")
     total_start_time = time.time()
     
     processed_files = 0  # 实际处理的文件数
+    skipped_files = 0 # 跳过的文件数
 
-    for i, filename in enumerate(png_files, start=1):
-        input_image_path = os.path.join(folder_path, filename)
+    for i, input_image_path in enumerate(png_files, start=1):
         original_size, new_size, processing_time = resize_image(input_image_path, size)
         if processing_time > 0:  # 如果处理时间大于0，则表示文件被处理了
-            print(f"已处理{filename}: {original_size:.2f}KB -> {new_size:.2f}KB | 耗时：{processing_time:.2f}秒")
+            print(f"已处理{os.path.relpath(input_image_path, folder_path)}: {original_size:.2f}KB -> {new_size:.2f}KB | 耗时：{processing_time:.2f}秒")
             processed_files += 1
+        else:
+            skipped_files += 1
         print_progress_bar(i, total_files, prefix='总进度', suffix='完成', length=40)
     
     total_time = time.time() - total_start_time
@@ -119,16 +160,13 @@ def resize_images_in_folder(folder_path, size):
     for line in pattern:
         print(line)
 
-    print(f"\n处理完成。总共处理了{total_files}个文件中的{processed_files}个文件，总耗时：{total_time:.2f}秒。")
+    print(f"处理完成。总共处理了{total_files}个文件中的{processed_files}个文件，跳过了{skipped_files}个文件，总耗时：{total_time:.2f}秒。")
 
 if __name__ == "__main__":
     print_welcome_message()
 
-    if len(sys.argv) != 3:
-        print("Usage: python test.py <folder_path> <size>")
-        sys.exit(1)
-
-    folder_path = sys.argv[1]
-    size = int(sys.argv[2])
+    folder_path = input("目标文件夹路径：")
+    size = int(input("目标文件尺寸："))
+    print("=====================================================================================================")
 
     resize_images_in_folder(folder_path, size)
