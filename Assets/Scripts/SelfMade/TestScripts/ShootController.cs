@@ -65,8 +65,7 @@ namespace BattleShoot
 
         private void Update()
         {
-            Target = aif.GetAvailableShootPoint(raycastOrigin, gameObject, TargetPre, aimColliderLayerMask);
-            Debug.Log(Target?.name);
+
             AIM();
             FireCondition();
         }
@@ -75,6 +74,8 @@ namespace BattleShoot
         {
             if (isAiming)
             {
+                Target = aif.GetAvailableShootPoint(raycastOrigin, gameObject, TargetPre, aimColliderLayerMask);
+                Debug.Log(Target?.name);
                 RaycastDetection();
                 if (Target != null)
                 {
