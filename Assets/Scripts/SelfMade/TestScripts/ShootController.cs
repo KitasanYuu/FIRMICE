@@ -319,6 +319,7 @@ namespace BattleShoot
 
         public void SetAssetFireComfirm(bool FireConfirm)
         {
+            isAiming = FireConfirm;
             AssetFireConfirm = FireConfirm;
         }
 

@@ -100,7 +100,7 @@ namespace TestField
         private void OnTargetExposeStatusChanged(bool ExposeStatus)
         {
             TargetExposed = ExposeStatus;
-            shootcontroller.AimStatusSet(TargetExposed);
+            //shootcontroller.AimStatusSet(TargetExposed);
         }
 
         #endregion
