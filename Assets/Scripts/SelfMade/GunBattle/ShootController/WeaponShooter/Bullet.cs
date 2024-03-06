@@ -88,7 +88,7 @@ public class Bullet : MonoBehaviour
             hasHit = true; // 设置已命中标志
             virtualhp = hitObject.GetComponent<VirtualHP>();
             // 在此处可以进行命中的处理，例如播放音效、添加命中效果、处理伤害等
-            Debug.Log("命中了：" + hitObject.name);
+            //Debug.Log("命中了：" + hitObject.name);
 
 
 

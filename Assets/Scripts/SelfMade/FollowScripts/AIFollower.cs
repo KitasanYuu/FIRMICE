@@ -337,7 +337,7 @@ namespace Partner
             {
                 targetToFollow = objectseeker.targetToFollow;
                 avatarController = targetToFollow.GetComponent<AvatarController>();
-                Debug.Log("FollowerRebinded");
+                //Debug.Log("FollowerRebinded");
                 ComponentInit();
                 FollowTargetInit();
                 NeedtoRetakeTarget = false;

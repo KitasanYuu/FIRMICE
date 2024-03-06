@@ -27,14 +27,14 @@ public class Example : MonoBehaviour
             Vector2 whrer = (Vector2)weaponData["Whrer"];
 
             // 输出获取的数据
-            Debug.Log("Weapon found with ID " + Gid + ":");
-            Debug.Log("Weapon ID " + id);
-            Debug.Log("WeaponName: " + weaponName);
-            Debug.Log("Damage: " + damage);
-            Debug.Log("VaildShootRange: " + VaildShootRange);
-            Debug.Log("Test: " + test);
-            Debug.Log("Position" + Position);
-            Debug.Log("Whrer" + whrer);
+            //Debug.Log("Weapon found with ID " + Gid + ":");
+            //Debug.Log("Weapon ID " + id);
+            //Debug.Log("WeaponName: " + weaponName);
+            //Debug.Log("Damage: " + damage);
+            //Debug.Log("VaildShootRange: " + VaildShootRange);
+            //Debug.Log("Test: " + test);
+            //Debug.Log("Position" + Position);
+            //Debug.Log("Whrer" + whrer);
         }
         else
         {

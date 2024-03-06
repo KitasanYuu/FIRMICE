@@ -59,7 +59,7 @@ namespace TargetFinding
                     if ((targetLayer.value & (1 << obj.layer)) != 0)
                     {
                         targetToFollow = obj;
-                        Debug.Log("找到了对象: " + obj.name);
+                        //Debug.Log("找到了对象: " + obj.name);
                         return;
                     }
                 }

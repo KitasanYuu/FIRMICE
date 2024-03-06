@@ -75,7 +75,7 @@ namespace BattleShoot
             if (isAiming)
             {
                 Target = aif.GetAvailableShootPoint(raycastOrigin, gameObject, TargetPre, aimColliderLayerMask);
-                Debug.Log(Target?.name);
+                //Debug.Log(Target?.name);
                 RaycastDetection();
                 if (Target != null)
                 {
@@ -122,12 +122,12 @@ namespace BattleShoot
                 HitpointVelocyCalcu();
                 if (Target != null)
                 {
-                    Debug.Log("1");
+                    //Debug.Log("1");
                     Ray ray = new Ray(raycastOrigin.transform.position, (Target.transform.position - raycastOrigin.transform.position).normalized);
                     if (Physics.Raycast(ray, out RaycastHit hit, 999f, aimColliderLayerMask))
                     {
                         //debugSphere.transform.position = hit.point;
-                        Debug.Log(hit.collider.gameObject);
+                        //Debug.Log(hit.collider.gameObject);
                         hitpoint = hit.point;
                         currentHitpoint = hit.point;
                     }
@@ -175,7 +175,7 @@ namespace BattleShoot
                             if (currentTransform == TargetPre.transform)
                             {
                                 LocalFire = true;
-                                Debug.Log("Can Fire");
+                                //Debug.Log("Can Fire");
                                 break;
                             }
                             currentTransform = currentTransform.parent;
@@ -184,19 +184,19 @@ namespace BattleShoot
                         if(currentTransform != TargetPre.transform)
                         {
                             LocalFire = false;
-                            Debug.Log("Cannot Fire");
+                            //Debug.Log("Cannot Fire");
                         }
                     }
                     else
                     {
                         LocalFire = false;
-                        Debug.Log("Cannot Fire");
+                        //Debug.Log("Cannot Fire");
                     }
                 }
                 else
                 {
                     LocalFire = false;
-                    Debug.Log("Cannot Fire");
+                    //Debug.Log("Cannot Fire");
                 }
             }
 

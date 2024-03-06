@@ -59,7 +59,7 @@ namespace TestField
                 OnAttackTargetChanged(CurrentTarget);
                 PreviousTarget = CurrentTarget;
 
-                Debug.Log(CurrentTarget);
+                //Debug.Log(CurrentTarget);
             }
         }
 

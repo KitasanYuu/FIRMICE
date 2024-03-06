@@ -30,7 +30,7 @@ namespace TargetDirDetec
                     {
                         // 将相对位置转换到本地坐标系
                         Vector3 relativePosition = transform.InverseTransformPoint(collision.contacts[0].point);
-                        Debug.Log(collision.gameObject);
+                        //Debug.Log(collision.gameObject);
                         CalculateHitDir(relativePosition);
                     }
                 }
@@ -71,7 +71,7 @@ namespace TargetDirDetec
         public void HitDirStatus(int HitDirStatus)
         {
             HitDir = HitDirStatus;
-            Debug.Log(HitDirStatus);
+            //Debug.Log(HitDirStatus);
         }
     }
 }

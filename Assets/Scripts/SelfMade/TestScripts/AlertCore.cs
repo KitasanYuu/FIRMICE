@@ -385,13 +385,13 @@ namespace TestField
                     // 如果至少有一条射线命中了目标，执行相应的逻辑
                     if (foundTarget)
                     {
-                        Debug.Log("At least one target detected!");
+                        //Debug.Log("At least one target detected!");
                         // 在这里执行相应的逻辑
                     }
 
                 if (Hitbutoutrange)
                 {
-                    Debug.Log("Detected Target But Out the Range");
+                    //Debug.Log("Detected Target But Out the Range");
                 }
             }
             else

@@ -405,7 +405,7 @@ public class WeaponShooter : MonoBehaviour
         {
             UsingMasterControl = true;
             UsingAIControl = false;
-            Debug.Log("BulletSpwanInitSuccess!" + "  " + gameObject.name + "  " + "CurrentUsing 'TPSMasterControl'");
+            //Debug.Log("BulletSpwanInitSuccess!" + "  " + gameObject.name + "  " + "CurrentUsing 'TPSMasterControl'");
         }
 
         if (shootcontroller)
@@ -413,7 +413,7 @@ public class WeaponShooter : MonoBehaviour
             shootController.GetWeaponShooter(this);
             UsingAIControl = true;
             UsingMasterControl = false;
-            Debug.Log("BulletSpwanInitSuccess!"+ "  " + gameObject.name + "  " + "CurrentUsing 'AIControl'");
+            //Debug.Log("BulletSpwanInitSuccess!"+ "  " + gameObject.name + "  " + "CurrentUsing 'AIControl'");
         }
     }
 
