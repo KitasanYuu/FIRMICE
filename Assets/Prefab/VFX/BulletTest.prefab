@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 973113465283358747}
   - component: {fileID: 4794186341874681873}
   - component: {fileID: 4787674078598992264}
-  m_Layer: 29
+  m_Layer: 28
   m_Name: BulletTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,6 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46cc7d3baa582c6409c3d900e1e2dd92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Shooter: {fileID: 0}
   speed: 0
   destroyOnCollisionWith:
     serializedVersion: 2
@@ -156,4 +157,5 @@ MonoBehaviour:
   hitLayers:
     serializedVersion: 2
     m_Bits: 3624927231
-  vfxHitYellow: {fileID: 613433886817584986, guid: ba6b14e3b68bfca48af707c67f7dbee8, type: 3}
+  rayLength: 10
+  VFXHit: {fileID: 0}
