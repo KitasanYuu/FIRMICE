@@ -1,6 +1,7 @@
 using UnityEngine;
 using RootMotion.FinalIK;
 using CustomInspector;
+using Battle;
 using System.Collections.Generic;
 using TestField;
 

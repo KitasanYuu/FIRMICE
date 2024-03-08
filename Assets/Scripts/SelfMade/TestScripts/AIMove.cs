@@ -6,6 +6,7 @@ using CustomInspector;
 
 namespace TestField
 {
+    [RequireComponent(typeof(Seeker))]
     public class AIMove : MonoBehaviour
     {
         [Tab("AIMoveParameter")]
