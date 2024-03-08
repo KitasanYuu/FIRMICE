@@ -1,5 +1,6 @@
 using CustomInspector;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace BattleHealth
@@ -9,7 +10,7 @@ namespace BattleHealth
         [SerializeField, ReadOnly] private float CurrentHP;
         [SerializeField, ReadOnly] private float CurrentArmor;
         [Space2(20)]
-        public bool revive;
+        public bool TRevive;
         [SerializeField]
         private bool DestoryAfterDead;
         [SerializeField]
@@ -39,21 +40,37 @@ namespace BattleHealth
         }
 
         // 从外部调用的方法，直接添加伤害并指定角色标识
-        public void AddDamage(float damage, GameObject character)
+        public void AddDamage(float damage, float ArmorBrake,GameObject character)
         {
-            // 将伤害值添加到List末尾
-            damageList.Add(damage);
-
-            // 将伤害值关联到特定角色
-            if (characterDamageMap.ContainsKey(character))
+            // 计算减伤后的实际伤害值
+            float actualDamage = damage;
+            damageList.Add(actualDamage);
+            if (CurrentArmor > 1)
             {
-                characterDamageMap[character] += damage;
+                actualDamage = (damage * ArmorRate) * (1 - DamageReduceRate);
+                CurrentArmor -= ArmorBrake; // 根据实际情况调整护甲值的减少
             }
             else
             {
-                characterDamageMap.Add(character, damage);
+                actualDamage = damage * (1 - DamageReduceRate);
+            }
+
+            // 确保伤害值不为负数
+            actualDamage = Mathf.Max(actualDamage, 0);
+
+
+
+            // 将处理过的伤害值关联到特定角色
+            if (characterDamageMap.ContainsKey(character))
+            {
+                characterDamageMap[character] += actualDamage;
+            }
+            else
+            {
+                characterDamageMap.Add(character, actualDamage);
             }
         }
+
 
         void Start()
         {
@@ -63,7 +80,7 @@ namespace BattleHealth
 
         void Update()
         {
-            Revive(revive);
+            Revive(TRevive);
             if (Input.GetKeyDown(KeyCode.R))
             {
                 PrintDamageInfo();
@@ -95,7 +112,7 @@ namespace BattleHealth
                     onDamageDealt.Invoke(totalDamage, gameObject);
 
                     CurrentHP = CurrentHP - (totalDamage * ArmorRate) * (1 - DamageReduceRate);
-                    CurrentArmor -= 0.1f * CurrentArmor;
+                    //CurrentArmor -= 0.1f * CurrentArmor;
                 }
                 else if (CurrentArmor <= 1)
                 {
@@ -123,9 +140,10 @@ namespace BattleHealth
         {
             if (revive)
             {
+                characterDamageMap.Clear();
                 CurrentArmor = Armor;
                 CurrentHP = TotalHP;
-                revive = false;
+                TRevive = false;
                 gameObject.SetActive(true);
             }
         }
