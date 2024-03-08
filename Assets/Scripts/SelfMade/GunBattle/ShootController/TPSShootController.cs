@@ -9,7 +9,6 @@ using CustomInspector;
 
 namespace playershooting
 {
-
     public class TPSShootController : MonoBehaviour
     {
         [ReadOnly]
