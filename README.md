@@ -21,9 +21,9 @@
 >目前的进度概览<br>
 -->底层代码构建 &emsp;&emsp; 进行中<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->角色行动逻辑 &nbsp;&emsp;&emsp; 进行中<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->敌人AI &nbsp;&emsp;&emsp;&emsp;&emsp;&emsp; 排队中<br>
--->基础策划&emsp;&emsp;&emsp;&emsp;&nbsp; 排队中<br>
--->系统优化&emsp;&emsp;&emsp;&emsp;&nbsp; 排队中  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->敌人AI &nbsp;&emsp;&emsp;&emsp;&emsp;&emsp; 进行中<br>
+-->基础策划&emsp;&emsp;&emsp;&emsp;&nbsp; 进行中<br>
+-->系统优化&emsp;&emsp;&emsp;&emsp;&nbsp; 进行中  
                 
 ## 项目结构
 <details>
@@ -38,6 +38,7 @@
 |    |    -Shader                                     //项目着色器
 |    -AstarNavMesh                                    //A*寻路缓存的NavMesh
 |    -Component                                       //引用的外部组件
+|    -Data                                            //存放游戏组件数值
 |    -Extenals                                        //外部Git组件
 |    |    -TextFilesForTextMeshPro                    //TextMeshPro字库
 |    -Editor                                          //UnityEditor工具
@@ -45,11 +46,15 @@
 |    |    -LSS                                        //LoadScene存放处
 |    |    |    -Resources
 |    |    |    |    -Loading Screens                  //LSS的预制体
+|    -Resources
+|    |    -GlobalSettings                             //记录预设数值的ScriptableObject资产
+|    |    -Prefab                                     //通过Resource.Load读取装载的预制体
 |    -SCENE                                           //场景文件
 |    -Scripts                                         //主要脚本
 |    |    -SelfMade
 |    |    |    -Actor                                 //角色控制器相关基础脚本
 |    |    |    -Common                                //全局通用
+|    |    |    |    -Data                             //核心数据读取脚本
 |    |    |    -Detecor                               //检测器
 |    |    |    -FollowScripts                         //跟随核心
 |    |    |    -FPSUSED(Aborted)                      //FPS相关(项目已不使用)
@@ -62,6 +67,22 @@
 |    |    -XR                                         //XR默认配置
 |    -TempAsset                                       //临时文件暂存
 |    -Trash                                           //文件暂存
+```
+</details>
+
+<details>
+  <summary>Trunk_Tools结构</summary>
+Trunk_Tools大都是基于Python的批处理工具
+    
+```
+-Trunk_Tools                                          //工具主目录
+|    -CSVGEN                                          //存储导表脚本的目录
+|    -PngTextureResizer                               //存储贴图尺寸归一化脚本目录
+|    -TgaToPng                                        //存储tga格式贴图导出png格式脚本的目录
+|    -Table                                           //存放各种数值表的xlsx源文件目录
+|    -RunCSVMaker.bat                                 //启动导表的批处理文件
+|    -RunPngTextureResizer.bat                        //启动贴图尺寸归一化的批处理文件
+|    -RunTgaToPng.bat                                 //启动tga转png的批处理文件
 ```
 </details>
 
