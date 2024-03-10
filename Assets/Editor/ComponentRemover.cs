@@ -141,7 +141,7 @@ public class ComponentRemover : EditorWindow
             {
                 if (componentSelection[i])
                 {
-                    DestroyImmediate(components[i]);
+                    DestroyImmediate(components[i],true);
                 }
             }
 

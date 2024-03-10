@@ -10,8 +10,8 @@ AnimatorStateMachine:
   m_Name: Base Layer
   m_ChildStates:
   - serializedVersion: 1
-    m_State: {fileID: -6747963479251776591}
-    m_Position: {x: 260, y: 210, z: 0}
+    m_State: {fileID: -5691443204938473199}
+    m_Position: {x: 328.34396, y: 127.89804, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -21,15 +21,15 @@ AnimatorStateMachine:
   m_EntryPosition: {x: 50, y: 120, z: 0}
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
-  m_DefaultState: {fileID: -6747963479251776591}
---- !u!1102 &-6747963479251776591
+  m_DefaultState: {fileID: -5691443204938473199}
+--- !u!1102 &-5691443204938473199
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Aiming Gun Pose
+  m_Name: Rifle Idle
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -42,7 +42,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 3ee121bf956313a4d9eff2adbe4bd1fa, type: 2}
+  m_Motion: {fileID: 7400000, guid: c3793a7efe9a53a4086145b2c8f112a6, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
