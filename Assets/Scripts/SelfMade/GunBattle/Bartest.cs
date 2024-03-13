@@ -162,7 +162,7 @@ public class HealthBar : MonoBehaviour
         var suddenChangeBar = damage >= 0 ? HPFadeBar : HPBar;
         var slowChangeBar = damage >= 0 ? HPBar : HPFadeBar;
         suddenChangeBar.fillAmount = valueRate;
-        while(Mathf.Abs(suddenChangeBar.fillAmount - slowChangeBar.fillAmount) != 0f)
+        while(Mathf.Abs(suddenChangeBar.fillAmount - slowChangeBar.fillAmount) >= 0.0001f)
         {
             slowChangeBar.fillAmount = Mathf.Lerp(slowChangeBar.fillAmount, valueRate, Time.deltaTime * transpeed);
             yield return null;
@@ -175,7 +175,7 @@ public class HealthBar : MonoBehaviour
         var suddenChangeBar = damage >= 0 ? ArmorFadeBar : ArmorBar;
         var slowChangeBar = damage >= 0 ? ArmorBar : ArmorFadeBar;
         suddenChangeBar.fillAmount = valueRate;
-        while (Mathf.Abs(suddenChangeBar.fillAmount - slowChangeBar.fillAmount) != 0f)
+        while (Mathf.Abs(suddenChangeBar.fillAmount - slowChangeBar.fillAmount) >= 0.0001f)
         {
             slowChangeBar.fillAmount = Mathf.Lerp(slowChangeBar.fillAmount, valueRate, Time.deltaTime * transpeed);
             yield return null;
