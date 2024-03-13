@@ -121,7 +121,7 @@ public class HPVisionManager : MonoBehaviour
         HealthBar healthBar = hpbar.GetComponent<HealthBar>();
 
         VHP.SetHealthBar(healthBar);
-        healthBar.SetParameter(VHP.HPAnchor.transform, mainCamera, ccanvas);
+        healthBar.SetParameter(RegisteObject,VHP,VHP.HPAnchor.transform, mainCamera, ccanvas);
         VHP.SetRegistResult(true);
     }
 

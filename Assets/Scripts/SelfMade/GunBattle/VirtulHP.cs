@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TestField;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace BattleHealth
 {
@@ -10,8 +11,8 @@ namespace BattleHealth
     {
         [ReadOnly] public GameObject Object;
         [ReadOnly] public GameObject HPAnchor;
-        [SerializeField, ReadOnly] private float CurrentHP;
-        [SerializeField, ReadOnly] private float CurrentArmor;
+        [ReadOnly] public float CurrentHP;
+        [ReadOnly] public float CurrentArmor;
         [ReadOnly] public HealthBar healthBar;
         [Space2(20)]
         public bool TRevive;
@@ -19,8 +20,7 @@ namespace BattleHealth
         private bool DestoryAfterDead;
         [SerializeField]
         private bool HideAfterDead;
-        [SerializeField]
-        private float TotalHP;
+        public float TotalHP;
         [SerializeField, Tooltip("自身的减伤倍率，值越高伤害减免越高，为1时完全无敌"), Range(0, 1)]
         private float DamageReduceRate;
 
@@ -38,8 +38,6 @@ namespace BattleHealth
         // 用于存储每个角色造成的伤害
         private Dictionary<GameObject, float> characterDamageMap = new Dictionary<GameObject, float>();
 
-        // 定义伤害事件
-        public DamageEvent onDamageDealt = new DamageEvent();
 
         // 从外部调用的方法，输出列表中的信息
         public void PrintDamageInfo()
@@ -66,19 +64,12 @@ namespace BattleHealth
             {
                 PrintDamageInfo();
             }
-            
-            DamageCalculating();
 
-            if (CurrentHP <= 0)
-            {
-                CurrentHP = 0;
-                if (HideAfterDead)
-                    gameObject.SetActive(false);
-                else if (DestoryAfterDead)
-                    DestoryProgress();
-            }
+            DamageCalculating();
         }
 
+
+        #region 伤害计算相关
         // 从外部调用的方法，直接添加伤害并指定角色标识
         public void AddDamage(float damage, float ArmorBrake, GameObject character)
         {
@@ -97,8 +88,6 @@ namespace BattleHealth
 
             // 确保伤害值不为负数
             actualDamage = Mathf.Max(actualDamage, 0);
-
-
 
             // 将处理过的伤害值关联到特定角色
             if (characterDamageMap.ContainsKey(character))
@@ -121,23 +110,45 @@ namespace BattleHealth
             {
                 if (CurrentArmor > 1)
                 {
-                    // 触发伤害事件，通知其他系统
-                    onDamageDealt.Invoke(totalDamage, gameObject);
-
                     CurrentHP = CurrentHP - (totalDamage * ArmorRate) * (1 - DamageReduceRate);
                     //CurrentArmor -= 0.1f * CurrentArmor;
                 }
                 else if (CurrentArmor <= 1)
                 {
-                    // 触发伤害事件，通知其他系统
-                    onDamageDealt.Invoke(totalDamage, gameObject);
-
                     CurrentArmor = 0;
                     CurrentHP = CurrentHP - totalDamage * (1 - DamageReduceRate);
                 }
             }
+
+            if (CurrentHP <= 0)
+            {
+                CurrentHP = 0;
+                if (HideAfterDead)
+                    gameObject.SetActive(false);
+                else if (DestoryAfterDead)
+                    DestoryProgress();
+            }
         }
 
+        private float CalculateTotalDamage()
+        {
+            // 计算伤害数组的和
+            float totalDamage = 0f;
+            foreach (float damage in damageList)
+            {
+                totalDamage += damage;
+            }
+            return totalDamage;
+        }
+
+        private void ClearDamageArray()
+        {
+            // 清空伤害数组
+            damageList.Clear();
+        }
+        #endregion
+
+        #region 参数组件初始化
         private void ComponentInit()
         {
             id = GetComponent<Identity>();
@@ -159,17 +170,9 @@ namespace BattleHealth
             CurrentHP = TotalHP;
             CurrentArmor = Armor;
         }
+        #endregion
 
-        public void SetRegistResult(bool Result)
-        {
-            NeedRegistHP = !Result;
-        }
-
-        public void SetHealthBar(HealthBar HPB)
-        {
-            healthBar = HPB;
-        }
-
+        #region 对血条UI的注册流程&c参数接收
         private void RegeisterHP(bool NeedToRegist)
         {
             if (id.canUse)
@@ -193,16 +196,18 @@ namespace BattleHealth
             }
         }
 
-        private float CalculateTotalDamage()
+        public void SetRegistResult(bool Result)
         {
-            // 计算伤害数组的和
-            float totalDamage = 0f;
-            foreach (float damage in damageList)
-            {
-                totalDamage += damage;
-            }
-            return totalDamage;
+            NeedRegistHP = !Result;
         }
+
+        public void SetHealthBar(HealthBar HPB)
+        {
+            healthBar = HPB;
+        }
+        #endregion
+
+
 
         public void Revive(bool revive)
         {
@@ -216,11 +221,7 @@ namespace BattleHealth
             }
         }
 
-        private void ClearDamageArray()
-        {
-            // 清空伤害数组
-            damageList.Clear();
-        }
+
 
         private void DestoryProgress()
         {
@@ -229,7 +230,4 @@ namespace BattleHealth
         }
     }
 
-    // 定义伤害事件
-    [System.Serializable]
-    public class DamageEvent : UnityEngine.Events.UnityEvent<float, GameObject> { }
 }
