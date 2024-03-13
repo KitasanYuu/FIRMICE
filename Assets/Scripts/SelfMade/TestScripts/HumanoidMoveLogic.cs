@@ -540,7 +540,15 @@ namespace TestField
                 BCIC.HalfcoverChanged -= OnHalfCoverChanged;
                 BCIC.OccupiedcoverChanged -= OnOccupiedCoverChanged;
                 BCIC.FreecoverChanged -= OnFreeCoverChanged;
+            }
+
+            if(EAIB!= null)
+            {
                 EAIB.AttackTargetChanged -= TargetReceived;
+            }
+
+            if(AC!= null)
+            {
                 AC.ExposeStatusChanged -= OnTargetExposeStatusChanged;
             }
         }
