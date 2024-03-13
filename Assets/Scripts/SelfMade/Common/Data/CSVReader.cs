@@ -8,42 +8,58 @@ namespace DataManager
     public class CSVReader
     {
         private Dictionary<string, List<Dictionary<string, object>>> data;
-        private string csvFolderPath;
 
         public CSVReader()
         {
             data = new Dictionary<string, List<Dictionary<string, object>>>();
-            // 默认的CSV文件夹路径，您可以根据需要修改
-            csvFolderPath = Path.Combine(Application.dataPath, "Data", "Table");
         }
 
         public void LoadCSV(string csvFileName)
         {
-            string csvFilePath = Path.Combine(csvFolderPath, csvFileName);
-            if (!File.Exists(csvFilePath))
+            ResourceReader RR = new ResourceReader();
+            string CsvResourcePath = RR.GainPath("DataPath", csvFileName);
+            TextAsset csvFile = RR.GetCSVFile(csvFileName);
+
+            if (csvFile == null)
             {
-                Debug.LogError("CSV file not found: " + csvFilePath);
+                Debug.LogError("CSV file not found in Resources: " + CsvResourcePath);
                 return;
             }
 
-            string[] lines = File.ReadAllLines(csvFilePath);
-            string[] headers = lines[0].Trim().Split(','); // 使用第一行作为变量名
-            string[] types = lines[1].Trim().Split(','); // 使用第二行作为变量类型
+            string[] lines = csvFile.text.Split('\n');
+            string[] headers = lines[0].Trim().Split(',');
+            string[] types = lines[1].Trim().Split(',');
 
             List<Dictionary<string, object>> dataList = new List<Dictionary<string, object>>();
 
-            for (int i = 2; i < lines.Length; i++) // 从第三行开始读取数据
+            for (int i = 2; i < lines.Length; i++)
             {
                 string[] fields = lines[i].Trim().Split(',');
+                if (fields.Length < headers.Length) // 检查字段数量是否少于标题数量
+                {
+                    Debug.LogWarning(csvFileName+":数据行字段数量少于标题数量，跳过此行: " + "Line:"+i);
+                    continue; // 跳过这行
+                }
+
                 Dictionary<string, object> entry = new Dictionary<string, object>();
                 for (int j = 0; j < headers.Length; j++)
                 {
                     string valueString = fields[j].Trim();
-                    object value = ParseValue(types[j], valueString); // 解析值，根据每列的变量类型进行转换
+                    object value;
+                    if (j < types.Length) // 确保类型数组也足够长
+                    {
+                        value = ParseValue(types[j], valueString);
+                    }
+                    else
+                    {
+                        Debug.LogWarning(csvFileName + ":类型定义行字段数量少于标题数量，使用默认类型解析值");
+                        value = ParseValue("defaultType", valueString); // 使用一个默认类型处理方法或者直接赋值
+                    }
                     entry[headers[j]] = value;
                 }
                 dataList.Add(entry);
             }
+
 
             string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(csvFileName);
             data[fileNameWithoutExtension] = dataList;
@@ -100,7 +116,7 @@ namespace DataManager
 
             if (!data.ContainsKey(csvFileName))
             {
-                LoadCSV(csvFileName + ".csv");
+                LoadCSV(csvFileName);
             }
 
             if (data.ContainsKey(csvFileName))

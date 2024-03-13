@@ -10,10 +10,9 @@ public class Example : MonoBehaviour
         // 创建一个 CSVReader 对象
         CSVReader csvReader = new CSVReader();
 
-        // 加载 CSV 文件并获取特定数据
-        csvReader.LoadCSV("weapons.csv");
+        csvReader.GetDataByID("weapons", "Weapon_Rifle");
 
-        string idToSearch = "Weapon_Fire_ChainSaw";
+        string idToSearch = "Weapon_Rifle";
         var weaponData = csvReader.GetDataByID("weapons", idToSearch);
         if (weaponData != null)
         {
@@ -23,16 +22,15 @@ public class Example : MonoBehaviour
             string weaponName = (string)weaponData["WeaponName"];
             float damage = (float)weaponData["Damage"];
             float VaildShootRange = (float)weaponData["VaildShootRange"];
-            int test = (int)weaponData["Test"];
-            Vector3 Position = (Vector3)weaponData["Position"];
-            Vector2 whrer = (Vector2)weaponData["Whrer"];
+            string HitParticle = (string)weaponData["HitParticle"];
 
             // 输出获取的数据
-            //Debug.Log("Weapon found with ID " + Gid + ":");
-            //Debug.Log("Weapon ID " + id);
-            //Debug.Log("WeaponName: " + weaponName);
-            //Debug.Log("Damage: " + damage);
-            //Debug.Log("VaildShootRange: " + VaildShootRange);
+            Debug.Log("Weapon found with ID " + Gid + ":");
+            Debug.Log("Weapon ID " + id);
+            Debug.Log("WeaponName: " + weaponName);
+            Debug.Log("Damage: " + damage);
+            Debug.Log("VaildShootRange: " + VaildShootRange);
+            Debug.Log("HitParticle:" + HitParticle);
             //Debug.Log("Test: " + test);
             //Debug.Log("Position" + Position);
             //Debug.Log("Whrer" + whrer);

@@ -25,6 +25,13 @@ public class ResourceReader
         return relativePath;
     }
 
+    public TextAsset GetCSVFile(string CSVName)
+    {
+        TextAsset csv = null;
+        string CsvResourcePath = GainPath("DataPath", CSVName);
+        csv = Resources.Load<TextAsset>(CsvResourcePath);
+        return csv;
+    }
 
     public GameObject GetGameObject(string ObjectType ,string ObjectName)
     {
