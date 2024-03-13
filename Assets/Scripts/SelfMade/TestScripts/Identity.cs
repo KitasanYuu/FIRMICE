@@ -7,10 +7,12 @@ namespace TestField
     {
         [SerializeField, FixedValues("Player", "Partner", "Ally","Enemy","Neutral", "TrainingTarget","TestPrototype","Cover","Custom")]
         private string MasterIdentity;
+
         [SerializeField,ShowIf(nameof(ShowCustomOps))]
         private string CustomMasterIdentity;
         [ShowIf(nameof(CidShow))]
         public string Cid;
+
         [SerializeField, FixedValues("null","FullCover", "HalfCover"),ShowIf(nameof(CoverSerizes))]
         private string CoverType;
         [ReadOnly,ShowIf(nameof(CoverSerizes))]
@@ -25,8 +27,14 @@ namespace TestField
         [HideInInspector]
         public string MasterID;
         [HideInInspector]
+        public bool canUse;
+        [HideInInspector]
         public string Covertype;
         private bool OccupiedInit;
+        private void Awake()
+        {
+            canUse = false;
+        }
 
         // Start is called before the first frame update
         void Start()
@@ -41,6 +49,7 @@ namespace TestField
             }
 
             Covertype = CoverType;
+            canUse = true;
         }
 
         // Update is called once per frame

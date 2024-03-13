@@ -1,5 +1,6 @@
 using CustomInspector;
 using System.Collections.Generic;
+using TestField;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -7,12 +8,17 @@ namespace BattleHealth
 {
     public class VirtualHP : MonoBehaviour
     {
+        [ReadOnly] public GameObject Object;
+        [ReadOnly] public GameObject HPAnchor;
         [SerializeField, ReadOnly] private float CurrentHP;
         [SerializeField, ReadOnly] private float CurrentArmor;
+        [ReadOnly] public HealthBar healthBar;
         [Space2(20)]
         public bool TRevive;
         [SerializeField]
         private bool DestoryAfterDead;
+        [SerializeField]
+        private bool HideAfterDead;
         [SerializeField]
         private float TotalHP;
         [SerializeField, Tooltip("自身的减伤倍率，值越高伤害减免越高，为1时完全无敌"), Range(0, 1)]
@@ -21,6 +27,11 @@ namespace BattleHealth
         public float Armor;
         [Tooltip("护盾带来的减伤效率，值越低护盾减免越高，为0时完全无敌，为1时全伤害生效"), Range(1, 0)]
         public float ArmorRate = 1;
+
+        private bool NeedRegistHP;
+
+        private HPVisionManager HVM;
+        private Identity id;
 
         public List<float> damageList = new List<float>(); // 使用List来存储伤害值
 
@@ -39,8 +50,37 @@ namespace BattleHealth
             }
         }
 
+        void Start()
+        {
+            ComponentInit();
+            InfoInit();
+            ParameterInit();
+            RegeisterHP(NeedRegistHP);
+        }
+
+        void Update()
+        {
+            RegeisterHP(NeedRegistHP);
+            Revive(TRevive);
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                PrintDamageInfo();
+            }
+            
+            DamageCalculating();
+
+            if (CurrentHP <= 0)
+            {
+                CurrentHP = 0;
+                if (HideAfterDead)
+                    gameObject.SetActive(false);
+                else if (DestoryAfterDead)
+                    DestoryProgress();
+            }
+        }
+
         // 从外部调用的方法，直接添加伤害并指定角色标识
-        public void AddDamage(float damage, float ArmorBrake,GameObject character)
+        public void AddDamage(float damage, float ArmorBrake, GameObject character)
         {
             // 计算减伤后的实际伤害值
             float actualDamage = damage;
@@ -71,33 +111,6 @@ namespace BattleHealth
             }
         }
 
-
-        void Start()
-        {
-            CurrentHP = TotalHP;
-            CurrentArmor = Armor;
-        }
-
-        void Update()
-        {
-            Revive(TRevive);
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                PrintDamageInfo();
-            }
-            
-            DamageCalculating();
-
-            if (CurrentHP <= 0)
-            {
-                CurrentHP = 0;
-                if (DestoryAfterDead)
-                {
-                    gameObject.SetActive(false);
-                }
-            }
-        }
-
         private void DamageCalculating()
         {
             float totalDamage = CalculateTotalDamage();
@@ -121,6 +134,61 @@ namespace BattleHealth
 
                     CurrentArmor = 0;
                     CurrentHP = CurrentHP - totalDamage * (1 - DamageReduceRate);
+                }
+            }
+        }
+
+        private void ComponentInit()
+        {
+            id = GetComponent<Identity>();
+        }
+
+        private void InfoInit()
+        {
+            Object = gameObject;
+            Transform hpAnchor = gameObject.transform.Find("HPAnchor");
+            if (hpAnchor != null)
+            {
+                HPAnchor = hpAnchor.gameObject;
+            }
+        }
+
+        private void ParameterInit()
+        {
+            NeedRegistHP = true;
+            CurrentHP = TotalHP;
+            CurrentArmor = Armor;
+        }
+
+        public void SetRegistResult(bool Result)
+        {
+            NeedRegistHP = !Result;
+        }
+
+        public void SetHealthBar(HealthBar HPB)
+        {
+            healthBar = HPB;
+        }
+
+        private void RegeisterHP(bool NeedToRegist)
+        {
+            if (id.canUse)
+            {
+                if (NeedToRegist)
+                {
+                    if (Object != null && HPAnchor != null)
+                    {
+                        HVM = FindAnyObjectByType<HPVisionManager>();
+
+                        if (HVM != null)
+                        {
+                            HVM.ObjectHPRegister(gameObject);
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError(gameObject.name + "Regist HP Failure");
+                    }
                 }
             }
         }
@@ -152,6 +220,12 @@ namespace BattleHealth
         {
             // 清空伤害数组
             damageList.Clear();
+        }
+
+        private void DestoryProgress()
+        {
+            Destroy(healthBar.gameObject);
+            Destroy(gameObject);
         }
     }
 
