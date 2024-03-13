@@ -33,6 +33,14 @@ public class HPVisionManager : MonoBehaviour
 
     private void RayCastDetect()
     {
+        // 对healthBars列表进行排序，根据与相机的距离，距离越近的越后面
+        healthBars.Sort((a, b) =>
+        {
+            float distanceA = Vector3.Distance(mainCamera.transform.position, a.HPAnchor.position);
+            float distanceB = Vector3.Distance(mainCamera.transform.position, b.HPAnchor.position);
+            return distanceB.CompareTo(distanceA);
+        });
+
         foreach (var healthBar in healthBars)
         {
             Transform npcTransform = healthBar.HPAnchor;
@@ -64,6 +72,9 @@ public class HPVisionManager : MonoBehaviour
             float FinalRadius = checkRadius * ScaleFactor * Offset;
             // 使用胶囊体进行射线检测，判断是否有物体阻挡视线
             bool isBlocked = Physics.CheckCapsule(capsulePointA, capsulePointB, FinalRadius, ~ignoreLayers);
+
+            // 调整healthBar的层级顺序，使得距离越近的血条越先渲染
+            healthBar.transform.SetAsLastSibling();
 
             // 根据是否被阻挡来设置血条的显示状态
             healthBar.SetVisibility(!isBlocked);
