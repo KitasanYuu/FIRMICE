@@ -3,24 +3,24 @@ using UnityEditor;
 
 public class CopyAnimationClip : MonoBehaviour
 {
-    public AnimationClip originalClip; // Ô­Ê¼Ö»¶Á¶¯»­Æ¬¶Î
+    public AnimationClip originalClip; // åŸå§‹åªè¯»åŠ¨ç”»ç‰‡æ®µ
 
     [ContextMenu("Create Editable Animation Clip")]
     void CreateEditableClip()
     {
-        // ´´½¨Ò»¸öĞÂµÄ¶¯»­Æ¬¶Î
+        // åˆ›å»ºä¸€ä¸ªæ–°çš„åŠ¨ç”»ç‰‡æ®µ
         AnimationClip editableClip = new AnimationClip();
-        editableClip.name = "Editable_" + originalClip.name; // ÉèÖÃĞÂ¶¯»­Æ¬¶ÎµÄÃû³Æ
+        editableClip.name = "Editable_" + originalClip.name; // è®¾ç½®æ–°åŠ¨ç”»ç‰‡æ®µçš„åç§°
 
-        // ½«Ô­Ê¼¶¯»­Æ¬¶ÎµÄĞÅÏ¢¸´ÖÆµ½ĞÂµÄ¶¯»­Æ¬¶ÎÖĞ
+        // å°†åŸå§‹åŠ¨ç”»ç‰‡æ®µçš„ä¿¡æ¯å¤åˆ¶åˆ°æ–°çš„åŠ¨ç”»ç‰‡æ®µä¸­
         EditorUtility.CopySerialized(originalClip, editableClip);
 
-        // ±£´æĞÂµÄ¶¯»­Æ¬¶ÎÎª.assetÎÄ¼ş
+        // ä¿å­˜æ–°çš„åŠ¨ç”»ç‰‡æ®µä¸º.assetæ–‡ä»¶
         string path = "Assets/NewEditableAnimationClip.anim";
         AssetDatabase.CreateAsset(editableClip, path);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
-        Debug.Log("´´½¨¿É±à¼­µÄ¶¯»­Æ¬¶Î£º" + path);
+        Debug.Log("åˆ›å»ºå¯ç¼–è¾‘çš„åŠ¨ç”»ç‰‡æ®µï¼š" + path);
     }
 }

@@ -21,7 +21,7 @@ public class ControllerGUI : Editor
     public override void OnInspectorGUI()
     {
         // 加载图片
-        logo = EditorGUIUtility.Load("Assets/Scripts/SelfMade/AvatarController/ControllerImage.png") as Texture2D;
+        logo = EditorGUIUtility.Load("Assets/Scripts/SelfMade/Actor/Player/AvatarController/ControllerImage.png") as Texture2D;
 
         serializedObject.Update(); // 更新SerializedObject以便显示最新的属性值
         serializedObject.ApplyModifiedProperties(); // 调用显示属性的方法
@@ -168,8 +168,8 @@ public class ControllerGUI : Editor
         avatarController.virtualCamera = EditorGUILayout.ObjectField(new GUIContent("CinemachineCamera", "virtualCamera"), avatarController.virtualCamera, typeof(CinemachineVirtualCamera), true) as CinemachineVirtualCamera;
         avatarController.CinemachineCameraTarget = EditorGUILayout.ObjectField(new GUIContent("CinemachineCameraTarget", "Camera target"), avatarController.CinemachineCameraTarget, typeof(GameObject), true) as GameObject;
         EditorGUI.EndDisabledGroup(); // 结束置灰区域
-        avatarController.minFov = EditorGUILayout.FloatField(new GUIContent("MinFOV", "滚轮缩放的最小FOV"), avatarController.minFov);
-        avatarController.maxFov = EditorGUILayout.FloatField(new GUIContent("MaxFOV", "滚轮缩放的最大FOV"), avatarController.maxFov);
+        avatarController.minDistance = EditorGUILayout.FloatField(new GUIContent("MinDistance", "滚轮缩放的最小距离"), avatarController.minDistance);
+        avatarController.maxDistance = EditorGUILayout.FloatField(new GUIContent("MaxDistance", "滚轮缩放的最大距离"), avatarController.maxDistance);
         avatarController.zoomSpeed = EditorGUILayout.FloatField(new GUIContent("ZoomSpeed", "缩放速度"), avatarController.zoomSpeed);
         avatarController.zoomsensitivity = EditorGUILayout.FloatField(new GUIContent("ZoomSensitivity", "滚轮缩放的灵敏度"), avatarController.zoomsensitivity);
         avatarController.TopClamp = EditorGUILayout.FloatField(new GUIContent("TopClamp", "相机向上移动的最大角度"), avatarController.TopClamp);

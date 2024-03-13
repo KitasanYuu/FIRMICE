@@ -3,7 +3,7 @@ using UnityEditor;
 
 public class CopyGameObjectPath : Editor
 {
-    [MenuItem("Custom/Copy GameObject Path")]
+    [MenuItem("YuuTools/Copy GameObject Path")]
     static void CopyPath()
     {
         GameObject selectedObject = Selection.activeGameObject;

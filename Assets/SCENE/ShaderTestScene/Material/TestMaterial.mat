@@ -30,7 +30,7 @@ Material:
   m_ValidKeywords:
   - _ALPHATEST_ON
   - _EMISSION
-  - _ENABLEDITHER
+  - _ENABLEDISSOLVE
   - _SIX_WAY_COLOR_ABSORPTION
   m_InvalidKeywords:
   - _BOOLEAN
@@ -237,8 +237,8 @@ Material:
     - _EMISSION: 1
     - _EMISSION2: 0
     - _ENABLEALPHAREPLACE: 0
-    - _ENABLEDISSOLVE: 0
-    - _ENABLEDITHER: 1
+    - _ENABLEDISSOLVE: 1
+    - _ENABLEDITHER: 0
     - _ENAKBLEALPHAREPLACE: 0
     - _EmissiveColorMode: 1
     - _EmissiveExposureWeight: 1

@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using Cinemachine;
 using AvatarMain;
@@ -10,7 +9,6 @@ using CustomInspector;
 
 namespace playershooting
 {
-
     public class TPSShootController : MonoBehaviour
     {
         [ReadOnly]
@@ -21,6 +19,7 @@ namespace playershooting
         [HorizontalLine("自定义的参数",2,FixedColor.Gray)]
         // 用于瞄准的虚拟相机
         [SerializeField] private CinemachineVirtualCamera aimVirtualCamera;
+        //[SerializeField] private GameObject AimPoint;
         // 普通灵敏度和瞄准灵敏度
         [SerializeField] private float normalSensitivity;
         [SerializeField] private float aimSensitivity;
@@ -43,6 +42,7 @@ namespace playershooting
         private BasicInput _input;
         private RayDectec rayDectec;
         public GameObject corshair;
+        private Cinemachine3rdPersonFollow thirdPersonFollow;
 
         private bool _hasAnimator;
         // animation IDs
@@ -53,7 +53,6 @@ namespace playershooting
         public int AimIKParameter;
 
         //这些是实例化生成后查找物体用的参数
-        private string corshairtag = "Corshair";
         private string corshairname = "Corshair";
         private bool searchInactiveObjects = true;
 
@@ -61,15 +60,17 @@ namespace playershooting
         [HideInInspector]
         public Vector3 TmouseWorldPosition;
 
+        //调试用参数
+        private Vector3 DetectPoint;
+        private Vector3 TargetPoint;
+
         private void Awake()
         {
-            // 获取角色控制器和输入
-            avatarController = GetComponent<AvatarController>();
-            _input = GetComponent<BasicInput>();
-            rayDectec = GetComponent<RayDectec>();
+
         }
         private void Start()
         {
+            ComponentInit();
             _hasAnimator = TryGetComponent(out _animator);
             AssignAnimationIDs();
 
@@ -97,15 +98,33 @@ namespace playershooting
 
             // 获取鼠标在世界空间中的位置
             Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
-            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-            //Transform hitTransform = null;
+
+
+            float minDistance = thirdPersonFollow.CameraDistance;
+
+            Vector3 cameraPos = Camera.main.transform.position;
+            Vector3 cameraForward = Camera.main.transform.forward;
+
+            Vector3 rayOrigin = cameraPos + cameraForward * minDistance;
+            //Vector3 rayorigin = AimPoint.transform.position;
+            //Vector3 rayOrigin = new Vector3(rayorigin.x-2.5f,rayorigin.y,rayorigin.z);
+            //DetectPoint = rayOrigin;
+
+            TargetPoint = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()).direction;
+
+            Ray ray = new Ray(rayOrigin, TargetPoint);
+
             if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimColliderLayerMask))
             {
+
                 debugTransform.position = raycastHit.point;
+
                 mouseWorldPosition = raycastHit.point;
+
                 TmouseWorldPosition = mouseWorldPosition;
-                //hitTransform = raycastHit.transform;
+
             }
+
 
             // 瞄准
             if (_input.aim)
@@ -122,6 +141,9 @@ namespace playershooting
                 Vector3 aimDirection = (worldAimTarget - transform.position).normalized;
 
                 transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * 20f);
+
+                //让角色的朝向始终与TPSShootCamera的朝向相同
+                //transform.forward = Vector3.Lerp(transform.forward, aimVirtualCamera.transform.forward, Time.deltaTime * 20f);
 
                 float targetShoulderOffsetY = avatarController.IsCrouching ? CrouchingY : OriginY;
                 float transitionspeed = 5f; // 调整过渡速度
@@ -188,13 +210,19 @@ namespace playershooting
 
         private void FIRE()
         {
-            Fire = _input.shoot;
+            if(isAiming)
+            {
+                Fire = _input.shoot;
+            }
+            else
+            {
+                Fire = false;
+            }
+
         }
 
         private void ShootSiteChange()
         {
-            Cinemachine3rdPersonFollow thirdPersonFollow = aimVirtualCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
-
             if (!isBlocked && swaKeyPressed)
             {
                 swaKeyPressed = false; // 重置按键状态
@@ -254,19 +282,42 @@ namespace playershooting
             if (corshair == null)
             {
                 TargetSeeker targetseeker = GetComponent<TargetSeeker>();
+                if(targetseeker == null)
+                {
+                    targetseeker = gameObject.AddComponent<TargetSeeker>();
+                }
+
                 if (targetseeker != null)
                 {
-                    targetseeker.objectTagToFind = corshairtag;
+                    //targetseeker.objectTagToFind = corshairtag;
+                    targetseeker.objectLayerToFind = LayerMask.GetMask("UI");
                     targetseeker.objectNameToFind = corshairname;
                     targetseeker.searchInactiveObjects = searchInactiveObjects;
-                    targetseeker.SetStatus(true);
+                    //targetseeker.SetStatus(true);
                     if (targetseeker.foundObject != null)
                     {
                         corshair = targetseeker.foundObject;
-                        targetseeker.SetStatus(false);
+                        if (corshair.activeSelf)
+                        {
+                            corshair.SetActive(false);
+                        }
+                        //targetseeker.SetStatus(false);
+                        Destroy(targetseeker);
                     }
                 }
             }
+        }
+
+        private void ComponentInit()
+        {
+            // 获取角色控制器和输入
+            avatarController = GetComponent<AvatarController>();
+            _input = GetComponent<BasicInput>();
+            rayDectec = GetComponent<RayDectec>();
+            thirdPersonFollow = aimVirtualCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
+
+            if(corshair == null)
+                FindCorshair();
         }
 
         private Vector3 CalculateTargetPosition(float cameraSide)
@@ -283,6 +334,15 @@ namespace playershooting
             AimIKParameter = status;
             //Debug.Log(AimIKParameter);
         }
+
+#if UNITY_EDITOR
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.cyan;
+            //Gizmos.DrawSphere(DetectPoint, 0.1f);
+            Gizmos.DrawRay(DetectPoint, TargetPoint);
+        }
+#endif
 
     }
 }

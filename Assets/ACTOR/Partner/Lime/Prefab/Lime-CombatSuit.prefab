@@ -8819,6 +8819,8 @@ GameObject:
   m_Component:
   - component: {fileID: 94243915461084603}
   - component: {fileID: 2517407529741890980}
+  - component: {fileID: -3196313981324614363}
+  - component: {fileID: -189165122754396735}
   m_Layer: 30
   m_Name: Lime-CombatSuit
   m_TagString: Untagged
@@ -8835,7 +8837,7 @@ Transform:
   m_GameObject: {fileID: 3107162728240083391}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.058, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8878,6 +8880,50 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-3196313981324614363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3107162728240083391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 187afa859ccf41245a548fda0520e7dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MasterIdentity: Partner
+  CoverType: 
+  CoverOccupied: 0
+  Occupier: {fileID: 0}
+  MasterID: 
+  Covertype: 
+--- !u!143 &-189165122754396735
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3107162728240083391}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 1.4
+  m_Radius: 0.13
+  m_SlopeLimit: 45
+  m_StepOffset: 0.25
+  m_SkinWidth: 0.02
+  m_MinMoveDistance: 0
+  m_Center: {x: 0, y: 0.7, z: 0}
 --- !u!1 &3107220886636871771
 GameObject:
   m_ObjectHideFlags: 0

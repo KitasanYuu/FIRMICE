@@ -1,56 +1,266 @@
+using CustomInspector;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace TestField
 {
-    [RequireComponent(typeof(TargetSearchArea))]
+    [RequireComponent(typeof(BattleAreaManager))]
     public class AreaBoarCaster : MonoBehaviour
     {
-        private GameObject ObjectFound;
+        [SerializeField, ReadOnly] private GameObject ObjectFound;
+        [SerializeField, ReadOnly] private BattleAreaManager BAM;
+        [SerializeField, ReadOnly] private List<GameObject> AttackTargetList = new List<GameObject>();
+        [SerializeField, ReadOnly] private List<GameObject> Partner = new List<GameObject>();
+        [SerializeField, ReadOnly] private List<GameObject> Neutral = new List<GameObject>();
+        [SerializeField, ReadOnly] private List<GameObject> BCReceiver = new List<GameObject>();
         private List<GameObject> BroadCastReceiver = new List<GameObject>();
-        private TargetSearchArea targetsearcharea;
+        public List<GameObject> SBroadCastReceiver = new List<GameObject>();
+        [SerializeField, ReadOnly] private List<GameObject> FullCoverList = new List<GameObject>();
+        [SerializeField, ReadOnly] private List<GameObject> HalfCoverList = new List<GameObject>();
+        [SerializeField, ReadOnly] private List<GameObject> OccupiedCoverList = new List<GameObject>();
+        [SerializeField, ReadOnly] private List<GameObject> FreeCoverList = new List<GameObject>();
 
         // Start is called before the first frame update
         void Start()
         {
-            targetsearcharea = GetComponent<TargetSearchArea>();
-
-            // 订阅事件
-            targetsearcharea.TargetFoundChanged += OnTargetFoundChanged;
+            BAM = GetComponent<BattleAreaManager>();
+            EventSubscribe();
         }
+
+
 
         // Update is called once per frame
         void Update()
         {
-            
+
         }
 
+        #region 信息预处理
+
+        private void AreaTargetUnion()
+        {
+            AttackTargetList.Clear();
+
+            if (Partner.Count > 0)
+                AttackTargetList.AddRange(Partner);
+            if (Neutral.Count > 0)
+                AttackTargetList.AddRange(Neutral);
+            if (ObjectFound != null)
+                AttackTargetList.Add(ObjectFound);
+            SendAttackTargetList();
+        }
+
+        #endregion
+
+        #region 信息接收
+        private void HandleBroadCastReceiverChanged(List<GameObject> newReceiverList)
+        {
+            BCReceiver = newReceiverList;
+            SendOtherReceiverINFO();
+        }
 
         private void OnTargetFoundChanged(GameObject newTarget)
         {
-            ObjectFound = targetsearcharea.TargetFound;
-            BroadCastReceiver = targetsearcharea.BroadCastReceiver;
+            ObjectFound = BAM.TargetFound;
+            BroadCastReceiver = BAM.BroadCastReceiver;
+            AreaTargetUnion();
             // 在 TargetFound 变化时，向 BroadCastReceiver 中的具有 AlertLine 脚本的对象发送信息
             SendAlertToObjectWithAlertLine();
         }
 
-        private void SendAlertToObjectWithAlertLine()
+        private void OnPartnerChanged(List<GameObject> newList)
         {
-            foreach (GameObject receiverObject in BroadCastReceiver)
+            Partner = newList;
+            AreaTargetUnion();
+            SendPartnerINFO();
+        }
+
+        private void OnNeutralChanged(List<GameObject> newList)
+        {
+            Neutral = newList;
+            AreaTargetUnion();
+        }
+
+        private void OnHalfCoverChanged(List<GameObject> newList)
+        {
+            HalfCoverList = newList;
+            foreach (GameObject receiverObject in BCReceiver)
             {
-                BroadCasterInfoContainer broadcasterinfocontainer = receiverObject.GetComponent<BroadCasterInfoContainer>();
-                if (broadcasterinfocontainer != null)
+                BroadCasterInfoContainer BCIC = receiverObject.GetComponent<BroadCasterInfoContainer>();
+                if (BCIC != null)
                 {
                     // 直接调用 AlertLine 脚本中的 TargetBoardCast 方法，将 ObjectFound 传递给它
-                    broadcasterinfocontainer.TargetBoardCast(ObjectFound);
+                    BCIC.HalfCoverChanged(HalfCoverList);
                 }
             }
+
+        }
+
+        private void OnFullCoverChanged(List<GameObject> newList)
+        {
+            FullCoverList = newList;
+            foreach (GameObject receiverObject in BCReceiver)
+            {
+                BroadCasterInfoContainer BCIC = receiverObject.GetComponent<BroadCasterInfoContainer>();
+                if (BCIC != null)
+                {
+                    // 直接调用 AlertLine 脚本中的 TargetBoardCast 方法，将 ObjectFound 传递给它
+                    BCIC.FullCoverChanged(FullCoverList);
+                }
+            }
+        }
+
+        private void OnOccupiedCoverChanged(List<GameObject> newList)
+        {
+            OccupiedCoverList = newList;
+            foreach (GameObject receiverObject in BCReceiver)
+            {
+                BroadCasterInfoContainer BCIC = receiverObject.GetComponent<BroadCasterInfoContainer>();
+                if (BCIC != null)
+                {
+                    BCIC.OccupiedCoverChanged(OccupiedCoverList);
+                }
+            }
+        }
+
+        private void OnFreeCoverChanged(List<GameObject> newList)
+        {
+            FreeCoverList = newList;
+            foreach (GameObject receiverObject in BCReceiver)
+            {
+                BroadCasterInfoContainer BCIC = receiverObject.GetComponent<BroadCasterInfoContainer>();
+                if (BCIC != null)
+                {
+                    BCIC.FreeCoverChanged(FreeCoverList);
+                }
+            }
+        }
+
+        private void OnSBroadCastReceivedChanged(List<GameObject> newList)
+        {
+            SBroadCastReceiver = newList;
+
+            // 找到两个列表的交集，即相同的物体
+            List<GameObject> commonObjects = BroadCastReceiver.Intersect(SBroadCastReceiver).ToList();
+
+            // 遍历相同的物体，并获取每个物体上的一个组件
+            foreach (GameObject obj in commonObjects)
+            {
+                BroadCasterInfoContainer BCIC = obj.GetComponent<BroadCasterInfoContainer>();
+
+                if (BCIC != null)
+                {
+                    BCIC.NeedBackToOrigin = false;
+                    BCIC.SetAlertTarget(ObjectFound);
+                }
+            }
+
+            // 找到两个列表的并集，即所有不同的物体
+            List<GameObject> onlyInCurrent = BroadCastReceiver.Except(SBroadCastReceiver).ToList();
+            //Debug.Log(onlyInCurrent.Count);
+
+            // 遍历所有不同的物体，并获取每个物体上的一个组件
+            foreach (GameObject obj in onlyInCurrent)
+            {
+                BroadCasterInfoContainer BCIC = obj.GetComponent<BroadCasterInfoContainer>();
+
+                if (BCIC != null)
+                {
+                    BCIC.NeedBackToOrigin = true;
+                    BCIC.SetAlertTarget(null);
+                }
+            }
+        }
+
+        #endregion
+
+        #region 信息发送
+        private void SendPartnerINFO()
+        {
+            foreach (GameObject receiverObject in BCReceiver)
+            {
+                BroadCasterInfoContainer BCIC = receiverObject.GetComponent<BroadCasterInfoContainer>();
+                if (BCIC != null)
+                {
+                    BCIC.EnemeyPoolChanged(Partner);
+                }
+            }
+        }
+
+        private void SendAlertToObjectWithAlertLine()
+        {
+            foreach (GameObject receiverObject in SBroadCastReceiver)
+            {
+                BroadCasterInfoContainer BCIC = receiverObject.GetComponent<BroadCasterInfoContainer>();
+                if (BCIC != null)
+                {
+                    // 直接调用 AlertLine 脚本中的 TargetBoardCast 方法，将 ObjectFound 传递给它
+                    BCIC.SetAlertTarget(ObjectFound);
+                }
+            }
+        }
+
+        private void SendAttackTargetList()
+        {
+            foreach (GameObject receiverObject in SBroadCastReceiver)
+            {
+                BroadCasterInfoContainer BCIC = receiverObject.GetComponent<BroadCasterInfoContainer>();
+                if (BCIC != null)
+                {
+                    // 直接调用 AlertLine 脚本中的 TargetBoardCast 方法，将 ObjectFound 传递给它
+                    BCIC.SetAttackTargetList(AttackTargetList);
+                }
+            }
+        }
+
+        private void SendOtherReceiverINFO()
+        {
+            foreach (GameObject receiverObject in BCReceiver)
+            {
+                List<GameObject> filteredList = BCReceiver.Where(x => x != receiverObject).ToList();
+
+                BroadCasterInfoContainer BCIC = receiverObject.GetComponent<BroadCasterInfoContainer>();
+                if (BCIC != null)
+                {
+                    BCIC.OtherReceiverINFOChanged(filteredList);
+                }
+            }
+        }
+
+        #endregion
+
+        #region 事件订阅处理
+        private void EventSubscribe()
+        {
+            // 订阅事件，当BroadCastReceiver变化时调用 HandleBroadCastReceiverChanged 方法
+            BAM.BroadCastReceiverChanged += HandleBroadCastReceiverChanged;
+            // 订阅事件
+            BAM.TargetFoundChanged += OnTargetFoundChanged;
+            BAM.PartnerChanged += OnPartnerChanged;
+            BAM.FullCoverChanged += OnFullCoverChanged;
+            BAM.HalfCoverChanged += OnHalfCoverChanged;
+            BAM.SBroadCastReceiverChanged += OnSBroadCastReceivedChanged;
+            BAM.OccupiedCoverChanged += OnOccupiedCoverChanged;
+            BAM.FreeCoverChanged += OnFreeCoverChanged;
+            BAM.NeutralChanged += OnNeutralChanged;
         }
 
         // 在脚本销毁时取消订阅事件，以防止潜在的内存泄漏
         private void OnDestroy()
         {
-            targetsearcharea.TargetFoundChanged -= OnTargetFoundChanged;
+            BAM.TargetFoundChanged -= OnTargetFoundChanged;
+            BAM.PartnerChanged -= OnPartnerChanged;
+            BAM.BroadCastReceiverChanged -= HandleBroadCastReceiverChanged;
+            BAM.HalfCoverChanged -= OnHalfCoverChanged;
+            BAM.FullCoverChanged -= OnFullCoverChanged;
+            BAM.SBroadCastReceiverChanged -= OnSBroadCastReceivedChanged;
+            BAM.OccupiedCoverChanged -= OnOccupiedCoverChanged;
+            BAM.FreeCoverChanged -= OnFreeCoverChanged;
+            BAM.NeutralChanged -= OnNeutralChanged;
         }
+
+        #endregion
     }
 }

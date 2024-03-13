@@ -1,147 +1,77 @@
+using TestField;
 using UnityEngine;
-using System.Collections.Generic;
-using Pathfinding;
 
 namespace TargetDirDetec
 {
+
     public class HitCollisionDetection : MonoBehaviour
     {
-        public GameObject ColliderContainer;
-        private BoxCollider boxCollider;
         public LayerMask targetLayer;
-        public bool reverseXAxis = false;
-        public bool reverseYAxis = false;
-        public float rayLength = 1.0f; // 射线长度
-        public Dictionary<CollisionSide, Vector3> directionToVector; // 方向和射线向量对应关系
-
-        [SerializeField]
-        private HitOrNot hitornot;
-
-        [HideInInspector]
-        private bool hitted;
-
         public int HitDir;
-        public int resetDelayFrames = 3; // 延迟帧数
 
-        private int resetCounter = 0;
-
-        private void Awake()
-        {
-            // 初始化方向和射线向量对应关系
-            directionToVector = new Dictionary<CollisionSide, Vector3>
-            {
-                { CollisionSide.Front, Vector3.forward },
-                { CollisionSide.Back, Vector3.back },
-                { CollisionSide.Left, Vector3.left },
-                { CollisionSide.Right, Vector3.right }
-            };
-        }
-
-        private void Start()
-        {
-            if (boxCollider == null && hitornot != null)
-            {
-                Debug.LogError("HitCollisionDetection:没有找到 Box Collider 组件！");
-            }
-            else
-            {
-                Debug.Log("HitCollisionDetection:方向受击检测初始化完成");
-            }
-
-            hitornot = ColliderContainer.GetComponent<HitOrNot>();
-            boxCollider = ColliderContainer.GetComponent<BoxCollider>();
-        }
+        private AIFunction aif = new AIFunction();
 
         private void Update()
         {
-            if (boxCollider != null)
+            //HitDir = 0;
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if ((targetLayer.value & 1 << collision.gameObject.layer) != 0)
             {
-                bool collisionDetected = false; // 是否检测到碰撞
-
-                // 检测碰撞
-                foreach (CollisionSide side in System.Enum.GetValues(typeof(CollisionSide)))
+                Bullet bullet = collision.gameObject.GetComponent<Bullet>();
+                if (bullet != null)
                 {
-                    if (CheckCollision(side))
+                    GameObject go = bullet.Shooter;
+                    int shooterCamp = aif.GetActorCamp(go);
+                    int selfCamp = aif.GetActorCamp(gameObject);
+                    if(shooterCamp != selfCamp)
                     {
-                        // 使用 HitDir 来记录碰撞方向
-                        switch (side)
-                        {
-                            case CollisionSide.Front:
-                                HitDir = 1;
-                                //Debug.Log("前碰撞");
-                                break;
-                            case CollisionSide.Back:
-                                HitDir = -1;
-                                //Debug.Log("后碰撞");
-                                break;
-                            case CollisionSide.Left:
-                                HitDir = -2;
-                                //Debug.Log("左碰撞");
-                                break;
-                            case CollisionSide.Right:
-                                HitDir = 2;
-                                //Debug.Log("右碰撞");
-                                break;
-                        }
-
-                        collisionDetected = true;
-
-                        // 重置计数器
-                        resetCounter = 0;
-
-                        // 可以在这里计算碰撞点坐标并用于生成特效等
-                    }
-                }
-
-                if (hitornot != null)
-                {
-                    hitted = hitornot.hitted;
-                }
-
-                if (HitDir == 0 && hitted)
-                {
-                    HitDir = 1;
-                    collisionDetected = true;
-                }
-
-                // 如果没有检测到碰撞，逐渐减小 HitDir 的值
-                if (!collisionDetected)
-                {
-                    resetCounter++;
-                    if (resetCounter >= resetDelayFrames)
-                    {
-                        HitDir = 0; // 在计数器达到指定帧数后才清零
+                        // 将相对位置转换到本地坐标系
+                        Vector3 relativePosition = transform.InverseTransformPoint(collision.contacts[0].point);
+                        //Debug.Log(collision.gameObject);
+                        CalculateHitDir(relativePosition);
                     }
                 }
             }
-
-
-
-
         }
 
-        private bool CheckCollision(CollisionSide side)
+        private void CalculateHitDir(Vector3 relativePosition)
         {
-            Vector3 center = boxCollider.bounds.center;
-            Vector3 extents = boxCollider.bounds.extents;
+            Quaternion rotation = Quaternion.LookRotation(relativePosition, Vector3.up);
+            float angle = rotation.eulerAngles.y;
+            //Debug.Log(angle);
 
-            // 根据反转布尔变量决定方向
-            float xDirection = reverseXAxis ? -1f : 1f;
-            float yDirection = reverseYAxis ? -1f : 1f;
+            if (angle >= 0f && angle < 45f)
+            {
+                HitDir = 1;
+            }
+            else if (angle >= 45f && angle < 135f)
+            {
+                HitDir = -2;
+            }
+            else if (angle >= 135f && angle < 225f)
+            {
+                HitDir = -1;
+            }
+            else if (angle >= 225f && angle < 315f)
+            {
+                HitDir = -2;
+            }
+            else if (angle >= 315f || angle < 0f)
+            {
+                HitDir = 1;
+            }
 
-            Vector3 rayDirection = directionToVector[side] * rayLength;
-
-            bool collision = Physics.CheckBox(center + rayDirection * xDirection, extents, Quaternion.identity, targetLayer);
-            return collision;
+            // You can use hitDir as needed in your game logic
+            //Debug.Log("HitDir: " + HitDir);
         }
 
-        public enum CollisionSide
+        public void HitDirStatus(int HitDirStatus)
         {
-            Front,
-            Back,
-            Left,
-            Right
+            HitDir = HitDirStatus;
+            //Debug.Log(HitDirStatus);
         }
-
     }
 }

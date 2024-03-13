@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using CustomInspector;
+using System;
 
 namespace TestField
 {
@@ -10,34 +11,35 @@ namespace TestField
     {
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [HorizontalLine("ParameterView", 2, FixedColor.Gray)]
-        [ReadOnly]public bool foundTarget;
-        [ReadOnly]public bool Hitbutoutrange;
-        [ReadOnly]public int TargetMovingStatus;
-        [ShowIf(nameof(TestRay),style =DisabledStyle.GreyedOut)] public GameObject targetContainer;
+        [ReadOnly] public bool foundTarget;
+        [ReadOnly] public bool Hitbutoutrange;
+        [ReadOnly] public float DistanceToTarget;
+        [ReadOnly] public int TargetMovingStatus;
+        [ShowIf(nameof(TestRay), style = DisabledStyle.GreyedOut)] public GameObject targetContainer;
         public List<GameObject> targetlist = new List<GameObject>();
         [Space2(20)]
         public bool TestRay = false;
 
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        [HorizontalLine("SyncRangeSettings",2,FixedColor.Gray)]
+        [HorizontalLine("SyncRangeSettings", 2, FixedColor.Gray)]
         public bool UsingSyncAlertRange;
 
         [SerializeField, ShowIf(nameof(UsingSyncAlertRange))]
         private bool SyncRayLength;
-        [SerializeField, ShowIf(nameof(SyncRayLength))]
+        [SerializeField, ShowIf(BoolOperator.And,nameof(SyncRayLength),nameof(UsingSyncAlertRange))]
         private bool SyncSectorRange;
 
         //不同情况下的检测范围倍率
-        [Range(0,3),SerializeField, ShowIf(nameof(UsingSyncAlertRange))] private float CrouchRate = 1.0f;
-        [Range(0,3),SerializeField, ShowIf(nameof(UsingSyncAlertRange))] private float NormalRate = 1.0f;
-        [Range(0,3),SerializeField, ShowIf(nameof(UsingSyncAlertRange))] private float SprintRate = 1.0f;
+        [Range(0, 3), SerializeField, ShowIf(nameof(UsingSyncAlertRange))] private float CrouchRate = 1.0f;
+        [Range(0, 3), SerializeField, ShowIf(nameof(UsingSyncAlertRange))] private float NormalRate = 1.0f;
+        [Range(0, 3), SerializeField, ShowIf(nameof(UsingSyncAlertRange))] private float SprintRate = 1.0f;
 
-        [SerializeField] private float RangeChangingRate =10.0f;
+        [SerializeField] private float RangeChangingRate = 10.0f;
 
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        [HorizontalLine("DetectRaySettings",2,FixedColor.Gray)]
+        [HorizontalLine("DetectRaySettings", 2, FixedColor.Gray)]
         public float RayLength = 10.0f; // 射线的长度
         public Vector3 RayStarpointOffset;
         [Space2(10)]
@@ -45,7 +47,7 @@ namespace TestField
 
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        [HorizontalLine("DetectRangeSettings",2,FixedColor.Gray)]
+        [HorizontalLine("DetectRangeSettings", 2, FixedColor.Gray)]
         public bool syncRadiusWithRayLength = false; // 是否同步扇形的边长为射线长度
         [ShowIf(nameof(MyMethod))]
         public float DetectionRadius = 10.0f; // 扇形的半径
@@ -53,8 +55,18 @@ namespace TestField
 
         public float DetectionAngle = 45f; // 扇形的角度
         public float detectionRotation = 0f; // 扇形的旋转角度
+        private float TotalRotation;
 
         //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        //出一个发现的事件给AlertLogic调用
+        public Action<bool> TargetFound;
+        public Action<bool> FoundButOutRange;
+
+        //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        //申明外部脚本引用
+        private TargetContainer targetcontainer;
+        private BroadCasterInfoContainer BCIC;
 
         //动态范围的参数
         private float _TRayLength;
@@ -65,10 +77,8 @@ namespace TestField
         private float detectionAngle;
 
         private Vector3 detectionDirection = Vector3.forward; // 扇形的方向
-        private TargetContainer targetcontainer;
 
-        private BroadCasterInfoContainer broadCasterinfocontainer;
-
+        //判断是否达成条件的bool参数
         private bool notarget;
         private bool targetBroadCastFound;
 
@@ -97,15 +107,12 @@ namespace TestField
         private void Awake()
         {
             // 获取 BroadCasterInfoContainer 组件
-            broadCasterinfocontainer = GetComponent<BroadCasterInfoContainer>();
+            BCIC = GetComponent<BroadCasterInfoContainer>();
         }
 
         private void Start()
         {
-            // 订阅事件
-            broadCasterinfocontainer.TargetReceivedChanged += OnTargetReceivedChanged;
-            broadCasterinfocontainer.TargetMovingStatusChanged += OnTargetMovingStatusChanged;
-            ParameterInit();
+            EventSubscribe();
             Startinit();
 
             EditorMode = false;
@@ -134,6 +141,7 @@ namespace TestField
             }
         }
 
+        //在BCIC接收到Area广播物体时重新初始化对象
         private void TargetRetake()
         {
             if (targetBroadCastFound)
@@ -143,6 +151,7 @@ namespace TestField
             }
         }
 
+        //Ray和扇形范围对于Target的不同状态预设处理
         private void SyncAlertRange()
         {
             _TRayLength = RayLength;
@@ -190,7 +199,7 @@ namespace TestField
                 _TDetectionRadius = DetectionRadius;
             }
 
-            if(targetContainer == null)
+            if (targetContainer == null)
             {
                 _TRayLength = RayLength;
                 _TDetectionAngle = DetectionAngle;
@@ -204,10 +213,14 @@ namespace TestField
 
         }
 
+        //判定核心
         private void DetectTargets()
         {
             if (!notarget)
             {
+                bool PHBO = Hitbutoutrange;
+                bool FT = foundTarget;
+
                 Hitbutoutrange = false;
                 foundTarget = false;
 
@@ -215,6 +228,8 @@ namespace TestField
                 Vector3 origin = transform.position;
                 // 在起始位置上添加偏移量
                 origin += RayStarpointOffset;
+
+                DistanceToTarget = Vector3.Distance(origin, targetContainer.transform.position);
 
                 // 遍历目标列表
                 foreach (GameObject targetObject in targetlist)
@@ -226,8 +241,9 @@ namespace TestField
                     Vector3 direction = (targetPosition - origin).normalized;
                     Vector3 RayDirection = (targetPosition - origin).normalized;
 
+                    TotalRotation = detectionRotation + transform.rotation.eulerAngles.y;
                     // 进行旋转
-                    direction = Quaternion.Euler(0f, detectionRotation, 0f) * direction;
+                    direction = Quaternion.Euler(0f, TotalRotation, 0f) * direction;
 
                     // 计算射线的长度（使用自定义的射线长度）
                     float currentRayLength = Mathf.Min(rayLength, detectionRadius);
@@ -258,11 +274,18 @@ namespace TestField
                                 Hitbutoutrange = true;
                                 break;
                             }
-
                         }
 
                     }
                 }
+
+                if (FT != foundTarget)
+                {
+                    OnTargetFound(foundTarget);
+                }
+
+                if(PHBO!=Hitbutoutrange)
+                    OnFoundButOutRange(Hitbutoutrange);
 
                 // 如果至少有一条射线命中了目标，执行相应的逻辑
                 if (foundTarget)
@@ -276,20 +299,28 @@ namespace TestField
                     Debug.Log("Detected Target But Out the Range");
                 }
             }
+            else
+            {
+                //Notarget的时候将Distance设置成无限大
+                DistanceToTarget = float.PositiveInfinity;
+            }
         }
 
-        private void ParameterInit()
+        protected virtual void OnTargetFound(bool newbool)
         {
-            _TRayLength = rayLength;
-            _TDetectionRadius = detectionRadius;
-            _TDetectionAngle = detectionAngle;
+            TargetFound?.Invoke(newbool);
+        }        
+
+        protected virtual void OnFoundButOutRange(bool newbool)
+        {
+            FoundButOutRange?.Invoke(newbool);
         }
 
 
         private void OnTargetReceivedChanged(GameObject newTarget)
         {
             // 在 TargetReceived 改变时执行的逻辑
-            Debug.Log("TargetReceived changed to: " + newTarget);
+            //Debug.Log("TargetReceived changed to: " + newTarget);
             targetContainer = newTarget;
             targetBroadCastFound = true;
         }
@@ -297,16 +328,23 @@ namespace TestField
         private void OnTargetMovingStatusChanged(int newValue)
         {
             TargetMovingStatus = newValue;
-            Debug.Log(TargetMovingStatus);
+            //Debug.Log(TargetMovingStatus);
+        }
+
+        // 订阅事件
+        private void EventSubscribe()
+        {
+            BCIC.AlertTargetReceivedChanged += OnTargetReceivedChanged;
+            BCIC.TargetMovingStatusChanged += OnTargetMovingStatusChanged;
         }
 
         // 在脚本销毁时取消订阅事件，以防止潜在的内存泄漏
         private void OnDestroy()
         {
-            if (broadCasterinfocontainer != null)
+            if (BCIC != null)
             {
-                broadCasterinfocontainer.TargetReceivedChanged -= OnTargetReceivedChanged;
-                broadCasterinfocontainer.TargetMovingStatusChanged -= OnTargetMovingStatusChanged;
+                BCIC.AlertTargetReceivedChanged -= OnTargetReceivedChanged;
+                BCIC.TargetMovingStatusChanged -= OnTargetMovingStatusChanged;
             }
 
         }
@@ -314,6 +352,10 @@ namespace TestField
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
+
+            TotalRotation = detectionRotation + transform.rotation.eulerAngles.y;
+            // 正确的获取y轴旋转角度方法
+
             // 获取当前位置
             Vector3 origin = transform.position;
             origin += RayStarpointOffset;
@@ -324,8 +366,8 @@ namespace TestField
             Vector3 leftDirection = leftRotation * detectionDirection;
             Vector3 rightDirection = rightRotation * detectionDirection;
             // 进行旋转
-            leftDirection = Quaternion.Euler(0f, -detectionRotation, 0f) * leftDirection;
-            rightDirection = Quaternion.Euler(0f, -detectionRotation, 0f) * rightDirection;
+            leftDirection = Quaternion.Euler(0f, TotalRotation, 0f) * leftDirection;
+            rightDirection = Quaternion.Euler(0f, TotalRotation, 0f) * rightDirection;
 
             //调试模式下计算预设点位
             // 计算扇形的两个边缘点
@@ -334,8 +376,8 @@ namespace TestField
             Vector3 LeftDirection = LeftRotation * detectionDirection;
             Vector3 RightDirection = RightRotation * detectionDirection;
             // 进行旋转
-            LeftDirection = Quaternion.Euler(0f, -detectionRotation, 0f) * LeftDirection;
-            RightDirection = Quaternion.Euler(0f, -detectionRotation, 0f) * RightDirection;
+            LeftDirection = Quaternion.Euler(0f, TotalRotation, 0f) * LeftDirection;
+            RightDirection = Quaternion.Euler(0f, TotalRotation, 0f) * RightDirection;
 
             // 在 Scene 视图上绘制蓝色圆，表示 RayStarpointOffset
             Gizmos.color = Color.blue;
@@ -375,14 +417,11 @@ namespace TestField
                         if (Physics.Raycast(ray, out hit, float.PositiveInfinity, ~IgnoreLayer))
                         {
                             // 检查命中目标是否为 targetContainer 或者在列表中
-                            if (hit.collider.gameObject == targetContainer || targetlist.Contains(hit.collider.gameObject))
+                            if (distanceToTarget<=currentRayLength&& hit.collider.gameObject == targetContainer || targetlist.Contains(hit.collider.gameObject))
                             {
                                 // 在扇形区域内检测到目标，绘制黄色射线
                                 Gizmos.color = Color.yellow;
                                 Gizmos.DrawLine(origin, origin + RayDirection * currentRayLength);
-
-                                // 更新整体 foundTarget 的值
-                                foundTarget = true;
                             }
                             else
                             {
@@ -400,11 +439,8 @@ namespace TestField
 
                         if (Physics.Raycast(Gray, out Ghit, float.PositiveInfinity, ~IgnoreLayer))
                         {
-                                Gizmos.color = Color.green;
-                                Gizmos.DrawLine(origin, origin + RayDirection * currentRayLength);
-
-                                // 在扇形范围外检测到目标，更新整体 foundTarget 的值
-                                foundTarget = true;
+                            Gizmos.color = Color.green;
+                            Gizmos.DrawLine(origin, origin + RayDirection * currentRayLength);
                         }
 
                     }
@@ -426,29 +462,29 @@ namespace TestField
 
         // 绘制扇形的方法
         private void DrawSector(Vector3 origin, Vector3 leftDirection, Vector3 rightDirection, float radius, float angle)
-            {
+        {
             origin -= RayStarpointOffset;
             // 将原点的 Y 轴分量设置为 0
             origin.y = 0f;
 
-                Handles.color = Color.red;
+            Handles.color = Color.red;
 
-                // 使用 Handles.DrawWireArc 来绘制扇形的圆弧
-                Handles.DrawWireArc(origin, Vector3.up, leftDirection, angle, radius);
+            // 使用 Handles.DrawWireArc 来绘制扇形的圆弧
+            Handles.DrawWireArc(origin, Vector3.up, leftDirection, angle, radius);
 
-                // 绘制扇形两侧的连线
-                Vector3 leftEdge = origin + leftDirection * radius;
-                Vector3 rightEdge = origin + rightDirection * radius;
+            // 绘制扇形两侧的连线
+            Vector3 leftEdge = origin + leftDirection * radius;
+            Vector3 rightEdge = origin + rightDirection * radius;
 
-                // 将两侧的 Y 轴分量设置为 0
-                leftEdge.y = 0f;
-                rightEdge.y = 0f;
+            // 将两侧的 Y 轴分量设置为 0
+            leftEdge.y = 0f;
+            rightEdge.y = 0f;
 
-                Handles.DrawLine(origin, leftEdge);
-                Handles.DrawLine(origin, rightEdge);
-            }
+            Handles.DrawLine(origin, leftEdge);
+            Handles.DrawLine(origin, rightEdge);
+        }
 
 
 #endif
     }
-    }
+}

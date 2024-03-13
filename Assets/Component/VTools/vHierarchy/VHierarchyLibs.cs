@@ -2822,6 +2822,29 @@ namespace VHierarchy.Libs
 
         #endregion
 
+        #region Icons
+
+
+        public static class EditorIcons
+        {
+            public static Texture2D GetIcon(string iconNameOrPath)
+            {
+                if (icons_byName.TryGetValue(iconNameOrPath, out var cachedResult)) return cachedResult;
+
+                var icon = typeof(EditorGUIUtility).InvokeMethod<Texture2D>("LoadIcon", iconNameOrPath) as Texture2D;
+
+                return icons_byName[iconNameOrPath] = icon;
+
+            }
+
+            static Dictionary<string, Texture2D> icons_byName = new Dictionary<string, Texture2D>();
+        }
+
+
+
+
+        #endregion
+
         #region Other 
 
         public static void MarkInteractive(this Rect rect)

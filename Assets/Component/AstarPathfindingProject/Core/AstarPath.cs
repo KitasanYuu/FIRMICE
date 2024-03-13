@@ -22,7 +22,7 @@ using Thread = System.Threading.Thread;
 /// </summary>
 [HelpURL("https://arongranberg.com/astar/documentation/stable/class_astar_path.php")]
 public class AstarPath : VersionedMonoBehaviour {
-#pragma warning disable 0618 // ½ûÓÃ¾¯¸æ CS0618
+#pragma warning disable 0618 // ç¦ç”¨è­¦å‘Š CS0618
     /// <summary>The version number for the A* Pathfinding Project</summary>
     public static readonly System.Version Version = new System.Version(4, 2, 19);
 

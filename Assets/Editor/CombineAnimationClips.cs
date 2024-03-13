@@ -8,7 +8,7 @@ public class MergeAnimationClipsInFolder : EditorWindow
     private string folderPath;
     private AnimationClip mergedClip;
 
-    [MenuItem("Window/Merge Animation Clips In Folder")]
+    [MenuItem("YuuTools/Animation/Merge Animation Clips In Folder")]
     static void Init()
     {
         GetWindow<MergeAnimationClipsInFolder>();

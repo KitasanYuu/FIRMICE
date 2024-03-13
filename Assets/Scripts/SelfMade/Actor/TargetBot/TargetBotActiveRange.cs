@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 namespace ActiveRange
@@ -51,20 +52,20 @@ namespace ActiveRange
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            Gizmos.color = new Color(1f, 0f, 1f, 0.4f); // 设置为紫色，您可以根据需要调整颜色
-
             // 获取物体的世界坐标
-            Vector3 center = transform.position;
+            Vector3 worldPosition = transform.position;
+            worldPosition.y = 0.0f;
 
-            // 忽略Y轴
-            center.y = 0f;
+            // 绘制在xz平面上的圆
+            DrawCircleOnXZPlane(worldPosition, detectionRadius, 360);
+        }
 
-            // 绘制外圆
-            Gizmos.DrawWireSphere(center, detectionRadius);
+        private void DrawCircleOnXZPlane(Vector3 center, float radius, int segments)
+        {
+            Handles.color = new Color(1f, 0f, 1f, 0.4f);
 
-            // 绘制内圆（如果需要）
-            float innerRadius = detectionRadius; // 用内圆的半径替换 yourInnerRadius
-            Gizmos.DrawWireSphere(center, innerRadius);
+            Vector3 axis = Vector3.up;  // 指定轴向为y轴，即绘制在xz平面上
+            Handles.DrawWireDisc(center, axis, radius);
         }
 #endif
     }

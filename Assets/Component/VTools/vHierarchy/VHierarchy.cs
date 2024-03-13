@@ -36,7 +36,7 @@ namespace VHierarchy
 
             void setState()
             {
-                void isRowSelected_()
+                void set_isRowSelected()
                 {
                     if (!curEvent.isRepaint) return;
 
@@ -51,7 +51,7 @@ namespace VHierarchy
                     isRowSelected = dragging ? (dragSelectionList.Contains(go.GetInstanceID())) : Selection.Contains(go);
 
                 }
-                void isRowBeingRenamed_()
+                void set_isRowBeingRenamed()
                 {
                     if (!curEvent.isRepaint) return;
 
@@ -60,7 +60,7 @@ namespace VHierarchy
                                         treeViewController?.GetMemberValue("state")?.GetMemberValue("renameOverlay")?.InvokeMethod<bool>("IsRenaming") == true;
 
                 }
-                void isTreeFocused_()
+                void set_isTreeFocused()
                 {
                     if (!curEvent.isRepaint) return;
 
@@ -68,14 +68,14 @@ namespace VHierarchy
                                     GUIUtility.keyboardControl == hierarchyWindow?.GetMemberValue("sceneHierarchy")?.GetMemberValue<int>("m_TreeViewKeyboardControlID");
 
                 }
-                void lastVisibleSelectedRowRect_()
+                void set_lastVisibleSelectedRowRect()
                 {
                     if (!Selection.gameObjects.Contains(go)) return;
 
                     lastVisibleSelectedRowRect = rowRect;
 
                 }
-                void mousePressed_()
+                void set_mousePressed()
                 {
                     if (curEvent.isMouseDown && isRowHovered)
                         mousePressed = true;
@@ -84,7 +84,7 @@ namespace VHierarchy
                         mousePressed = false;
 
                 }
-                void hoveredGo_()
+                void set_hoveredGo()
                 {
                     if (curEvent.isLayout)
                         hoveredGo = null;
@@ -94,12 +94,12 @@ namespace VHierarchy
 
                 }
 
-                isRowSelected_();
-                isRowBeingRenamed_();
-                isTreeFocused_();
-                lastVisibleSelectedRowRect_();
-                mousePressed_();
-                hoveredGo_();
+                set_isRowSelected();
+                set_isRowBeingRenamed();
+                set_isTreeFocused();
+                set_lastVisibleSelectedRowRect();
+                set_mousePressed();
+                set_hoveredGo();
 
             }
 
@@ -219,14 +219,14 @@ namespace VHierarchy
                     if (!showBackgroundColor) return;
                     if (go.transform.childCount == 0) return;
 
-                    var triangleRect = rowRect.MoveX(-15).SetWidth(16).Resize(-1);
+                    var triangleRect = rowRect.MoveX(-15.5f).SetWidth(16).Resize(1.5f);
 
-                    GUI.Label(triangleRect, EditorGUIUtility.IconContent(IsExpanded(go) ? "IN_foldout_on" : "IN_foldout"));
+                    GUI.DrawTexture(triangleRect, EditorIcons.GetIcon(IsExpanded(go) ? "IN_foldout_on" : "IN_foldout"));
 
 
                     if (!makeTriangleBrighter) return;
 
-                    GUI.Label(triangleRect, EditorGUIUtility.IconContent(IsExpanded(go) ? "IN_foldout_on" : "IN_foldout"));
+                    GUI.DrawTexture(triangleRect, EditorIcons.GetIcon(IsExpanded(go) ? "IN_foldout_on" : "IN_foldout"));
 
                 }
                 void name()
@@ -277,35 +277,30 @@ namespace VHierarchy
                     if (!showBackgroundColor) return;
                     if (!showDefaultIcon) return;
 
-                    var iconRect = rowRect.SetWidth(16).Resize(-2);
+                    var iconRect = rowRect.SetWidth(16);
 
                     SetGUIColor(go.activeInHierarchy ? Color.white : Greyscale(1, .4f));
-                    SetLabelAlignmentCenter();
 
-                    GUI.Label(iconRect, new GUIContent(PrefabUtility.GetIconForGameObject(go)));
+                    GUI.DrawTexture(iconRect, PrefabUtility.GetIconForGameObject(go));
 
                     if (PrefabUtility.IsAddedGameObjectOverride(go))
-                        GUI.Label(iconRect, EditorGUIUtility.IconContent("PrefabOverlayAdded Icon"));
+                        GUI.DrawTexture(iconRect, EditorIcons.GetIcon("PrefabOverlayAdded Icon"));
 
                     ResetGUIColor();
-                    ResetLabelStyle();
 
                 }
                 void customIcon()
                 {
                     if (!showCustomIcon) return;
 
-                    var iconRect = rowRect.SetWidth(16).Resize(-2);
-
+                    var iconRect = rowRect.SetWidth(16);
                     var iconNameOrPath = goData.iconNameOrGuid.Length == 32 ? goData.iconNameOrGuid.ToPath() : goData.iconNameOrGuid;
 
                     SetGUIColor(go.activeInHierarchy ? Color.white : Greyscale(1, .4f));
-                    SetLabelAlignmentCenter();
 
-                    GUI.Label(iconRect, EditorGUIUtility.IconContent(iconNameOrPath));
+                    GUI.DrawTexture(iconRect, EditorIcons.GetIcon(iconNameOrPath) ?? Texture2D.blackTexture);
 
                     ResetGUIColor();
-                    ResetLabelStyle();
 
                 }
                 void hierarchyLines()
@@ -740,6 +735,9 @@ namespace VHierarchy
 
         static void RowGUI(int instanceId, Rect rowRect)
         {
+            // GUIStopwatch.OnGUIBeginning(iterations: 350); // toremove
+            // EditorApplication.RepaintHierarchyWindow();
+
 
             if (curEvent.isLayout)
                 UpdateExpandQueue();
@@ -762,8 +760,6 @@ namespace VHierarchy
             }
 
         }
-
-
 
 
 
@@ -911,6 +907,7 @@ namespace VHierarchy
             focus();
 
         }
+
 
 
         static void UpdateExpandQueue() // called from gui because reflected methods rely on event.current
@@ -1071,10 +1068,12 @@ namespace VHierarchy
                     if (sceneIdMap == null) return;
                     if (currentSceneGuid != originalSceneGuid) return;
 
+
                     var curInstanceIdsHash = go.scene.GetHashCode();
                     var curGlobalIdsHash = sceneData.goDatas_byGlobalId.Keys.Aggregate(0, (hash, r) => hash ^= r.GetHashCode());
 
                     if (sceneIdMap.instanceIdsHash == curInstanceIdsHash && sceneIdMap.globalIdsHash == curGlobalIdsHash) return;
+
 
                     var globalIds = sceneData.goDatas_byGlobalId.Keys.ToList();
                     var instanceIds = globalIds.GetObjectInstanceIds();
@@ -1101,14 +1100,13 @@ namespace VHierarchy
 
                     }
 
+
                     clearSceneGuids();
                     fillIdMap();
                     fillSceneGuids();
 
                     sceneIdMap.instanceIdsHash = curInstanceIdsHash;
                     sceneIdMap.globalIdsHash = curGlobalIdsHash;
-
-                    // "vHierarchy cache updated".Log();
 
                 }
 
@@ -1119,7 +1117,6 @@ namespace VHierarchy
                     if (!sceneIdMap.globalIds_byInstanceId.TryGetValue(go.GetInstanceID(), out var globalId)) return;
 
                     sceneData.goDatas_byGlobalId.TryGetValue(globalId, out goData);
-                    // goData = sceneData.goDatas_byGlobalId[globalId];
 
                 }
                 void moveGoDataToCurrentSceneGuid() // totest
@@ -1287,6 +1284,7 @@ namespace VHierarchy
 
 
 
+
         static void RemoveIdMapsForUnloadedScenes()
         {
             var scenes = Enumerable.Range(0, EditorSceneManager.sceneCount).Select(i => EditorSceneManager.GetSceneAt(i));
@@ -1320,6 +1318,38 @@ namespace VHierarchy
 
         static List<Scene> prevLoadedScenes = new List<Scene>();
 
+
+
+
+
+
+
+        static Texture2D GetIcon_forVTabs(GameObject gameObject)
+        {
+            var goData = GetGameObjectData(gameObject, false);
+
+            if (goData == null) return null;
+
+            var iconNameOrPath = goData.iconNameOrGuid.Length == 32 ? goData.iconNameOrGuid.ToPath() : goData.iconNameOrGuid;
+
+            if (!iconNameOrPath.IsNullOrEmpty())
+                return EditorIcons.GetIcon(iconNameOrPath);
+
+            return null;
+
+        }
+
+        static string GetIconName_forVFavorites(GameObject gameObject)
+        {
+            var goData = GetGameObjectData(gameObject, false);
+
+            if (goData == null) return "";
+
+            var iconNameOrPath = goData.iconNameOrGuid.Length == 32 ? goData.iconNameOrGuid.ToPath() : goData.iconNameOrGuid;
+
+            return iconNameOrPath;
+
+        }
 
 
 
@@ -1368,7 +1398,7 @@ namespace VHierarchy
                 typeof(EditorApplication).SetFieldValue("globalEventHandler", CheckShortcuts + (globalEventHandler - CheckShortcuts));
 
                 var projectWasLoaded = typeof(EditorApplication).GetFieldValue<UnityEngine.Events.UnityAction>("projectWasLoaded");
-                typeof(EditorApplication).SetFieldValue("projectWasLoaded", (projectWasLoaded - OnProjectWasLoaded) + OnProjectWasLoaded);
+                typeof(EditorApplication).SetFieldValue("projectWasLoaded", (projectWasLoaded - ClearCacheOnProjectLoaded) + ClearCacheOnProjectLoaded);
 
             }
             void loadData()
@@ -1653,9 +1683,9 @@ namespace VHierarchy
 
 
         [UnityEditor.Callbacks.PostProcessBuild]
-        public static void OnPostprocessBuild(BuildTarget _, string __) => VHierarchyCache.Clear();
+        public static void ClearCacheAfterBuild(BuildTarget _, string __) => VHierarchyCache.Clear();
 
-        static void OnProjectWasLoaded() => VHierarchyCache.Clear();
+        static void ClearCacheOnProjectLoaded() => VHierarchyCache.Clear();
 
 
 
@@ -1669,16 +1699,17 @@ namespace VHierarchy
 
         static object treeViewController => hierarchyWindow?.GetFieldValue("m_SceneHierarchy").GetFieldValue("m_TreeView"); // recreated on prefab mode enter/exit
 
+
         static Type t_SceneHierarchyWindow = typeof(Editor).Assembly.GetType("UnityEditor.SceneHierarchyWindow");
 
 
 
 
 
-
-        public const string version = "2.0.6";
+        public const string version = "2.0.7";
 
     }
 }
 #endif
+
 

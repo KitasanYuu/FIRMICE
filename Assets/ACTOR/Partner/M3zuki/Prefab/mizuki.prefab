@@ -2815,6 +2815,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c28e29f74d16dad4096b55e6204bd3c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGlobalSearch: 1
   DetecCenter: {x: 0, y: 1, z: 0}
   DetecRange: {x: 50, y: 3, z: 50}
   targetLayer:
@@ -2834,19 +2835,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b081aeaa1ee6aa449a081bcf6cbccbb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RoutePoint: []
+  HasReachedPoint: 1
+  NiBuXuTiQianBian: 1
   targetToFollow: {fileID: 0}
   sectorDirection: {x: 0, y: 0, z: -1}
-  followSpeed: 3
-  stoppingDistance: 0.15
   radius: 1.8
   angle: 274.5
-  DelayStartTime: 0.5
   minDistance: 1
+  CopyTargetParameter: 0
+  DelayStartTime: 0.5
+  followSpeed: 3
+  stoppingDistance: 0.15
   accelerationDistance: 5
   accelerationSpeed: 5
   rotationSpeed: 5
-  movementThreshold: 0.01
-  aimPoint: []
   MoveDirection: {x: 0, y: 0, z: 0}
   CTargetPosition: {x: 0, y: 0, z: 0}
   CSpeed: 0

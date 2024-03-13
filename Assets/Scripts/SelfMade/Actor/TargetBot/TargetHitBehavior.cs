@@ -1,6 +1,7 @@
 using TargetDirDetec;
 using UnityEngine;
 using ActiveRange;
+using System.Collections;
 
 namespace Behavior
 {
@@ -63,5 +64,7 @@ namespace Behavior
                 }
             }
         }
+
+
     }
 }

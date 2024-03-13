@@ -76,7 +76,7 @@ namespace AvatarMain
             {
                 MainRenderClose = true;
                 DitherChange = true;
-                DitherCount = (distancetocamera - CompleteDitherDistance) / StartDitherDistance;
+                DitherCount = (distancetocamera - CompleteDitherDistance) / (StartDitherDistance - CompleteDitherDistance);
                 //Debug.Log(DitherCount);
             }
             else if(distancetocamera < CompleteDitherDistance)

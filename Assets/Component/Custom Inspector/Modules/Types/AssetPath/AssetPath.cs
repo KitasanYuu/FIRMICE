@@ -22,7 +22,7 @@ namespace CustomInspector
         [MessageBox("You are overriding the default PropertyDrawer of AssetPath. Use the [AssetPath] attribute to fix overriding", MessageBoxType.Error)]
 #endif
         [SerializeField]
-        string path;
+        public string path;
         protected const string invalidString = "<invalid>";
 
         /// <summary> All types accepted by this path </summary>
