@@ -38,6 +38,21 @@ public class HPVisionManager : MonoBehaviour
             Transform npcTransform = healthBar.HPAnchor;
             if (npcTransform == null) continue;
 
+            Vector3 screenPos = mainCamera.WorldToScreenPoint(npcTransform.position);
+
+            // 检查是否在渲染范围内
+            bool isWithinRenderView = screenPos.z > 0 && screenPos.x >= 0 && screenPos.x <= Screen.width && screenPos.y >= 0 && screenPos.y <= Screen.height;
+
+            if (!isWithinRenderView)
+            {
+                healthBar.SetVisibility(false);
+                continue;
+            }
+            else
+            {
+                healthBar.SetVisibility(true);
+            }
+
             Vector3 start = mainCamera.transform.position;
             Vector3 end = npcTransform.position;
             Vector3 direction = end - start;
