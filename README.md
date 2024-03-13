@@ -24,6 +24,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->敌人AI &nbsp;&emsp;&emsp;&emsp;&emsp;&emsp; 进行中<br>
 -->基础策划&emsp;&emsp;&emsp;&emsp;&nbsp; 进行中<br>
 -->系统优化&emsp;&emsp;&emsp;&emsp;&nbsp; 进行中  
+-->基础策划&emsp;&emsp;&emsp;&emsp;&nbsp; 排队中  
                 
 ## 项目结构
 <details>
