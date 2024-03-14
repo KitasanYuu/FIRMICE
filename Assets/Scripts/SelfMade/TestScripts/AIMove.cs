@@ -130,7 +130,7 @@ namespace TestField
                             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
                         }
                     }
-                    else if (!DynamicFaceToMoveDir)
+                    else if (!DynamicFaceToMoveDir && target != null)
                     {
                         Vector3 TargetPosition = target.transform.position;
                         TargetPosition.y = 0;

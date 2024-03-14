@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
+using DataManager; 
 
 namespace TestField
 {
@@ -11,32 +12,22 @@ namespace TestField
         public GameObject Target;
         public List<GameObject> CoverList = new List<GameObject>();
         private Vector3 TargetCover;
+        private ResourceReader RR = new ResourceReader();
 
         // Start is called before the first frame update
         void Start()
         {
-            BCIC = GetComponent<BroadCasterInfoContainer>();
+
         }
 
         // Update is called once per frame
         void Update()
         {
-            CoverList = BCIC.CoverList;
-            if (Input.GetKeyUp(KeyCode.R))
+            if (Input.GetKeyUp(KeyCode.G))
             {
-                TargetCover = coverUtility.FindSafePointOnNextCover(gameObject, Target, CoverList,true);
+                Color color = RR.GetColor("NeutralColor");
             }
         }
 
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.green;
-            if (TargetCover != null)
-            {
-
-                Vector3 CoverPosition = TargetCover;
-                Gizmos.DrawSphere(CoverPosition, 0.5f);
-            }
-        }
     }
 }

@@ -72,7 +72,7 @@ namespace TestField
                 GameObject SelectTarget = null;
                 float maxDependValue = float.MaxValue; // 初始化最大 DependValue 值为最小可能值
                 CSVReader csvreader = new CSVReader();
-                csvreader.LoadCSV("Identity.csv");
+                csvreader.LoadCSV("Identity");
 
                 foreach (GameObject Target in AttackTargetList)
                 {
@@ -230,7 +230,6 @@ namespace TestField
                 return 0;
             }
         }
-
     }
 
 }
