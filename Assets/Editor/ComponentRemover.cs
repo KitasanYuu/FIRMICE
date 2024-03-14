@@ -131,6 +131,7 @@ public class ComponentRemover : EditorWindow
     }
 
 
+    // 移除组件后不清空选择栏，并确保Inspector视图刷新显示最新状态
     private void RemoveSelectedComponents()
     {
         if (selectedGameObject != null && componentSelection != null)
@@ -141,12 +142,15 @@ public class ComponentRemover : EditorWindow
             {
                 if (componentSelection[i])
                 {
-                    DestroyImmediate(components[i],true);
+                    DestroyImmediate(components[i], true);
                 }
             }
 
-            selectedGameObject = null;
-            componentSelection = null;
+            // 更新Inspector以反映更改
+            EditorUtility.SetDirty(selectedGameObject);
+            // 保持当前对象选中状态
+            Selection.activeObject = selectedGameObject;
         }
     }
+
 }
