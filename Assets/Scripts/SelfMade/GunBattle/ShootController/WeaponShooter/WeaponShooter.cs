@@ -7,6 +7,7 @@ using BattleHealth;
 using System.Collections;
 using TestField;
 using DataManager;
+using TargetDirDetec;
 
 namespace Battle
 {
@@ -330,8 +331,12 @@ namespace Battle
 
         private void RayDamageIn(GameObject rayHitTarget)
         {
+            HitCollisionDetection HCD = rayHitTarget.GetComponent<HitCollisionDetection>();
             VirtualHP virtualHp = null;
             GameObject currentTarget = rayHitTarget;
+
+            if (HCD != null)
+                HCD.RayBulletHitSet(gameObject);
 
             // 循环遍历父级对象直到找到VirtualHP组件或没有更多的父级
             while (currentTarget != null && virtualHp == null)

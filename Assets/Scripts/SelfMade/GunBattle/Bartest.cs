@@ -1,8 +1,10 @@
 using BattleHealth;
 using CustomInspector;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using YuuTool;
 
 public class HealthBar : MonoBehaviour
 {
@@ -18,15 +20,25 @@ public class HealthBar : MonoBehaviour
     private HPVisionManager HVM;
     private RectTransform healthBarRectTransform;
 
-    public Image HPBar;
-    public Image HPFadeBar;
-    public Image ArmorBar;
-    public Image ArmorFadeBar;
+    [SerializeField,ReadOnly] private Image HPBar;
+    [SerializeField, ReadOnly] private Image HPFadeBar;
+    [SerializeField, ReadOnly] private Image ArmorBar;
+    [SerializeField, ReadOnly] private Image ArmorFadeBar;
+    [SerializeField, ReadOnly] private Image LevelBackGround;
+
+    [Space2(20)]
+
+    [SerializeField, ReadOnly] private TextMeshProUGUI ObjectName;
+    [SerializeField, ReadOnly] private TextMeshProUGUI ObjectLevel;
+
 
     private float PreviousHP;
     private float PreviousTotalHP;
     private float PreviousArmor;
     private float PreviousTotalArmor;
+
+    private float CHPRate;
+    private float CArmorRate;
 
     [HideInInspector]
     public float ScaleFactor;
@@ -34,9 +46,15 @@ public class HealthBar : MonoBehaviour
     private Coroutine HPBarFadeCoroutine;
     private Coroutine ArmorBarFadeCoroutine;
 
+    private void Awake()
+    {
+        ResourceInit();
+    }
+
     void Start()
     {
         ComponentInit();
+        ParameterInit();
     }
 
     void LateUpdate()
@@ -65,6 +83,9 @@ public class HealthBar : MonoBehaviour
                 ArmorValueRate = 0;
             else
                 ArmorValueRate = CurrentArmor / Armor;
+
+            CHPRate = HPValueRate;
+            CArmorRate = ArmorValueRate;
 
             if (PreviousHP != CurrentHP || PreviousTotalHP != TotalHP)
             {
@@ -109,7 +130,7 @@ public class HealthBar : MonoBehaviour
         float distance = Vector3.Distance(mainCamera.transform.position, HPAnchor.position);
 
         // 根据距离调整血条的缩放
-        float scaleFactor = Mathf.Clamp(1 / (distance * 0.1f), 0, 1.2f);
+        float scaleFactor = Mathf.Clamp(1 / (distance * 0.1f), 0, 0.75f);
         ScaleFactor = scaleFactor;
         healthBarRectTransform.localScale = new Vector3(scaleFactor, scaleFactor, 1);
 
@@ -129,6 +150,19 @@ public class HealthBar : MonoBehaviour
     #endregion
 
     #region 组件参数初始化
+    private void ResourceInit()
+    {
+        HPBar = transform.FindDeepChild("HealthBar")?.gameObject.GetComponent<Image>();
+        HPFadeBar = transform.FindDeepChild("HealthFadeBar")?.gameObject.GetComponent<Image>();
+        ArmorBar = transform.FindDeepChild("ArmorBar")?.gameObject.GetComponent<Image>();
+        ArmorFadeBar = transform.FindDeepChild("ArmorFadeBar")?.gameObject.GetComponent<Image>();
+        LevelBackGround = transform.FindDeepChild("LevelBackGround")?.gameObject.GetComponent<Image>();
+
+        ObjectName = transform.FindDeepChild("NameContent")?.gameObject.GetComponent<TextMeshProUGUI>();
+        ObjectLevel = transform.FindDeepChild("LevelContent")?.gameObject.GetComponent<TextMeshProUGUI>();
+
+    }
+
     private void ComponentInit()
     {
         // 获取血条的RectTransform组件
@@ -138,6 +172,12 @@ public class HealthBar : MonoBehaviour
         {
             HVM.RegisterHealthBar(this);
         }
+    }
+
+    private void ParameterInit()
+    {
+        HPBar.fillAmount = 1;
+        ArmorBar.fillAmount = 1;
     }
     #endregion
 
@@ -151,12 +191,62 @@ public class HealthBar : MonoBehaviour
         canvas = scanvas;
     }
 
+    public void SetInitBarParameter(float SHPBar,float SArmorBar)
+    {
+        HPBar.fillAmount = SHPBar;
+        ArmorBar.fillAmount= SArmorBar;
+    }
+
     public void SetVisibility(bool isVisible)
     {
+        if (!isVisible)
+        {
+            if (HPBarFadeCoroutine != null)
+            {
+                StopCoroutine(HPBarFadeCoroutine);
+            }
+            if (ArmorBarFadeCoroutine != null)
+            {
+                StopCoroutine(ArmorBarFadeCoroutine);
+            }
+
+            ArmorBar.fillAmount = CArmorRate;
+            ArmorFadeBar.fillAmount = CArmorRate;
+            HPBar.fillAmount = CHPRate;
+            HPFadeBar.fillAmount = CHPRate;
+        }
+
         gameObject.SetActive(isVisible);
     }
+
+    public void SetHPColor(Color SetColor)
+    {
+        HPBar.color = SetColor;
+    }
+
+    public void SetArmorColor(Color SetColor)
+    {
+        ArmorBar.color = SetColor;
+    }
+
+    public void SetLevelBackGroundColor(Color SetColor)
+    {
+        LevelBackGround.color = SetColor;
+    }
+
+    public void SetName(string Name)
+    {
+        ObjectName.text = Name;
+    }
+
+    public void SetLevel(string Level)
+    {
+        ObjectLevel.text = Level;
+    }
+
     #endregion
 
+    #region 处理血条缓冲的协程
     private IEnumerator DoHPFadeEffect (float damage,float valueRate)
     {
         var suddenChangeBar = damage >= 0 ? HPFadeBar : HPBar;
@@ -182,6 +272,7 @@ public class HealthBar : MonoBehaviour
         }
         slowChangeBar.fillAmount = valueRate;
     }
+    #endregion
 
     void OnDestroy()
     {

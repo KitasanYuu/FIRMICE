@@ -55,7 +55,7 @@ public class Bullet : MonoBehaviour
             }
 
             Instantiate(VFXHit,transform.position, Quaternion.identity,transform.parent);
-            Debug.Log(collision.gameObject.name);
+            //Debug.Log(collision.gameObject.name);
             Destroy(gameObject);
         }
     }

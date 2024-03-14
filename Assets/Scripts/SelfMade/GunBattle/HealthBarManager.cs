@@ -14,9 +14,10 @@ public class HPVisionManager : MonoBehaviour
     public float checkRadius = 0.5f; // 胶囊体检测的半径
     public float Offset = 1;
 
-    [SerializeField, ReadOnly] private GameObject AllyHPBar;
-    [SerializeField, ReadOnly] private GameObject EnemyHPBar;
-    [SerializeField, ReadOnly] private GameObject NeutralHPBar;
+    private DataMaster DM = new DataMaster();
+    private ResourceReader RR = new ResourceReader();
+
+    [SerializeField, ReadOnly] private GameObject HealthBarPrefab;
 
 
     void Start()
@@ -83,22 +84,19 @@ public class HPVisionManager : MonoBehaviour
 
     private void ResourceInit()
     {
-        ResourceReader RR = new ResourceReader();
-        AllyHPBar = RR.GetGameObject("HealthBar", "AllyHealthBar");
-        EnemyHPBar = RR.GetGameObject("HealthBar", "EnemyHealthBar");
-        NeutralHPBar = RR.GetGameObject("HealthBar", "NeutralHealthBar");
+        HealthBarPrefab = RR.GetGameObject("HealthBar", "HealthBarPrefab");
     }
-
 
     public void ObjectHPRegister(GameObject RegisteObject)
     {
         Canvas ccanvas = GetComponent<Canvas>();
         VirtualHP VHP = RegisteObject.GetComponent<VirtualHP>();
-        AIFunction aif = new AIFunction();
 
         GameObject hpbar = null;
-
-        int camp = aif.GetActorCamp(RegisteObject);
+        Color HPBarColor = Color.white;
+        Color LevelBGImageColor = Color.white;
+        string name = DM.GetActorName(RegisteObject);
+        int camp = DM.GetActorCamp(RegisteObject);
         switch (camp)
         {
             case 0:
@@ -106,19 +104,29 @@ public class HPVisionManager : MonoBehaviour
                 VHP.SetRegistResult(false);
                 return;
             case 1:
-                hpbar = Instantiate(AllyHPBar,gameObject.transform);
+                HPBarColor = RR.GetColor("AllyColor");
+                LevelBGImageColor = RR.GetColor("AllyBGImageColor");
                 break;
             case 2:
-                hpbar = Instantiate(EnemyHPBar, gameObject.transform);
+                HPBarColor = RR.GetColor("EnemyColor");
+                LevelBGImageColor = RR.GetColor("EnemyBGImageColor");
                 break;
             case 3:
-                hpbar = Instantiate(NeutralHPBar, gameObject.transform);
+                HPBarColor = RR.GetColor("NeutralColor");
+                LevelBGImageColor = RR.GetColor("NeutralBGImageColor");
                 break;
         }
+
+        hpbar = Instantiate(HealthBarPrefab, gameObject.transform);
 
         hpbar.name = "Health "+RegisteObject.name;
 
         HealthBar healthBar = hpbar.GetComponent<HealthBar>();
+
+        healthBar.SetHPColor(HPBarColor);
+        healthBar.SetLevelBackGroundColor(LevelBGImageColor);
+        healthBar.SetName(name);
+        healthBar.SetInitBarParameter(1, 1);
 
         VHP.SetHealthBar(healthBar);
         healthBar.SetParameter(RegisteObject,VHP,VHP.HPAnchor.transform, mainCamera, ccanvas);
