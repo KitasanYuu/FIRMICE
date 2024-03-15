@@ -23,7 +23,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: New Material
+  m_Name: UI-WaveTest
   m_Shader: {fileID: 4800000, guid: 553aef808afc79748be50ef526b016ed, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -162,6 +162,7 @@ Material:
     - _Angle: 48
     - _Anisotropy: 0
     - _BlendMode: 0
+    - _CanvasAspectRatio: 1
     - _CoatMask: 0
     - _ColorMask: 15
     - _ControlParameter: 0
@@ -226,7 +227,7 @@ Material:
     - _ReceivesSSR: 1
     - _ReceivesSSRTransparent: 0
     - _RefractionModel: 0
-    - _ShapeKey: 2
+    - _ShapeKey: 4.13
     - _Smoothness: 0.5
     - _SmoothnessRemapMax: 1
     - _SmoothnessRemapMin: 0
@@ -266,6 +267,7 @@ Material:
     - _UVDetail: 0
     - _UVEmissive: 0
     - _UseEmissiveIntensity: 0
+    - _UseScriptPass: 0
     - _UseShadowThreshold: 0
     - _UseUIAlphaClip: 0
     - _WaveIntensity: 0.1
@@ -280,7 +282,7 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
-    - _Color: {r: 0.43396223, g: 0.43396223, b: 0.43396223, a: 1}
+    - _Color: {r: 0, g: 0.73404264, b: 1, a: 0.65882355}
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}

@@ -1,5 +1,6 @@
 Shader "Akari/UI/WAVE" {
     Properties {
+        [Toggle(_UseScriptPass)] _UseScriptPass("Use Script Pass", Float) = 0 // 0 表示未选中, 1 表示选中
         _Color ("Color", Color) = (1,1,1,1)
         _TargetColor("TOColor", Color) = (1,1,1,1)
         _ControlParameter ("Control Parameter", Range(0, 1.34)) = 0
@@ -7,11 +8,14 @@ Shader "Akari/UI/WAVE" {
         _ShapeKey ("ShapeKey", Range(0, 20)) = 2
         _Tilling ("Tilling", Range(1, 5)) = 1
         _WaveSpacing ("Wave Spacing", Range(0, 1)) = 1
+        _CanvasAspectRatio("Canvas Aspect Ratio", Float) = 1.0
     }
     SubShader {
-        Tags {"Queue"="Overlay" "RenderType"="Transparent"}
+        Tags {"QUEUE"="Transparent" "IGNOREPROJECTOR"="true" "RenderType"="Transparent" "PreviewType"="Plane" "CanUseSpriteAtlas"="true"}
         Pass {
             Name"MAIN"
+            Tags {"QUEUE"="Transparent" "IGNOREPROJECTOR"="true" "RenderType"="Transparent" "PreviewType"="Plane" "CanUseSpriteAtlas"="true"}
+            Blend SrcAlpha OneMinusSrcAlpha
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -30,6 +34,7 @@ struct v2f
     float4 vertex : SV_POSITION;
 };
 
+float _UseScriptPass;
 float4 _Color;
 float4 _TargetColor;
 float _ControlParameter;
@@ -37,6 +42,7 @@ float _Angel;
 float _Tilling;
 float _WaveSpacing;
 float _ShapeKey;
+float _CanvasAspectRatio;
 
 v2f vert(appdata_t v)
 {
@@ -48,7 +54,12 @@ v2f vert(appdata_t v)
 }
 
 fixed4 frag(v2f i) : SV_Target {
-    float aspect = _ScreenParams.y / _ScreenParams.x; 
+    float UseScriptPass =  _UseScriptPass;
+    float aspect;
+    if(_UseScriptPass > 0.5)
+        aspect = _CanvasAspectRatio; 
+    else
+        aspect = _ScreenParams.y / _ScreenParams.x; 
     float Angle = _Angel;
     float value;
     float ShapeKey = _ShapeKey;
