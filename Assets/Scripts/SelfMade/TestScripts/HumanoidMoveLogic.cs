@@ -224,6 +224,7 @@ namespace TestField
             if (TargetExpose && !HasExcuted)
             {
                 InBattle = true;
+                inBattle = true;
                 StartPositionAdjust(true);
                 HasExcuted = true;
             }
@@ -236,6 +237,7 @@ namespace TestField
                 CurrentCoverSelected = null;
                 HasExcuted = false;
                 InBattle = false;
+                inBattle = false;
                 AC.CurrentAlertness = 0;
                 AC.O_ExposeStatusSet(false);
                 FacetoMoveDir = true;

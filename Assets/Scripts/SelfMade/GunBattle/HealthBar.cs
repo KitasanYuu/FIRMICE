@@ -46,6 +46,9 @@ public class HealthBar : MonoBehaviour
     private Coroutine HPBarFadeCoroutine;
     private Coroutine ArmorBarFadeCoroutine;
 
+    private bool ResourceInitComplete;
+    private bool ComponentInitComplete;
+
     private void Awake()
     {
         ResourceInit();
@@ -161,6 +164,8 @@ public class HealthBar : MonoBehaviour
         ObjectName = transform.FindDeepChild("NameContent")?.gameObject.GetComponent<TextMeshProUGUI>();
         ObjectLevel = transform.FindDeepChild("LevelContent")?.gameObject.GetComponent<TextMeshProUGUI>();
 
+        ResourceInitComplete = true;
+        RequestParameterProgress();
     }
 
     private void ComponentInit()
@@ -172,6 +177,15 @@ public class HealthBar : MonoBehaviour
         {
             HVM.RegisterHealthBar(this);
         }
+
+        ComponentInitComplete = true;
+        RequestParameterProgress();
+    }
+
+    private void RequestParameterProgress()
+    {
+        if(ResourceInitComplete && ComponentInitComplete)
+            HVM?.ParameterSetProgress(gameObject, Object);
     }
 
     private void ParameterInit()

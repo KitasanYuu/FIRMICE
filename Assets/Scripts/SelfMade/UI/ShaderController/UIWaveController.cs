@@ -8,6 +8,7 @@ public class ShaderDataController : MonoBehaviour
     [SerializeField,ReadOnly]private RectTransform rectTransform;
     public Color color;
     public Color ToColor;
+    [Range(0, 1)] public float OriginColorPassValue;
     [Range(0,1)] public float ControlParameter;
     [Range(45, 135)] public float Angle = 45;
     [Range(0,20)]public float ShapeKey =1;
@@ -30,7 +31,7 @@ public class ShaderDataController : MonoBehaviour
             }
 
             // 示例：动态修改颜色和控制参数
-            material.SetColor("_Color", color); // 设置为红色
+            material.SetColor("_Color", CraftColor(color, OriginColorPassValue)); // 设置为红色
             material.SetColor("_TargetColor",ToColor); // 设置为蓝色
             material.SetFloat("_ControlParameter",ControlParameter);
             material.SetFloat("_Angle", Angle);
@@ -43,5 +44,17 @@ public class ShaderDataController : MonoBehaviour
         {
             material = GetComponent<Material>();
         }
+    }
+
+    private Color CraftColor(Color color,float Passvalue)
+    {
+        float a = color.a;
+        float r = color.r;
+        float g = color.g;
+        float b = color.b;
+
+        Color newcolor = new Color(r,g,b, Passvalue);
+
+        return newcolor;
     }
 }

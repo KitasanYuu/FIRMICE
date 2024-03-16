@@ -4,6 +4,7 @@ using DataManager;
 using System.Collections.Generic;
 using System.Data.Common;
 using TestField;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class HPVisionManager : MonoBehaviour
@@ -17,8 +18,10 @@ public class HPVisionManager : MonoBehaviour
 
     private DataMaster DM = new DataMaster();
     private ResourceReader RR = new ResourceReader();
+    private HPVisionManager HVM;
 
     [SerializeField, ReadOnly] private GameObject HealthBarPrefab;
+    [SerializeField, ReadOnly] private GameObject EHealthBarPrefab;
 
 
     void Start()
@@ -95,6 +98,8 @@ public class HPVisionManager : MonoBehaviour
 
     private void ResourceInit()
     {
+         HVM = GetComponent<HPVisionManager>();
+        EHealthBarPrefab = RR.GetGameObject("HealthBar", "EliteHealthBarPrefab");
         HealthBarPrefab = RR.GetGameObject("HealthBar", "HealthBarPrefab");
     }
 
@@ -104,15 +109,64 @@ public class HPVisionManager : MonoBehaviour
         VirtualHP VHP = RegisteObject.GetComponent<VirtualHP>();
 
         GameObject hpbar = null;
+
+
+
+        int ActorSP = DM.GetActorSP(RegisteObject);
+
+        if(ActorSP == 0)
+        {
+            hpbar = Instantiate(HealthBarPrefab, gameObject.transform);
+            VHP.SetRegistResult(true);
+            hpbar.name = "N-" + RegisteObject.name;
+
+            HealthBar healthBar = hpbar.GetComponent<HealthBar>();
+
+            healthBar.SetParameter(RegisteObject, VHP, VHP.HPAnchor.transform, mainCamera, ccanvas);
+            VHP.SetHealthBar(healthBar);
+            
+        }
+        
+        if(ActorSP == 1)
+        {
+            hpbar = Instantiate(EHealthBarPrefab, gameObject.transform);
+            VHP.SetRegistResult(true);
+            hpbar.name = "E-" + RegisteObject.name;
+
+            EliteHealthBar ehealthBar = hpbar.GetComponent<EliteHealthBar>();
+
+            ehealthBar.SetParameter(RegisteObject,VHP,HVM);
+
+            VHP.SetEHealthBar(ehealthBar);
+        }
+    }
+
+    public void ParameterSetProgress(GameObject RequestObject,GameObject RegisterObject)
+    {
+        EliteHealthBar EHealthBar = null;
+        HealthBar healthBar = null;
+
+        int ActorSP = DM.GetActorSP(RegisterObject);
+
+        if (ActorSP == 1)
+        {
+            EHealthBar = RequestObject.GetComponent<EliteHealthBar>();
+        }
+        else if(ActorSP == 0)
+        {
+            healthBar = RequestObject.GetComponent<HealthBar>();
+        }
+            
+        string name = DM.GetActorName(RegisterObject);
+
         Color HPBarColor = Color.white;
         Color LevelBGImageColor = Color.white;
-        string name = DM.GetActorName(RegisteObject);
-        int camp = DM.GetActorCamp(RegisteObject);
+
+        int camp = DM.GetActorCamp(RegisterObject);
         switch (camp)
         {
             case 0:
-                Debug.LogError(RegisteObject.name + "Regist HP Failure,Because Camp Error!");
-                VHP.SetRegistResult(false);
+                Debug.LogError(RegisterObject.name + "Regist HP Failure,Because Camp Error!");
                 return;
             case 1:
                 HPBarColor = RR.GetColor("AllyColor");
@@ -128,20 +182,24 @@ public class HPVisionManager : MonoBehaviour
                 break;
         }
 
-        hpbar = Instantiate(HealthBarPrefab, gameObject.transform);
+        if (ActorSP == 0)
+        {
+            healthBar.SetHPColor(HPBarColor);
+            healthBar.SetLevelBackGroundColor(LevelBGImageColor);
+            healthBar.SetName(name);
+            healthBar.SetInitBarParameter(1, 1);
+        }
+        else if(ActorSP == 1)
+        {
+            string elitetitle = DM.GetActorSPTitle(RegisterObject);
 
-        hpbar.name = "Health "+RegisteObject.name;
-
-        HealthBar healthBar = hpbar.GetComponent<HealthBar>();
-
-        healthBar.SetHPColor(HPBarColor);
-        healthBar.SetLevelBackGroundColor(LevelBGImageColor);
-        healthBar.SetName(name);
-        healthBar.SetInitBarParameter(1, 1);
-
-        VHP.SetHealthBar(healthBar);
-        healthBar.SetParameter(RegisteObject,VHP,VHP.HPAnchor.transform, mainCamera, ccanvas);
-        VHP.SetRegistResult(true);
+            EHealthBar.SetEName(name);
+            EHealthBar.SetEliteTitle(elitetitle);
+            //EHealthBar.SetHPColor(HPBarColor);
+            //EHealthBar.SetNameColor(HPBarColor);
+            //EHealthBar.SetTitleColor(HPBarColor);
+            EHealthBar.SetInitBarParameter(1, 1);
+        }
     }
 
     public void ObjectHPUnRegister(HealthBar healthBart)

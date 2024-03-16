@@ -37,8 +37,11 @@ namespace TestField
 
         void Update()
         {
-            TargetSelect();
-            ShootCondition();
+            if (AiM.inBattle)
+            {
+                TargetSelect();
+                ShootCondition();
+            }
 
         }
 

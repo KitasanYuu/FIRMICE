@@ -42,6 +42,65 @@ namespace DataManager
             }
         }
 
+        //用于获取Actor是否为特殊属性，0为普通，1为Boss
+        public int GetActorSP(GameObject Actor)
+        {
+            bool isBoss = false;
+            CSVReader csvreader = new CSVReader();
+            Identity ID = Actor.GetComponent<Identity>();
+            string ActorCID = ID?.Cid;
+            if (ActorCID.EndsWith("_E"))
+            {
+                ActorCID = ActorCID.Substring(0, ActorCID.Length - 2);
+                isBoss = true;
+            }
+
+            var ActorInfo = csvreader.GetDataByID("role", ActorCID);
+            if (ActorInfo != null)
+            {
+                if(!isBoss)
+                    return 0;
+                else
+                    return 1;
+            }
+            else
+            {
+                Debug.LogError("DataMaster:GetActorName" + Actor.name + "Has no CID Found:" + ActorCID); ;
+                return -1;
+            }
+        }
+
+        public string GetActorSPTitle(GameObject Actor)
+        {
+            string Title;
+            CSVReader csvreader = new CSVReader();
+            Identity ID = Actor.GetComponent<Identity>();
+            string ActorCID = ID?.Cid;
+            if (ActorCID.EndsWith("_E"))
+            {
+                ActorCID = ActorCID.Substring(0, ActorCID.Length - 2);
+
+                var ActorInfo = csvreader.GetDataByID("role", ActorCID);
+                if (ActorInfo != null)
+                {
+                    Title = (string)ActorInfo["EliteTitle"];
+                    return Title;
+                }
+                else
+                {
+                    Debug.LogError("DataMaster:GetActorName" + Actor.name + "Has no CID Found");
+                    Title = "外域来客";
+                    return Title;
+                }
+            }
+            else
+            {
+                Debug.LogWarning(Actor.name + "IS Not Elite!! CID:" + ActorCID);
+                Title = "错误适格者";
+                return Title;
+            }
+        }
+
         public string GetActorName(GameObject Actor)
         {
             CSVReader csvreader = new CSVReader();
@@ -60,6 +119,7 @@ namespace DataManager
                 return placeHoder;
             }
         }
+
     }
 }
 

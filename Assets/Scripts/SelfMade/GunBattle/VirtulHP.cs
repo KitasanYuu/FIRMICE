@@ -1,4 +1,5 @@
 using CustomInspector;
+using DataManager;
 using System.Collections.Generic;
 using TestField;
 using Unity.VisualScripting;
@@ -14,6 +15,7 @@ namespace BattleHealth
         [ReadOnly] public float CurrentHP;
         [ReadOnly] public float CurrentArmor;
         [ReadOnly] public HealthBar healthBar;
+        [ReadOnly] public EliteHealthBar eHealthBar;
         [Space2(20)]
         public bool TRevive;
         [SerializeField]
@@ -30,8 +32,11 @@ namespace BattleHealth
 
         private bool NeedRegistHP;
 
+        private int mycamp= -999;
+
         private HPVisionManager HVM;
         private Identity id;
+        private DataMaster DM = new DataMaster();
 
         public List<float> damageList = new List<float>(); // 使用List来存储伤害值
 
@@ -73,31 +78,42 @@ namespace BattleHealth
         // 从外部调用的方法，直接添加伤害并指定角色标识
         public void AddDamage(float damage, float ArmorBrake, GameObject character)
         {
-            // 计算减伤后的实际伤害值
-            float actualDamage = damage;
-            damageList.Add(actualDamage);
-            if (CurrentArmor > 1)
+            if(mycamp == -999)
             {
-                actualDamage = (damage * ArmorRate) * (1 - DamageReduceRate);
-                CurrentArmor -= ArmorBrake; // 根据实际情况调整护甲值的减少
-            }
-            else
-            {
-                actualDamage = damage * (1 - DamageReduceRate);
+                mycamp = DM.GetActorCamp(gameObject);
             }
 
-            // 确保伤害值不为负数
-            actualDamage = Mathf.Max(actualDamage, 0);
+            int attackercamp = DM.GetActorCamp(character);
+            
+            if(attackercamp != mycamp)
+            {
+                // 计算减伤后的实际伤害值
+                float actualDamage = damage;
+                damageList.Add(actualDamage);
+                if (CurrentArmor > 1)
+                {
+                    actualDamage = (damage * ArmorRate) * (1 - DamageReduceRate);
+                    CurrentArmor -= ArmorBrake; // 根据实际情况调整护甲值的减少
+                }
+                else
+                {
+                    actualDamage = damage * (1 - DamageReduceRate);
+                }
 
-            // 将处理过的伤害值关联到特定角色
-            if (characterDamageMap.ContainsKey(character))
-            {
-                characterDamageMap[character] += actualDamage;
+                // 确保伤害值不为负数
+                actualDamage = Mathf.Max(actualDamage, 0);
+
+                // 将处理过的伤害值关联到特定角色
+                if (characterDamageMap.ContainsKey(character))
+                {
+                    characterDamageMap[character] += actualDamage;
+                }
+                else
+                {
+                    characterDamageMap.Add(character, actualDamage);
+                }
             }
-            else
-            {
-                characterDamageMap.Add(character, actualDamage);
-            }
+
         }
 
         private void DamageCalculating()
@@ -175,11 +191,17 @@ namespace BattleHealth
         #region 对血条UI的注册流程&c参数接收
         private void RegeisterHP(bool NeedToRegist)
         {
-            if (id.canUse)
+            if (NeedToRegist)
             {
-                if (NeedToRegist)
+                bool isSpecial = false;
+                DataMaster DM = new DataMaster();
+                int SP = DM.GetActorSP(gameObject);
+                if (SP != 0)
+                    isSpecial = true;
+                if (id.canUse)
                 {
-                    if (Object != null && HPAnchor != null)
+
+                    if ((Object != null && HPAnchor != null) || isSpecial)
                     {
                         HVM = FindAnyObjectByType<HPVisionManager>();
 
@@ -205,6 +227,11 @@ namespace BattleHealth
         {
             healthBar = HPB;
         }
+
+        public void SetEHealthBar(EliteHealthBar EHPB)
+        {
+            eHealthBar = EHPB;
+        }
         #endregion
 
 
@@ -225,7 +252,10 @@ namespace BattleHealth
 
         private void DestoryProgress()
         {
-            Destroy(healthBar.gameObject);
+            if(healthBar != null)
+                Destroy(healthBar.gameObject);
+            else if(eHealthBar != null)
+                Destroy(eHealthBar.gameObject);
             Destroy(gameObject);
         }
     }

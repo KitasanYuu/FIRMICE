@@ -14,6 +14,8 @@ namespace TestField
         private Vector3 Destination;
 
         [ReadOnly]
+        public bool inBattle;
+        [ReadOnly]
         public float Normalspeed;
         [ReadOnly]
         public float Sprintspeed;
