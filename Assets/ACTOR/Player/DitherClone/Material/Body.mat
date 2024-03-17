@@ -30,6 +30,7 @@ Material:
   m_ValidKeywords:
   - _ALPHATEST_ON
   - _DEPTHOFFSET_ON
+  - _DOUBLESIDED_ON
   - _EMISSION
   - _ENABLEDITHER
   - _INVERT
@@ -38,7 +39,7 @@ Material:
   - _NORMALMAPENABLE
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
+  m_DoubleSidedGI: 1
   m_CustomRenderQueue: 2450
   stringTagMap:
     MotionVector: User
@@ -202,6 +203,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Main2ndTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Main2ndTexture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -500,8 +505,8 @@ Material:
     - _ColorMask: 15
     - _ConservativeDepthOffsetEnable: 0
     - _Cull: 2
-    - _CullMode: 2
-    - _CullModeForward: 2
+    - _CullMode: 0
+    - _CullModeForward: 0
     - _Cutoff: 0.001
     - _DepthOffsetEnable: 1
     - _DetailAlbedoScale: 1
@@ -519,7 +524,7 @@ Material:
     - _DistanceFadeRimFresnelPower: 5
     - _Dither: 1
     - _DitherMaxValue: 255
-    - _DoubleSidedEnable: 0
+    - _DoubleSidedEnable: 1
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 1
     - _DstBlend: 0
@@ -622,6 +627,7 @@ Material:
     - _LightMaxLimit: 1
     - _LightMinLimit: 0.05
     - _LinkDetailsWithBase: 1
+    - _MAIN2NDCOLOR: 0
     - _MATCAP1: 0
     - _MATCAP2: 0
     - _Main2ndDissolveNoiseStrength: 0.1

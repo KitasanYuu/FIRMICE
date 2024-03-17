@@ -29,12 +29,13 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ALPHATEST_ON
+  - _DOUBLESIDED_ON
   - _ENABLEDITHER
   - _SIX_WAY_COLOR_ABSORPTION
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
+  m_DoubleSidedGI: 1
   m_CustomRenderQueue: 2450
   stringTagMap:
     MotionVector: User
@@ -500,8 +501,8 @@ Material:
     - _ColorMask: 15
     - _ConservativeDepthOffsetEnable: 1
     - _Cull: 2
-    - _CullMode: 2
-    - _CullModeForward: 2
+    - _CullMode: 0
+    - _CullModeForward: 0
     - _Cutoff: 0.001
     - _DepthOffsetEnable: 0
     - _DetailAlbedoScale: 1
@@ -519,7 +520,7 @@ Material:
     - _DistanceFadeRimFresnelPower: 5
     - _Dither: 1
     - _DitherMaxValue: 255
-    - _DoubleSidedEnable: 0
+    - _DoubleSidedEnable: 1
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 1
     - _DstBlend: 0
