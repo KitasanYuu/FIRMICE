@@ -224,6 +224,7 @@ namespace TestField
             if (TargetExpose && !HasExcuted)
             {
                 InBattle = true;
+                inBattle = true;
                 StartPositionAdjust(true);
                 HasExcuted = true;
             }
@@ -236,6 +237,7 @@ namespace TestField
                 CurrentCoverSelected = null;
                 HasExcuted = false;
                 InBattle = false;
+                inBattle = false;
                 AC.CurrentAlertness = 0;
                 AC.O_ExposeStatusSet(false);
                 FacetoMoveDir = true;
@@ -250,7 +252,7 @@ namespace TestField
         //声明目前生成并占用的掩体，防止别的AI也将点生成在这个掩体上，造成挤兑
         private void CoverOccupied()
         {
-            if (InBattle)
+            if (InBattle && !NoCoverNear)
             {
                 Identity ID = CurrentCoverSelected?.GetComponent<Identity>();
                 if (ID != null)

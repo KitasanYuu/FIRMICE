@@ -114,6 +114,11 @@ namespace DataManager
             csvFileName = csvFileName.Trim();
             id = id.Trim();
 
+            if(csvFileName == "role")
+            {
+                id = RoleTableCidModify(id);
+            }
+
             if (!data.ContainsKey(csvFileName))
             {
                 LoadCSV(csvFileName);
@@ -129,6 +134,24 @@ namespace DataManager
                 }
             }
             return null;
+        }
+
+        public static string RoleTableCidModify(string cid)
+        {
+            // 检查字符串的最后一个字符是否为数字
+            if (cid.Length > 0 && char.IsDigit(cid[cid.Length - 1]))
+            {
+                // 如果以数字结尾，保留字符串
+                Console.WriteLine("字符串以数字结尾，保持不变： " + cid);
+                return cid;
+            }
+            else
+            {
+                // 如果不以数字结尾，删除最后两个字符（如果长度允许）
+                string modifiedString = cid.Length > 2 ? cid.Substring(0, cid.Length - 2) : string.Empty;
+                Console.WriteLine("字符串不以数字结尾，修改后的字符串： " + modifiedString);
+                return modifiedString;
+            }
         }
     }
 }

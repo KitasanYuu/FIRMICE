@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3369335142799035646}
   - component: {fileID: 5788312291734657726}
   - component: {fileID: 3558523824365298046}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: CoreBottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 6403698522784856438}
   - component: {fileID: 7345519377913171451}
   - component: {fileID: 1674788148127318570}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: Bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 4021395980611960428}
   - component: {fileID: 5844362856240308343}
   - component: {fileID: 5894543792035698770}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: ConnectionB2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -266,7 +266,7 @@ GameObject:
   - component: {fileID: 8305138381916783195}
   - component: {fileID: 5103086160410017261}
   - component: {fileID: 2663055127208104536}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: LegSubF2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -351,7 +351,7 @@ GameObject:
   - component: {fileID: 7367919968888875749}
   - component: {fileID: 2174780559278392475}
   - component: {fileID: 752404934543978532}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: Moudle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -450,7 +450,7 @@ GameObject:
   - component: {fileID: 8060631531862206102}
   - component: {fileID: 2898121466482407630}
   - component: {fileID: 7649716444696185430}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: TestPrototype
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -494,6 +494,7 @@ MonoBehaviour:
   CoverOccupied: 0
   Occupier: {fileID: 0}
   MasterID: TrainingTarget
+  canUse: 0
   Covertype: 
 --- !u!95 &5915118627346539985
 Animator:
@@ -771,18 +772,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b9066f51e2e40244bf681eebe72f6ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Object: {fileID: 0}
+  HPAnchor: {fileID: 0}
   CurrentHP: 0
   CurrentArmor: 0
-  revive: 0
+  healthBar: {fileID: 0}
+  TRevive: 0
   DestoryAfterDead: 0
+  HideAfterDead: 0
   TotalHP: 1000
   DamageReduceRate: 0
   Armor: 1000
   ArmorRate: 1
   damageList: []
-  onDamageDealt:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!54 &8890205225869517995
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -885,7 +887,7 @@ GameObject:
   - component: {fileID: 6519776254516062933}
   - component: {fileID: 5971119963162696599}
   - component: {fileID: 6257268301387407891}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: Face
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -968,7 +970,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 956265179428481077}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: RF2Connection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1002,7 +1004,7 @@ GameObject:
   - component: {fileID: 6647780963770234642}
   - component: {fileID: 3120730502681976754}
   - component: {fileID: 5605266890122075717}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: WheelF2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1085,7 +1087,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5646641742592590119}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: R1GControll_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1118,7 +1120,7 @@ GameObject:
   - component: {fileID: 7626553137411149040}
   - component: {fileID: 7736186244837440443}
   - component: {fileID: 1290760972555519301}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: LegMainF2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1203,7 +1205,7 @@ GameObject:
   - component: {fileID: 5935153344036832729}
   - component: {fileID: 7282567698984273019}
   - component: {fileID: 8351286585211751950}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: CameraBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1289,7 +1291,7 @@ GameObject:
   - component: {fileID: 6466655341153670952}
   - component: {fileID: 7131350555394893667}
   - component: {fileID: 5181433433507842051}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: Core
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1396,7 +1398,7 @@ GameObject:
   - component: {fileID: 4658757175038649068}
   - component: {fileID: 6045062355641644189}
   - component: {fileID: 5229454098144130935}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: WheelF1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1481,7 +1483,7 @@ GameObject:
   - component: {fileID: 2365995466504815760}
   - component: {fileID: 7680855770479607621}
   - component: {fileID: 6307396078226604533}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: SingalTp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1564,7 +1566,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 573377390119160174}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: RayCastOrigin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1595,7 +1597,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5945984247010902994}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: Head_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1626,7 +1628,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3193908948544085464}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: L2GControll_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1657,7 +1659,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7995124982833903331}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1699,7 +1701,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4999799038327653032}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: L1GControll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1733,7 +1735,7 @@ GameObject:
   - component: {fileID: 3120853963163858627}
   - component: {fileID: 8671190292527616575}
   - component: {fileID: 6554282300249403125}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: LegMainF3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1816,7 +1818,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1692387190134686779}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: LeftFoot1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1851,7 +1853,7 @@ GameObject:
   - component: {fileID: 2098102466916037562}
   - component: {fileID: 8573665369085626474}
   - component: {fileID: 3003086736490301077}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: LegSubF4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1934,7 +1936,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1164029817267263063}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: LeftsmallFoot1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1972,7 +1974,7 @@ GameObject:
   - component: {fileID: 4850931488267316145}
   - component: {fileID: 9211025427250384291}
   - component: {fileID: 4325454335212129886}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: ConnectionF1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2057,7 +2059,7 @@ GameObject:
   - component: {fileID: 4955840926420506353}
   - component: {fileID: 1093793613507602484}
   - component: {fileID: 9185576177980095837}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: BreakF1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2140,7 +2142,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 381170086364622815}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: RightsmallFoot2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2177,7 +2179,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2747556461724894876}
   - component: {fileID: 3900791707165755056}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: NavMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2236,7 +2238,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5130392700082462465}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: L2GControll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2268,7 +2270,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 273427485813981395}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: RF1Connection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2302,7 +2304,7 @@ GameObject:
   - component: {fileID: 493115892721405217}
   - component: {fileID: 6344243018532032128}
   - component: {fileID: 4145226418454606883}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: LegSubF1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2385,7 +2387,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3927899314176892647}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: Leftfoot2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2418,7 +2420,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3799033487698756299}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: LeftsmallFoot1_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2451,7 +2453,7 @@ GameObject:
   - component: {fileID: 2180228626948045018}
   - component: {fileID: 4352317337201519455}
   - component: {fileID: 1345049763078983621}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2537,7 +2539,7 @@ GameObject:
   - component: {fileID: 1078958953520303906}
   - component: {fileID: 4951878519247091381}
   - component: {fileID: 2988607529721857956}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: Connection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2622,7 +2624,7 @@ GameObject:
   - component: {fileID: 5683482678135661465}
   - component: {fileID: 6104963651705544982}
   - component: {fileID: 3652697474007617883}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: CircleConnectB2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2707,7 +2709,7 @@ GameObject:
   - component: {fileID: 2903235309814082393}
   - component: {fileID: 4422811958315974574}
   - component: {fileID: 8762889568803076587}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: LegMainF4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2792,7 +2794,7 @@ GameObject:
   - component: {fileID: 5670634102523484203}
   - component: {fileID: 8398410132014177789}
   - component: {fileID: 7768682442418588503}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: ConnectionB1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2878,7 +2880,8 @@ GameObject:
   - component: {fileID: 7736692521923745092}
   - component: {fileID: 1997676970658646429}
   - component: {fileID: 9031851800630606343}
-  m_Layer: 27
+  - component: {fileID: 5383708708035471104}
+  m_Layer: 11
   m_Name: Temp_Weapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2965,6 +2968,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23b1250f03b229b46a77b3e8013b6ca1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WeaponID: 
   UsingAIControl: 0
   UsingMasterControl: 0
   AimDir: {x: 0, y: 0, z: 0}
@@ -2972,23 +2976,39 @@ MonoBehaviour:
   InstanceMethod: 1
   Semi: 0
   LimitAmmo: 0
-  TempAmmoTotal: 0
-  defaultBulletCount: 0
+  needReload: 0
+  MaxAmmoCarry: 0
+  AmmoPreMag: 0
   CurrentBulletCount: 0
   Shooter: {fileID: 0}
-  bulletPrefab: {fileID: 2505341365566777671, guid: 0243ad9ee5a7481428ec3255d6ed225d, type: 3}
-  VFXHitEffect: {fileID: 613433886817584986, guid: 76f16306fbddec94dbb3a017d7f840a7, type: 3}
   spawnBulletPosition: {fileID: 7327434110320121651}
   shootingAccuracy: 0.4
-  bulletspeed: 100
-  DestoryLayer:
-    serializedVersion: 2
-    m_Bits: 1346142175
-  BulletDamage: 100
   fireRate: 0.05
   reloadDuration: 2
   FastreloadDuration: 1
+  bulletPrefab: {fileID: 2505341365566777671, guid: 0243ad9ee5a7481428ec3255d6ed225d, type: 3}
+  VFXHitEffect: {fileID: 613433886817584986, guid: 76f16306fbddec94dbb3a017d7f840a7, type: 3}
+  bulletspeed: 100
+  BulletDamage: 100
+  ArmorBreak: 0
+  DetectRayLength: 0
+  DestoryLayer:
+    serializedVersion: 2
+    m_Bits: 1346142175
   PredictedAimPoint: {x: 0, y: 0, z: 0}
+--- !u!114 &5383708708035471104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4849490761703967623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b60f3b3235da1d419ff479a969055d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WeaponID: 
 --- !u!1 &5040762001738294413
 GameObject:
   m_ObjectHideFlags: 0
@@ -2998,7 +3018,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 973167671498766477}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: L1GControll_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3029,7 +3049,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3291382486696683736}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3071,7 +3091,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4333024640789901947}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: RightFoot1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3104,7 +3124,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4472511584438140984}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: RightsmallFoot2_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3137,7 +3157,7 @@ GameObject:
   - component: {fileID: 7510005681872373487}
   - component: {fileID: 6665971652187556676}
   - component: {fileID: 8417911240845103527}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: BreakF3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3222,7 +3242,7 @@ GameObject:
   - component: {fileID: 1547975686781908247}
   - component: {fileID: 300516438097316198}
   - component: {fileID: 8960829054299044637}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: CircleConnectF2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3305,7 +3325,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7430917921023034145}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: LF2Connection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3339,7 +3359,7 @@ GameObject:
   - component: {fileID: 2897694150285974909}
   - component: {fileID: 1243541458265859410}
   - component: {fileID: 4514930337628229029}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: WheelF4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3424,7 +3444,7 @@ GameObject:
   - component: {fileID: 7972608750417296127}
   - component: {fileID: 1487022756673844619}
   - component: {fileID: 6752547146580695121}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: ConnectionF2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3509,7 +3529,7 @@ GameObject:
   - component: {fileID: 8751230799771254100}
   - component: {fileID: 1849803887988242179}
   - component: {fileID: 3621923500856548154}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: BreakF4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3594,7 +3614,7 @@ GameObject:
   - component: {fileID: 7307734169173364975}
   - component: {fileID: 4433506398423867919}
   - component: {fileID: 6082271531637793969}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: SingalLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3677,7 +3697,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 305718608026166597}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: Weapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3711,7 +3731,7 @@ GameObject:
   - component: {fileID: 440981739543073273}
   - component: {fileID: 2820557081971442267}
   - component: {fileID: 2920423249187686472}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: SingalBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3794,7 +3814,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3134238859998565001}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: R1GControll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3826,7 +3846,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7874033362204115178}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: LF1Connection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3860,7 +3880,7 @@ GameObject:
   - component: {fileID: 2633600460786357123}
   - component: {fileID: 8282426386758580624}
   - component: {fileID: 7077391033720755115}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: CircleConnectB1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3943,7 +3963,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5319270593534335258}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: R2GControll_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3976,7 +3996,7 @@ GameObject:
   - component: {fileID: 7379466378786659477}
   - component: {fileID: 4061411867776050567}
   - component: {fileID: 9120417681132728380}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: WheelF3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4059,7 +4079,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3046930899167572464}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: RightsmallFoot1_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4092,7 +4112,7 @@ GameObject:
   - component: {fileID: 4261693751771517206}
   - component: {fileID: 6303838201009332176}
   - component: {fileID: 5446810380258034219}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: LegMainF1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4177,7 +4197,7 @@ GameObject:
   - component: {fileID: 8437391501902635983}
   - component: {fileID: 4031908507363342378}
   - component: {fileID: 2633820930191391083}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: LegSubF3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4262,7 +4282,7 @@ GameObject:
   - component: {fileID: 4026441447387651957}
   - component: {fileID: 5407244408367634483}
   - component: {fileID: 5760241733895330602}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: BreakF2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4347,7 +4367,7 @@ GameObject:
   - component: {fileID: 9029115811587121157}
   - component: {fileID: 5111564063343963573}
   - component: {fileID: 7060928639594701405}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: CircleConnectF1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4430,7 +4450,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7327434110320121651}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: ShootAncho
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4461,7 +4481,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3046355642116249305}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: LeftsmallFoot2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4497,7 +4517,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4880735083333612098}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: LeftsmallFoot2_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4528,7 +4548,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3236876687724569291}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: RightsmallFoot1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4566,7 +4586,7 @@ GameObject:
   - component: {fileID: 2812731738467632544}
   - component: {fileID: 693410638382493366}
   - component: {fileID: 2381971128748088859}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: Top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4649,7 +4669,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2846063212695049304}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: R2GControll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4681,7 +4701,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7512296249477164510}
-  m_Layer: 27
+  m_Layer: 11
   m_Name: RightFoot2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4714,7 +4734,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4835744557828726786}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: TargetBot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
