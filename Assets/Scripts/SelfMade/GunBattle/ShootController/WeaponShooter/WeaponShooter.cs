@@ -266,13 +266,13 @@ namespace Battle
                 {
                     if (CurrentBulletCount < AmmoPreMag)
                     {
-                        StartCoroutine(ReloadCoroutine());
+                        StartCoroutine(ReloadCoroutine(reloadDuration));
                     }
                 }
             }
         }
 
-        private IEnumerator ReloadCoroutine()
+        private IEnumerator ReloadCoroutine(float Duration)
         {
             Reloading = true;
             reloadingInProgress = true;
@@ -284,7 +284,7 @@ namespace Battle
                 if (CurrentBulletCount == 0)
                 {
                     // 模拟延迟后执行重新加载的逻辑
-                    yield return new WaitForSeconds(reloadDuration);
+                    yield return new WaitForSeconds(Duration);
 
                     MaxAmmoCarry -= AmmoPreMag;
                     CurrentBulletCount = AmmoPreMag;
@@ -486,6 +486,8 @@ namespace Battle
             {
                 MaxAmmoCarry = (int)WeaponData["MaxAmmoCarry"];
             }
+
+            StartCoroutine(ReloadCoroutine(0));
         }
 
         private void ComponemetInit()
