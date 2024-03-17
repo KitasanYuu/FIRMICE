@@ -249,14 +249,15 @@ namespace BattleHealth
         }
 
 
-
         private void DestoryProgress()
         {
-            if(healthBar != null)
+            if (healthBar != null)
                 Destroy(healthBar.gameObject);
-            else if(eHealthBar != null)
-                Destroy(eHealthBar.gameObject);
-            Destroy(gameObject);
+            else if (eHealthBar != null)
+                eHealthBar.DestoryProgressInit(true);
+
+            if(healthBar ==null && eHealthBar == null)
+                Destroy(gameObject);
         }
     }
 
