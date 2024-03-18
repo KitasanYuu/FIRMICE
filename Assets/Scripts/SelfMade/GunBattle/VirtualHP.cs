@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TestField;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 namespace BattleHealth
@@ -30,6 +31,7 @@ namespace BattleHealth
         [Tooltip("护盾带来的减伤效率，值越低护盾减免越高，为0时完全无敌，为1时全伤害生效"), Range(1, 0)]
         public float ArmorRate = 1;
 
+        private int CharacterSP = -999;
         private bool NeedRegistHP;
 
         private int mycamp= -999;
@@ -195,8 +197,9 @@ namespace BattleHealth
             {
                 bool isSpecial = false;
                 DataMaster DM = new DataMaster();
-                int SP = DM.GetActorSP(gameObject);
-                if (SP != 0)
+                if(CharacterSP == -999)
+                    CharacterSP = DM.GetActorSP(gameObject);
+                if (CharacterSP > 0)
                     isSpecial = true;
                 if (id.canUse)
                 {
