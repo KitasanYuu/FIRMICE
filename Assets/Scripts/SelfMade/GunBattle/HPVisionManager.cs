@@ -18,11 +18,17 @@ public class HPVisionManager : MonoBehaviour
 
     private DataMaster DM = new DataMaster();
     private ResourceReader RR = new ResourceReader();
+    private Canvas RenderCanvas;
     private HPVisionManager HVM;
 
     [SerializeField, ReadOnly] private GameObject HealthBarPrefab;
     [SerializeField, ReadOnly] private GameObject EHealthBarPrefab;
 
+
+    private void Awake()
+    {
+        ComponentInit();
+    }
 
     void Start()
     {
@@ -33,6 +39,7 @@ public class HPVisionManager : MonoBehaviour
 
     void Update()
     {
+        ComponentInit();
         RayCastDetect();
     }
 
@@ -103,9 +110,21 @@ public class HPVisionManager : MonoBehaviour
         HealthBarPrefab = RR.GetGameObject("HealthBar", "HealthBarPrefab");
     }
 
+    private void ComponentInit()
+    {
+        if(RenderCanvas == null)
+        {
+            RenderCanvas = GetComponentInParent<Canvas>();
+        }
+
+        if (mainCamera == null)
+        {
+            mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        }
+    }
+
     public void ObjectHPRegister(GameObject RegisteObject)
     {
-        Canvas ccanvas = GetComponent<Canvas>();
         VirtualHP VHP = RegisteObject.GetComponent<VirtualHP>();
 
         GameObject hpbar = null;
@@ -122,7 +141,7 @@ public class HPVisionManager : MonoBehaviour
 
             HealthBar healthBar = hpbar.GetComponent<HealthBar>();
 
-            healthBar.SetParameter(RegisteObject, VHP, VHP.HPAnchor.transform, mainCamera, ccanvas);
+            healthBar.SetParameter(RegisteObject, VHP, VHP.HPAnchor.transform, mainCamera, RenderCanvas);
             VHP.SetHealthBar(healthBar);
             
         }
