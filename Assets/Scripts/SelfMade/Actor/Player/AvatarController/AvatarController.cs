@@ -191,7 +191,7 @@ namespace AvatarMain
         public bool IsJumping;
         //[HideInInspector]
         public bool Stopping;
-
+        public bool TestButton;
         //额外判断参数
         private Vector2 INPUTSTOP = new Vector2(0, 0);
 

@@ -38,7 +38,7 @@ public class ControllerGUI : Editor
             GUILayout.Space(10);
 
         // Create tabs as buttons
-        string[] tabNames = new string[] { "Global", "ObjectBind", "MOVE", "Audio Clips", "Cinemachine" };
+        string[] tabNames = new string[] { "Global", "ObjectBind", "MOVE", "Audio Clips", "Cinemachine" ,"Test"};
         selectedTab = GUILayout.Toolbar(selectedTab, tabNames);
 
         // Display different content based on selected tab
@@ -58,6 +58,9 @@ public class ControllerGUI : Editor
                 break;
             case 4:
                 DisplayTabContent4(avatarController);
+                break;
+            case 5:
+                DisplayContent5(avatarController);
                 break;
         }
 
@@ -176,7 +179,11 @@ public class ControllerGUI : Editor
         avatarController.BottomClamp = EditorGUILayout.FloatField(new GUIContent("BottomClamp", "相机向下移动的最大角度"), avatarController.BottomClamp);
         avatarController.CameraAngleOverride = EditorGUILayout.FloatField(new GUIContent("CameraAngleOverride", "在相机锁定时，可以使用这个字段对相机位置进行微调"), avatarController.CameraAngleOverride);
         avatarController.LockCameraPosition = EditorGUILayout.Toggle(new GUIContent("LockCameraPosition", "锁定相机"), avatarController.LockCameraPosition);
+    }
 
+    private void DisplayContent5(AvatarController avatarController)
+    {
+        avatarController.TestButton = EditorGUILayout.Toggle(new GUIContent("TestButton"), avatarController.TestButton);
     }
 
     private void DisplayAudioClips(SerializedObject so)

@@ -6,12 +6,15 @@ using RootMotion.FinalIK;
 using Detector;
 using TargetFinding;
 using CustomInspector;
+using YuuTool;
+using FIMSpace.Basics;
 
 namespace playershooting
 {
     public class TPSShootController : MonoBehaviour
     {
-        [ReadOnly]
+        public bool hasWeapon;
+        //[ReadOnly]
         public bool isAiming = false;
         [ReadOnly]
         public bool Fire = false;
@@ -27,6 +30,12 @@ namespace playershooting
         [SerializeField] private LayerMask aimColliderLayerMask = new LayerMask();
         // 用于调试显示的Transform
         [SerializeField] private Transform debugTransform;
+        [SerializeField] private Transform HeadJoint;
+        [SerializeField] private Transform rightHandPosition;
+        [SerializeField] private Transform rifleAimRightHandPosition;
+        [SerializeField] private Transform rifleCrouchAimRightHandPosition;
+        [SerializeField] private Transform leftHandGrip;
+        [SerializeField] private Transform leftHandCrouchGrip;
 
         public float targetCameraSide = 1;
         public float transitionSpeed = 0.5f; // 调整过渡速度的值
@@ -72,6 +81,11 @@ namespace playershooting
         {
             ComponentInit();
             _hasAnimator = TryGetComponent(out _animator);
+            rifleAimRightHandPosition = transform.FindDeepChild("RifleAimRightHandPosition");
+            rifleCrouchAimRightHandPosition = transform.FindDeepChild("RifleCrouchAimRightHandPosition");
+            rightHandPosition = transform.FindDeepChild("RightHandPosition");
+            leftHandGrip = transform.FindDeepChild("LeftHandGrip");
+            leftHandCrouchGrip = transform.FindDeepChild("LeftHandCrouchGrip");
             AssignAnimationIDs();
 
         }
@@ -88,6 +102,54 @@ namespace playershooting
         {
             _animIDEnterAiming = Animator.StringToHash("EnterAiming");
             _animIDAimStatus = Animator.StringToHash("AimStatus");
+        }
+
+        private void OnAnimatorIK(int layerIndex)
+        {
+            if (hasWeapon)
+            {
+                _animator.SetBool("HasWeapon", true);
+
+                if (rightHandPosition != null && !isAiming)
+                {
+                    _animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandPosition.position);
+                    _animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandPosition.rotation);
+                    _animator.SetLayerWeight(layerIndex, 0);
+                }
+                else if (rifleAimRightHandPosition != null && isAiming)
+                {
+                    if (!avatarController.IsCrouching)
+                    {
+                        _animator.SetIKPosition(AvatarIKGoal.RightHand, rifleAimRightHandPosition.position);
+                        _animator.SetIKRotation(AvatarIKGoal.RightHand, rifleAimRightHandPosition.rotation);
+                        _animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandCrouchGrip.position);
+                        _animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandCrouchGrip.rotation);
+                    }
+                    else
+                    {
+                        _animator.SetIKPosition(AvatarIKGoal.RightHand, rifleCrouchAimRightHandPosition.position);
+                        _animator.SetIKRotation(AvatarIKGoal.RightHand, rifleCrouchAimRightHandPosition.rotation);
+                    }
+
+                    _animator.SetLayerWeight(layerIndex, 1);
+                }
+
+                if (leftHandGrip != null && !avatarController.IsCrouching)
+                {
+                    _animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandGrip.position);
+                    _animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandGrip.rotation);
+                }
+                _animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f);
+                _animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f);
+                _animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1f);
+                _animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1f);
+            }
+            else
+            {
+                _animator.SetLayerWeight(layerIndex, 0);
+                _animator.SetBool("HasWeapon", false);
+
+            }
         }
 
         private void AIM()

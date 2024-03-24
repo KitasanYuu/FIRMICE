@@ -12,13 +12,13 @@ public class AnimationExample : MonoBehaviour
         anim = GetComponent<Animation>();
 
         // 播放动画
-        anim.CrossFade("WeaponShowL",0.4f);
+        anim.CrossFade("Idle-Legacy", 0.4f);
         virtualCamera.enabled = false;
 
-        foreach (AnimationState state in anim)
-        {
-            Debug.Log("Animation Clip Name: " + state.name);
-        }
+        //foreach (AnimationState state in anim)
+        //{
+        //    Debug.Log("Animation Clip Name: " + state.name);
+        //}
     }
 
     void Update()
@@ -27,7 +27,7 @@ public class AnimationExample : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             // 使用三元运算符决定播放哪个动画片段
-            string clipToPlay = isPlayingClip1 ? "WeaponDetail" : "WeaponShowL";
+            string clipToPlay = isPlayingClip1 ? "WeaponDetail" : "Idle-Legacy";
 
             virtualCamera.enabled = isPlayingClip1 ? true : false;
             // 切换到跳跃动画
@@ -37,9 +37,10 @@ public class AnimationExample : MonoBehaviour
             isPlayingClip1 = !isPlayingClip1;
         }
 
+
         if (Input.GetKeyDown(KeyCode.P))
         {
-            anim.CrossFade("Idle-Legacy", 0.4f); // 使用CrossFade实现平滑过渡，0.2f是过渡时间
+            anim.CrossFade("WeaponShowL", 0.4f); // 使用CrossFade实现平滑过渡，0.2f是过渡时间
         }
 
             if (Input.GetKeyDown(KeyCode.Q))
