@@ -8,12 +8,16 @@ using System.Collections;
 using TestField;
 using DataManager;
 using TargetDirDetec;
+using VInspector;
+using Kinemation.Recoilly;
+using Kinemation.Recoilly.Runtime;
 
 namespace Battle
 {
     [RequireComponent(typeof(WeaponIdentity))]
     public class WeaponShooter : MonoBehaviour
     {
+        [Tab("WeaponSettings")]
         [SerializeField, ReadOnly] private string WeaponID;
         [ReadOnly, SerializeField] private bool UsingAIControl;
         [ReadOnly, SerializeField] private bool UsingMasterControl;
@@ -27,9 +31,9 @@ namespace Battle
         [SerializeField] private bool Semi;
         [SerializeField] private bool LimitAmmo = true;
         [SerializeField] private bool needReload;
-        [SerializeField, ShowIf(nameof(LimitAmmo))] private int MaxAmmoCarry;
-        [SerializeField, ShowIf(nameof(LimitAmmo))] private int AmmoPreMag;
-        [ReadOnly, SerializeField, ShowIf(nameof(LimitAmmo))] private int CurrentBulletCount;
+        [SerializeField, CustomInspector.ShowIf(nameof(LimitAmmo))] private int MaxAmmoCarry;
+        [SerializeField, CustomInspector.ShowIf(nameof(LimitAmmo))] private int AmmoPreMag;
+        [ReadOnly, SerializeField, CustomInspector.ShowIf(nameof(LimitAmmo))] private int CurrentBulletCount;
 
         [Space2(20)]
         public GameObject Shooter;
@@ -55,6 +59,15 @@ namespace Battle
         [SerializeField, ReadOnly] public float ArmorBreak;
         [SerializeField, ReadOnly] public float DetectRayLength;
         [SerializeField, ReadOnly] public LayerMask DestoryLayer;
+
+        [Tab("Recoilly package")]
+        public Transform recoilPivot;
+        public RecoilAnimData recoilData;
+        public Vector3 handOffset;
+        public LocRot pointAimData;
+
+        public FireMode fireMode;
+
         //子弹速度与射线检测的比值 射线长度 = 子弹速度*SRR
         private float CSRR = 0.0385f;
         private float LSRR = 0.05f;
@@ -68,6 +81,7 @@ namespace Battle
 
         private float PreviousBulletSpeed = 0;
 
+        private bool outofAmmo = false;
         private bool Reloading = false;
         private bool reloadingInProgress = false;
 
@@ -120,6 +134,7 @@ namespace Battle
                 {
                     if (!LimitAmmo ||(!needReload && (MaxAmmoCarry > 0 || CurrentBulletCount > 0)) || CurrentBulletCount > 0)
                     {
+                        outofAmmo = false;
                         // 获取当前时间
                         float currentTime = Time.time;
 
@@ -249,8 +264,15 @@ namespace Battle
                             lastShootTime = currentTime;
                         }
                     }
+                    else if(LimitAmmo && CurrentBulletCount == 0 && MaxAmmoCarry == 0)
+                    {
+                        outofAmmo = true;
+                        if (UsingMasterControl)
+                            tpsShootController.SetAmmoStatus(outofAmmo);
+                    }
                     else
                     {
+                        outofAmmo = false;
                         ReloadProgress(true);
                     }
                 }
@@ -275,6 +297,15 @@ namespace Battle
         private IEnumerator ReloadCoroutine(float Duration)
         {
             Reloading = true;
+            float _reloadDuration = 0;
+            if (CurrentBulletCount > 0)
+                _reloadDuration = FastreloadDuration;
+            else
+                _reloadDuration = reloadDuration;
+
+            if (UsingMasterControl)
+                tpsShootController.SetReloadStatus(Reloading, _reloadDuration);
+                
             reloadingInProgress = true;
 
             int missingBulletCount = AmmoPreMag - CurrentBulletCount;
@@ -320,6 +351,9 @@ namespace Battle
             CanFireNow = true;
             Reloading = false;
             reloadingInProgress = false;
+            if (UsingMasterControl)
+                tpsShootController.SetReloadStatus(Reloading, _reloadDuration);
+
         }
 
         #endregion
@@ -336,7 +370,7 @@ namespace Battle
             GameObject currentTarget = rayHitTarget;
 
             if (HCD != null)
-                HCD.RayBulletHitSet(gameObject);
+                HCD.RayBulletHitSet(Shooter);
 
             // 循环遍历父级对象直到找到VirtualHP组件或没有更多的父级
             while (currentTarget != null && virtualHp == null)
@@ -505,6 +539,7 @@ namespace Battle
             {
                 UsingMasterControl = true;
                 UsingAIControl = false;
+                tpsShootController.RegisterWeapon(this);
                 //Debug.Log("BulletSpwanInitSuccess!" + "  " + gameObject.name + "  " + "CurrentUsing 'TPSMasterControl'");
             }
 

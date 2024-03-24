@@ -325,26 +325,27 @@ namespace AvatarMain
             }
         }
 
+        //相机滚轮缩放功能，和滚轮切换武器冲突，暂且废弃
         private void CameraZoom()
         {
-            if (virtualCamera != null)
-            {
-                if (!isAiming)
-                {
+            //if (virtualCamera != null)
+            //{
+            //    if (!isAiming)
+            //    {
 
-                    // 根据鼠标滚轮输入更新目标距离
-                    targetDistance -= Input.GetAxis("Mouse ScrollWheel") * zoomsensitivity;
-                    targetDistance = Mathf.Clamp(targetDistance, minDistance, maxDistance);
+            //        // 根据鼠标滚轮输入更新目标距离
+            //        targetDistance -= Input.GetAxis("Mouse ScrollWheel") * zoomsensitivity;
+            //        targetDistance = Mathf.Clamp(targetDistance, minDistance, maxDistance);
 
-                    // 平滑地插值当前距离到目标距离
-                    followersettings.CameraDistance = Mathf.Lerp(followersettings.CameraDistance, targetDistance, zoomSpeed * Time.deltaTime);
-                }
-                else
-                {
-                    followersettings.CameraDistance = maxDistance;
-                    targetDistance = maxDistance;
-                }
-            }
+            //        // 平滑地插值当前距离到目标距离
+            //        followersettings.CameraDistance = Mathf.Lerp(followersettings.CameraDistance, targetDistance, zoomSpeed * Time.deltaTime);
+            //    }
+            //    else
+            //    {
+            //        followersettings.CameraDistance = maxDistance;
+            //        targetDistance = maxDistance;
+            //    }
+            //}
         }
 
         private void CameraRotation()

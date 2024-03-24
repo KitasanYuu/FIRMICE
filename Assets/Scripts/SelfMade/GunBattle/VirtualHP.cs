@@ -39,6 +39,7 @@ namespace BattleHealth
         private HPVisionManager HVM;
         private Identity id;
         private DataMaster DM = new DataMaster();
+        private LocalDataSaver LDS = new LocalDataSaver();
 
         public List<float> damageList = new List<float>(); // 使用List来存储伤害值
 
@@ -82,12 +83,12 @@ namespace BattleHealth
         {
             if(mycamp == -999)
             {
-                mycamp = DM.GetActorCamp(gameObject);
+                mycamp = LDS.GetActorCamp(gameObject);
             }
 
-            int attackercamp = DM.GetActorCamp(character);
-            
-            if(attackercamp != mycamp)
+            int attackercamp = LDS.GetActorCamp(character);
+
+            if (attackercamp != mycamp)
             {
                 // 计算减伤后的实际伤害值
                 float actualDamage = damage;
@@ -115,7 +116,6 @@ namespace BattleHealth
                     characterDamageMap.Add(character, actualDamage);
                 }
             }
-
         }
 
         private void DamageCalculating()

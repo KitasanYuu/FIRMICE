@@ -17,6 +17,7 @@ public class HPVisionManager : MonoBehaviour
     public float Offset = 1;
 
     private DataMaster DM = new DataMaster();
+    private LocalDataSaver LDS = new LocalDataSaver();
     private ResourceReader RR = new ResourceReader();
     private Canvas RenderCanvas;
     private HPVisionManager HVM;
@@ -176,12 +177,12 @@ public class HPVisionManager : MonoBehaviour
             healthBar = RequestObject.GetComponent<HealthBar>();
         }
             
-        string name = DM.GetActorName(RegisterObject);
+        string name = LDS.GetActorName(RegisterObject);
 
         Color HPBarColor = Color.white;
         Color LevelBGImageColor = Color.white;
 
-        int camp = DM.GetActorCamp(RegisterObject);
+        int camp = LDS.GetActorCamp(RegisterObject);
         switch (camp)
         {
             case 0:

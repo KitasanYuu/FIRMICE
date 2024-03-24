@@ -121,5 +121,41 @@ namespace DataManager
         }
 
     }
+
+    public class LocalDataSaver
+    {
+        private DataMaster DM = new DataMaster();
+        private Dictionary<GameObject, int> actorCamps = new Dictionary<GameObject, int>();
+        private Dictionary<GameObject,string> actorName = new Dictionary<GameObject,string>();
+
+        public int GetActorCamp(GameObject actor)
+        {
+            if (actorCamps.TryGetValue(actor, out int camp))
+            {
+                return camp;
+            }
+            else
+            {
+                // 假设DM.GetActorCamp是你获取阵营信息的方法
+                int newCamp = DM.GetActorCamp(actor);
+                actorCamps[actor] = newCamp;
+                return newCamp;
+            }
+        }
+
+        public string GetActorName(GameObject actor)
+        {
+            if(actorName.TryGetValue(actor,out string actorname))
+            {
+                return actorname;
+            }
+            else
+            {
+                string newActorName = DM.GetActorName(actor);
+                actorName[actor] = newActorName;
+                return newActorName;
+            }
+        }
+    }
 }
 

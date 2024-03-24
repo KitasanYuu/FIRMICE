@@ -8,6 +8,11 @@ using TargetFinding;
 using CustomInspector;
 using YuuTool;
 using FIMSpace.Basics;
+using Kinemation.Recoilly;
+using Kinemation.Recoilly.Runtime;
+using NUnit.Framework;
+using Battle;
+using System.Collections.Generic;
 
 namespace playershooting
 {
@@ -18,7 +23,12 @@ namespace playershooting
         public bool isAiming = false;
         [ReadOnly]
         public bool Fire = false;
-
+        [ReadOnly]
+        public bool Reloading = false;
+        [ReadOnly]
+        public bool OutOfAmmo = false;
+        [HorizontalLine("武器列表", 2, FixedColor.Gray)]
+        [SerializeField] private List<WeaponShooter> weapons;
         [HorizontalLine("自定义的参数",2,FixedColor.Gray)]
         // 用于瞄准的虚拟相机
         [SerializeField] private CinemachineVirtualCamera aimVirtualCamera;
@@ -52,6 +62,10 @@ namespace playershooting
         private RayDectec rayDectec;
         public GameObject corshair;
         private Cinemachine3rdPersonFollow thirdPersonFollow;
+        private RecoilAnimation _recoilAnimation;
+        private CoreAnimComponent _animComponent;
+
+        private bool _shootAnim = false;
 
         private bool _hasAnimator;
         // animation IDs
@@ -93,8 +107,13 @@ namespace playershooting
 
         private void Update()
         {
+            EquipWeapon();
             AIM();
             FIRE();
+        }
+
+        private void LateUpdate()
+        {
 
         }
 
@@ -112,9 +131,17 @@ namespace playershooting
 
                 if (rightHandPosition != null && !isAiming)
                 {
-                    _animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandPosition.position);
-                    _animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandPosition.rotation);
-                    _animator.SetLayerWeight(layerIndex, 0);
+
+
+                    if(Reloading)
+                        _animator.SetLayerWeight(layerIndex, 1);
+                    else
+                    {
+                        _animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandPosition.position);
+                        _animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandPosition.rotation);
+                        _animator.SetLayerWeight(layerIndex, 0);
+                    }
+
                 }
                 else if (rifleAimRightHandPosition != null && isAiming)
                 {
@@ -122,8 +149,12 @@ namespace playershooting
                     {
                         _animator.SetIKPosition(AvatarIKGoal.RightHand, rifleAimRightHandPosition.position);
                         _animator.SetIKRotation(AvatarIKGoal.RightHand, rifleAimRightHandPosition.rotation);
-                        _animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandCrouchGrip.position);
-                        _animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandCrouchGrip.rotation);
+
+                        if (!Reloading)
+                        {
+                            _animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandCrouchGrip.position);
+                            _animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandCrouchGrip.rotation);
+                        }
                     }
                     else
                     {
@@ -134,7 +165,7 @@ namespace playershooting
                     _animator.SetLayerWeight(layerIndex, 1);
                 }
 
-                if (leftHandGrip != null && !avatarController.IsCrouching)
+                if (leftHandGrip != null && !avatarController.IsCrouching && !Reloading)
                 {
                     _animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandGrip.position);
                     _animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandGrip.rotation);
@@ -148,7 +179,6 @@ namespace playershooting
             {
                 _animator.SetLayerWeight(layerIndex, 0);
                 _animator.SetBool("HasWeapon", false);
-
             }
         }
 
@@ -268,6 +298,8 @@ namespace playershooting
                     _animator.SetBool(_animIDEnterAiming, false);
                 }
             }
+
+            _recoilAnimation.isAiming = isAiming;
         }
 
         private void FIRE()
@@ -275,10 +307,24 @@ namespace playershooting
             if(isAiming)
             {
                 Fire = _input.shoot;
+                if (Fire && !Reloading &&!OutOfAmmo)
+                {
+                    _recoilAnimation.Play();
+                    _shootAnim = true;
+                }
+                else if(_shootAnim || Reloading || OutOfAmmo)
+                {
+                    _recoilAnimation.Stop();
+                    _shootAnim = false;
+                }
             }
             else
             {
-                Fire = false;
+                if (_shootAnim)
+                {
+                    Fire = false;
+                    _recoilAnimation.Stop();
+                }
             }
 
         }
@@ -378,8 +424,41 @@ namespace playershooting
             rayDectec = GetComponent<RayDectec>();
             thirdPersonFollow = aimVirtualCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
 
-            if(corshair == null)
+            _recoilAnimation = GetComponent<RecoilAnimation>();
+            _animComponent = GetComponent<CoreAnimComponent>();
+
+            if (corshair == null)
                 FindCorshair();
+        }
+
+        public void RegisterWeapon(WeaponShooter weapon)
+        {
+            if (!weapons.Contains(weapon))
+            {
+                weapons.Add(weapon);
+            }
+        }
+        public void UnRegisterWeapon(WeaponShooter weapon)
+        {
+            if (!weapons.Contains(weapon))
+            {
+                weapons.Remove(weapon);
+            }
+        }
+
+        private void EquipWeapon()
+        {
+            if (weapons.Count > 0)
+            {
+                var gun = weapons[0];
+
+                _recoilAnimation.fireMode = gun.fireMode;
+                _recoilAnimation.Init(gun.recoilData, (1 / gun.fireRate) * 60);
+
+                _animComponent.recoilPivot = gun.recoilPivot;
+                _animComponent.handsOffset = gun.handOffset;
+                _animComponent.pointAimOffset = gun.pointAimData;
+            }
         }
 
         private Vector3 CalculateTargetPosition(float cameraSide)
@@ -395,6 +474,27 @@ namespace playershooting
         {
             AimIKParameter = status;
             //Debug.Log(AimIKParameter);
+        }
+
+        public void SetAmmoStatus(bool ammo)
+        {
+            OutOfAmmo = ammo;
+        }
+
+        public void SetReloadStatus(bool newReloadStatus, float reloadDuration)
+        {
+            Reloading = newReloadStatus;
+            if (Reloading)
+            {
+                float SpeedRate = ((180f/60f) / reloadDuration);
+                _animator.SetFloat("MotionTime", SpeedRate);
+            }
+            else
+            {
+                _animator.SetFloat("MotionTime", 1);
+            }
+
+            _animator.SetBool("Reloading", newReloadStatus);
         }
 
 #if UNITY_EDITOR
