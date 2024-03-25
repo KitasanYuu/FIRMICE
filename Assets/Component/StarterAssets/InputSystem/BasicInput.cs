@@ -15,6 +15,7 @@ namespace AvatarMain
         public bool aim;
         public bool shoot;
         public bool swa;
+        public bool roll;
 
 
 
@@ -72,6 +73,11 @@ namespace AvatarMain
         {
            SWAInput(value.isPressed);
         }
+
+        public void OnRoll(InputValue value)
+        {
+            RollInput(value.isPressed);
+        }
 #endif
 
 
@@ -107,6 +113,11 @@ namespace AvatarMain
             swa = newSWA;
         }
 
+        public void RollInput(bool newRoll)
+        {
+            roll = newRoll;
+        }
+
 		private void OnApplicationFocus(bool hasFocus)
 		{
 			SetCursorState(cursorLocked);
@@ -119,13 +130,13 @@ namespace AvatarMain
 			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
 		}
 
-		// ÔÚ StarterAssetsInputs ÀàÖĞ
+		// åœ¨ StarterAssetsInputs ç±»ä¸­
 		public bool crouch
         {
             get
             {
 #if ENABLE_INPUT_SYSTEM
-        return Keyboard.current.cKey.isPressed; // Ê¹ÓÃÊÊµ±µÄÊäÈëÏµÍ³´úÂë
+        return Keyboard.current.cKey.isPressed; // ä½¿ç”¨é€‚å½“çš„è¾“å…¥ç³»ç»Ÿä»£ç 
 #else
                 return Input.GetKey(KeyCode.C);
 #endif

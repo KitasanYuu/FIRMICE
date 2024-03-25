@@ -11,6 +11,7 @@ using TargetDirDetec;
 using VInspector;
 using Kinemation.Recoilly;
 using Kinemation.Recoilly.Runtime;
+using UnityEngine.Audio;
 
 namespace Battle
 {
@@ -67,6 +68,11 @@ namespace Battle
         public LocRot pointAimData;
 
         public FireMode fireMode;
+
+        [Tab("AudioResources")]
+        public AudioClip audioFire;
+        public AudioClip audioReload;
+        public AudioClip audioFullReload;
 
         //子弹速度与射线检测的比值 射线长度 = 子弹速度*SRR
         private float CSRR = 0.0385f;
@@ -129,6 +135,9 @@ namespace Battle
         {
             if (Shooter != null)
             {
+                if (UsingMasterControl)
+                    if (tpsShootController.avatarController.IsRolling)
+                        return;
                 // 开火
                 if ((UsingAIControl && shootController.Fire && shootController.isAiming) || (UsingMasterControl && tpsShootController.Fire && tpsShootController.isAiming))
                 {
@@ -284,24 +293,28 @@ namespace Battle
         {
             if (needReload)
             {
+                if (UsingMasterControl)
+                {
+                    if (tpsShootController.avatarController.IsRolling &&tpsShootController.avatarController.IsSliding)
+                        return;
+                }
+
                 if (!Reloading && !reloadingInProgress && (Input.GetKeyDown(KeyCode.R) || ReloadStart))
                 {
                     if (CurrentBulletCount < AmmoPreMag)
                     {
-                        StartCoroutine(ReloadCoroutine(reloadDuration));
+                        StartCoroutine(ReloadCoroutine());
                     }
                 }
             }
         }
 
-        private IEnumerator ReloadCoroutine(float Duration)
+        private IEnumerator ReloadCoroutine(bool ReloadNow = false)
         {
             Reloading = true;
-            float _reloadDuration = 0;
-            if (CurrentBulletCount > 0)
-                _reloadDuration = FastreloadDuration;
-            else
-                _reloadDuration = reloadDuration;
+
+            float _reloadDuration = CurrentBulletCount > 0 ? FastreloadDuration : reloadDuration;
+
 
             if (UsingMasterControl)
                 tpsShootController.SetReloadStatus(Reloading, _reloadDuration);
@@ -513,7 +526,7 @@ namespace Battle
             {
                 AmmoPreMag = (int)WeaponData["AmmoPreMag"];
                 reloadDuration = (float)WeaponData["ReloadDuration"];
-                FastreloadDuration = 0.5f * reloadDuration;
+                FastreloadDuration = (float)WeaponData["FastReloadDuration"];
             }
 
             if(LimitAmmo)
@@ -521,7 +534,7 @@ namespace Battle
                 MaxAmmoCarry = (int)WeaponData["MaxAmmoCarry"];
             }
 
-            StartCoroutine(ReloadCoroutine(0));
+            StartCoroutine(ReloadCoroutine(true));
         }
 
         private void ComponemetInit()

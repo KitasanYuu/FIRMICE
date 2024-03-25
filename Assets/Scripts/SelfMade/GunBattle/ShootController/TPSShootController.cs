@@ -57,7 +57,8 @@ namespace playershooting
 
         // 角色控制器和输入
         private Animator _animator;
-        private AvatarController avatarController;
+        [HideInInspector]
+        public AvatarController avatarController;
         private BasicInput _input;
         private RayDectec rayDectec;
         public GameObject corshair;
@@ -131,10 +132,14 @@ namespace playershooting
 
                 if (rightHandPosition != null && !isAiming)
                 {
+                    if (Reloading)
+                    {
+                        if(!avatarController.IsRolling)
+                            _animator.SetLayerWeight(layerIndex, 1);
+                        else
+                            _animator.SetLayerWeight(layerIndex, 0);
+                    }
 
-
-                    if(Reloading)
-                        _animator.SetLayerWeight(layerIndex, 1);
                     else
                     {
                         _animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandPosition.position);
@@ -145,13 +150,18 @@ namespace playershooting
                 }
                 else if (rifleAimRightHandPosition != null && isAiming)
                 {
+                     _animator.SetLayerWeight(layerIndex, 1);
+  
+
                     if (!avatarController.IsCrouching)
                     {
-                        _animator.SetIKPosition(AvatarIKGoal.RightHand, rifleAimRightHandPosition.position);
-                        _animator.SetIKRotation(AvatarIKGoal.RightHand, rifleAimRightHandPosition.rotation);
+                        //_animator.SetIKPosition(AvatarIKGoal.RightHand, rifleAimRightHandPosition.position);
+                        //_animator.SetIKRotation(AvatarIKGoal.RightHand, rifleAimRightHandPosition.rotation);
 
                         if (!Reloading)
                         {
+                            _animator.SetIKPosition(AvatarIKGoal.RightHand, rifleAimRightHandPosition.position);
+                            _animator.SetIKRotation(AvatarIKGoal.RightHand, rifleAimRightHandPosition.rotation);
                             _animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandCrouchGrip.position);
                             _animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandCrouchGrip.rotation);
                         }
@@ -162,7 +172,7 @@ namespace playershooting
                         _animator.SetIKRotation(AvatarIKGoal.RightHand, rifleCrouchAimRightHandPosition.rotation);
                     }
 
-                    _animator.SetLayerWeight(layerIndex, 1);
+                    //_animator.SetLayerWeight(layerIndex, 1);
                 }
 
                 if (leftHandGrip != null && !avatarController.IsCrouching && !Reloading)
@@ -219,7 +229,7 @@ namespace playershooting
 
 
             // 瞄准
-            if (_input.aim)
+            if (_input.aim && !avatarController.IsRolling)
             {
                 isAiming = true;
                 aimVirtualCamera.Priority = 20;
@@ -307,12 +317,12 @@ namespace playershooting
             if(isAiming)
             {
                 Fire = _input.shoot;
-                if (Fire && !Reloading &&!OutOfAmmo)
+                if (Fire && !Reloading &&!OutOfAmmo && !avatarController.IsRolling)
                 {
                     _recoilAnimation.Play();
                     _shootAnim = true;
                 }
-                else if(_shootAnim || Reloading || OutOfAmmo)
+                else if(_shootAnim || Reloading || OutOfAmmo || avatarController.IsRolling)
                 {
                     _recoilAnimation.Stop();
                     _shootAnim = false;

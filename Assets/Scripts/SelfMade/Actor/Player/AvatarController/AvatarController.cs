@@ -130,6 +130,28 @@ namespace AvatarMain
         public float OriginOffset = 1.125f;
         public float CrouchingOffset = 0.75f;
 
+        //滚
+        public float rolltargetspeed;
+        public AnimationCurve rollSpeedCurve = new AnimationCurve(
+    new Keyframe(0, 0, 0, 2),
+         new Keyframe(0.5f, 1, 0, 0),
+         new Keyframe(1, 0, -2, 0));
+        private float rollspeed;
+        private bool isRolling;
+        private bool rollInPorgress;
+
+        //黑手！滑铲
+        public float slideLimitSpeed;
+        public float slideTargetspeed;
+        public AnimationCurve slideSpeedCurve = new AnimationCurve(
+        new Keyframe(0, 0, 0, 2),
+             new Keyframe(0.5f, 1, 0, 0),
+             new Keyframe(1, 0, -2, 0));
+        private float slideSpeed;
+        private bool isSliding;
+        private bool slideInProgress;
+
+
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
@@ -160,6 +182,8 @@ namespace AvatarMain
         private int _animIDMovingX;
         private int _animIDMovingY;
         private int _animIDAimOrNot;
+        private int _animIDRoll;
+        private int _animIDSlide;
 
         //检测蹲下时上方是否有障碍物
         public LayerMask detectionLayer;
@@ -192,6 +216,8 @@ namespace AvatarMain
         //[HideInInspector]
         public bool Stopping;
         public bool TestButton;
+        public bool IsRolling;
+        public bool IsSliding;
         //额外判断参数
         private Vector2 INPUTSTOP = new Vector2(0, 0);
 
@@ -262,6 +288,8 @@ namespace AvatarMain
 
         private void Update()
         {
+            SlideProgress();
+            RollProgress();
             AimingStatus();
             WalkSwitcher();
             CameraZoom();
@@ -308,6 +336,8 @@ namespace AvatarMain
             _animIDMovingX = Animator.StringToHash("MovingX");
             _animIDMovingY = Animator.StringToHash("MovingY");
             _animIDAimOrNot = Animator.StringToHash("AimOrNot");
+            _animIDRoll = Animator.StringToHash("Roll");
+            _animIDSlide = Animator.StringToHash("Slide");
         }
 
         private void GroundedCheck()
@@ -399,7 +429,7 @@ namespace AvatarMain
                 IsSprinting = true;
             }
 
-            if (Grounded && _input.crouch && cantCrouchinAir)
+            if (Grounded && _input.crouch && cantCrouchinAir && _speed < slideLimitSpeed)
             {
                 if (isAiming)
                 {
@@ -413,9 +443,13 @@ namespace AvatarMain
                 _input.jump = false;    //下蹲禁用跳跃
                 CrouchingDetect = true; //特征值允许检测下蹲状态
             }
+            else if (Grounded && _input.crouch && cantCrouchinAir && _speed >= slideLimitSpeed)
+            {
+                _isCrouching = true;
+            }
 
-            //判定是否在下蹲环境中没有人为输入下蹲指令
-            if (Grounded && !_input.crouch)
+                //判定是否在下蹲环境中没有人为输入下蹲指令
+                if (Grounded && !_input.crouch)
             {
                 //若是没有检测到碰撞
                 if (!DetectedResult)
@@ -581,7 +615,8 @@ namespace AvatarMain
                     _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
                     if (_isCrouching)
                     {
-                        _animator.SetBool(_animIDis_Crouching, true);
+                        if(targetSpeed < slideLimitSpeed)
+                            _animator.SetBool(_animIDis_Crouching, true);
                     }
                     else
                     {
@@ -745,6 +780,96 @@ namespace AvatarMain
                 {
                     _verticalVelocity += Gravity * Time.deltaTime;
                 }
+            }
+        }
+
+        private void SlideProgress()
+        {
+            if (_isCrouching && targetSpeed >= slideLimitSpeed)
+            {
+                if(rollInPorgress)
+                    slideSpeed = rolltargetspeed/2 + slideTargetspeed;
+                else
+                    slideSpeed = _speed + slideTargetspeed - 2;
+                isSliding = true;
+                if(isSliding && !slideInProgress)
+                {
+                    IsSliding = true;
+                    IsRolling = false;
+                    slideInProgress = true;
+                    rollInPorgress = false;
+                    _animator.SetBool(_animIDRoll, false);
+                    _animator.SetBool(_animIDSlide, true);
+                    StartCoroutine(DelaySlideMove(0.2f, slideSpeed));
+                }
+                else
+                {
+                    isSliding = false;
+                }
+            }
+        }
+
+        private IEnumerator DelaySlideMove(float delay, float initialRollSpeed)
+        {
+            yield return new WaitForSeconds(delay);
+
+            float duration = 1f; // 假设曲线的最后一个键定义了翻滚的总时长
+            float timeSinceStarted = 0f;
+
+            while (timeSinceStarted <= duration && IsSliding)
+            {
+                timeSinceStarted += Time.deltaTime;
+                float curveTime = timeSinceStarted / duration; // 计算当前时间在曲线总时长中的比例
+                float _slideSpeed = initialRollSpeed * slideSpeedCurve.Evaluate(curveTime); // 使用曲线来调整速度
+
+                _controller.Move(transform.forward.normalized * (_slideSpeed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+
+                yield return null; // 等待下一帧
+            }
+        }
+
+        private void RollProgress()
+        {
+            if (_input.roll)
+            {
+                if(slideInProgress)
+                    rollspeed = slideTargetspeed/2 + rolltargetspeed;
+                else
+                    rollspeed =_speed + rolltargetspeed-2;
+                isRolling = true;
+                if (isRolling && !rollInPorgress)
+                {
+                    IsRolling = true;
+                    IsSliding = false;
+                    rollInPorgress = true;
+                    slideInProgress = false;
+                    _animator.SetBool(_animIDSlide, false);
+                    _animator.SetBool(_animIDRoll, true);
+                    StartCoroutine(DelayRollMove(0.2f,rollspeed));
+                }
+                else
+                {
+                    isRolling = false;
+                }
+            }
+        }
+
+        private IEnumerator DelayRollMove(float delay, float initialRollSpeed)
+        {
+            yield return new WaitForSeconds(delay);
+            float duration = 1.1f; // 假设曲线的最后一个键定义了翻滚的总时长
+            float timeSinceStarted = 0f;
+
+            while (timeSinceStarted <= duration && IsRolling)
+            {
+                timeSinceStarted += Time.deltaTime;
+                float curveTime = timeSinceStarted / duration; // 计算当前时间在曲线总时长中的比例
+                float _rollSpeed = initialRollSpeed * rollSpeedCurve.Evaluate(curveTime); // 使用曲线来调整速度
+
+                //Debug.Log(_rollSpeed);
+
+                _controller.Move(transform.forward.normalized * (_rollSpeed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+                yield return null; // 等待下一帧
             }
         }
 
@@ -974,6 +1099,39 @@ namespace AvatarMain
         private void ParameterRelink()
         {
             IsCrouching = _isCrouching;
+        }
+
+        public void SetRollEnd(int RollEnd)
+        {
+            if(RollEnd == 1)
+            {
+                isRolling = false;
+                _animator.SetBool(_animIDRoll, false);
+                StartCoroutine(SetRollFalseDelay(0.1f));
+            }
+        }
+
+        public void SetSlideEnd(int SlideEnd)
+        {
+            if(SlideEnd == 1)
+            {
+                isSliding = false;
+                _animator.SetBool(_animIDSlide, false);
+                StartCoroutine(SetSlideFalseDelay(0.1f));
+            }
+        }
+
+        private IEnumerator SetRollFalseDelay(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            rollInPorgress = false;
+            IsRolling = false;
+        }
+        private IEnumerator SetSlideFalseDelay(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            slideInProgress = false;
+            IsSliding = false;
         }
 
         private void DebugINFO()
