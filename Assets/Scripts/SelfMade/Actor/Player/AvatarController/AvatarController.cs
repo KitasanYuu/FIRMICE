@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using Cinemachine;
-#if ENABLE_INPUT_SYSTEM 
+using Unity.VisualScripting;
+#if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 using playershooting;
 #endif
@@ -288,6 +289,7 @@ namespace AvatarMain
 
         private void Update()
         {
+            Debug.Log(rollInPorgress);
             SlideProgress();
             RollProgress();
             AimingStatus();
@@ -666,9 +668,9 @@ namespace AvatarMain
 
         private void JumpAndGravity()
         {
-            if (!_isCrouching)
+            if (!_isCrouching && !slideInProgress && !rollInPorgress)
             {
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (_input.jump)
                 {
                     UpdateLastMoveDirection();
                 }
@@ -785,7 +787,7 @@ namespace AvatarMain
 
         private void SlideProgress()
         {
-            if (_isCrouching && targetSpeed >= slideLimitSpeed)
+            if (Grounded &&_isCrouching && targetSpeed >= slideLimitSpeed)
             {
                 if(rollInPorgress)
                     slideSpeed = rolltargetspeed/2 + slideTargetspeed;
@@ -804,7 +806,7 @@ namespace AvatarMain
                 }
                 else
                 {
-                    isSliding = false;
+                    //isSliding = false;
                 }
             }
         }
@@ -830,7 +832,7 @@ namespace AvatarMain
 
         private void RollProgress()
         {
-            if (_input.roll)
+            if (Grounded &&_input.roll)
             {
                 if(slideInProgress)
                     rollspeed = slideTargetspeed/2 + rolltargetspeed;
@@ -849,7 +851,7 @@ namespace AvatarMain
                 }
                 else
                 {
-                    isRolling = false;
+                    //isRolling = false;
                 }
             }
         }

@@ -141,6 +141,12 @@ namespace playershooting
                         else
                             _animator.SetLayerWeight(layerIndex, 0);
                     }
+                    else if (Reloading)
+                    {
+                        _animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandPosition.position);
+                        _animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandPosition.rotation);
+                        _animator.SetLayerWeight(layerIndex, 1);
+                    }
                     else if(!Reloading && !isAiming && !avatarController.IsCrouching && leftHandGrip != null && rightHandPosition != null)
                     {
                         _animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandPosition.position);
@@ -148,12 +154,14 @@ namespace playershooting
                         _animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandGrip.position);
                         _animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandGrip.rotation);
                         _animator.SetLayerWeight(layerIndex, 0);
-                    }else if(!Reloading && !isAiming &&avatarController.IsCrouching && leftHandCrouchGrip != null && rightHandCrouchPosition != null)
+                    }
+                    else if(!Reloading && !isAiming &&avatarController.IsCrouching && leftHandCrouchGrip != null && rightHandCrouchPosition != null)
                     {
                         _animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandCrouchPosition.position);
                         _animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandCrouchPosition.rotation);
                         _animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandCrouchGrip.position);
                         _animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandCrouchGrip.rotation);
+                        _animator.SetLayerWeight(layerIndex, 0);
                     }
 
                 }
@@ -170,11 +178,6 @@ namespace playershooting
                             _animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandCrouchGrip.position);
                             _animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandCrouchGrip.rotation);
                         }
-                        else
-                        {
-                            _animator.SetIKPosition(AvatarIKGoal.RightHand, rifleAimRightHandPosition.position);
-                            _animator.SetIKRotation(AvatarIKGoal.RightHand, rifleAimRightHandPosition.rotation);
-                        }
                     }
                     else
                     {
@@ -185,7 +188,6 @@ namespace playershooting
 
                     }
                 }
-
             }
             else
             {
@@ -197,6 +199,7 @@ namespace playershooting
             _animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f);
             _animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1f);
             _animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1f);
+
         }
 
         private void AIM()
