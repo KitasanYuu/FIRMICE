@@ -363,15 +363,25 @@ namespace Battle
             {
                 if (CurrentBulletCount == 0)
                 {
+                    if (_audioSource != null && !ReloadNow)
+                    {
+                        _audioSource.clip = audioFullReload;
+                        _audioSource.Play();
+                    }
                     // 模拟延迟后执行重新加载的逻辑
-                    yield return new WaitForSeconds(reloadDuration);
+                    yield return new WaitForSeconds(_reloadDuration);
 
                     CurrentBulletCount += MaxAmmoCarry;
                     MaxAmmoCarry = 0;
                 }
                 else if (CurrentBulletCount > 0)
                 {
-                    yield return new WaitForSeconds(FastreloadDuration);
+                    if (_audioSource != null && !ReloadNow)
+                    {
+                        _audioSource.clip = audioReload;
+                        _audioSource.Play();
+                    }
+                    yield return new WaitForSeconds(_reloadDuration);
 
                     CurrentBulletCount += MaxAmmoCarry;
                     MaxAmmoCarry = 0;
