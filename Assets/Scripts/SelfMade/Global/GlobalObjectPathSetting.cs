@@ -12,4 +12,6 @@ public class GlobalObjectPathSetting:ScriptableObject
 
     public FolderPath HealthBar = new FolderPath();
 
+    public FolderPath WeaponAudioClip = new FolderPath();
+
 }

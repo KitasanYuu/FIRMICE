@@ -54,6 +54,22 @@ namespace DataManager
             }
         }
 
+        public AudioClip GetWeaponAudioClip(string weaponName,string audioType)
+        {
+            AudioClip returnClip = null;
+
+            string clipName = weaponName + "_" + audioType;
+            string ObjectWeaponPath = GainPath("WeaponAudioClip", weaponName)+"/"+clipName;
+            //Debug.Log(ObjectWeaponPath);
+
+            returnClip = Resources.Load<AudioClip>(ObjectWeaponPath);
+
+            //Debug.Log(returnClip);
+
+            return returnClip;
+        }
+
+
         public TextAsset GetCSVFile(string CSVName)
         {
             TextAsset csv = null;

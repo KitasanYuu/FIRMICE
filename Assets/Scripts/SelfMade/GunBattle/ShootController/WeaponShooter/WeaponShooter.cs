@@ -20,6 +20,7 @@ namespace Battle
     {
         [Tab("WeaponSettings")]
         [SerializeField, ReadOnly] private string WeaponID;
+        [SerializeField, ReadOnly] private string WeaponName;
         [ReadOnly, SerializeField] private bool UsingAIControl;
         [ReadOnly, SerializeField] private bool UsingMasterControl;
 
@@ -91,12 +92,14 @@ namespace Battle
         private bool Reloading = false;
         private bool reloadingInProgress = false;
 
+        private ResourceReader RR = new ResourceReader();
 
         //获取脚本
         private BasicInput _input;
         private ShootController shootController;
         private TPSShootController tpsShootController;
         private WeaponIdentity WID;
+        private AudioSource _audioSource;
         private bool Basicinput;
         private bool Tpsshootcontroller;
         private bool shootcontroller;
@@ -218,6 +221,7 @@ namespace Battle
                                 if (bullet != null)
                                 {
                                     bullet?.SetParameter(Shooter, DetectRayLength, DestoryLayer, VFXHitEffect, bulletspeed, BulletDamage, ArmorBreak);
+                                    AudioSource.PlayClipAtPoint(audioFire, transform.position, 1);
                                     //Debug.Log(bulletspeed * SRR);
                                     //Debug.LogError("BulletSpwaned");
                                 }
@@ -238,6 +242,7 @@ namespace Battle
                                     RayDamageIn(HitObject);
                                     // 生成特效
                                     Instantiate(VFXHitEffect, hitPoint, Quaternion.identity, BulletContainer.transform);
+                                    AudioSource.PlayClipAtPoint(audioFire, transform.position, 1);
                                     // 在这里处理射击命中的逻辑，例如对击中物体造成伤害或触发其他效果等
                                     //Debug.Log("射击命中：" + shootRaycastHit.collider.gameObject.name + "，击中坐标：" + hitPoint);
 
@@ -327,15 +332,28 @@ namespace Battle
             {
                 if (CurrentBulletCount == 0)
                 {
-                    // 模拟延迟后执行重新加载的逻辑
-                    yield return new WaitForSeconds(Duration);
+                    if(_audioSource!= null && !ReloadNow)
+                    {
+                        _audioSource.clip = audioFullReload;
+                        _audioSource.Play();
+                    }
+
+                    if(!ReloadNow)
+                        yield return new WaitForSeconds(_reloadDuration);
 
                     MaxAmmoCarry -= AmmoPreMag;
                     CurrentBulletCount = AmmoPreMag;
                 }
                 else if (CurrentBulletCount > 0)
                 {
-                    yield return new WaitForSeconds(FastreloadDuration);
+                    if (_audioSource != null && !ReloadNow)
+                    {
+                        _audioSource.clip = audioReload;
+                        _audioSource.Play();
+                    }
+
+                    if (!ReloadNow)
+                        yield return new WaitForSeconds(_reloadDuration);
                     MaxAmmoCarry -= missingBulletCount;
                     CurrentBulletCount += missingBulletCount;
                 }
@@ -499,6 +517,7 @@ namespace Battle
             ResourceReader RR = new ResourceReader();
             CSVReader csv = new CSVReader();
             var WeaponData = csv.GetDataByID("weapons", WeaponID);
+            WeaponName = (string)WeaponData["WeaponName"];
             int BulletMethod = (int)WeaponData["BulletFireMode"];
             if (BulletMethod == 1)
                 InstanceMethod = true;
@@ -514,6 +533,10 @@ namespace Battle
             VFXHitEffect = RR.GetGameObject("BulletEffect", HitEffect);
             BulletDamage = (float)WeaponData["Damage"];
             ArmorBreak = (float)WeaponData["ArmorBreak"];
+
+            audioFire = RR.GetWeaponAudioClip(WeaponName, "Fire");
+            audioFullReload = RR.GetWeaponAudioClip(WeaponName, "Full_Reload");
+            audioReload = RR.GetWeaponAudioClip(WeaponName, "Reload");
 
             if (InstanceMethod)
             {
@@ -540,6 +563,7 @@ namespace Battle
         private void ComponemetInit()
         {
             WID = GetComponent<WeaponIdentity>();
+            _audioSource = GetComponent<AudioSource>();
 
             if (Shooter != null)
             {
