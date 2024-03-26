@@ -12,7 +12,7 @@ namespace BattleShoot
         public bool UsingTrajectoryPredict = true;
 
         public GameObject Target;
-        private GameObject TargetPre;
+        [HideInInspector]public GameObject TargetPre;
         private List<GameObject> TargetHitPoint = new List<GameObject>();
 
         public bool isAiming = false;
@@ -75,6 +75,13 @@ namespace BattleShoot
         {
             if (isAiming)
             {
+                if (TargetPre == null)
+                {
+                    isAiming = false;
+                    return;
+                }
+
+
                 Target = aif.GetAvailableShootPoint(raycastOrigin, gameObject, TargetPre, aimColliderLayerMask);
                 //Debug.Log(Target?.name);
                 RaycastDetection();

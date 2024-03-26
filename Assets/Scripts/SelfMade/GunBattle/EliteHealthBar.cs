@@ -247,7 +247,6 @@ public class EliteHealthBar : MonoBehaviour
     public void SetEName(string Name)
     {
         ObjectName.text = Name;
-        Debug.Log("111");
     }
 
     public void SetNameColor(Color namecolor)

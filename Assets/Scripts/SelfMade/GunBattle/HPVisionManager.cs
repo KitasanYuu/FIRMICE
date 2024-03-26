@@ -132,7 +132,7 @@ public class HPVisionManager : MonoBehaviour
 
 
 
-        int ActorSP = DM.GetActorSP(RegisteObject);
+        int ActorSP = LDS.GetActorSP(RegisteObject);
 
         if(ActorSP == 0)
         {
@@ -166,7 +166,7 @@ public class HPVisionManager : MonoBehaviour
         EliteHealthBar EHealthBar = null;
         HealthBar healthBar = null;
 
-        int ActorSP = DM.GetActorSP(RegisterObject);
+        int ActorSP = LDS.GetActorSP(RegisterObject);
 
         if (ActorSP == 1)
         {
@@ -211,7 +211,7 @@ public class HPVisionManager : MonoBehaviour
         }
         else if(ActorSP == 1)
         {
-            string elitetitle = DM.GetActorSPTitle(RegisterObject);
+            string elitetitle = LDS.GetActorSPTitle(RegisterObject);
 
             EHealthBar.SetEName(name);
             EHealthBar.SetEliteTitle(elitetitle);

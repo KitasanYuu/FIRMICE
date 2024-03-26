@@ -13,7 +13,10 @@ using YuuTool;
 
 public class PlayerStatusManager : MonoBehaviour
 {
+    public bool TestButton;
+
     [HorizontalLine(message: "总面板", 2, FixedColor.Gray)]
+    [ReadOnly] public GameObject Player;
     [ReadOnly] public GameObject AmmoCount;
     [ReadOnly] public GameObject PlayerDetail;
 
@@ -28,8 +31,11 @@ public class PlayerStatusManager : MonoBehaviour
     private WeaponShooter _previousWeapon;
     [ReadOnly] public GameObject CurrentAmmo;
     [ReadOnly] public TextMeshProUGUI _currentAmmo;
+    [ReadOnly] public GameObject CurrentAmmoHide0;
     [ReadOnly] public GameObject AmmoTotal;
     [ReadOnly] public TextMeshProUGUI _ammoTotal;
+    [ReadOnly] public GameObject AmmoTotalHide01;
+    [ReadOnly] public GameObject AmmoTotalHide02;
     [ReadOnly] public GameObject AmmoPreMag;
     [ReadOnly] public TextMeshProUGUI _ammoPreMag;
 
@@ -44,6 +50,11 @@ public class PlayerStatusManager : MonoBehaviour
     [ReadOnly] public GameObject Con2Num;
     [ReadOnly] public TextMeshProUGUI _con2Num;
 
+    [HideInInspector] public Camera mainCamera;
+    [HideInInspector] public GameObject _aimPanelAnchor;
+    [HideInInspector] public GameObject _normalPanelAnchorR;
+    [HideInInspector] public GameObject _normalPanelAnchorL;
+
     private float PreviousHP = -1;
     private float PreviousTotalHP = -1;
 
@@ -53,12 +64,18 @@ public class PlayerStatusManager : MonoBehaviour
 
     private bool _initComplete;
 
+    private RectTransform _panelRectTransform;
+    private Canvas _renderCanvas;
+
     private VirtualHP _virtualHP;
     private RayDectec _rayDetec;
     private AvatarController _avatarController;
     private TPSShootController _tpsshootController;
 
     private Coroutine HPBarFadeCoroutine;
+
+    [HideInInspector]
+    public float ScaleFactor;
 
     void Start()
     {
@@ -70,6 +87,68 @@ public class PlayerStatusManager : MonoBehaviour
     {
         UIParameterUpdate();
         WeaponParameterUpdate();
+    }
+
+    private void LateUpdate()
+    {
+        PanelPositionAdjust();
+    }
+
+    private void PanelPositionAdjust()
+    {
+        Transform panelAnchor = null;
+
+        if (_tpsshootController.isAiming)
+        {
+            _panelRectTransform.pivot = new Vector2(0.5f, 0.5f);
+            panelAnchor = _aimPanelAnchor.transform;
+
+            if(_tpsshootController.targetCameraSide ==1)
+                PlayerDetail.transform.SetSiblingIndex(AmmoCount.transform.GetSiblingIndex() + 1);
+            else if (_tpsshootController.targetCameraSide == 0)
+                AmmoCount.transform.SetSiblingIndex(PlayerDetail.transform.GetSiblingIndex() + 1);
+        }
+
+        else if(!_tpsshootController.isAiming)
+        {
+            if (_rayDetec.isBlockedL)
+            {
+                _panelRectTransform.pivot = new Vector2(0f, 0.5f);
+                panelAnchor = _normalPanelAnchorR.transform;
+                PlayerDetail.transform.SetSiblingIndex(AmmoCount.transform.GetSiblingIndex() + 1);
+            }
+            else if (_rayDetec.isBlockedR)
+            {
+                _panelRectTransform.pivot = new Vector2(1f, 0.5f);
+                panelAnchor = _normalPanelAnchorL.transform;
+                AmmoCount.transform.SetSiblingIndex(PlayerDetail.transform.GetSiblingIndex() + 1);
+            }
+            else
+            {
+                _panelRectTransform.pivot = new Vector2(0f, 0.5f);
+                panelAnchor = _normalPanelAnchorR.transform;
+                PlayerDetail.transform.SetSiblingIndex(AmmoCount.transform.GetSiblingIndex() + 1);
+            }
+
+        }
+
+
+        // 计算摄像机到NPC的距离
+        float distance = Vector3.Distance(mainCamera.transform.position, Player.transform.position);
+        //Debug.Log(distance);
+        // 根据距离调整血条的缩放
+        float scaleFactor = 0.7f + (0.3f * (distance - 2) / (6 - 2));
+        ScaleFactor = scaleFactor;
+        _panelRectTransform.localScale = new Vector3(scaleFactor, scaleFactor, 1);
+
+        // 将NPC的世界坐标转换为屏幕坐标
+        Vector3 screenPos = mainCamera.WorldToScreenPoint(panelAnchor.position + new Vector3(0, 0, 0));
+
+        // 将屏幕坐标转换为Canvas坐标系下的位置
+        Vector2 canvasPos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(_renderCanvas.GetComponent<RectTransform>(), screenPos, _renderCanvas.worldCamera, out canvasPos);
+        // 更新血条的位置
+        _panelRectTransform.localPosition = canvasPos;
     }
 
     private void UIParameterUpdate()
@@ -116,16 +195,57 @@ public class PlayerStatusManager : MonoBehaviour
 
     private void WeaponParameterUpdate()
     {
-        CurrentWeapon = _tpsshootController.CurrentWeapon;
+        CurrentWeapon = _tpsshootController?.CurrentWeapon;
+
+        if (CurrentWeapon == null)
+            return;
 
         if (CurrentWeapon.needReload)
-            _currentAmmo.text = CurrentWeapon.CurrentBulletCount.ToString();
+            if(CurrentWeapon.CurrentBulletCount >= 10)
+            {
+                CurrentAmmoHide0.SetActive(false);
+                CurrentAmmo.SetActive(true);
+
+                _currentAmmo.text = CurrentWeapon.CurrentBulletCount.ToString();
+            }
+            else
+            {
+                CurrentAmmo.SetActive(true);
+                CurrentAmmoHide0.SetActive(true);
+
+                _currentAmmo.text = CurrentWeapon.CurrentBulletCount.ToString();
+            }
         else
             _currentAmmo.text = "999";
+
         if (CurrentWeapon.LimitAmmo)
-            _ammoTotal.text = CurrentWeapon.MaxAmmoCarry.ToString();
-        else
-            _ammoTotal.text = "9999";
+            if (CurrentWeapon.MaxAmmoCarry >= 100)
+            {
+                AmmoTotalHide01.SetActive(false);
+                AmmoTotalHide02.SetActive(false);
+                AmmoTotal.SetActive(true);
+
+                _ammoTotal.text = CurrentWeapon.MaxAmmoCarry.ToString();
+            }
+            else if (CurrentWeapon.MaxAmmoCarry < 100 && CurrentWeapon.MaxAmmoCarry >= 10)
+            {
+                AmmoTotalHide01.SetActive(true);
+                AmmoTotalHide02.SetActive(false);
+                AmmoTotal.SetActive(true);
+
+                _ammoTotal.text = CurrentWeapon.MaxAmmoCarry.ToString();
+            }
+            else if(CurrentWeapon.MaxAmmoCarry < 10)
+            {
+                AmmoTotalHide01.SetActive(true);
+                AmmoTotalHide02.SetActive(true);
+                AmmoTotal.SetActive(true);
+
+                _ammoTotal.text = CurrentWeapon.MaxAmmoCarry.ToString();
+            }
+
+            else
+                _ammoTotal.text = "9999";
 
         if (CurrentWeapon != _previousWeapon)
         {
@@ -159,7 +279,10 @@ public class PlayerStatusManager : MonoBehaviour
         PlayerHealthFadeBar = transform.FindDeepChild("PlayerHealthFadeBar").gameObject;
 
         CurrentAmmo = transform.FindDeepChild("CurrentAmmo").gameObject;
+        CurrentAmmoHide0 = transform.FindDeepChild("CurrentAmmoHide0").gameObject;
         AmmoTotal = transform.FindDeepChild("AmmoTotal").gameObject;
+        AmmoTotalHide01 = transform.FindDeepChild("AmmoTotalHide01").gameObject;
+        AmmoTotalHide02 = transform.FindDeepChild("AmmoTotalHide02").gameObject;
         AmmoPreMag = transform.FindDeepChild("AmmoPreMag").gameObject;
 
         Skill1 = transform.FindDeepChild("Skill1").gameObject;
@@ -175,6 +298,9 @@ public class PlayerStatusManager : MonoBehaviour
 
     private void ComponentInit()
     {
+        mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        _renderCanvas = GetComponentInParent<Canvas>();
+        _panelRectTransform = GetComponent<RectTransform>();
         _playerHealthBar = PlayerHealthBar.GetComponent<Image>();
         _playerHealthFadeBar = PlayerHealthFadeBar.GetComponent<Image>();
         _currentAmmo = CurrentAmmo.GetComponent<TextMeshProUGUI>();
@@ -187,13 +313,34 @@ public class PlayerStatusManager : MonoBehaviour
         InitCheck();
     }
 
-    public void HPRegister(GameObject Register)
+    public void HPRegister(GameObject Register,GameObject AimPanelAnchor,GameObject PanelAnchorL, GameObject PanelAnchorR)
     {
-        _virtualHP = Register.GetComponent<VirtualHP>();
-        _avatarController = Register.GetComponent<AvatarController>();
-        _tpsshootController = Register.GetComponent<TPSShootController>();
-        _rayDetec = Register.GetComponent<RayDectec>();
+        Player = Register;
+        _virtualHP = Register?.GetComponent<VirtualHP>();
+        _avatarController = Register?.GetComponent<AvatarController>();
+        _tpsshootController = Register?.GetComponent<TPSShootController>();
+        _rayDetec = Register?.GetComponent<RayDectec>();
 
+        if(_virtualHP == null || _avatarController == null || _tpsshootController == null || _rayDetec == null)
+        {
+            _virtualHP.SetRegistResult(false);
+            return;
+        }
+
+
+        if (AimPanelAnchor != null && PanelAnchorL != null && PanelAnchorR != null)
+        {
+            _aimPanelAnchor = AimPanelAnchor;
+            _normalPanelAnchorL = PanelAnchorL;
+            _normalPanelAnchorR = PanelAnchorR;
+        }
+        else
+        {
+            _virtualHP.SetRegistResult(false);
+            return;
+        }
+
+        _virtualHP.SetRegistResult(true);
         registerInfoIn = true;
         InitCheck();
     }

@@ -7,10 +7,11 @@ namespace DataManager
 {
     public class DataMaster
     {
+        private CSVReader csvreader = new CSVReader();
+
         //获取Actor所属阵营
         public int GetActorCamp(GameObject gameObject)
         {
-            CSVReader csvreader = new CSVReader();
             Identity ID = gameObject.GetComponent<Identity>();
             if (ID != null)
             {
@@ -42,11 +43,19 @@ namespace DataManager
             }
         }
 
+        public float GetCharaterPriority(GameObject Actor)
+        {
+            Identity ID = Actor.GetComponent<Identity>();
+            string MasterID = ID.MasterID;
+            var IDData = csvreader.GetDataByID("Identity", MasterID);
+            float CharaterPriority = (float)IDData["CharacterPriority"];
+            return CharaterPriority;
+        }
+
         //用于获取Actor是否为特殊属性，0为普通，1为Boss
         public int GetActorSP(GameObject Actor)
         {
             bool isBoss = false;
-            CSVReader csvreader = new CSVReader();
             Identity ID = Actor.GetComponent<Identity>();
             string ActorCID = ID?.Cid;
             if (ActorCID.EndsWith("_E"))
@@ -73,7 +82,6 @@ namespace DataManager
         public string GetActorSPTitle(GameObject Actor)
         {
             string Title;
-            CSVReader csvreader = new CSVReader();
             Identity ID = Actor.GetComponent<Identity>();
             string ActorCID = ID?.Cid;
             if (ActorCID.EndsWith("_E"))
@@ -103,7 +111,6 @@ namespace DataManager
 
         public string GetActorName(GameObject Actor)
         {
-            CSVReader csvreader = new CSVReader();
             Identity ID = Actor.GetComponent<Identity>();
             string ActorCID = ID?.Cid;
             var ActorInfo = csvreader.GetDataByID("role", ActorCID);
@@ -122,7 +129,6 @@ namespace DataManager
 
         public string GetActorID(GameObject Actor)
         {
-            CSVReader csvreader = new CSVReader();
             Identity ID = Actor.GetComponent<Identity>();
             string ActorCID = ID?.Cid;
             var ActorInfo = csvreader.GetDataByID("role", ActorCID);
@@ -148,6 +154,7 @@ namespace DataManager
         private Dictionary<GameObject,int> actorSP = new Dictionary<GameObject,int>();
         private Dictionary<GameObject,string> actorSPTitle = new Dictionary<GameObject,string>();
         private Dictionary<GameObject,string> actorName = new Dictionary<GameObject,string>();
+        private Dictionary<GameObject,float>actorPriority = new Dictionary<GameObject,float>();
 
         public string GetActorID(GameObject actor)
         {
@@ -184,6 +191,20 @@ namespace DataManager
                 int newSP = DM.GetActorSP(actor);
                 actorSP[actor] = newSP;
                 return newSP;
+            }
+        }
+
+        public float GetActorPriority(GameObject actor)
+        {
+            if(actorPriority.TryGetValue(actor,out float Priority))
+            {
+                return Priority;
+            }
+            else
+            {
+                float newPriority = DM.GetCharaterPriority(actor);
+                actorPriority[actor] = newPriority;
+                return newPriority;
             }
         }
 
