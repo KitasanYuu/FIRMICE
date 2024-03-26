@@ -146,6 +146,9 @@ namespace Battle
                 {
                     if (!LimitAmmo ||(!needReload && (MaxAmmoCarry > 0 || CurrentBulletCount > 0)) || CurrentBulletCount > 0)
                     {
+                        if (Reloading && reloadingInProgress)
+                            return;
+
                         outofAmmo = false;
                         // 获取当前时间
                         float currentTime = Time.time;
@@ -277,6 +280,9 @@ namespace Battle
 
                             lastShootTime = currentTime;
                         }
+
+                        if (UsingMasterControl)
+                            tpsShootController.SetAmmoStatus(outofAmmo);
                     }
                     else if(LimitAmmo && CurrentBulletCount == 0 && MaxAmmoCarry == 0)
                     {
@@ -287,6 +293,8 @@ namespace Battle
                     else
                     {
                         outofAmmo = false;
+                        if (UsingMasterControl)
+                            tpsShootController.SetAmmoStatus(outofAmmo);
                         ReloadProgress(true);
                     }
                 }
@@ -302,7 +310,17 @@ namespace Battle
                 {
                     if (tpsShootController.avatarController.IsRolling &&tpsShootController.avatarController.IsSliding)
                         return;
+
+                    if (tpsShootController.Fire && CurrentBulletCount >1)
+                        return;
                 }
+
+                if (UsingAIControl)
+                {
+                    if (shootController.Fire)
+                        return;
+                }
+
 
                 if (!Reloading && !reloadingInProgress && (Input.GetKeyDown(KeyCode.R) || ReloadStart))
                 {
