@@ -37,8 +37,6 @@ namespace TestField
 
         void Update()
         {
-            Debug.Log(PreviousCanFireStatus);
-
             if (AiM.inBattle)
             {
                 TargetSelect();

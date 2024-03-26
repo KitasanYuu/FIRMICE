@@ -31,11 +31,11 @@ namespace Battle
         [Space2(20)]
 
         [SerializeField] private bool Semi;
-        [SerializeField] private bool LimitAmmo = true;
-        [SerializeField] private bool needReload;
-        [SerializeField, CustomInspector.ShowIf(nameof(LimitAmmo))] private int MaxAmmoCarry;
-        [SerializeField, CustomInspector.ShowIf(nameof(LimitAmmo))] private int AmmoPreMag;
-        [ReadOnly, SerializeField, CustomInspector.ShowIf(nameof(LimitAmmo))] private int CurrentBulletCount;
+        [SerializeField] public bool LimitAmmo = true;
+        [SerializeField] public bool needReload;
+        [CustomInspector.ShowIf(nameof(LimitAmmo))] public int MaxAmmoCarry;
+        [CustomInspector.ShowIf(nameof(LimitAmmo))] public int AmmoPreMag;
+        [ReadOnly,CustomInspector.ShowIf(nameof(LimitAmmo))] public int CurrentBulletCount;
 
         [Space2(20)]
         public GameObject Shooter;

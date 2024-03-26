@@ -1,7 +1,9 @@
 using AvatarMain;
+using Battle;
 using BattleHealth;
 using CustomInspector;
 using Detector;
+using playershooting;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -22,6 +24,8 @@ public class PlayerStatusManager : MonoBehaviour
     [ReadOnly] public Image _playerHealthFadeBar;
 
     [HorizontalLine(message: "Ammo面板", 2, FixedColor.Gray)]
+    [ReadOnly, SerializeField] private WeaponShooter CurrentWeapon;
+    private WeaponShooter _previousWeapon;
     [ReadOnly] public GameObject CurrentAmmo;
     [ReadOnly] public TextMeshProUGUI _currentAmmo;
     [ReadOnly] public GameObject AmmoTotal;
@@ -52,6 +56,7 @@ public class PlayerStatusManager : MonoBehaviour
     private VirtualHP _virtualHP;
     private RayDectec _rayDetec;
     private AvatarController _avatarController;
+    private TPSShootController _tpsshootController;
 
     private Coroutine HPBarFadeCoroutine;
 
@@ -64,6 +69,7 @@ public class PlayerStatusManager : MonoBehaviour
     void Update()
     {
         UIParameterUpdate();
+        WeaponParameterUpdate();
     }
 
     private void UIParameterUpdate()
@@ -104,6 +110,29 @@ public class PlayerStatusManager : MonoBehaviour
             //Debug.Log(HPdamageDir);
             //HPBar.fillAmount = HPValueRate;
             //ArmorBar.fillAmount = ArmorValueRate;
+        }
+
+    }
+
+    private void WeaponParameterUpdate()
+    {
+        CurrentWeapon = _tpsshootController.CurrentWeapon;
+
+        if (CurrentWeapon.needReload)
+            _currentAmmo.text = CurrentWeapon.CurrentBulletCount.ToString();
+        else
+            _currentAmmo.text = "999";
+        if (CurrentWeapon.LimitAmmo)
+            _ammoTotal.text = CurrentWeapon.MaxAmmoCarry.ToString();
+        else
+            _ammoTotal.text = "9999";
+
+        if (CurrentWeapon != _previousWeapon)
+        {
+            if (CurrentWeapon.needReload)
+                _ammoPreMag.text = CurrentWeapon.AmmoPreMag.ToString();
+            else
+                _ammoPreMag.text = "999";
         }
 
     }
@@ -162,6 +191,7 @@ public class PlayerStatusManager : MonoBehaviour
     {
         _virtualHP = Register.GetComponent<VirtualHP>();
         _avatarController = Register.GetComponent<AvatarController>();
+        _tpsshootController = Register.GetComponent<TPSShootController>();
         _rayDetec = Register.GetComponent<RayDectec>();
 
         registerInfoIn = true;
