@@ -37,6 +37,7 @@ namespace BattleHealth
         private int mycamp= -999;
 
         private HPVisionManager HVM;
+        private PlayerStatusManager PSM;
         private Identity id;
         private DataMaster DM = new DataMaster();
         private LocalDataSaver LDS = new LocalDataSaver();
@@ -195,27 +196,37 @@ namespace BattleHealth
         {
             if (NeedToRegist)
             {
-                bool isSpecial = false;
-                DataMaster DM = new DataMaster();
-                if(CharacterSP == -999)
-                    CharacterSP = DM.GetActorSP(gameObject);
-                if (CharacterSP > 0)
-                    isSpecial = true;
-                if (id.canUse)
+                if (LDS.IsPlayer(gameObject))
                 {
-
-                    if ((Object != null && HPAnchor != null) || isSpecial)
+                    PSM = FindAnyObjectByType<PlayerStatusManager>();
+                    if(PSM != null)
                     {
-                        HVM = FindAnyObjectByType<HPVisionManager>();
-
-                        if (HVM != null)
-                        {
-                            HVM.ObjectHPRegister(gameObject);
-                        }
+                        PSM.HPRegister(Object);
                     }
-                    else
+                }
+                else
+                {
+                    bool isSpecial = false;
+                    if (CharacterSP == -999)
+                        CharacterSP = LDS.GetActorSP(gameObject);
+                    if (CharacterSP > 0)
+                        isSpecial = true;
+                    if (id.canUse)
                     {
-                        Debug.LogError(gameObject.name + "Regist HP Failure");
+
+                        if ((Object != null && HPAnchor != null) || isSpecial)
+                        {
+                            HVM = FindAnyObjectByType<HPVisionManager>();
+
+                            if (HVM != null)
+                            {
+                                HVM.ObjectHPRegister(gameObject);
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogError(gameObject.name + "Regist HP Failure");
+                        }
                     }
                 }
             }

@@ -120,13 +120,86 @@ namespace DataManager
             }
         }
 
+        public string GetActorID(GameObject Actor)
+        {
+            CSVReader csvreader = new CSVReader();
+            Identity ID = Actor.GetComponent<Identity>();
+            string ActorCID = ID?.Cid;
+            var ActorInfo = csvreader.GetDataByID("role", ActorCID);
+            if (ActorInfo != null)
+            {
+                string ActorName = (string)ActorInfo["ID"];
+                return ActorName;
+            }
+            else
+            {
+                Debug.LogError("DataMaster:GetActorName" + Actor.name + "Has no CID Found");
+                string placeHoder = null;
+                return placeHoder;
+            }
+        }
     }
 
     public class LocalDataSaver
     {
         private DataMaster DM = new DataMaster();
+        private Dictionary<GameObject,string>actorID = new Dictionary<GameObject,string>();
         private Dictionary<GameObject, int> actorCamps = new Dictionary<GameObject, int>();
+        private Dictionary<GameObject,int> actorSP = new Dictionary<GameObject,int>();
+        private Dictionary<GameObject,string> actorSPTitle = new Dictionary<GameObject,string>();
         private Dictionary<GameObject,string> actorName = new Dictionary<GameObject,string>();
+
+        public string GetActorID(GameObject actor)
+        {
+            if (actorID.TryGetValue(actor, out string ID))
+            {
+                return ID;
+            }
+            else
+            {
+                // 假设DM.GetActorCamp是你获取阵营信息的方法
+                string newID = DM.GetActorID(actor);
+                actorID[actor] = newID;
+                return newID;
+            }
+        }
+
+        public bool IsPlayer(GameObject Actor)
+        {
+            string ActorID = GetActorID(Actor);
+            if(ActorID == "C1001")
+                return true;
+            else
+                return false;
+        }
+
+        public int GetActorSP(GameObject actor)
+        {
+            if (actorSP.TryGetValue(actor, out int SP))
+            {
+                return SP;
+            }
+            else
+            {
+                int newSP = DM.GetActorSP(actor);
+                actorSP[actor] = newSP;
+                return newSP;
+            }
+        }
+
+        public string GetActorSPTitle(GameObject actor)
+        {
+            if (actorSPTitle.TryGetValue(actor, out string SPTitle))
+            {
+                return SPTitle;
+            }
+            else
+            {
+                string newSPTitle = DM.GetActorSPTitle(actor);
+                actorSPTitle[actor] = newSPTitle;
+                return newSPTitle;
+            }
+        }
 
         public int GetActorCamp(GameObject actor)
         {

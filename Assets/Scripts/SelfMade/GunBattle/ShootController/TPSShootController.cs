@@ -28,6 +28,7 @@ namespace playershooting
         [ReadOnly]
         public bool OutOfAmmo = false;
         [HorizontalLine("武器列表", 2, FixedColor.Gray)]
+        [ReadOnly] public WeaponShooter CurrentWeapon;
         [SerializeField] private List<WeaponShooter> weapons;
         [HorizontalLine("自定义的参数",2,FixedColor.Gray)]
         // 用于瞄准的虚拟相机
@@ -478,6 +479,8 @@ namespace playershooting
                 _animComponent.recoilPivot = gun.recoilPivot;
                 _animComponent.handsOffset = gun.handOffset;
                 _animComponent.pointAimOffset = gun.pointAimData;
+
+                CurrentWeapon = weapons[0];
             }
         }
 
