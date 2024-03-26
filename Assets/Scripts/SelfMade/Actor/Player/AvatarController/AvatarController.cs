@@ -289,7 +289,6 @@ namespace AvatarMain
 
         private void Update()
         {
-            Debug.Log(rollInPorgress);
             SlideProgress();
             RollProgress();
             AimingStatus();

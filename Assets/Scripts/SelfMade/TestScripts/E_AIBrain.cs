@@ -37,6 +37,8 @@ namespace TestField
 
         void Update()
         {
+            Debug.Log(PreviousCanFireStatus);
+
             if (AiM.inBattle)
             {
                 TargetSelect();
@@ -126,7 +128,7 @@ namespace TestField
 
         private void ParameterInit()
         {
-            PreviousCanFireStatus = !CanFire;
+            PreviousCanFireStatus = false;
         }
 
         private void ComponentInit()
