@@ -591,7 +591,7 @@ namespace Battle
         private void ComponemetInit()
         {
             WID = GetComponent<WeaponIdentity>();
-            _audioSource = GetComponent<AudioSource>();
+            _audioSource = GetComponentInParent<AudioSource>();
 
             if (Shooter != null)
             {

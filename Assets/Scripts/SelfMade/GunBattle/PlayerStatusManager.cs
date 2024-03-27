@@ -216,9 +216,10 @@ public class PlayerStatusManager : MonoBehaviour
                 _currentAmmo.text = CurrentWeapon.CurrentBulletCount.ToString();
             }
         else
-            _currentAmmo.text = "999";
+            _currentAmmo.text = "99";
 
         if (CurrentWeapon.LimitAmmo)
+        {
             if (CurrentWeapon.MaxAmmoCarry >= 100)
             {
                 AmmoTotalHide01.SetActive(false);
@@ -235,7 +236,7 @@ public class PlayerStatusManager : MonoBehaviour
 
                 _ammoTotal.text = CurrentWeapon.MaxAmmoCarry.ToString();
             }
-            else if(CurrentWeapon.MaxAmmoCarry < 10)
+            else if (CurrentWeapon.MaxAmmoCarry < 10)
             {
                 AmmoTotalHide01.SetActive(true);
                 AmmoTotalHide02.SetActive(true);
@@ -243,16 +244,22 @@ public class PlayerStatusManager : MonoBehaviour
 
                 _ammoTotal.text = CurrentWeapon.MaxAmmoCarry.ToString();
             }
+        }
+        else
+        {
+            AmmoTotalHide01.SetActive(false);
+            AmmoTotalHide02.SetActive(false);
+            AmmoTotal.SetActive(true);
+            _ammoTotal.text = "999";
+        }
 
-            else
-                _ammoTotal.text = "9999";
 
         if (CurrentWeapon != _previousWeapon)
         {
             if (CurrentWeapon.needReload)
                 _ammoPreMag.text = CurrentWeapon.AmmoPreMag.ToString();
             else
-                _ammoPreMag.text = "999";
+                _ammoPreMag.text = "99";
         }
 
     }
