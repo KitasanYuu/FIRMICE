@@ -9,8 +9,10 @@ public class GlobalObjectPathSetting:ScriptableObject
     public FolderPath BulletEffect = new FolderPath();
 
     public FolderPath DataPath = new FolderPath();
-
+        
     public FolderPath HealthBar = new FolderPath();
+
+    public FolderPath Player = new FolderPath();
 
     public FolderPath WeaponAudioClip = new FolderPath();
 

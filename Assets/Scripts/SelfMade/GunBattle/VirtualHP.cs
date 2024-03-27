@@ -293,6 +293,9 @@ namespace BattleHealth
 
         private void DestoryProgress()
         {
+            if (LDS.IsPlayer(gameObject))
+                PSM.playerDestory(true);
+
             if (healthBar != null)
                 Destroy(healthBar.gameObject);
             else if (eHealthBar != null)

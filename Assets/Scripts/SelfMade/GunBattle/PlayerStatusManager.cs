@@ -2,10 +2,10 @@ using AvatarMain;
 using Battle;
 using BattleHealth;
 using CustomInspector;
+using DataManager;
 using Detector;
 using playershooting;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,6 +17,7 @@ public class PlayerStatusManager : MonoBehaviour
 
     [HorizontalLine(message: "总面板", 2, FixedColor.Gray)]
     [ReadOnly] public GameObject Player;
+    [ReadOnly] public GameObject PlayerStatus;
     [ReadOnly] public GameObject AmmoCount;
     [ReadOnly] public GameObject PlayerDetail;
 
@@ -72,6 +73,8 @@ public class PlayerStatusManager : MonoBehaviour
     private AvatarController _avatarController;
     private TPSShootController _tpsshootController;
 
+    private ResourceReader RR = new ResourceReader();
+
     private Coroutine HPBarFadeCoroutine;
 
     [HideInInspector]
@@ -79,7 +82,6 @@ public class PlayerStatusManager : MonoBehaviour
 
     void Start()
     {
-        ResourceInit();
         ComponentInit();
     }
 
@@ -96,6 +98,9 @@ public class PlayerStatusManager : MonoBehaviour
 
     private void PanelPositionAdjust()
     {
+        if (_panelRectTransform == null)
+            return;
+
         Transform panelAnchor = null;
 
         if (_tpsshootController.isAiming)
@@ -201,7 +206,8 @@ public class PlayerStatusManager : MonoBehaviour
             return;
 
         if (CurrentWeapon.needReload)
-            if(CurrentWeapon.CurrentBulletCount >= 10)
+        {
+            if (CurrentWeapon.CurrentBulletCount >= 10)
             {
                 CurrentAmmoHide0.SetActive(false);
                 CurrentAmmo.SetActive(true);
@@ -215,6 +221,7 @@ public class PlayerStatusManager : MonoBehaviour
 
                 _currentAmmo.text = CurrentWeapon.CurrentBulletCount.ToString();
             }
+        }
         else
             _currentAmmo.text = "99";
 
@@ -299,6 +306,14 @@ public class PlayerStatusManager : MonoBehaviour
         Con1Num = transform.FindDeepChild("Con1Num").gameObject;
         Con2Num = transform.FindDeepChild("Con2Num").gameObject;
 
+        _playerHealthBar = PlayerHealthBar.GetComponent<Image>();
+        _playerHealthFadeBar = PlayerHealthFadeBar.GetComponent<Image>();
+        _currentAmmo = CurrentAmmo.GetComponent<TextMeshProUGUI>();
+        _ammoTotal = AmmoTotal.GetComponent<TextMeshProUGUI>();
+        _ammoPreMag = AmmoPreMag.GetComponent<TextMeshProUGUI>();
+        _con1Num = Con1Num.GetComponent<TextMeshProUGUI>();
+        _con2Num = Con2Num.GetComponent<TextMeshProUGUI>();
+
         resourceInitComplete = true;
         InitCheck();
     }
@@ -307,14 +322,6 @@ public class PlayerStatusManager : MonoBehaviour
     {
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         _renderCanvas = GetComponentInParent<Canvas>();
-        _panelRectTransform = GetComponent<RectTransform>();
-        _playerHealthBar = PlayerHealthBar.GetComponent<Image>();
-        _playerHealthFadeBar = PlayerHealthFadeBar.GetComponent<Image>();
-        _currentAmmo = CurrentAmmo.GetComponent<TextMeshProUGUI>();
-        _ammoTotal = AmmoTotal.GetComponent<TextMeshProUGUI>();
-        _ammoPreMag = AmmoPreMag.GetComponent<TextMeshProUGUI>();
-        _con1Num = Con1Num.GetComponent<TextMeshProUGUI>();
-        _con2Num = Con2Num.GetComponent<TextMeshProUGUI>();
 
         componentInitComplete = true;
         InitCheck();
@@ -347,8 +354,22 @@ public class PlayerStatusManager : MonoBehaviour
             return;
         }
 
+        GameObject StatusPrefab = RR.GetGameObject("Player", "PlayerStatusUI");
+
+        PlayerStatus = Instantiate(StatusPrefab,gameObject.transform) as GameObject;
+
+        PlayerStatus.name = "PlayerStatus";
+
+        _panelRectTransform = PlayerStatus?.GetComponent<RectTransform>();
+
+        if(PlayerStatus == null)
+            _virtualHP.SetRegistResult(false);
+
+        ResourceInit();
+
         _virtualHP.SetRegistResult(true);
         registerInfoIn = true;
+
         InitCheck();
     }
 
