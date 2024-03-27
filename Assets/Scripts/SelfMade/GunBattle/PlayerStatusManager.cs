@@ -359,4 +359,14 @@ public class PlayerStatusManager : MonoBehaviour
             _initComplete= true;
         }
     }
+
+    public void playerDestory(bool Destory)
+    {
+        if (Destory)
+        {
+            StopAllCoroutines();
+            Destroy(PlayerStatus);
+        }
+           
+    }
 }

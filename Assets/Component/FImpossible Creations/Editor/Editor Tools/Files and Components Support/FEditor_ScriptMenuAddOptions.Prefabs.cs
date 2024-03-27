@@ -1,4 +1,4 @@
-﻿#if UNITY_2019_4_OR_NEWER
+#if UNITY_2019_4_OR_NEWER
 using System.IO;
 using UnityEditor;
 using UnityEditor.Hardware;

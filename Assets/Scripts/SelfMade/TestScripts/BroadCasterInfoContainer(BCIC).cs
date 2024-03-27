@@ -4,6 +4,7 @@ using CustomInspector;
 using AvatarMain;
 using playershooting;
 using System.Collections.Generic;
+using YuuTool;
 
 namespace TestField
 {
@@ -111,8 +112,15 @@ namespace TestField
 
         public void SetAlertTarget(GameObject newTarget)
         {
+            bool _missing = false;
+
+            if(newTarget.IsMissing() || TargetContainer.IsMissing())
+            {
+                _missing = true;
+                TargetContainer = null;
+            }
             // 如果新目标与当前目标不同，触发事件
-            if (newTarget != TargetContainer)
+            if (newTarget != TargetContainer || _missing)
             {
                 TargetContainer = newTarget;
                 TargetReceived = TargetContainer;
