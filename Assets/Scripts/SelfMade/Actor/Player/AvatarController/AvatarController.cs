@@ -276,6 +276,7 @@ namespace AvatarMain
             _lastMoveDirection = Vector3.zero; // 或者根据需要初始化其他值
 #if ENABLE_INPUT_SYSTEM
             _playerInput = GetComponent<PlayerInput>();
+            _hasAnimator = TryGetComponent(out _animator);
 #else
             Debug.LogError("Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
@@ -292,13 +293,11 @@ namespace AvatarMain
             SlideProgress();
             RollProgress();
             AimingStatus();
-            WalkSwitcher();
             CameraZoom();
-            _hasAnimator = TryGetComponent(out _animator);
             JumpAndGravity();
             GroundedCheck();
-            MoveStatus();
             Move();
+            WalkSwitcher();
             ModifyControllerProperties();
             PerformDetectionAndDrawGizmos();
             ParameterRelink();

@@ -176,8 +176,8 @@ namespace playershooting
                         {
                             _animator.SetIKPosition(AvatarIKGoal.RightHand, rifleAimRightHandPosition.position);
                             _animator.SetIKRotation(AvatarIKGoal.RightHand, rifleAimRightHandPosition.rotation);
-                            _animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandCrouchGrip.position);
-                            _animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandCrouchGrip.rotation);
+                            _animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandGrip.position);
+                            _animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandGrip.rotation);
                         }
                     }
                     else
