@@ -398,6 +398,8 @@ namespace TestField
             {
                 //Notarget的时候将Distance设置成无限大
                 DistanceToTarget = float.PositiveInfinity;
+                Hitbutoutrange = false;
+                foundTarget = false;
             }
         }
 
@@ -584,6 +586,7 @@ namespace TestField
             targetContainer = newTarget;
             targetBroadCastFound = newTarget ? true : false;
             notarget = newTarget ? false : true;
+            Startinit();
         }
 
         private void OnTargetMovingStatusChanged(int newValue)

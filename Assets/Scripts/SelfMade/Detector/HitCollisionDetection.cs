@@ -1,7 +1,5 @@
 using DataManager;
 using System.Collections.Generic;
-using TestField;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace TargetDirDetec

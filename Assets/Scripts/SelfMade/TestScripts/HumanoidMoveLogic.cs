@@ -228,6 +228,12 @@ namespace TestField
                 StartPositionAdjust(true);
                 HasExcuted = true;
             }
+            else if (!TargetExpose)
+            {
+                InBattle = false;
+                inBattle = false;
+                HasExcuted = false;
+            }
         }
 
         private void OutBattleParameterUpdate()
