@@ -174,7 +174,7 @@ namespace BattleShoot
                     float maxDistance = Vector3.Distance(raycastOrigin.transform.position, Target.transform.position);
 
                     RaycastHit hitInfo;
-                    if (Physics.Raycast(ray, out hitInfo, maxDistance))
+                    if (Physics.Raycast(ray, out hitInfo, maxDistance,aimColliderLayerMask))
                     {
                         // 判断击中的目标是否就是预期的Target 或者其父物体
                         Transform currentTransform = hitInfo.transform;

@@ -200,7 +200,6 @@ namespace playershooting
             _animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f);
             _animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1f);
             _animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1f);
-
         }
 
         private void AIM()
