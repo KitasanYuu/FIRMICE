@@ -73,6 +73,9 @@ namespace BattleShoot
 
         private void AIM()
         {
+            if(TargetPre != null)
+                isAiming = true;
+
             if (isAiming)
             {
                 if (TargetPre == null)
