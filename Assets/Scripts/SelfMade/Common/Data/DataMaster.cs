@@ -144,6 +144,20 @@ namespace DataManager
                 return placeHoder;
             }
         }
+
+        public Dictionary<string, object> GetWeaponVar(string WeaponID)
+        {
+            var weapon = csvreader.GetDataByID("weapons", WeaponID);
+            if(weapon != null)
+            {
+                return weapon;
+            }
+            else
+            {
+                Debug.LogError("DataMaster:GetWeaponVar" + WeaponID + "Not Found!");
+                return null;
+            }
+        }
     }
 
     public class LocalDataSaver
@@ -155,6 +169,8 @@ namespace DataManager
         private Dictionary<GameObject,string> actorSPTitle = new Dictionary<GameObject,string>();
         private Dictionary<GameObject,string> actorName = new Dictionary<GameObject,string>();
         private Dictionary<GameObject,float>actorPriority = new Dictionary<GameObject,float>();
+        private Dictionary<string, Dictionary<string, object>> weaponInfo = new Dictionary<string, Dictionary<string, object>>();
+
 
         public string GetActorID(GameObject actor)
         {
@@ -248,6 +264,20 @@ namespace DataManager
                 string newActorName = DM.GetActorName(actor);
                 actorName[actor] = newActorName;
                 return newActorName;
+            }
+        }
+
+        public Dictionary<string, object> GetWeapon(string WeaponID)
+        {
+            if(weaponInfo.TryGetValue(WeaponID, out var weaponinfo))
+            {
+                return weaponinfo;
+            }
+            else
+            {
+                Dictionary<string, object> newWeaponInfo = DM.GetWeaponVar(WeaponID);
+                weaponInfo[WeaponID] = newWeaponInfo;
+                return newWeaponInfo;
             }
         }
     }

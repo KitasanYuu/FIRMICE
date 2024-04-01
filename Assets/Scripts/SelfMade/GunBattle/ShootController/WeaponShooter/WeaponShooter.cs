@@ -543,8 +543,9 @@ namespace Battle
             PreviousBulletSpeed = bulletspeed;
 
             ResourceReader RR = new ResourceReader();
-            CSVReader csv = new CSVReader();
-            var WeaponData = csv.GetDataByID("weapons", WeaponID);
+            //CSVReader csv = new CSVReader();
+            LocalDataSaver LDS = new LocalDataSaver();
+            var WeaponData = LDS.GetWeapon(WeaponID);
             WeaponName = (string)WeaponData["WeaponName"];
             int BulletMethod = (int)WeaponData["BulletFireMode"];
             if (BulletMethod == 1)
