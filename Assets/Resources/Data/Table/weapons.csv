@@ -1,7 +1,8 @@
-GID,ID,WeaponName,Damage,VaildShootRange,BulletFireMode,BulletSpeed,ArmorBreak,IsLimitAmmo,needReload,AmmoPreMag,MaxAmmoCarry,FireRate,ReloadDuration,FastReloadDuration,BulletModel,HitParticle
-string,string,string,float,float,int,float,float,bool,bool,int,int,float,float,float,string,string
-Weapon_GM_Force,W0000,Blaster,100,99999,2,999999,100,False,False,50,500,0.05,0,0,BulletTest_B,VFX_Hit_B
-Weapon_Bot_Prototype_T,W0001_T,Blaster,10,100,1,10,10,False,False,30,30,0.05,0,0,BulletTest_B,VFX_Hit_B
-Weapon_Bot_Prototype,W0001,Blaster,10,100,1,100,10,False,False,30,30,0.05,0,0,BulletTest_B,VFX_Hit_B
-Weapon_AssaultRifle,W3001,Blaster,10,100,1,100,20,True,True,30,100,0.07,3,2,BulletTest,VFX_HitYellow
-Weapon_Rifle,W4001,Blaster,300,200,1,100,200,True,True,5,50,1,4,3,BulletTest,VFX_HitYellow
+GID,ID,WeaponName,WeaponDescribe,WeaponType,Damage,VaildShootRange,BulletFireMode,BulletSpeed,ArmorBreak,IsLimitAmmo,needReload,AmmoPreMag,MaxAmmoCarry,FireRate,ReloadDuration,FastReloadDuration,BulletModel,HitParticle
+string,string,string,string,int,float,float,int,float,float,bool,bool,int,int,float,float,float,string,string
+Weapon_GM_Force,W0000,Blaster,象征着至高权力的GM之枪，IWA荣誉出品,2,100,99999,2,999999,100,False,False,50,500,0.05,0,0,BulletTest_B,VFX_Hit_B
+Weapon_Bot_Prototype_T,W0001_T,Blaster,null,5,10,100,1,10,10,False,False,30,30,0.05,0,0,BulletTest_B,VFX_Hit_B
+Weapon_Bot_Prototype,W0001,Blaster,null,2,10,100,1,100,10,False,False,30,30,0.05,0,0,BulletTest_B,VFX_Hit_B
+Weapon_AssaultRifle,W3001,Blaster,null,3,10,100,1,100,20,True,True,30,100,0.07,3,2,BulletTest,VFX_HitYellow
+Weapon_Rifle,W4001,Blaster,null,6,300,200,1,100,200,True,True,5,50,1,4,3,BulletTest,VFX_HitYellow
+Weapon_EVTK009,W4002,EVTK-009电磁轨道炮,这有什么好看的，你又玩不到。不会真以为你能玩到测试的超模武器吧。,7,9999999,200,1,100,9999999,True,True,5,50,1,4,3,BulletTest,VFX_HitYellow

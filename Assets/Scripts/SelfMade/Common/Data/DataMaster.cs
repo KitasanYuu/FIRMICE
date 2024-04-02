@@ -280,6 +280,34 @@ namespace DataManager
                 return newWeaponInfo;
             }
         }
+
+        public string GetWeaponType(string WeaponID)
+        {
+            var weapon = GetWeapon(WeaponID);
+            int weaponType = (int)weapon["WeaponType"];
+            switch (weaponType)
+            {
+                case 0:
+                    return "无武器";
+                case 1:
+                    return "手枪";
+                case 2:
+                    return "冲锋枪";
+                case 3:
+                    return "突击步枪";
+                case 4:
+                    return "轻机枪";
+                case 5:
+                    return "射手步枪";
+                case 6:
+                    return "狙击步枪";
+                case 7:
+                    return "特种武器";
+                default:
+                    return "404";
+            }
+
+        }
     }
 }
 
