@@ -170,6 +170,7 @@ namespace DataManager
         private Dictionary<GameObject,string> actorName = new Dictionary<GameObject,string>();
         private Dictionary<GameObject,float>actorPriority = new Dictionary<GameObject,float>();
         private Dictionary<string, Dictionary<string, object>> weaponInfo = new Dictionary<string, Dictionary<string, object>>();
+        private Dictionary<string,string> weaponPrefabInfo = new Dictionary<string, string>();
 
 
         public string GetActorID(GameObject actor)
@@ -278,6 +279,27 @@ namespace DataManager
                 Dictionary<string, object> newWeaponInfo = DM.GetWeaponVar(WeaponID);
                 weaponInfo[WeaponID] = newWeaponInfo;
                 return newWeaponInfo;
+            }
+        }
+
+        public string GetWeaponPrefab(string WeaponID)
+        {
+            if(weaponPrefabInfo.TryGetValue(WeaponID ,out string weaponPrefab))
+            {
+                if (weaponPrefab != "null")
+                    return weaponPrefab;
+                else
+                    return null;
+            }
+            else
+            {
+                var weapon = GetWeapon(WeaponID);
+                string newweaponPrefab = (string)weapon["WeaponPrefab"];
+                weaponPrefabInfo[WeaponID]= newweaponPrefab;
+                if (newweaponPrefab != "null")
+                    return newweaponPrefab;
+                else
+                    return null;
             }
         }
 

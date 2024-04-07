@@ -43,21 +43,24 @@ public class WeaponDetailCell : MonoBehaviour
 
     public void SelectedWeaponChanged(string WeaponID)
     {
-        var weaponInfo = LDS.GetWeapon(WeaponID);
+        if (WeaponID != null)
+        {
+            var weaponInfo = LDS.GetWeapon(WeaponID);
 
-        float weapondamage = (float)weaponInfo["Damage"];
-        _weaponDamage.text = weapondamage.ToString();
-        float armorbreak = (float)weaponInfo["ArmorBreak"];
-        _weaponArmorBreak.text = armorbreak.ToString();
-        _weaponDetailDescribe.text = (string)weaponInfo["WeaponDescribe"];
+            float weapondamage = (float)weaponInfo["Damage"];
+            _weaponDamage.text = weapondamage.ToString();
+            float armorbreak = (float)weaponInfo["ArmorBreak"];
+            _weaponArmorBreak.text = armorbreak.ToString();
+            _weaponDetailDescribe.text = (string)weaponInfo["WeaponDescribe"];
 
-        _weaponDetailValue.SetActive(false);
-        _weapondetaildescribe.SetActive(false);
+            _weaponDetailValue.SetActive(false);
+            _weapondetaildescribe.SetActive(false);
 
-        _weaponDetailName.text = (string)weaponInfo["WeaponName"];
-        _weaponDetailType.text = LDS.GetWeaponType(WeaponID);
+            _weaponDetailName.text = (string)weaponInfo["WeaponName"];
+            _weaponDetailType.text = LDS.GetWeaponType(WeaponID);
 
-        _weaponDetailValue.SetActive(true);
-        _weapondetaildescribe.SetActive(value: true);
+            _weaponDetailValue.SetActive(true);
+            _weapondetaildescribe.SetActive(value: true);
+        }
     }
 }

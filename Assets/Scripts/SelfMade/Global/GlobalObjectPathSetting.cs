@@ -16,4 +16,6 @@ public class GlobalObjectPathSetting:ScriptableObject
 
     public FolderPath WeaponAudioClip = new FolderPath();
 
+    public FolderPath WeaponSnapShot = new FolderPath();
+
 }

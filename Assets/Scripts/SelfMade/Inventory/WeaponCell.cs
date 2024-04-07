@@ -38,8 +38,8 @@ public class WeaponCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
 
     public void SetSelectStatus(bool AmISelected)
     {
-        UnderLine.SetActive(!AmISelected);
-        Selected.SetActive(AmISelected);
+        UnderLine?.SetActive(!AmISelected);
+        Selected?.SetActive(AmISelected);
         _selectStatus = AmISelected;
     }
 
