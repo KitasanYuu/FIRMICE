@@ -1,5 +1,4 @@
 using System.IO;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -65,7 +64,7 @@ public class Kacha : MonoBehaviour
 
 
     // 示例：你可以在适当的时候调用这个方法，例如在一个按钮的点击事件中
-    public void OnCaptureButtonClick(string saveID)
+    public void CaptureSnapShot(string saveID)
     {
         CaptureAndApply(saveID);
     }
