@@ -84,9 +84,10 @@ public class WeaponCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
     public void OnPointerExit(PointerEventData eventData)
     {
         _hoverImage.color = _weaponDefaultColor;
+        WIM.SelectWeaponChangedRequest(null);
         StopAllCoroutines();
         HoverImage.alpha = 0;
-        WDC._currentWeaponSelected = null;
+        //WDC._currentWeaponSelected = null;
         Debug.Log("OnPointExit:" + eventData.ToString());
     }
 
@@ -97,7 +98,7 @@ public class WeaponCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
 
         while (currentTime < fadeInDuration)
         {
-            currentTime += Time.deltaTime;
+            currentTime += Time.unscaledDeltaTime;
             HoverImage.alpha = Mathf.Lerp(0, 1, currentTime / fadeInDuration);
             yield return null;
         }

@@ -39,6 +39,8 @@ public class WeaponDetailCell : MonoBehaviour
         _weaponDetailDescribe = transform.FindDeepChild("WeaponDetailDescribe")?.gameObject.GetComponent<TextMeshProUGUI>();
         _weaponDamage = transform.FindDeepChild("DamageValue")?.gameObject.GetComponent<TextMeshProUGUI>();
         _weaponArmorBreak = transform.FindDeepChild("ArmorBreakValue")?.gameObject.GetComponent<TextMeshProUGUI>();
+
+        gameObject.SetActive(false);
     }
 
     public void SelectedWeaponChanged(string WeaponID)

@@ -18,4 +18,6 @@ public class GlobalObjectPathSetting:ScriptableObject
 
     public FolderPath WeaponSnapShot = new FolderPath();
 
+    public FolderPath RenderBox = new FolderPath();
+
 }

@@ -143,6 +143,15 @@ public class WeaponInventoryManager : MonoBehaviour
 
     public void SelectWeaponChangedRequest(string CurrentSelectWeaponID)
     {
+        if(CurrentSelectWeaponID == null)
+        {
+            WDC.gameObject.SetActive(false);
+        }
+        else
+        {
+            WDC.gameObject.SetActive(true);
+        }
+
         WDC._currentWeaponSelected = CurrentSelectWeaponID;
         WDC.SelectedWeaponChanged(CurrentSelectWeaponID);
     }
