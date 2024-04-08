@@ -3,6 +3,7 @@ using CustomInspector;
 using YuuTool;
 using DataManager;
 using System.Collections;
+using UnityEngine.UI;
 
 public class InventoryPanelManager : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class InventoryPanelManager : MonoBehaviour
 
     [ReadOnly] public GameObject _weaponSelectPanel;
 
+    [ReadOnly] public Image _panelSubTitleChangeBar;
     [ReadOnly] public GameObject _renderBox;
 
     private CanvasGroup _weaponSelectPanelcanvasGroup;
@@ -51,17 +53,22 @@ public class InventoryPanelManager : MonoBehaviour
 
     private void ComponentInit()
     {
+        _panelSubTitleChangeBar = transform.FindDeepChild("Subtitlefadebar")?.gameObject.GetComponent<Image>();
         _weaponPanel = transform.FindDeepChild("WeaponPanel")?.gameObject;
         _weaponSelectPanel = transform.FindDeepChild("WeaponSelectPanel")?.gameObject;
 
         _weaponSelectPanelcanvasGroup = _weaponSelectPanel?.GetComponent<CanvasGroup>();
     }
 
-    public void OnWeaponSelectPanelClose()
+    public void OnPanelChanged(CanvasGroup currentPanel , CanvasGroup targetPanel)
     {
-        StartCoroutine(CanvasGroupFade(_weaponSelectPanelcanvasGroup));
+        Debug.Log(currentPanel + "" + targetPanel);
+        //StartCoroutine(CanvasGroupFade(_weaponSelectPanelcanvasGroup));
+    }
 
-        
+    private IEnumerator PanelChange(GameObject currentPanel, GameObject targetPanel)
+    {
+        yield return null;
     }
 
     private IEnumerator CanvasGroupFade(CanvasGroup newCanvasGroup)
@@ -78,7 +85,6 @@ public class InventoryPanelManager : MonoBehaviour
 
         newCanvasGroup.gameObject.SetActive(false);
         newCanvasGroup.alpha = 1; // 确保最终Alpha值为1
-
     }
 
 }
