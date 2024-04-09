@@ -62,13 +62,40 @@ public class InventoryPanelManager : MonoBehaviour
 
     public void OnPanelChanged(CanvasGroup currentPanel , CanvasGroup targetPanel)
     {
-        Debug.Log(currentPanel + "" + targetPanel);
+        //Debug.Log(currentPanel + "" + targetPanel);
         //StartCoroutine(CanvasGroupFade(_weaponSelectPanelcanvasGroup));
+        StartCoroutine(PanelChange(currentPanel, targetPanel));
     }
 
-    private IEnumerator PanelChange(GameObject currentPanel, GameObject targetPanel)
+    private IEnumerator PanelChange(CanvasGroup currentPanel, CanvasGroup targetPanel)
     {
-        yield return null;
+        float currentTime = 0f;
+        float fadeInDuration = 0.3f;
+
+        while (currentTime < fadeInDuration)
+        {
+            currentTime += Time.unscaledDeltaTime;
+            currentPanel.alpha = Mathf.Lerp(1, 0, currentTime / fadeInDuration);
+            yield return null;
+        }
+
+        currentPanel.alpha = 0; // 确保最终Alpha值为0
+        currentPanel.gameObject.SetActive(false);
+        currentPanel.alpha = 1;
+
+        currentTime = 0f;
+
+        targetPanel.alpha = 0;
+        targetPanel.gameObject.SetActive(true);
+
+        while (currentTime < fadeInDuration)
+        {
+            currentTime += Time.unscaledDeltaTime;
+            targetPanel.alpha = Mathf.Lerp(0, 1, currentTime / fadeInDuration);
+            yield return null;
+        }
+        targetPanel.alpha = 1; // 确保最终Alpha值为1
+
     }
 
     private IEnumerator CanvasGroupFade(CanvasGroup newCanvasGroup)
