@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Profiling;
+using UnityEngine.Rendering;
 using YuuTool;
 
 public class WeaponInventoryManager : MonoBehaviour
@@ -90,6 +92,7 @@ public class WeaponInventoryManager : MonoBehaviour
             else
             {
                 _weaponPanel = Instantiate(_weaponPanelPrefab, _weaponLayout);
+                _weaponPanel.name = "Layout_"+weapon.ID;
                 WeaponGrip.Add(_weaponPanel);
 
                 // 将 WeaponHold 和 GameObject 添加到字典
@@ -163,7 +166,7 @@ public class WeaponInventoryManager : MonoBehaviour
         wc._weaponType.text = LDS.GetWeaponType(weaponID);
         if (_weaponRender.WeaponPrefabComfirm(weaponID))
         {
-            Sprite loadedSprite = ImageLoader.LoadImageAsSprite(weaponID + ".YPic");
+            Sprite loadedSprite = ImageLoader.LoadKachaImageAsSprite(weaponID + ".YPic");
             if (loadedSprite != null)
             {
                 Debug.Log("UsingSavingPic");
@@ -173,8 +176,7 @@ public class WeaponInventoryManager : MonoBehaviour
             else
             {
                 Debug.Log("UsingKacha");
-                _kacha.targetImage = wc._weaponImage;
-                _kacha.CaptureSnapShot(weaponID);
+                _kacha.CaptureSnapShot(wc,weaponID,250);
             }
         }
     }

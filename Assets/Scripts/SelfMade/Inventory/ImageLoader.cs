@@ -1,3 +1,4 @@
+using CustomInspector;
 using System;
 using System.Collections;
 using System.IO;
@@ -6,9 +7,11 @@ using UnityEngine.UI;
 
 public class ImageLoader
 {
-    public static Sprite LoadImageAsSprite(string filename)
+    public static Sprite LoadKachaImageAsSprite(string filename)
     {
-        string path = Path.Combine(Application.persistentDataPath, filename);
+        string folderPath = Path.Combine(Application.persistentDataPath, "KaChaImage");
+        string path = Path.Combine(folderPath, filename);
+        Debug.Log(path);
         if (File.Exists(path))
         {
             byte[] bytes = File.ReadAllBytes(path);
@@ -33,9 +36,10 @@ public class ImageLoader
         return null;
     }
 
-    public static void LoadImageAsSpriteAction(string filename, Action<Sprite> onLoaded)
+    public static void LoadKachaImageAsSpriteAction(string filename, Action<Sprite> onLoaded)
     {
-        string path = Path.Combine(Application.persistentDataPath, filename);
+        string folderPath = Path.Combine(Application.persistentDataPath, "KaChaImage");
+        string path = Path.Combine(folderPath, filename);
         if (File.Exists(path))
         {
             byte[] bytes = File.ReadAllBytes(path);

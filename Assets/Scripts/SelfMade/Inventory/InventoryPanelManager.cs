@@ -98,6 +98,12 @@ public class InventoryPanelManager : MonoBehaviour
 
     }
 
+    private IEnumerator PanelTitleChange(CanvasGroup NextPanel)
+    {
+
+        yield return null;
+    }
+
     private IEnumerator CanvasGroupFade(CanvasGroup newCanvasGroup)
     {
         float currentTime = 0f;
