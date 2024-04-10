@@ -11,10 +11,22 @@ public class UIPanelID : ScriptableObject
 }
 
 [System.Serializable]
-public class UIIdentity
+public class UIIdentity : IEnumerable<SubSelectIdentity>
 {
     public string PanelID;
     public List<SubSelectIdentity> SubIdentity = new List<SubSelectIdentity>();
+
+    // 实现 IEnumerable 接口的 GetEnumerator 方法
+    public IEnumerator<SubSelectIdentity> GetEnumerator()
+    {
+        return SubIdentity.GetEnumerator();
+    }
+
+    // 实现非泛型版本的 IEnumerable 接口的 GetEnumerator 方法
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
 }
 
 [System.Serializable]

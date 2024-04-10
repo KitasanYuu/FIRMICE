@@ -2,6 +2,7 @@ using CustomInspector;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -84,6 +85,17 @@ namespace DataManager
             string ObjectResourcePath = GainPath(ObjectType, ObjectName);
             ReturnGameObject = Resources.Load<GameObject>(ObjectResourcePath);
             return ReturnGameObject;
+        }
+
+        public SubSelectIdentity GetPanelIDData(string PanelID, int page = 0)
+        {
+            UIPanelID uiPanelID = Resources.Load<UIPanelID>("GlobalSettings/UIPanelID");
+            UIIdentity uiInfo = uiPanelID.UIID.FirstOrDefault(ui => ui.PanelID == PanelID);
+            if (uiInfo != null)
+            {
+                return uiInfo.SubIdentity.FirstOrDefault(subs => subs.Page == page);
+            }
+            return null;
         }
     }
 }

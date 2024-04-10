@@ -4,11 +4,13 @@ using YuuTool;
 using DataManager;
 using System.Collections;
 using UnityEngine.UI;
+using TMPro;
 
 public class InventoryPanelManager : MonoBehaviour
 {
     public bool Testbutton;
-
+    [ReadOnly] public TextMeshProUGUI Title;
+    [ReadOnly] public TextMeshProUGUI SubTitle;
     [ReadOnly] public GameObject _weaponPanel;
     [ReadOnly] public GameObject _backPackPanel;
 
@@ -53,6 +55,8 @@ public class InventoryPanelManager : MonoBehaviour
 
     private void ComponentInit()
     {
+        Title = transform.FindDeepChild("Title")?.gameObject.GetComponent<TextMeshProUGUI>();
+        SubTitle = transform.FindDeepChild("SubtitleDiscribe")?.gameObject.GetComponent<TextMeshProUGUI>();
         _panelSubTitleChangeBar = transform.FindDeepChild("Subtitlefadebar")?.gameObject.GetComponent<Image>();
         _weaponPanel = transform.FindDeepChild("WeaponPanel")?.gameObject;
         _weaponSelectPanel = transform.FindDeepChild("WeaponSelectPanel")?.gameObject;
@@ -62,21 +66,31 @@ public class InventoryPanelManager : MonoBehaviour
 
     public void OnPanelChanged(CanvasGroup currentPanel , CanvasGroup targetPanel)
     {
+        SubSelectIdentity subs = RR.GetPanelIDData(targetPanel.gameObject.GetComponent<PanelIdentity>().PID);
+        string _targetPanelTitle = subs.PanelTitle;
+        string _targetPanelSubTitle = subs.PanelSubTitle;
+
         //Debug.Log(currentPanel + "" + targetPanel);
         //StartCoroutine(CanvasGroupFade(_weaponSelectPanelcanvasGroup));
-        StartCoroutine(PanelChange(currentPanel, targetPanel));
+        StartCoroutine(PanelChange(currentPanel, targetPanel, _targetPanelTitle));
+        StartCoroutine(PanelTitleChange(targetPanel, _targetPanelSubTitle));
     }
 
-    private IEnumerator PanelChange(CanvasGroup currentPanel, CanvasGroup targetPanel)
+    private IEnumerator PanelChange(CanvasGroup currentPanel, CanvasGroup targetPanel,string panelTitle = null)
     {
         float currentTime = 0f;
-        float fadeInDuration = 0.3f;
+        float fadeInDuration = 0.1f;
 
         while (currentTime < fadeInDuration)
         {
             currentTime += Time.unscaledDeltaTime;
             currentPanel.alpha = Mathf.Lerp(1, 0, currentTime / fadeInDuration);
             yield return null;
+        }
+
+        if (panelTitle != null)
+        {
+            Title.text = panelTitle;
         }
 
         currentPanel.alpha = 0; // 确保最终Alpha值为0
@@ -98,10 +112,35 @@ public class InventoryPanelManager : MonoBehaviour
 
     }
 
-    private IEnumerator PanelTitleChange(CanvasGroup NextPanel)
+    private IEnumerator PanelTitleChange(CanvasGroup NextPanel,string nextPanelsubtitle = null)
     {
+        float currentTime = 0f;
+        float changeSingleDuration = 0.1f;
 
-        yield return null;
+        while (currentTime < changeSingleDuration)
+        {
+            currentTime += Time.unscaledDeltaTime;
+            _panelSubTitleChangeBar.fillAmount = Mathf.Lerp(0f, 0.75f, currentTime / changeSingleDuration);
+            yield return null;
+        }
+
+        if(nextPanelsubtitle != null)
+        {
+            SubTitle.text = nextPanelsubtitle;
+        }
+
+        _panelSubTitleChangeBar.fillAmount = 0.75f;
+
+        currentTime = 0f;
+
+        while (currentTime < changeSingleDuration)
+        {
+            currentTime += Time.unscaledDeltaTime;
+            _panelSubTitleChangeBar.fillAmount = Mathf.Lerp(0.75f, 0f, currentTime / changeSingleDuration);
+            yield return null;
+        }
+
+        _panelSubTitleChangeBar.fillAmount = 0f;
     }
 
     private IEnumerator CanvasGroupFade(CanvasGroup newCanvasGroup)
