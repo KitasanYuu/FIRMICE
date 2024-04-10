@@ -66,7 +66,8 @@ public class InventoryPanelManager : MonoBehaviour
 
     public void OnPanelChanged(CanvasGroup currentPanel , CanvasGroup targetPanel)
     {
-        SubSelectIdentity subs = RR.GetPanelIDData(targetPanel.gameObject.GetComponent<PanelIdentity>().PID);
+        PanelIdentity _panelIdentity = targetPanel.gameObject.GetComponent<PanelIdentity>();
+        SubSelectIdentity subs = RR.GetPanelIDData(_panelIdentity.PID,_panelIdentity.PageNum);
         string _targetPanelTitle = subs.PanelTitle;
         string _targetPanelSubTitle = subs.PanelSubTitle;
 
