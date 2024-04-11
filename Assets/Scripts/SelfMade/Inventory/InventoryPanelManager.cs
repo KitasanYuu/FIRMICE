@@ -121,7 +121,7 @@ public class InventoryPanelManager : MonoBehaviour
         while (currentTime < changeSingleDuration)
         {
             currentTime += Time.unscaledDeltaTime;
-            _panelSubTitleChangeBar.fillAmount = Mathf.Lerp(0f, 0.75f, currentTime / changeSingleDuration);
+            _panelSubTitleChangeBar.fillAmount = Mathf.Lerp(0f, 1f, currentTime / changeSingleDuration);
             yield return null;
         }
 
@@ -130,14 +130,14 @@ public class InventoryPanelManager : MonoBehaviour
             SubTitle.text = nextPanelsubtitle;
         }
 
-        _panelSubTitleChangeBar.fillAmount = 0.75f;
+        _panelSubTitleChangeBar.fillAmount = 1f;
 
         currentTime = 0f;
 
         while (currentTime < changeSingleDuration)
         {
             currentTime += Time.unscaledDeltaTime;
-            _panelSubTitleChangeBar.fillAmount = Mathf.Lerp(0.75f, 0f, currentTime / changeSingleDuration);
+            _panelSubTitleChangeBar.fillAmount = Mathf.Lerp(1f, 0f, currentTime / changeSingleDuration);
             yield return null;
         }
 

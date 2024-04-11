@@ -29,7 +29,7 @@ public class ImageLoader
         }
         else
         {
-            Debug.LogError("File not found: " + filename);
+            Debug.LogWarning("File not found: " + filename+",New SnapShot will be Created in few seconds");
         }
 
         // 如果加载失败或文件不存在，返回null

@@ -14,6 +14,8 @@ public class GlobalColorSetting : ScriptableObject
     public Color NeutralBGImageColor;
     public Color EnemyBGImageColor;
     [Space2(20)]
+    public Color WeaponEquipSelectColor;
+    public Color WeaponOccupiedColor;
     public Color WeaponSelectedColor;
     public Color WeaponDefaultColor;
 }

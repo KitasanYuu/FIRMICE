@@ -8,7 +8,10 @@ using YuuTool;
 
 public class WeaponCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    public bool _occupied;
+    public bool _selected;
     [ReadOnly]public string WeaponID;
+    public GameObject Occupied;
     public GameObject Selected;
     public GameObject UnderLine;
     public CanvasGroup HoverImage;
@@ -23,6 +26,7 @@ public class WeaponCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
     private bool _selectStatus;
 
     public Color _weaponSelectedColor;
+    public Color _weaponOccupiedColor;
     public Color _weaponDefaultColor;
 
     void Start()
@@ -38,13 +42,39 @@ public class WeaponCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
 
     public void SetSelectStatus(bool AmISelected)
     {
-        UnderLine?.SetActive(!AmISelected);
-        Selected?.SetActive(AmISelected);
-        _selectStatus = AmISelected;
+        if (!_occupied)
+        {
+            Selected.SetActive(AmISelected);
+            UnderLine?.SetActive(!AmISelected);
+            Selected?.SetActive(AmISelected);
+            _selectStatus = AmISelected;
+            _selected = AmISelected;
+            _hoverImage.color = AmISelected ? _weaponSelectedColor : _weaponDefaultColor;
+        }
+    }
+
+    public void SetOccupyStatus(bool isOccupied)
+    {
+        _occupied = isOccupied;
+        if (isOccupied)
+        {
+            Selected.SetActive(false);
+            _hoverImage.color = _weaponOccupiedColor;
+            Occupied.SetActive(true);
+            UnderLine.SetActive(false);
+        }
+
+        else
+        {
+            _hoverImage.color = _weaponDefaultColor;
+            Occupied.SetActive(false);
+            UnderLine.SetActive(true);
+        }
     }
 
     private void ComponentInit()
     {
+        Occupied = transform.FindDeepChild("Occupied").gameObject;
         Selected = transform.FindDeepChild("Selected").gameObject;
         UnderLine = transform.FindDeepChild("UnderLine").gameObject;
         HoverImage = transform.FindDeepChild("HoverImage").gameObject.GetComponent<CanvasGroup>();
@@ -55,41 +85,16 @@ public class WeaponCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
         WIM.RequestInfo(this, WeaponID);
     }
 
-    public void SetStartParameter(string weaponID,WeaponInventoryManager wim,WeaponDetailCell wdc,Color SelectedColor,Color DefaultColor)
+    public void SetStartParameter(string weaponID,WeaponInventoryManager wim,WeaponDetailCell wdc,Color SelectedColor,Color DefaultColor,Color OccupiedColor)
     {
         WeaponID = weaponID;
         WDC = wdc;
         WIM = wim;
         _weaponDefaultColor = DefaultColor;
         _weaponSelectedColor = SelectedColor;
+        _weaponOccupiedColor = OccupiedColor;
     }
 
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        if(eventData.clickCount == 2)
-        {
-            _hoverImage.color = _weaponSelectedColor;
-            WIM.SelectWeaponChangedRequest(WeaponID);
-            WIM.WeaponSelected(this);
-            Debug.Log("OnPointClick:" + eventData.ToString());
-        }
-    }
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        _hoverImage.color = _selectStatus ? _weaponSelectedColor : _weaponDefaultColor;
-        WIM.SelectWeaponChangedRequest(WeaponID);
-        StartCoroutine(HoverImageChange());
-        Debug.Log("OnPointEnter:" + eventData.ToString());
-    }
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        _hoverImage.color = _weaponDefaultColor;
-        WIM.SelectWeaponChangedRequest(null);
-        StopAllCoroutines();
-        HoverImage.alpha = 0;
-        //WDC._currentWeaponSelected = null;
-        Debug.Log("OnPointExit:" + eventData.ToString());
-    }
 
     private IEnumerator HoverImageChange()
     {
@@ -105,5 +110,72 @@ public class WeaponCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
 
         HoverImage.alpha = 1; // 确保最终Alpha值为1
     }
+
+
+    #region 处理指针调用的函数（不要用这里的调用方法！！！！！！！）
+    private void UareSelected()
+    {
+        SetOccupyStatus(false);
+        WIM.SelectWeaponChangedRequest(WeaponID);
+        WIM.WeaponSelected(this,gameObject);
+    }
+
+    private void UareHovering()
+    {
+        if(!_occupied)
+            _hoverImage.color = _selectStatus ? _weaponSelectedColor : _weaponDefaultColor;
+        WIM.SelectWeaponChangedRequest(WeaponID);
+        StartCoroutine(HoverImageChange());
+    }
+
+    private void UareRecovering()
+    {
+        if(!_occupied)
+            _hoverImage.color = _weaponDefaultColor;
+        WIM.SelectWeaponChangedRequest(null);
+        StopAllCoroutines();
+        HoverImage.alpha = 0;
+    }
+#endregion
+
+    #region 指针点击调用
+    public void OnPointerClick(PointerEventData eventData)
+    {
+
+        if (eventData.clickCount == 2)
+        {
+            if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                if (!_occupied)
+                {
+                    UareSelected();
+                }
+                else
+                {
+                    //这里准备做强行切换的逻辑，暂时先空着
+                }
+            }
+            else if(eventData.button == PointerEventData.InputButton.Right && _selected)
+            {
+                WIM.ClearCurrentWeaponSelect(WIM._panelID.PageNum);
+                SetSelectStatus(false);
+
+            }
+
+            //Debug.Log("OnPointClick:" + eventData.ToString());
+        }
+    }
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        UareHovering();
+        //Debug.Log("OnPointEnter:" + eventData.ToString());
+    }
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        UareRecovering();
+        //WDC._currentWeaponSelected = null;
+        //Debug.Log("OnPointExit:" + eventData.ToString());
+    }
+    #endregion
 
 }

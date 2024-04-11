@@ -10,8 +10,11 @@ using YuuTool;
 
 public class WeaponInventoryManager : MonoBehaviour
 {
+    [ReadOnly] public string CurrentSelectedWeapon;
+    [ReadOnly] public GameObject CurrentSelectedGrip;
     public InventoryTestSO weapons;
     public List<WeaponHold> DataList = new List<WeaponHold>();
+    public List<LockedWeapon> LockedWeapon = new List<LockedWeapon>();
     [ReadOnly] public List<GameObject> WeaponGrip = new List<GameObject>();
     private Dictionary<WeaponHold, GameObject> _weaponGripDictionary = new Dictionary<WeaponHold, GameObject>();
     private List<WeaponHold> _previousDataList = new List<WeaponHold>();
@@ -19,16 +22,52 @@ public class WeaponInventoryManager : MonoBehaviour
 
     public Color _weaponSelectedColor;
     public Color _weaponDefaultColor;
+    public Color _weaponOccupiedColor;
 
     private Transform _weaponLayout;
 
     private WeaponDetailCell WDC;
     private WeaponRender _weaponRender;
     private Kacha _kacha;
+    [HideInInspector]public PanelIdentity _panelID;
     private LocalDataSaver LDS = new LocalDataSaver();
     private ResourceReader RR = new ResourceReader();
 
     private WeaponCell previousSelectWeapon;
+
+    private void OnEnable()
+    {
+        if (LockedWeapon.Count > 0)
+        {
+            foreach(LockedWeapon l in LockedWeapon)
+            {
+                if(l._lockedPage != _panelID.PageNum)
+                {
+                    l._lockedWeapon.GetComponent<WeaponCell>().SetOccupyStatus(true);
+                    l._lockedWeapon.GetComponent<WeaponCell>().SetSelectStatus(false);
+                }
+
+                if (l._lockedPage == _panelID.PageNum)
+                {
+                    previousSelectWeapon = l._lockedWeapon.GetComponent<WeaponCell>();
+                    previousSelectWeapon.SetOccupyStatus(false);
+                    previousSelectWeapon.SetSelectStatus(true);
+                }
+            }
+        }
+    }
+
+    private void OnDisable()
+    {
+        if(CurrentSelectedGrip != null)
+        {
+            WeaponCell wc = CurrentSelectedGrip.GetComponent<WeaponCell>();
+            WeaponLockRequest(CurrentSelectedGrip, _panelID.PageNum);
+            wc.UareRecovering();
+            CurrentSelectedGrip = null;
+        }
+
+    }
 
     void Start()
     {
@@ -101,7 +140,7 @@ public class WeaponInventoryManager : MonoBehaviour
 
             // Set parameters for newly instantiated or updated weapon panel
             WeaponCell _weaponcell = _weaponPanel.GetComponent<WeaponCell>();
-            _weaponcell.SetStartParameter(weapon.ID, this, WDC, _weaponSelectedColor, _weaponDefaultColor);
+            _weaponcell.SetStartParameter(weapon.ID, this, WDC, _weaponSelectedColor, _weaponDefaultColor,_weaponOccupiedColor);
         }
 
         // 处理删除的物体
@@ -127,10 +166,10 @@ public class WeaponInventoryManager : MonoBehaviour
     private void UpdateWeaponPanel(GameObject weaponPanel, WeaponHold weapon)
     {
         WeaponCell _weaponcell = weaponPanel.GetComponent<WeaponCell>();
-        _weaponcell.SetStartParameter(weapon.ID, this, WDC, _weaponSelectedColor, _weaponDefaultColor);
+        _weaponcell.SetStartParameter(weapon.ID, this, WDC, _weaponSelectedColor, _weaponDefaultColor,_weaponOccupiedColor);
     }
 
-    public void WeaponSelected(WeaponCell _weaponCell)
+    public void WeaponSelected(WeaponCell _weaponCell,GameObject Grip)
     {
         if (previousSelectWeapon != _weaponCell)
         {
@@ -141,6 +180,7 @@ public class WeaponInventoryManager : MonoBehaviour
 
             _weaponCell.SetSelectStatus(true);
             previousSelectWeapon = _weaponCell;
+            CurrentSelectedGrip = Grip;
         }
     }
 
@@ -181,17 +221,57 @@ public class WeaponInventoryManager : MonoBehaviour
         }
     }
 
+    public void WeaponLockRequest(GameObject lockedWeapon, int lockedPage)
+    {
+        WeaponUnlockRequest(lockedPage);
+
+        // 添加新的 LockedWeapon
+        LockedWeapon weapon = new LockedWeapon();
+        weapon._lockedWeapon = lockedWeapon;
+        weapon._lockedPage = lockedPage;
+        LockedWeapon.Add(weapon);
+    }
+
+    public void WeaponUnlockRequest(int lockedPage)
+    {
+        // 遍历 LockedWeapons 列表，找到与 lockedPage 相同的项并移除
+        for (int i = LockedWeapon.Count - 1; i >= 0; i--)
+        {
+            if (LockedWeapon[i]._lockedPage == lockedPage)
+            {
+                LockedWeapon.RemoveAt(i);
+            }
+        }
+    }
+
+    public void ClearCurrentWeaponSelect(int page)
+    {
+        CurrentSelectedGrip = null;
+        CurrentSelectedWeapon = null;
+        previousSelectWeapon = null;
+        WeaponUnlockRequest(page);
+    }
+
     private void ResourcesInit()
     {
         _weaponDefaultColor = RR.GetColor("WeaponDefaultColor");
         _weaponSelectedColor = RR.GetColor("WeaponSelectedColor");
+        _weaponOccupiedColor = RR.GetColor("WeaponOccupiedColor");
     }
 
     private void ComponentInit()
     {
+        _panelID = GetComponent<PanelIdentity>();
         _weaponLayout = transform.FindDeepChild("LayoutContent");
         _kacha = GetComponent<Kacha>();
         _weaponRender = GetComponent<WeaponRender>();
         WDC = transform.FindDeepChild("WeaponDetail").gameObject.GetComponent<WeaponDetailCell>();
     }
+}
+
+[System.Serializable]
+public class LockedWeapon
+{
+    public GameObject _lockedWeapon;
+    public int _lockedPage;
 }
