@@ -84,13 +84,17 @@ public class WeaponEquipCell : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        _hoverImage.color = _weaponEquipSelectedColor;
-        UnderLine.color = Color.red;
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            _hoverImage.color = _weaponEquipSelectedColor;
+            UnderLine.color = Color.red;
+        }
+
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (!_hasExited)
+        if (!_hasExited && eventData.button == PointerEventData.InputButton.Left)
         {
             _hoverImage.color = _weaponDefaultColor;
             UnderLine.color = Color.white;
