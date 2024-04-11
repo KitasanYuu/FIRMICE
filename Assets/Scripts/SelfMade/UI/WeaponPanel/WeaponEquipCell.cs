@@ -23,6 +23,9 @@ public class WeaponEquipCell : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public Image _weaponImage;
     public Image _hoverImage;
 
+    private AudioClip _hoverClip;
+    private AudioClip _clickClip;
+
     private bool _selectStatus;
     private bool _hasExited;
 
@@ -30,6 +33,7 @@ public class WeaponEquipCell : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public Color _weaponDefaultColor;
 
     private InventoryPanelManager IPM;
+    private AudioSource _audiosource;
 
     private ResourceReader RR = new ResourceReader();
 
@@ -46,14 +50,22 @@ public class WeaponEquipCell : MonoBehaviour, IPointerEnterHandler, IPointerExit
         
     }
 
+    private void OnDisable()
+    {
+        _audiosource.clip = null;
+    }
+
     private void ResourceInit()
     {
+        _hoverClip = RR.GetUIAudioClip("Hover");
+        _clickClip = RR.GetUIAudioClip("Click");
         _weaponEquipSelectedColor = RR.GetColor("WeaponEquipSelectColor");
         _weaponDefaultColor = RR.GetColor("WeaponDefaultColor");
     }
 
     private void ComponentInit()
     {
+        _audiosource = GetComponent<AudioSource>();
         IPM = transform.GetComponentInParent<InventoryPanelManager>();
         UnderLine = transform.FindDeepChild("UnderLine").gameObject.GetComponent<Image>();
         HoverImage = transform.FindDeepChild("HoverImage").gameObject.GetComponent<CanvasGroup>();
@@ -69,6 +81,8 @@ public class WeaponEquipCell : MonoBehaviour, IPointerEnterHandler, IPointerExit
         _hoverImage.color = _weaponDefaultColor;
         UnderLine.color = Color.white;
         StartCoroutine(HoverImageChange());
+        _audiosource.clip = _hoverClip;
+        _audiosource.Play();
         //Debug.Log("OnPointEnter:" + eventData.ToString());
     }
     public void OnPointerExit(PointerEventData eventData)
@@ -88,6 +102,8 @@ public class WeaponEquipCell : MonoBehaviour, IPointerEnterHandler, IPointerExit
         {
             _hoverImage.color = _weaponEquipSelectedColor;
             UnderLine.color = Color.red;
+            _audiosource.clip = _clickClip;
+            _audiosource.Play();
         }
 
     }

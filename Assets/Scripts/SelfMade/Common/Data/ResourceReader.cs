@@ -55,6 +55,16 @@ namespace DataManager
             }
         }
 
+        public AudioClip GetUIAudioClip(string AudioName)
+        {
+            AudioClip returnclip = null;
+            string ClipPath = GainPath("UIAudioClip", AudioName);
+
+            returnclip = Resources.Load<AudioClip>(ClipPath);
+
+            return returnclip;
+        }
+
         public AudioClip GetWeaponAudioClip(string weaponName,string audioType)
         {
             AudioClip returnClip = null;

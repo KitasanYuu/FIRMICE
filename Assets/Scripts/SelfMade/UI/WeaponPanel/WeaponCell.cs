@@ -2,6 +2,7 @@ using CustomInspector;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using YuuTool;
@@ -22,8 +23,12 @@ public class WeaponCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
 
     private WeaponDetailCell WDC;
     private WeaponInventoryManager WIM;
+    private AudioSource _audioSource;
 
     private bool _selectStatus;
+
+    public AudioClip _hoverClip;
+    public AudioClip _clickClip;
 
     public Color _weaponSelectedColor;
     public Color _weaponOccupiedColor;
@@ -32,6 +37,11 @@ public class WeaponCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
     void Start()
     {
         ComponentInit();
+    }
+
+    private void OnDisable()
+    {
+        _audioSource.clip = null;
     }
 
     // Update is called once per frame
@@ -75,6 +85,7 @@ public class WeaponCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
 
     private void ComponentInit()
     {
+        _audioSource = GetComponent<AudioSource>();
         Occupied = transform.FindDeepChild("Occupied").gameObject;
         Selected = transform.FindDeepChild("Selected").gameObject;
         UnderLine = transform.FindDeepChild("UnderLine").gameObject;
@@ -86,11 +97,13 @@ public class WeaponCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
         WIM.RequestInfo(this, WeaponID);
     }
 
-    public void SetStartParameter(string weaponID,WeaponInventoryManager wim,WeaponDetailCell wdc,Color SelectedColor,Color DefaultColor,Color OccupiedColor)
+    public void SetStartParameter(string weaponID,WeaponInventoryManager wim,WeaponDetailCell wdc,AudioClip click,AudioClip hover,Color SelectedColor,Color DefaultColor,Color OccupiedColor)
     {
         WeaponID = weaponID;
         WDC = wdc;
         WIM = wim;
+        _clickClip = click;
+        _hoverClip = hover;
         _weaponDefaultColor = DefaultColor;
         _weaponSelectedColor = SelectedColor;
         _weaponOccupiedColor = OccupiedColor;
@@ -150,6 +163,8 @@ public class WeaponCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
                 if (!_occupied)
                 {
                     UareSelected();
+                    _audioSource.clip = _clickClip;
+                    _audioSource.Play();
                 }
                 else
                 {
@@ -160,7 +175,7 @@ public class WeaponCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
             {
                 WIM.ClearCurrentWeaponSelect(WIM._panelID.PageNum);
                 SetSelectStatus(false);
-
+                
             }
 
             //Debug.Log("OnPointClick:" + eventData.ToString());
@@ -169,6 +184,8 @@ public class WeaponCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
     public void OnPointerEnter(PointerEventData eventData)
     {
         UareHovering();
+        _audioSource.clip = _hoverClip;
+        _audioSource.Play();
         //Debug.Log("OnPointEnter:" + eventData.ToString());
     }
     public void OnPointerExit(PointerEventData eventData)

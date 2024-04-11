@@ -1,11 +1,8 @@
 using CustomInspector;
 using DataManager;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Profiling;
-using UnityEngine.Rendering;
 using YuuTool;
 
 public class WeaponInventoryManager : MonoBehaviour
@@ -23,6 +20,9 @@ public class WeaponInventoryManager : MonoBehaviour
     public Color _weaponSelectedColor;
     public Color _weaponDefaultColor;
     public Color _weaponOccupiedColor;
+
+    private AudioClip _hoverSound;
+    private AudioClip _clickSound;
 
     private Transform _weaponLayout;
 
@@ -140,7 +140,7 @@ public class WeaponInventoryManager : MonoBehaviour
 
             // Set parameters for newly instantiated or updated weapon panel
             WeaponCell _weaponcell = _weaponPanel.GetComponent<WeaponCell>();
-            _weaponcell.SetStartParameter(weapon.ID, this, WDC, _weaponSelectedColor, _weaponDefaultColor,_weaponOccupiedColor);
+            _weaponcell.SetStartParameter(weapon.ID, this, WDC,_clickSound,_hoverSound ,_weaponSelectedColor, _weaponDefaultColor,_weaponOccupiedColor);
         }
 
         // 处理删除的物体
@@ -166,7 +166,7 @@ public class WeaponInventoryManager : MonoBehaviour
     private void UpdateWeaponPanel(GameObject weaponPanel, WeaponHold weapon)
     {
         WeaponCell _weaponcell = weaponPanel.GetComponent<WeaponCell>();
-        _weaponcell.SetStartParameter(weapon.ID, this, WDC, _weaponSelectedColor, _weaponDefaultColor,_weaponOccupiedColor);
+        _weaponcell.SetStartParameter(weapon.ID, this, WDC,_clickSound,_hoverSound, _weaponSelectedColor, _weaponDefaultColor,_weaponOccupiedColor);
     }
 
     public void WeaponSelected(WeaponCell _weaponCell,GameObject Grip)
@@ -254,6 +254,8 @@ public class WeaponInventoryManager : MonoBehaviour
 
     private void ResourcesInit()
     {
+        _hoverSound = RR.GetUIAudioClip("Hover");
+        _clickSound = RR.GetUIAudioClip("Click");
         _weaponDefaultColor = RR.GetColor("WeaponDefaultColor");
         _weaponSelectedColor = RR.GetColor("WeaponSelectedColor");
         _weaponOccupiedColor = RR.GetColor("WeaponOccupiedColor");
