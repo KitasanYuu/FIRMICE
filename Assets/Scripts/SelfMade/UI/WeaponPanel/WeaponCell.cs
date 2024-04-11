@@ -63,13 +63,14 @@ public class WeaponCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
             Occupied.SetActive(true);
             UnderLine.SetActive(false);
         }
+    }
 
-        else
-        {
-            _hoverImage.color = _weaponDefaultColor;
-            Occupied.SetActive(false);
-            UnderLine.SetActive(true);
-        }
+    public void PanelRecovering()
+    {
+        Selected?.SetActive(false);
+        Occupied?.SetActive(false);
+        UnderLine?.SetActive(true);
+        _hoverImage.color = _weaponDefaultColor;
     }
 
     private void ComponentInit()

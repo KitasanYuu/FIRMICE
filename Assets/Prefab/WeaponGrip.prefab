@@ -53,7 +53,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0144066806032f741a6d5e50b0db7f2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _occupied: 0
+  _selected: 0
   WeaponID: 
+  Occupied: {fileID: 0}
   Selected: {fileID: 0}
   UnderLine: {fileID: 0}
   HoverImage: {fileID: 0}
@@ -62,6 +65,7 @@ MonoBehaviour:
   _weaponImage: {fileID: 0}
   _hoverImage: {fileID: 0}
   _weaponSelectedColor: {r: 0, g: 0, b: 0, a: 0}
+  _weaponOccupiedColor: {r: 0, g: 0, b: 0, a: 0}
   _weaponDefaultColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1535024637418900479
 GameObject:
@@ -1377,7 +1381,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u5DF2\u88AB\u5176\u4ED6\u69FD\u4F4D\u5360\u7528"
+  m_text: "\u5DF2\u5728\u5176\u4ED6\u69FD\u4F4D\u9501\u5B9A"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e59250e685fd6fc47b65134b2601d3fb, type: 2}
   m_sharedMaterial: {fileID: 9182530340044323749, guid: e59250e685fd6fc47b65134b2601d3fb, type: 2}

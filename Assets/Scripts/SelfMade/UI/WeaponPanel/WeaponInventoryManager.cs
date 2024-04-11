@@ -50,6 +50,7 @@ public class WeaponInventoryManager : MonoBehaviour
                 if (l._lockedPage == _panelID.PageNum)
                 {
                     previousSelectWeapon = l._lockedWeapon.GetComponent<WeaponCell>();
+                    previousSelectWeapon.PanelRecovering();
                     previousSelectWeapon.SetOccupyStatus(false);
                     previousSelectWeapon.SetSelectStatus(true);
                 }
@@ -63,7 +64,6 @@ public class WeaponInventoryManager : MonoBehaviour
         {
             WeaponCell wc = CurrentSelectedGrip.GetComponent<WeaponCell>();
             WeaponLockRequest(CurrentSelectedGrip, _panelID.PageNum);
-            wc.UareRecovering();
             CurrentSelectedGrip = null;
         }
 
