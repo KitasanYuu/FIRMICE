@@ -5,6 +5,7 @@ using DataManager;
 using System.Collections;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class InventoryPanelManager : MonoBehaviour
 {
@@ -19,9 +20,11 @@ public class InventoryPanelManager : MonoBehaviour
     [ReadOnly] public Image _panelSubTitleChangeBar;
     [ReadOnly] public GameObject _renderBox;
 
+    [ReadOnly] public List<GameObject> PidUnit = new List<GameObject>();
     private CanvasGroup _weaponSelectPanelcanvasGroup;
 
     private bool TestStatus;
+    private bool _hasInited;
 
     private ResourceReader RR = new ResourceReader();
     private void Start()
@@ -37,6 +40,11 @@ public class InventoryPanelManager : MonoBehaviour
             SetWeaponPanelStatus(TestStatus);
             Testbutton = false;
         }
+    }
+
+    private void OnEnable()
+    {
+        _hasInited = false;
     }
 
     public void SetWeaponPanelStatus(bool newstatus)
@@ -75,6 +83,20 @@ public class InventoryPanelManager : MonoBehaviour
         //StartCoroutine(CanvasGroupFade(_weaponSelectPanelcanvasGroup));
         StartCoroutine(PanelChange(currentPanel, targetPanel, _targetPanelTitle));
         StartCoroutine(PanelTitleChange(targetPanel, _targetPanelSubTitle));
+    }
+
+    public void PanelInit(GameObject PanelObject,CanvasGroup firstPanel)
+    {
+        if (!PidUnit.Contains(PanelObject))
+        {
+            PidUnit.Add(PanelObject);
+        }
+
+        if (!_hasInited)
+        {
+            StartCoroutine(PanelTitleChange(firstPanel));
+            _hasInited = true;
+        }
     }
 
     private IEnumerator PanelChange(CanvasGroup currentPanel, CanvasGroup targetPanel,string panelTitle = null)
