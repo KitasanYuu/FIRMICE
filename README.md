@@ -10,7 +10,10 @@
 ![C#](https://img.shields.io/badge/C%20Sharp-512BD4.svg?style=flat-square&logo=csharp&logoColor=white)
 ![GLSL](https://img.shields.io/badge/GLSL-5586A4.svg?style=flat-square&logo=opengl&logoColor=white)<br>
 ![Unity](https://img.shields.io/badge/Unity-2023.2.3f1-black?style=flat-square&logo=unity)
+<br><br>
+当前工作分支<[UI-BackPack](https://github.com/KitasanYuu/FIRMICE/tree/UI-BackPack)>
 </div>
+
 
 ---
 >项目目前处于早期规划阶段，目前还没有想好如何介绍这个项目。<br>
@@ -20,8 +23,10 @@
 
 >目前的进度概览<br>
 -->底层代码构建 &emsp;&emsp; 进行中<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->角色行动逻辑 &nbsp;&emsp;&emsp; 进行中<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->敌人AI &nbsp;&emsp;&emsp;&emsp;&emsp;&emsp; 进行中<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->UI构建 &nbsp;&emsp;&emsp;&emsp;&emsp;&emsp; 进行中<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->数据持久化 &nbsp;&emsp;&emsp;&emsp; 进行中<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->角色行动逻辑 &nbsp;&emsp;&emsp; 搁置中<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->敌人AI &nbsp;&emsp;&emsp;&emsp;&emsp;&emsp; 搁置中<br>
 -->基础策划&emsp;&emsp;&emsp;&emsp;&nbsp; 进行中<br>
 -->系统优化&emsp;&emsp;&emsp;&emsp;&nbsp; 进行中  
 -->基础策划&emsp;&emsp;&emsp;&emsp;&nbsp; 排队中  
