@@ -133,7 +133,12 @@ namespace playershooting
             {
                 _animator.SetBool("HasWeapon", true);
 
-                if (!isAiming)
+                if (!avatarController.Grounded && hasWeapon)
+                {
+                    _animator.SetLayerWeight(layerIndex, 1);
+                }
+
+                if (!isAiming && avatarController.Grounded)
                 {
                     if (Reloading)
                     {

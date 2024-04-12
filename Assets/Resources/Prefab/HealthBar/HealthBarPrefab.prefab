@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3474809292602041162
 RectTransform:
   m_ObjectHideFlags: 0
@@ -271,10 +271,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3474809292602041162}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 20}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 500, y: -10}
+  m_SizeDelta: {x: 110.52, y: 20}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &3714783473068103855
 CanvasRenderer:
@@ -605,10 +605,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3474809292602041162}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 20}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 389.48, y: -10}
+  m_SizeDelta: {x: 5.03, y: 20}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &5873364492833528273
 CanvasRenderer:
@@ -756,10 +756,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3474809292602041162}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 384.45, y: -10}
+  m_SizeDelta: {x: 34.33, y: 20.11}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &2383807112386517796
 CanvasRenderer:
@@ -1365,8 +1365,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Roll_Dragon
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 90152cbe6975ea94297f4c5807ef5007, type: 2}
-  m_sharedMaterial: {fileID: -474308255903172113, guid: 90152cbe6975ea94297f4c5807ef5007, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: e59250e685fd6fc47b65134b2601d3fb, type: 2}
+  m_sharedMaterial: {fileID: 9182530340044323749, guid: e59250e685fd6fc47b65134b2601d3fb, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1398,7 +1398,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0

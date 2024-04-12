@@ -183,7 +183,7 @@ namespace BattleShoot
                         Transform currentTransform = hitInfo.transform;
                         while (currentTransform != null)
                         {
-                            if (currentTransform == TargetPre.transform)
+                            if (currentTransform == TargetPre?.transform)
                             {
                                 LocalFire = true;
                                 //Debug.Log("Can Fire");
@@ -192,7 +192,7 @@ namespace BattleShoot
                             currentTransform = currentTransform.parent;
                         }
 
-                        if(currentTransform != TargetPre.transform)
+                        if(currentTransform != TargetPre?.transform)
                         {
                             LocalFire = false;
                             //Debug.Log("Cannot Fire");
