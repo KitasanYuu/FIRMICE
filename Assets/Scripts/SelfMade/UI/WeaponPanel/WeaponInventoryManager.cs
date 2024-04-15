@@ -185,6 +185,11 @@ public class WeaponInventoryManager : MonoBehaviour
             CurrentSelectedGrip = Grip;
         }
 
+        WeaponDetailChange(_weaponCell);
+    }
+
+    public void WeaponDetailChange(WeaponCell _weaponCell)
+    {
         string CurrentSelectWeaponID = _weaponCell.WeaponID;
 
         if (CurrentSelectWeaponID == null)
@@ -199,7 +204,6 @@ public class WeaponInventoryManager : MonoBehaviour
         WDC._currentWeaponSelected = CurrentSelectWeaponID;
         WDC.SelectedWeaponChanged(CurrentSelectWeaponID);
     }
-
 
     public void RequestInfo(WeaponCell wc, string weaponID)
     {
