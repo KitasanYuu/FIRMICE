@@ -137,6 +137,7 @@ public class WeaponCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
     {
         if(!_occupied)
             _hoverImage.color = _selectStatus ? _weaponSelectedColor : _weaponDefaultColor;
+        StartCoroutine(HoverImageChange());
     }
 
     private void UareRecovering()
