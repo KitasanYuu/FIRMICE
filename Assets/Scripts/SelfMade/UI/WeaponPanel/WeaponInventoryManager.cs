@@ -1,3 +1,4 @@
+using Battle;
 using CustomInspector;
 using DataManager;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ public class WeaponInventoryManager : MonoBehaviour
     public InventoryTestSO weapons;
     public List<WeaponHold> DataList = new List<WeaponHold>();
     public List<LockedWeapon> LockedWeapon = new List<LockedWeapon>();
+    public List<CurrentSelectedWeapon> SelectedWeapons = new List<CurrentSelectedWeapon>();
     [ReadOnly] public List<GameObject> WeaponGrip = new List<GameObject>();
     private Dictionary<WeaponHold, GameObject> _weaponGripDictionary = new Dictionary<WeaponHold, GameObject>();
     private List<WeaponHold> _previousDataList = new List<WeaponHold>();
@@ -182,11 +184,10 @@ public class WeaponInventoryManager : MonoBehaviour
             previousSelectWeapon = _weaponCell;
             CurrentSelectedGrip = Grip;
         }
-    }
 
-    public void SelectWeaponChangedRequest(string CurrentSelectWeaponID)
-    {
-        if(CurrentSelectWeaponID == null)
+        string CurrentSelectWeaponID = _weaponCell.WeaponID;
+
+        if (CurrentSelectWeaponID == null)
         {
             WDC.gameObject.SetActive(false);
         }
@@ -198,6 +199,7 @@ public class WeaponInventoryManager : MonoBehaviour
         WDC._currentWeaponSelected = CurrentSelectWeaponID;
         WDC.SelectedWeaponChanged(CurrentSelectWeaponID);
     }
+
 
     public void RequestInfo(WeaponCell wc, string weaponID)
     {
@@ -276,4 +278,11 @@ public class LockedWeapon
 {
     public GameObject _lockedWeapon;
     public int _lockedPage;
+}
+
+[System.Serializable]
+public class CurrentSelectedWeapon
+{
+    public string _weaponID;
+    public int _selectedPage;
 }

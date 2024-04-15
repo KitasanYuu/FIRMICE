@@ -130,7 +130,6 @@ public class WeaponCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
     private void UareSelected()
     {
         SetOccupyStatus(false);
-        WIM.SelectWeaponChangedRequest(WeaponID);
         WIM.WeaponSelected(this,gameObject);
     }
 
@@ -138,15 +137,12 @@ public class WeaponCell : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
     {
         if(!_occupied)
             _hoverImage.color = _selectStatus ? _weaponSelectedColor : _weaponDefaultColor;
-        WIM.SelectWeaponChangedRequest(WeaponID);
-        StartCoroutine(HoverImageChange());
     }
 
     private void UareRecovering()
     {
         if(!_occupied)
             _hoverImage.color = _weaponDefaultColor;
-        WIM.SelectWeaponChangedRequest(null);
         StopAllCoroutines();
         HoverImage.alpha = 0;
     }
