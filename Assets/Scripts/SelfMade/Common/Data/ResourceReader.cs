@@ -80,6 +80,33 @@ namespace DataManager
             return returnClip;
         }
 
+        public Sprite GetPlaceHolderSprite(string spriteName)
+        {
+            Sprite sprite = null;
+
+            // 使用反射动态获取 DefaultSpritePlaceHolder 类型的实例
+            DefaultSpritePlaceHolder dsp = Resources.Load<DefaultSpritePlaceHolder>("GlobalSettings/DefaultSpritePlaceHolder");
+
+            if (dsp != null)
+            {
+                // 使用反射获取 ItemNotAvaible 字段的值
+                FieldInfo fieldInfo = typeof(DefaultSpritePlaceHolder).GetField(spriteName, BindingFlags.Public | BindingFlags.Instance);
+                if (fieldInfo != null && fieldInfo.FieldType == typeof(Sprite))
+                {
+                    sprite = (Sprite)fieldInfo.GetValue(dsp);
+                }
+                else
+                {
+                    Debug.LogError("Sprite not found in DefaultSpritePlaceHolder: " + spriteName);
+                }
+            }
+            else
+            {
+                Debug.LogError("DefaultSpritePlaceHolder not found!");
+            }
+
+            return sprite;
+        }
 
         public TextAsset GetCSVFile(string CSVName)
         {

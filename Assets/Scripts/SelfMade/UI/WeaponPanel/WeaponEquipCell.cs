@@ -28,14 +28,21 @@ public class WeaponEquipCell : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     private bool _selectStatus;
     private bool _hasExited;
+    private bool _hasPressed;
 
     public Color _weaponEquipSelectedColor;
     public Color _weaponDefaultColor;
 
     private InventoryPanelManager IPM;
+    private WeaponEquipManager WEM;
     private AudioSource _audiosource;
 
     private ResourceReader RR = new ResourceReader();
+
+    private void OnEnable()
+    {
+        _hasPressed = false;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -68,11 +75,13 @@ public class WeaponEquipCell : MonoBehaviour, IPointerEnterHandler, IPointerExit
         _audiosource = GetComponent<AudioSource>();
         IPM = transform.GetComponentInParent<InventoryPanelManager>();
         UnderLine = transform.FindDeepChild("UnderLine").gameObject.GetComponent<Image>();
+        WEM = GetComponentInParent<WeaponEquipManager>();
         HoverImage = transform.FindDeepChild("HoverImage").gameObject.GetComponent<CanvasGroup>();
         _weaponImage = transform.FindDeepChild("WeaponImage")?.gameObject.GetComponent<Image>();
         _hoverImage = transform.FindDeepChild("HoverImage").gameObject.GetComponent<Image>();
         _weaponName = transform.FindDeepChild("WeaponName")?.gameObject.GetComponent<TextMeshProUGUI>();
         _weaponType = transform.FindDeepChild("WeaponType")?.gameObject.GetComponent<TextMeshProUGUI>();
+        WEM.AddEquipCell(this);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -98,12 +107,13 @@ public class WeaponEquipCell : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Left)
+        if (eventData.button == PointerEventData.InputButton.Left && !_hasPressed)
         {
             _hoverImage.color = _weaponEquipSelectedColor;
             UnderLine.color = Color.red;
             _audiosource.clip = _clickClip;
             _audiosource.Play();
+            _hasPressed = true;
         }
 
     }
@@ -119,6 +129,13 @@ public class WeaponEquipCell : MonoBehaviour, IPointerEnterHandler, IPointerExit
             IPM.OnPanelChanged(thisPanel, toPanel);
             HoverImage.alpha = 0;
         }
+    }
+
+    public void SetSelectedDetail(string weaponName,string weaponType,Sprite weaponImagePic)
+    {
+        _weaponName.text = weaponName;
+        _weaponType.text = weaponType;
+        _weaponImage.sprite = weaponImagePic;
     }
 
 

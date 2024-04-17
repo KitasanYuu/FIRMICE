@@ -12,16 +12,14 @@ public class InventoryPanelManager : MonoBehaviour
     public bool Testbutton;
     [ReadOnly] public TextMeshProUGUI Title;
     [ReadOnly] public TextMeshProUGUI SubTitle;
-    [ReadOnly] public GameObject _weaponPanel;
-    [ReadOnly] public GameObject _backPackPanel;
 
-    [ReadOnly] public GameObject _weaponSelectPanel;
+    [ReadOnly] public GameObject _weaponPanel;
 
     [ReadOnly] public Image _panelSubTitleChangeBar;
     [ReadOnly] public GameObject _renderBox;
 
     [ReadOnly] public List<GameObject> PidUnit = new List<GameObject>();
-    private CanvasGroup _weaponSelectPanelcanvasGroup;
+
 
     private bool TestStatus;
     private bool _hasInited;
@@ -57,7 +55,7 @@ public class InventoryPanelManager : MonoBehaviour
             _renderBox = Instantiate(boxPrefab);
         }
         
-        _weaponPanel.SetActive(newstatus);
+        //_weaponPanel.SetActive(newstatus);
 
         if (!newstatus && _renderBox != null)
             Destroy(_renderBox);
@@ -69,9 +67,6 @@ public class InventoryPanelManager : MonoBehaviour
         Title = transform.FindDeepChild("Title")?.gameObject.GetComponent<TextMeshProUGUI>();
         SubTitle = transform.FindDeepChild("SubtitleDiscribe")?.gameObject.GetComponent<TextMeshProUGUI>();
         _weaponPanel = transform.FindDeepChild("WeaponPanel")?.gameObject;
-        _weaponSelectPanel = transform.FindDeepChild("WeaponSelectPanel")?.gameObject;
-
-        _weaponSelectPanelcanvasGroup = _weaponSelectPanel?.GetComponent<CanvasGroup>();
 
         StartCoroutine(PanelTitleChange(_initCVHolder));
         _initCVHolder = null;

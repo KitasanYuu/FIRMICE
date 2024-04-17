@@ -13,7 +13,6 @@ public class WeaponInventoryManager : MonoBehaviour
     public InventoryTestSO weapons;
     public List<WeaponHold> DataList = new List<WeaponHold>();
     public List<LockedWeapon> LockedWeapon = new List<LockedWeapon>();
-    public List<CurrentSelectedWeapon> SelectedWeapons = new List<CurrentSelectedWeapon>();
     [ReadOnly] public List<GameObject> WeaponGrip = new List<GameObject>();
     private Dictionary<WeaponHold, GameObject> _weaponGripDictionary = new Dictionary<WeaponHold, GameObject>();
     private List<WeaponHold> _previousDataList = new List<WeaponHold>();
@@ -31,6 +30,8 @@ public class WeaponInventoryManager : MonoBehaviour
     private WeaponDetailCell WDC;
     private WeaponRender _weaponRender;
     private Kacha _kacha;
+    private WeaponPanel _weaponPanel;
+    private WeaponEquipManager WEM;
     [HideInInspector]public PanelIdentity _panelID;
     private LocalDataSaver LDS = new LocalDataSaver();
     private ResourceReader RR = new ResourceReader();
@@ -68,6 +69,7 @@ public class WeaponInventoryManager : MonoBehaviour
             WeaponLockRequest(CurrentSelectedGrip, _panelID.PageNum);
             CurrentSelectedGrip = null;
         }
+        WEM.UpdateSelectedWeapon(_panelID.PageNum);
 
     }
 
@@ -269,11 +271,13 @@ public class WeaponInventoryManager : MonoBehaviour
 
     private void ComponentInit()
     {
+        _weaponPanel = GetComponentInParent<WeaponPanel>();
         _panelID = GetComponent<PanelIdentity>();
         _weaponLayout = transform.FindDeepChild("LayoutContent");
         _kacha = GetComponent<Kacha>();
         _weaponRender = GetComponent<WeaponRender>();
         WDC = transform.FindDeepChild("WeaponDetail").gameObject.GetComponent<WeaponDetailCell>();
+        WEM = _weaponPanel._weaponEquipPanel.GetComponent<WeaponEquipManager>();
     }
 }
 
@@ -282,11 +286,4 @@ public class LockedWeapon
 {
     public GameObject _lockedWeapon;
     public int _lockedPage;
-}
-
-[System.Serializable]
-public class CurrentSelectedWeapon
-{
-    public string _weaponID;
-    public int _selectedPage;
 }
