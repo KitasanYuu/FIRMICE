@@ -39,7 +39,7 @@ MonoBehaviour:
     m_To: RenderBoxCamera
     m_Blend:
       m_Style: 1
-      m_Time: 1
+      m_Time: 0.7
       m_CustomCurve:
         serializedVersion: 2
         m_Curve: []
@@ -47,7 +47,106 @@ MonoBehaviour:
         m_PostInfinity: 0
         m_RotationOrder: 0
   - m_From: RenderBoxCamera
-    m_To: RenderBoxSideCamera
+    m_To: RenderBoxWeaponShowCamera
+    m_Blend:
+      m_Style: 1
+      m_Time: 0.7
+      m_CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+  - m_From: RenderBoxWeaponShowCamera
+    m_To: RenderBoxSideCamera-Back
+    m_Blend:
+      m_Style: 1
+      m_Time: 0.7
+      m_CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+  - m_From: RenderBoxWeaponShowCamera
+    m_To: RenderBoxSideCamera-Back
+    m_Blend:
+      m_Style: 1
+      m_Time: 0.7
+      m_CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+  - m_From: RenderBoxWeaponEquipCamera
+    m_To: RenderBoxWeaponShowCamera
+    m_Blend:
+      m_Style: 1
+      m_Time: 0.7
+      m_CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+  - m_From: RenderBoxWeaponShowCamera
+    m_To: RenderBoxWeaponEquipCamera
+    m_Blend:
+      m_Style: 1
+      m_Time: 0.7
+      m_CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+  - m_From: RenderBoxWeaponEquipCamera
+    m_To: RenderBoxCamera
+    m_Blend:
+      m_Style: 1
+      m_Time: 0.7
+      m_CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+  - m_From: RenderBoxCamera
+    m_To: RenderBoxWeaponEquipCamera
+    m_Blend:
+      m_Style: 1
+      m_Time: 0.7
+      m_CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+  - m_From: RenderBoxCamera
+    m_To: RenderBoxSideCamera-Back
+    m_Blend:
+      m_Style: 1
+      m_Time: 1
+      m_CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+  - m_From: RenderBoxSideCamera-Back
+    m_To: RenderBoxCamera
+    m_Blend:
+      m_Style: 1
+      m_Time: 1
+      m_CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+  - m_From: RenderBoxSideCamera-Back
+    m_To: RenderBoxWeaponShowCamera
     m_Blend:
       m_Style: 1
       m_Time: 1

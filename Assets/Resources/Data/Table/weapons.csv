@@ -1,6 +1,8 @@
-GID,ID,WeaponName,Damage,VaildShootRange,BulletFireMode,BulletSpeed,ArmorBreak,IsLimitAmmo,needReload,AmmoPreMag,MaxAmmoCarry,FireRate,ReloadDuration,BulletModel,HitParticle
-string,string,string,float,float,int,float,float,bool,bool,int,int,float,float,string,string
-Weapon_GM_Force,W0000,GM_Force,100,99999,2,999999,100,False,False,50,500,0.05,0,BulletTest_B,VFX_Hit_B
-Weapon_Bot_Prototype,W0001,Bot_Prototype,10,100,1,100,10,False,False,30,30,0.05,0,BulletTest_B,VFX_Hit_B
-Weapon_AssaultRifle,W3001,AssaultRifle,10,100,1,100,20,True,True,30,100,0.07,2,BulletTest,VFX_HitYellow
-Weapon_Rifle,W4001,Rifle,300,200,1,100,200,True,True,5,50,1,4,BulletTest,VFX_HitYellow
+GID,WeaponName,ID,WeaponDescribe,WeaponType,WeaponPrefab,Damage,VaildShootRange,BulletFireMode,BulletSpeed,ArmorBreak,IsLimitAmmo,needReload,AmmoPreMag,MaxAmmoCarry,FireRate,ReloadDuration,FastReloadDuration,BulletModel,HitParticle
+string,string,string,string,int,string,float,float,int,float,float,bool,bool,int,int,float,float,float,string,string
+Weapon_GM_Force,Blaster,W0000,象征着至高权力的GM之枪，IWA荣誉出品,2,IGNITE Blaster,100,99999,2,999999,100,False,False,50,500,0.05,0,0,BulletTest_B,VFX_Hit_B
+Weapon_Bot_Prototype_T,Blaster,W0001_T,null,5,null,10,100,1,10,10,False,False,30,30,0.05,0,0,BulletTest_B,VFX_Hit_B
+Weapon_Bot_Prototype,Blaster,W0001,null,2,null,10,100,1,100,10,False,False,30,30,0.05,0,0,BulletTest_B,VFX_Hit_B
+Weapon_AssaultRifle,Blaster,W3001,null,3,null,10,100,1,100,20,True,True,30,100,0.07,3,2,BulletTest,VFX_HitYellow
+Weapon_Rifle,Blaster,W4001,null,6,null,300,200,1,100,200,True,True,5,50,1,4,3,BulletTest,VFX_HitYellow
+Weapon_EVTK009,EVTK-009电磁轨道炮,W4002,这有什么好看的，你又玩不到。不会真以为你能玩到测试的超模武器吧。,7,IGNITE Blaster,9999999,200,1,100,9999999,True,True,5,50,1,4,3,BulletTest,VFX_HitYellow

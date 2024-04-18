@@ -2,6 +2,7 @@ using CustomInspector;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -54,6 +55,59 @@ namespace DataManager
             }
         }
 
+        public AudioClip GetUIAudioClip(string AudioName)
+        {
+            AudioClip returnclip = null;
+            string ClipPath = GainPath("UIAudioClip", AudioName);
+
+            returnclip = Resources.Load<AudioClip>(ClipPath);
+
+            return returnclip;
+        }
+
+        public AudioClip GetWeaponAudioClip(string weaponName,string audioType)
+        {
+            AudioClip returnClip = null;
+
+            string clipName = weaponName + "_" + audioType;
+            string ObjectWeaponPath = GainPath("WeaponAudioClip", weaponName)+"/"+clipName;
+            //Debug.Log(ObjectWeaponPath);
+
+            returnClip = Resources.Load<AudioClip>(ObjectWeaponPath);
+
+            //Debug.Log(returnClip);
+
+            return returnClip;
+        }
+
+        public Sprite GetPlaceHolderSprite(string spriteName)
+        {
+            Sprite sprite = null;
+
+            // 使用反射动态获取 DefaultSpritePlaceHolder 类型的实例
+            DefaultSpritePlaceHolder dsp = Resources.Load<DefaultSpritePlaceHolder>("GlobalSettings/DefaultSpritePlaceHolder");
+
+            if (dsp != null)
+            {
+                // 使用反射获取 ItemNotAvaible 字段的值
+                FieldInfo fieldInfo = typeof(DefaultSpritePlaceHolder).GetField(spriteName, BindingFlags.Public | BindingFlags.Instance);
+                if (fieldInfo != null && fieldInfo.FieldType == typeof(Sprite))
+                {
+                    sprite = (Sprite)fieldInfo.GetValue(dsp);
+                }
+                else
+                {
+                    Debug.LogError("Sprite not found in DefaultSpritePlaceHolder: " + spriteName);
+                }
+            }
+            else
+            {
+                Debug.LogError("DefaultSpritePlaceHolder not found!");
+            }
+
+            return sprite;
+        }
+
         public TextAsset GetCSVFile(string CSVName)
         {
             TextAsset csv = null;
@@ -68,6 +122,17 @@ namespace DataManager
             string ObjectResourcePath = GainPath(ObjectType, ObjectName);
             ReturnGameObject = Resources.Load<GameObject>(ObjectResourcePath);
             return ReturnGameObject;
+        }
+
+        public SubSelectIdentity GetPanelIDData(string PanelID, int page = 0)
+        {
+            UIPanelID uiPanelID = Resources.Load<UIPanelID>("GlobalSettings/UIPanelID");
+            UIIdentity uiInfo = uiPanelID.UIID.FirstOrDefault(ui => ui.PanelID == PanelID);
+            if (uiInfo != null)
+            {
+                return uiInfo.SubIdentity.FirstOrDefault(subs => subs.Page == page);
+            }
+            return null;
         }
     }
 }

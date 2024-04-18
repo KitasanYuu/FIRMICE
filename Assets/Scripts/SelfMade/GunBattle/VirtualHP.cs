@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
+using YuuTool;
 
 namespace BattleHealth
 {
@@ -13,6 +14,9 @@ namespace BattleHealth
     {
         [ReadOnly] public GameObject Object;
         [ReadOnly] public GameObject HPAnchor;
+        [ReadOnly] public GameObject _aimPanelAnchor;
+        [ReadOnly] public GameObject _normalPanelAnchorR;
+        [ReadOnly] public GameObject _normalPanelAnchorL;
         [ReadOnly] public float CurrentHP;
         [ReadOnly] public float CurrentArmor;
         [ReadOnly] public HealthBar healthBar;
@@ -34,11 +38,18 @@ namespace BattleHealth
         private int CharacterSP = -999;
         private bool NeedRegistHP;
 
+        public float hpRecoveryDelay = 5f; // 5秒后开始回复HP
+        public float hpRecoveryRate = 2f; // 每秒回复2点HP
+        private bool _startRecover;
+        private float lastDamageTime = 0f;
+
         private int mycamp= -999;
 
         private HPVisionManager HVM;
+        private PlayerStatusManager PSM;
         private Identity id;
         private DataMaster DM = new DataMaster();
+        private LocalDataSaver LDS = new LocalDataSaver();
 
         public List<float> damageList = new List<float>(); // 使用List来存储伤害值
 
@@ -60,7 +71,7 @@ namespace BattleHealth
             ComponentInit();
             InfoInit();
             ParameterInit();
-            RegeisterHP(NeedRegistHP);
+            RegeisterHP(true);
         }
 
         void Update()
@@ -72,9 +83,21 @@ namespace BattleHealth
                 PrintDamageInfo();
             }
 
+            RecoverHP();
             DamageCalculating();
         }
 
+        private void RecoverHP()
+        {
+            if (Time.time - lastDamageTime > hpRecoveryDelay)
+            {
+                if (CurrentHP < TotalHP)
+                {
+                    CurrentHP += hpRecoveryRate * Time.deltaTime;
+                    CurrentHP = Mathf.Min(CurrentHP, TotalHP); // 确保HP不会超过最大值
+                }
+            }
+        }
 
         #region 伤害计算相关
         // 从外部调用的方法，直接添加伤害并指定角色标识
@@ -82,12 +105,12 @@ namespace BattleHealth
         {
             if(mycamp == -999)
             {
-                mycamp = DM.GetActorCamp(gameObject);
+                mycamp = LDS.GetActorCamp(gameObject);
             }
 
-            int attackercamp = DM.GetActorCamp(character);
-            
-            if(attackercamp != mycamp)
+            int attackercamp = LDS.GetActorCamp(character);
+
+            if (attackercamp != mycamp)
             {
                 // 计算减伤后的实际伤害值
                 float actualDamage = damage;
@@ -115,7 +138,6 @@ namespace BattleHealth
                     characterDamageMap.Add(character, actualDamage);
                 }
             }
-
         }
 
         private void DamageCalculating()
@@ -126,6 +148,7 @@ namespace BattleHealth
 
             if (totalDamage != 0)
             {
+                lastDamageTime = Time.time;
                 if (CurrentArmor > 1)
                 {
                     CurrentHP = CurrentHP - (totalDamage * ArmorRate) * (1 - DamageReduceRate);
@@ -175,10 +198,16 @@ namespace BattleHealth
         private void InfoInit()
         {
             Object = gameObject;
-            Transform hpAnchor = gameObject.transform.Find("HPAnchor");
-            if (hpAnchor != null)
+
+            if (LDS.IsPlayer(gameObject))
             {
-                HPAnchor = hpAnchor.gameObject;
+                _aimPanelAnchor = transform.FindDeepChild("AimPanelAnchor").gameObject;
+                _normalPanelAnchorL = transform.FindDeepChild("NormalPanelAnchorL").gameObject;
+                _normalPanelAnchorR = transform.FindDeepChild("NormalPanelAnchorR").gameObject;
+            }
+            else
+            {
+                HPAnchor = gameObject.transform.Find("HPAnchor").gameObject;
             }
         }
 
@@ -195,27 +224,37 @@ namespace BattleHealth
         {
             if (NeedToRegist)
             {
-                bool isSpecial = false;
-                DataMaster DM = new DataMaster();
-                if(CharacterSP == -999)
-                    CharacterSP = DM.GetActorSP(gameObject);
-                if (CharacterSP > 0)
-                    isSpecial = true;
-                if (id.canUse)
+                if (LDS.IsPlayer(gameObject))
                 {
-
-                    if ((Object != null && HPAnchor != null) || isSpecial)
+                    PSM = FindAnyObjectByType<PlayerStatusManager>();
+                    if(PSM != null)
                     {
-                        HVM = FindAnyObjectByType<HPVisionManager>();
-
-                        if (HVM != null)
-                        {
-                            HVM.ObjectHPRegister(gameObject);
-                        }
+                        PSM.HPRegister(Object,_aimPanelAnchor,_normalPanelAnchorL,_normalPanelAnchorR);
                     }
-                    else
+                }
+                else
+                {
+                    bool isSpecial = false;
+                    if (CharacterSP == -999)
+                        CharacterSP = LDS.GetActorSP(gameObject);
+                    if (CharacterSP > 0)
+                        isSpecial = true;
+                    if (id.canUse)
                     {
-                        Debug.LogError(gameObject.name + "Regist HP Failure");
+
+                        if ((Object != null && HPAnchor != null) || isSpecial)
+                        {
+                            HVM = FindAnyObjectByType<HPVisionManager>();
+
+                            if (HVM != null)
+                            {
+                                HVM.ObjectHPRegister(gameObject);
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogError(gameObject.name + "Regist HP Failure");
+                        }
                     }
                 }
             }
@@ -254,6 +293,9 @@ namespace BattleHealth
 
         private void DestoryProgress()
         {
+            if (LDS.IsPlayer(gameObject))
+                PSM.playerDestory(true);
+
             if (healthBar != null)
                 Destroy(healthBar.gameObject);
             else if (eHealthBar != null)

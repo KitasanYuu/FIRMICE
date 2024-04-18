@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddfe4371be90ee54b86652cb42848112, type: 3}
+  m_Name: UIPanelID
+  m_EditorClassIdentifier: 
+  UIID:
+  - PanelID: WeaponSelectPanel
+    SubIdentity:
+    - PanelSubTitle: "\u9009\u62E9\u4E3B\u6B66\u5668"
+      PanelTitle: "\u6B66\u5668\u9009\u62E9"
+      Page: 0
+    - PanelSubTitle: "\u9009\u62E9\u526F\u6B66\u5668"
+      PanelTitle: "\u6B66\u5668\u9009\u62E9"
+      Page: 1
+    - PanelSubTitle: "\u9009\u62E9\u6218\u672F\u9053\u5177"
+      PanelTitle: "\u9053\u5177\u9009\u62E9"
+      Page: 2
+  - PanelID: WeaponEquipPanel
+    SubIdentity:
+    - PanelSubTitle: "\u706B\u529B\u914D\u7F6E"
+      PanelTitle: "\u88C5\u5907\u6982\u89C8"
+      Page: 0
+  - PanelID: TestPanel
+    SubIdentity:
+    - PanelSubTitle: "\u53EA\u662F\u6D4B\u8BD5\u7528\u7684\u9762\u677F"
+      PanelTitle: Test
+      Page: 0

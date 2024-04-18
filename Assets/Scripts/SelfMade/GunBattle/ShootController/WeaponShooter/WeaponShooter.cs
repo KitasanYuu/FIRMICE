@@ -8,13 +8,19 @@ using System.Collections;
 using TestField;
 using DataManager;
 using TargetDirDetec;
+using VInspector;
+using Kinemation.Recoilly;
+using Kinemation.Recoilly.Runtime;
+using UnityEngine.Audio;
 
 namespace Battle
 {
     [RequireComponent(typeof(WeaponIdentity))]
     public class WeaponShooter : MonoBehaviour
     {
+        [Tab("WeaponSettings")]
         [SerializeField, ReadOnly] private string WeaponID;
+        [SerializeField, ReadOnly] private string WeaponName;
         [ReadOnly, SerializeField] private bool UsingAIControl;
         [ReadOnly, SerializeField] private bool UsingMasterControl;
 
@@ -25,11 +31,11 @@ namespace Battle
         [Space2(20)]
 
         [SerializeField] private bool Semi;
-        [SerializeField] private bool LimitAmmo = true;
-        [SerializeField] private bool needReload;
-        [SerializeField, ShowIf(nameof(LimitAmmo))] private int MaxAmmoCarry;
-        [SerializeField, ShowIf(nameof(LimitAmmo))] private int AmmoPreMag;
-        [ReadOnly, SerializeField, ShowIf(nameof(LimitAmmo))] private int CurrentBulletCount;
+        [SerializeField] public bool LimitAmmo = true;
+        [SerializeField] public bool needReload;
+        [CustomInspector.ShowIf(nameof(LimitAmmo))] public int MaxAmmoCarry;
+        [CustomInspector.ShowIf(nameof(LimitAmmo))] public int AmmoPreMag;
+        [ReadOnly,CustomInspector.ShowIf(nameof(LimitAmmo))] public int CurrentBulletCount;
 
         [Space2(20)]
         public GameObject Shooter;
@@ -55,6 +61,20 @@ namespace Battle
         [SerializeField, ReadOnly] public float ArmorBreak;
         [SerializeField, ReadOnly] public float DetectRayLength;
         [SerializeField, ReadOnly] public LayerMask DestoryLayer;
+
+        [Tab("Recoilly package")]
+        public Transform recoilPivot;
+        public RecoilAnimData recoilData;
+        public Vector3 handOffset;
+        public LocRot pointAimData;
+
+        public FireMode fireMode;
+
+        [Tab("AudioResources")]
+        public AudioClip audioFire;
+        public AudioClip audioReload;
+        public AudioClip audioFullReload;
+
         //子弹速度与射线检测的比值 射线长度 = 子弹速度*SRR
         private float CSRR = 0.0385f;
         private float LSRR = 0.05f;
@@ -68,15 +88,18 @@ namespace Battle
 
         private float PreviousBulletSpeed = 0;
 
+        private bool outofAmmo = false;
         private bool Reloading = false;
         private bool reloadingInProgress = false;
 
+        private ResourceReader RR = new ResourceReader();
 
         //获取脚本
         private BasicInput _input;
         private ShootController shootController;
         private TPSShootController tpsShootController;
         private WeaponIdentity WID;
+        private AudioSource _audioSource;
         private bool Basicinput;
         private bool Tpsshootcontroller;
         private bool shootcontroller;
@@ -115,11 +138,18 @@ namespace Battle
         {
             if (Shooter != null)
             {
+                if (UsingMasterControl)
+                    if (tpsShootController.avatarController.IsRolling)
+                        return;
                 // 开火
                 if ((UsingAIControl && shootController.Fire && shootController.isAiming) || (UsingMasterControl && tpsShootController.Fire && tpsShootController.isAiming))
                 {
                     if (!LimitAmmo ||(!needReload && (MaxAmmoCarry > 0 || CurrentBulletCount > 0)) || CurrentBulletCount > 0)
                     {
+                        if (Reloading && reloadingInProgress)
+                            return;
+
+                        outofAmmo = false;
                         // 获取当前时间
                         float currentTime = Time.time;
 
@@ -194,6 +224,7 @@ namespace Battle
                                 if (bullet != null)
                                 {
                                     bullet?.SetParameter(Shooter, DetectRayLength, DestoryLayer, VFXHitEffect, bulletspeed, BulletDamage, ArmorBreak);
+                                    AudioSource.PlayClipAtPoint(audioFire, transform.position, 1);
                                     //Debug.Log(bulletspeed * SRR);
                                     //Debug.LogError("BulletSpwaned");
                                 }
@@ -214,6 +245,7 @@ namespace Battle
                                     RayDamageIn(HitObject);
                                     // 生成特效
                                     Instantiate(VFXHitEffect, hitPoint, Quaternion.identity, BulletContainer.transform);
+                                    AudioSource.PlayClipAtPoint(audioFire, transform.position, 1);
                                     // 在这里处理射击命中的逻辑，例如对击中物体造成伤害或触发其他效果等
                                     //Debug.Log("射击命中：" + shootRaycastHit.collider.gameObject.name + "，击中坐标：" + hitPoint);
 
@@ -248,9 +280,21 @@ namespace Battle
 
                             lastShootTime = currentTime;
                         }
+
+                        if (UsingMasterControl)
+                            tpsShootController.SetAmmoStatus(outofAmmo);
+                    }
+                    else if(LimitAmmo && CurrentBulletCount == 0 && MaxAmmoCarry == 0)
+                    {
+                        outofAmmo = true;
+                        if (UsingMasterControl)
+                            tpsShootController.SetAmmoStatus(outofAmmo);
                     }
                     else
                     {
+                        outofAmmo = false;
+                        if (UsingMasterControl)
+                            tpsShootController.SetAmmoStatus(outofAmmo);
                         ReloadProgress(true);
                     }
                 }
@@ -262,19 +306,42 @@ namespace Battle
         {
             if (needReload)
             {
+                if (UsingMasterControl)
+                {
+                    if (tpsShootController.avatarController.IsRolling &&tpsShootController.avatarController.IsSliding)
+                        return;
+
+                    if (tpsShootController.Fire && CurrentBulletCount >1)
+                        return;
+                }
+
+                if (UsingAIControl)
+                {
+                    if (shootController.Fire)
+                        return;
+                }
+
+
                 if (!Reloading && !reloadingInProgress && (Input.GetKeyDown(KeyCode.R) || ReloadStart))
                 {
                     if (CurrentBulletCount < AmmoPreMag)
                     {
-                        StartCoroutine(ReloadCoroutine(reloadDuration));
+                        StartCoroutine(ReloadCoroutine());
                     }
                 }
             }
         }
 
-        private IEnumerator ReloadCoroutine(float Duration)
+        private IEnumerator ReloadCoroutine(bool ReloadNow = false)
         {
             Reloading = true;
+
+            float _reloadDuration = CurrentBulletCount > 0 ? FastreloadDuration : reloadDuration;
+
+
+            if (UsingMasterControl)
+                tpsShootController.SetReloadStatus(Reloading, _reloadDuration);
+                
             reloadingInProgress = true;
 
             int missingBulletCount = AmmoPreMag - CurrentBulletCount;
@@ -283,15 +350,28 @@ namespace Battle
             {
                 if (CurrentBulletCount == 0)
                 {
-                    // 模拟延迟后执行重新加载的逻辑
-                    yield return new WaitForSeconds(Duration);
+                    if(_audioSource!= null && !ReloadNow)
+                    {
+                        _audioSource.clip = audioFullReload;
+                        _audioSource.Play();
+                    }
+
+                    if(!ReloadNow)
+                        yield return new WaitForSeconds(_reloadDuration);
 
                     MaxAmmoCarry -= AmmoPreMag;
                     CurrentBulletCount = AmmoPreMag;
                 }
                 else if (CurrentBulletCount > 0)
                 {
-                    yield return new WaitForSeconds(FastreloadDuration);
+                    if (_audioSource != null && !ReloadNow)
+                    {
+                        _audioSource.clip = audioReload;
+                        _audioSource.Play();
+                    }
+
+                    if (!ReloadNow)
+                        yield return new WaitForSeconds(_reloadDuration);
                     MaxAmmoCarry -= missingBulletCount;
                     CurrentBulletCount += missingBulletCount;
                 }
@@ -301,15 +381,25 @@ namespace Battle
             {
                 if (CurrentBulletCount == 0)
                 {
+                    if (_audioSource != null && !ReloadNow)
+                    {
+                        _audioSource.clip = audioFullReload;
+                        _audioSource.Play();
+                    }
                     // 模拟延迟后执行重新加载的逻辑
-                    yield return new WaitForSeconds(reloadDuration);
+                    yield return new WaitForSeconds(_reloadDuration);
 
                     CurrentBulletCount += MaxAmmoCarry;
                     MaxAmmoCarry = 0;
                 }
                 else if (CurrentBulletCount > 0)
                 {
-                    yield return new WaitForSeconds(FastreloadDuration);
+                    if (_audioSource != null && !ReloadNow)
+                    {
+                        _audioSource.clip = audioReload;
+                        _audioSource.Play();
+                    }
+                    yield return new WaitForSeconds(_reloadDuration);
 
                     CurrentBulletCount += MaxAmmoCarry;
                     MaxAmmoCarry = 0;
@@ -320,6 +410,9 @@ namespace Battle
             CanFireNow = true;
             Reloading = false;
             reloadingInProgress = false;
+            if (UsingMasterControl)
+                tpsShootController.SetReloadStatus(Reloading, _reloadDuration);
+
         }
 
         #endregion
@@ -336,7 +429,7 @@ namespace Battle
             GameObject currentTarget = rayHitTarget;
 
             if (HCD != null)
-                HCD.RayBulletHitSet(gameObject);
+                HCD.RayBulletHitSet(Shooter);
 
             // 循环遍历父级对象直到找到VirtualHP组件或没有更多的父级
             while (currentTarget != null && virtualHp == null)
@@ -450,8 +543,10 @@ namespace Battle
             PreviousBulletSpeed = bulletspeed;
 
             ResourceReader RR = new ResourceReader();
-            CSVReader csv = new CSVReader();
-            var WeaponData = csv.GetDataByID("weapons", WeaponID);
+            //CSVReader csv = new CSVReader();
+            LocalDataSaver LDS = new LocalDataSaver();
+            var WeaponData = LDS.GetWeapon(WeaponID);
+            WeaponName = (string)WeaponData["WeaponName"];
             int BulletMethod = (int)WeaponData["BulletFireMode"];
             if (BulletMethod == 1)
                 InstanceMethod = true;
@@ -468,6 +563,10 @@ namespace Battle
             BulletDamage = (float)WeaponData["Damage"];
             ArmorBreak = (float)WeaponData["ArmorBreak"];
 
+            audioFire = RR.GetWeaponAudioClip(WeaponName, "Fire");
+            audioFullReload = RR.GetWeaponAudioClip(WeaponName, "Full_Reload");
+            audioReload = RR.GetWeaponAudioClip(WeaponName, "Reload");
+
             if (InstanceMethod)
             {
                 string BulletPrefab = (string)WeaponData["BulletModel"];
@@ -479,7 +578,7 @@ namespace Battle
             {
                 AmmoPreMag = (int)WeaponData["AmmoPreMag"];
                 reloadDuration = (float)WeaponData["ReloadDuration"];
-                FastreloadDuration = 0.5f * reloadDuration;
+                FastreloadDuration = (float)WeaponData["FastReloadDuration"];
             }
 
             if(LimitAmmo)
@@ -487,12 +586,13 @@ namespace Battle
                 MaxAmmoCarry = (int)WeaponData["MaxAmmoCarry"];
             }
 
-            StartCoroutine(ReloadCoroutine(0));
+            StartCoroutine(ReloadCoroutine(true));
         }
 
         private void ComponemetInit()
         {
             WID = GetComponent<WeaponIdentity>();
+            _audioSource = GetComponentInParent<AudioSource>();
 
             if (Shooter != null)
             {
@@ -505,6 +605,7 @@ namespace Battle
             {
                 UsingMasterControl = true;
                 UsingAIControl = false;
+                tpsShootController.RegisterWeapon(this);
                 //Debug.Log("BulletSpwanInitSuccess!" + "  " + gameObject.name + "  " + "CurrentUsing 'TPSMasterControl'");
             }
 

@@ -38,7 +38,7 @@ public class ControllerGUI : Editor
             GUILayout.Space(10);
 
         // Create tabs as buttons
-        string[] tabNames = new string[] { "Global", "ObjectBind", "MOVE", "Audio Clips", "Cinemachine" };
+        string[] tabNames = new string[] { "Global", "ObjectBind", "MOVE", "Audio Clips", "Cinemachine" ,"Test"};
         selectedTab = GUILayout.Toolbar(selectedTab, tabNames);
 
         // Display different content based on selected tab
@@ -58,6 +58,9 @@ public class ControllerGUI : Editor
                 break;
             case 4:
                 DisplayTabContent4(avatarController);
+                break;
+            case 5:
+                DisplayContent5(avatarController);
                 break;
         }
 
@@ -123,6 +126,13 @@ public class ControllerGUI : Editor
         avatarController.AimSpeed = EditorGUILayout.FloatField(new GUIContent("AimSpeed", "瞄准时的移速"), avatarController.AimSpeed);
         avatarController.CrouchingAimSpeed = EditorGUILayout.FloatField(new GUIContent("CrouchingAimSpeed", "下蹲瞄准时的移速"), avatarController.CrouchingAimSpeed);
         avatarController.SpeedChangeRate = EditorGUILayout.FloatField(new GUIContent("SpeedChangeRate", "加/减速度"), avatarController.SpeedChangeRate);
+        avatarController.slideLimitSpeed = EditorGUILayout.FloatField(new GUIContent("SlideLimitSpeed", "超过这个阈值蹲下就是滑铲"), avatarController.slideLimitSpeed);
+        avatarController.slideTargetspeed = EditorGUILayout.FloatField(new GUIContent("SlideSpeed", "翻滚的目标速度"), avatarController.slideTargetspeed);
+        avatarController.slideSpeedCurve = EditorGUILayout.CurveField(new GUIContent("SlideSpeedCurve", "滑铲时速度的变化曲线"),
+    avatarController.slideSpeedCurve);
+        avatarController.rolltargetspeed = EditorGUILayout.FloatField(new GUIContent("Rollspeed", "翻滚的目标速度"), avatarController.rolltargetspeed);
+        avatarController.rollSpeedCurve = EditorGUILayout.CurveField(new GUIContent("RollSpeedCurve", "翻滚时速度的变化曲线"),
+            avatarController.rollSpeedCurve);
         avatarController.RotationSmoothTime = EditorGUILayout.Slider(new GUIContent("RotationSmoothTime", "TPS下角色的转向速度 数值越大转向越慢"), avatarController.RotationSmoothTime, 0.0f, 0.3f);
 
 
@@ -176,7 +186,11 @@ public class ControllerGUI : Editor
         avatarController.BottomClamp = EditorGUILayout.FloatField(new GUIContent("BottomClamp", "相机向下移动的最大角度"), avatarController.BottomClamp);
         avatarController.CameraAngleOverride = EditorGUILayout.FloatField(new GUIContent("CameraAngleOverride", "在相机锁定时，可以使用这个字段对相机位置进行微调"), avatarController.CameraAngleOverride);
         avatarController.LockCameraPosition = EditorGUILayout.Toggle(new GUIContent("LockCameraPosition", "锁定相机"), avatarController.LockCameraPosition);
+    }
 
+    private void DisplayContent5(AvatarController avatarController)
+    {
+        avatarController.TestButton = EditorGUILayout.Toggle(new GUIContent("TestButton"), avatarController.TestButton);
     }
 
     private void DisplayAudioClips(SerializedObject so)

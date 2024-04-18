@@ -1,6 +1,5 @@
+using DataManager;
 using System.Collections.Generic;
-using TestField;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace TargetDirDetec
@@ -11,7 +10,7 @@ namespace TargetDirDetec
         public LayerMask targetLayer;
         public int HitDir;
 
-        private AIFunction aif = new AIFunction();
+        private LocalDataSaver LDS = new LocalDataSaver();
 
         private Dictionary<GameObject, int> actorCamps = new Dictionary<GameObject, int>();
 
@@ -28,8 +27,8 @@ namespace TargetDirDetec
                 if (bullet != null)
                 {
                     GameObject go = bullet.Shooter;
-                    int shooterCamp = GetActorCampCached(go);
-                    int selfCamp = GetActorCampCached(gameObject);
+                    int shooterCamp = LDS.GetActorCamp(go);
+                    int selfCamp = LDS.GetActorCamp(gameObject);
                     if (shooterCamp != selfCamp)
                     {
                         // 将相对位置转换到本地坐标系
@@ -74,23 +73,13 @@ namespace TargetDirDetec
 
         public void RayBulletHitSet(GameObject Attacker)
         {
-            int shooterCamp = GetActorCampCached(Attacker);
-            int selfCamp = GetActorCampCached(gameObject);
+            int shooterCamp = LDS.GetActorCamp(Attacker);
+            int selfCamp = LDS.GetActorCamp(gameObject);
             if (shooterCamp != selfCamp)
             {
                 Vector3 relativePosition = transform.InverseTransformPoint(Attacker.transform.position);
                 CalculateHitDir(relativePosition);
             }
-        }
-
-        private int GetActorCampCached(GameObject actor)
-        {
-            if (!actorCamps.ContainsKey(actor))
-            {
-                int camp = aif.GetActorCamp(actor); // 假设这是读取CSV的操作
-                actorCamps[actor] = camp;
-            }
-            return actorCamps[actor];
         }
 
         public void HitDirStatus(int HitDirStatus)

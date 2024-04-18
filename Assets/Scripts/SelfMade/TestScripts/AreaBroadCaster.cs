@@ -85,6 +85,8 @@ namespace TestField
 
         private void OnHalfCoverChanged(List<GameObject> newList)
         {
+            BCReceiver.RemoveAll(item => item == null);
+
             HalfCoverList = newList;
             foreach (GameObject receiverObject in BCReceiver)
             {
@@ -100,6 +102,8 @@ namespace TestField
 
         private void OnFullCoverChanged(List<GameObject> newList)
         {
+            BCReceiver.RemoveAll(item => item == null);
+
             FullCoverList = newList;
             foreach (GameObject receiverObject in BCReceiver)
             {
@@ -114,6 +118,8 @@ namespace TestField
 
         private void OnOccupiedCoverChanged(List<GameObject> newList)
         {
+            BCReceiver.RemoveAll(item => item == null);
+
             OccupiedCoverList = newList;
             foreach (GameObject receiverObject in BCReceiver)
             {
@@ -127,6 +133,8 @@ namespace TestField
 
         private void OnFreeCoverChanged(List<GameObject> newList)
         {
+            BCReceiver.RemoveAll(item => item == null);
+
             FreeCoverList = newList;
             foreach (GameObject receiverObject in BCReceiver)
             {
@@ -140,6 +148,9 @@ namespace TestField
 
         private void OnSBroadCastReceivedChanged(List<GameObject> newList)
         {
+            BCReceiver.RemoveAll(item => item == null);
+            SBroadCastReceiver.RemoveAll(item => item == null);
+
             SBroadCastReceiver = newList;
 
             // 找到两个列表的交集，即相同的物体
@@ -164,7 +175,7 @@ namespace TestField
             // 遍历所有不同的物体，并获取每个物体上的一个组件
             foreach (GameObject obj in onlyInCurrent)
             {
-                BroadCasterInfoContainer BCIC = obj.GetComponent<BroadCasterInfoContainer>();
+                BroadCasterInfoContainer BCIC = obj?.GetComponent<BroadCasterInfoContainer>();
 
                 if (BCIC != null)
                 {
@@ -179,6 +190,8 @@ namespace TestField
         #region 信息发送
         private void SendPartnerINFO()
         {
+            BCReceiver.RemoveAll(item => item == null);
+
             foreach (GameObject receiverObject in BCReceiver)
             {
                 BroadCasterInfoContainer BCIC = receiverObject.GetComponent<BroadCasterInfoContainer>();
@@ -191,6 +204,8 @@ namespace TestField
 
         private void SendAlertToObjectWithAlertLine()
         {
+            SBroadCastReceiver.RemoveAll(item => item == null);
+
             foreach (GameObject receiverObject in SBroadCastReceiver)
             {
                 BroadCasterInfoContainer BCIC = receiverObject.GetComponent<BroadCasterInfoContainer>();
@@ -204,6 +219,8 @@ namespace TestField
 
         private void SendAttackTargetList()
         {
+            SBroadCastReceiver.RemoveAll(item => item == null);
+
             foreach (GameObject receiverObject in SBroadCastReceiver)
             {
                 BroadCasterInfoContainer BCIC = receiverObject.GetComponent<BroadCasterInfoContainer>();
@@ -217,6 +234,8 @@ namespace TestField
 
         private void SendOtherReceiverINFO()
         {
+            BCReceiver.RemoveAll(item => item == null);
+
             foreach (GameObject receiverObject in BCReceiver)
             {
                 List<GameObject> filteredList = BCReceiver.Where(x => x != receiverObject).ToList();

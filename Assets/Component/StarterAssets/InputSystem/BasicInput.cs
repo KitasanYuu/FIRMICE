@@ -10,11 +10,13 @@ namespace AvatarMain
 		[Header("Character Input Values")]
 		public Vector2 move;
 		public Vector2 look;
+        public bool crouch;
 		public bool jump;
 		public bool sprint;
         public bool aim;
         public bool shoot;
         public bool swa;
+        public bool roll;
 
 
 
@@ -48,6 +50,11 @@ namespace AvatarMain
 			}
 		}
 
+        public void OnCrouch(InputValue value)
+        {
+            CrouchInput(value.isPressed);
+        }
+
 		public void OnJump(InputValue value)
 		{
 			JumpInput(value.isPressed);
@@ -72,6 +79,11 @@ namespace AvatarMain
         {
            SWAInput(value.isPressed);
         }
+
+        public void OnRoll(InputValue value)
+        {
+            RollInput(value.isPressed);
+        }
 #endif
 
 
@@ -84,6 +96,11 @@ namespace AvatarMain
 		{
 			look = newLookDirection;
 		}
+
+        public void CrouchInput(bool newCrouch)
+        {
+            crouch = newCrouch;
+        }
 
 		public void JumpInput(bool newJumpState)
 		{
@@ -107,6 +124,11 @@ namespace AvatarMain
             swa = newSWA;
         }
 
+        public void RollInput(bool newRoll)
+        {
+            roll = newRoll;
+        }
+
 		private void OnApplicationFocus(bool hasFocus)
 		{
 			SetCursorState(cursorLocked);
@@ -118,19 +140,6 @@ namespace AvatarMain
 		{
 			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
 		}
-
-		// 在 StarterAssetsInputs 类中
-		public bool crouch
-        {
-            get
-            {
-#if ENABLE_INPUT_SYSTEM
-        return Keyboard.current.cKey.isPressed; // 使用适当的输入系统代码
-#else
-                return Input.GetKey(KeyCode.C);
-#endif
-            }
-        }
 
     }
 

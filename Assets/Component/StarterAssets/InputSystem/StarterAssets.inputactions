@@ -25,12 +25,12 @@
                 },
                 {
                     "name": "Jump",
-                    "type": "Button",
+                    "type": "PassThrough",
                     "id": "8c4abdf8-4099-493a-aa1a-129acec7c3df",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Sprint",
@@ -72,6 +72,15 @@
                     "name": "SWA",
                     "type": "PassThrough",
                     "id": "04ce0513-c8ef-4fb0-a16f-bff5bcf3c1c4",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Roll",
+                    "type": "PassThrough",
+                    "id": "c029abc2-4f11-4e8c-b92a-51f68bdba9dd",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -296,6 +305,17 @@
                     "processors": "",
                     "groups": "KeyboardMouse",
                     "action": "SWA",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ca1a4944-dcf0-45df-a978-3616ebce2e2b",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse;Gamepad;PS4 Controller;Xbox Controller",
+                    "action": "Roll",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

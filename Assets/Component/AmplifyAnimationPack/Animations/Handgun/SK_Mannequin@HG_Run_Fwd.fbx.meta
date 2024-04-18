@@ -1,158 +1,452 @@
 fileFormatVersion: 2
 guid: cd26c291008beac43aaff61817ef315b
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: ball_l
-    100002: ball_r
-    100004: calf_l
-    100006: calf_r
-    100008: calf_twist_01_l
-    100010: calf_twist_01_r
-    100012: clavicle_l
-    100014: clavicle_r
-    100016: foot_l
-    100018: foot_r
-    100020: hand_l
-    100022: hand_r
-    100024: head
-    100026: ik_foot_l
-    100028: ik_foot_r
-    100030: ik_foot_root
-    100032: ik_hand_gun
-    100034: ik_hand_l
-    100036: ik_hand_r
-    100038: ik_hand_root
-    100040: index_01_l
-    100042: index_01_r
-    100044: index_02_l
-    100046: index_02_r
-    100048: index_03_l
-    100050: index_03_r
-    100052: lowerarm_l
-    100054: lowerarm_r
-    100056: lowerarm_twist_01_l
-    100058: lowerarm_twist_01_r
-    100060: middle_01_l
-    100062: middle_01_r
-    100064: middle_02_l
-    100066: middle_02_r
-    100068: middle_03_l
-    100070: middle_03_r
-    100072: neck_01
-    100074: neck_02
-    100076: pelvis
-    100078: pinky_01_l
-    100080: pinky_01_r
-    100082: pinky_02_l
-    100084: pinky_02_r
-    100086: pinky_03_l
-    100088: pinky_03_r
-    100090: ring_01_l
-    100092: ring_01_r
-    100094: ring_02_l
-    100096: ring_02_r
-    100098: ring_03_l
-    100100: ring_03_r
-    100102: //RootNode
-    100104: spine_01
-    100106: spine_02
-    100108: spine_03
-    100110: thigh_l
-    100112: thigh_r
-    100114: thigh_twist_01_l
-    100116: thigh_twist_01_r
-    100118: thumb_01_l
-    100120: thumb_01_r
-    100122: thumb_02_l
-    100124: thumb_02_r
-    100126: thumb_03_l
-    100128: thumb_03_r
-    100130: upperarm_l
-    100132: upperarm_r
-    100134: upperarm_twist_01_l
-    100136: upperarm_twist_01_r
-    100138: weapon_l
-    100140: weapon_r
-    100142: root
-    400000: ball_l
-    400002: ball_r
-    400004: calf_l
-    400006: calf_r
-    400008: calf_twist_01_l
-    400010: calf_twist_01_r
-    400012: clavicle_l
-    400014: clavicle_r
-    400016: foot_l
-    400018: foot_r
-    400020: hand_l
-    400022: hand_r
-    400024: head
-    400026: ik_foot_l
-    400028: ik_foot_r
-    400030: ik_foot_root
-    400032: ik_hand_gun
-    400034: ik_hand_l
-    400036: ik_hand_r
-    400038: ik_hand_root
-    400040: index_01_l
-    400042: index_01_r
-    400044: index_02_l
-    400046: index_02_r
-    400048: index_03_l
-    400050: index_03_r
-    400052: lowerarm_l
-    400054: lowerarm_r
-    400056: lowerarm_twist_01_l
-    400058: lowerarm_twist_01_r
-    400060: middle_01_l
-    400062: middle_01_r
-    400064: middle_02_l
-    400066: middle_02_r
-    400068: middle_03_l
-    400070: middle_03_r
-    400072: neck_01
-    400074: neck_02
-    400076: pelvis
-    400078: pinky_01_l
-    400080: pinky_01_r
-    400082: pinky_02_l
-    400084: pinky_02_r
-    400086: pinky_03_l
-    400088: pinky_03_r
-    400090: ring_01_l
-    400092: ring_01_r
-    400094: ring_02_l
-    400096: ring_02_r
-    400098: ring_03_l
-    400100: ring_03_r
-    400102: //RootNode
-    400104: spine_01
-    400106: spine_02
-    400108: spine_03
-    400110: thigh_l
-    400112: thigh_r
-    400114: thigh_twist_01_l
-    400116: thigh_twist_01_r
-    400118: thumb_01_l
-    400120: thumb_01_r
-    400122: thumb_02_l
-    400124: thumb_02_r
-    400126: thumb_03_l
-    400128: thumb_03_r
-    400130: upperarm_l
-    400132: upperarm_r
-    400134: upperarm_twist_01_l
-    400136: upperarm_twist_01_r
-    400138: weapon_l
-    400140: weapon_r
-    400142: root
-    7400000: Scene
-    9500000: //RootNode
-    2186277476908879412: ImportLogs
+  serializedVersion: 22200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: ball_l
+  - first:
+      1: 100002
+    second: ball_r
+  - first:
+      1: 100004
+    second: calf_l
+  - first:
+      1: 100006
+    second: calf_r
+  - first:
+      1: 100008
+    second: calf_twist_01_l
+  - first:
+      1: 100010
+    second: calf_twist_01_r
+  - first:
+      1: 100012
+    second: clavicle_l
+  - first:
+      1: 100014
+    second: clavicle_r
+  - first:
+      1: 100016
+    second: foot_l
+  - first:
+      1: 100018
+    second: foot_r
+  - first:
+      1: 100020
+    second: hand_l
+  - first:
+      1: 100022
+    second: hand_r
+  - first:
+      1: 100024
+    second: head
+  - first:
+      1: 100026
+    second: ik_foot_l
+  - first:
+      1: 100028
+    second: ik_foot_r
+  - first:
+      1: 100030
+    second: ik_foot_root
+  - first:
+      1: 100032
+    second: ik_hand_gun
+  - first:
+      1: 100034
+    second: ik_hand_l
+  - first:
+      1: 100036
+    second: ik_hand_r
+  - first:
+      1: 100038
+    second: ik_hand_root
+  - first:
+      1: 100040
+    second: index_01_l
+  - first:
+      1: 100042
+    second: index_01_r
+  - first:
+      1: 100044
+    second: index_02_l
+  - first:
+      1: 100046
+    second: index_02_r
+  - first:
+      1: 100048
+    second: index_03_l
+  - first:
+      1: 100050
+    second: index_03_r
+  - first:
+      1: 100052
+    second: lowerarm_l
+  - first:
+      1: 100054
+    second: lowerarm_r
+  - first:
+      1: 100056
+    second: lowerarm_twist_01_l
+  - first:
+      1: 100058
+    second: lowerarm_twist_01_r
+  - first:
+      1: 100060
+    second: middle_01_l
+  - first:
+      1: 100062
+    second: middle_01_r
+  - first:
+      1: 100064
+    second: middle_02_l
+  - first:
+      1: 100066
+    second: middle_02_r
+  - first:
+      1: 100068
+    second: middle_03_l
+  - first:
+      1: 100070
+    second: middle_03_r
+  - first:
+      1: 100072
+    second: neck_01
+  - first:
+      1: 100074
+    second: neck_02
+  - first:
+      1: 100076
+    second: pelvis
+  - first:
+      1: 100078
+    second: pinky_01_l
+  - first:
+      1: 100080
+    second: pinky_01_r
+  - first:
+      1: 100082
+    second: pinky_02_l
+  - first:
+      1: 100084
+    second: pinky_02_r
+  - first:
+      1: 100086
+    second: pinky_03_l
+  - first:
+      1: 100088
+    second: pinky_03_r
+  - first:
+      1: 100090
+    second: ring_01_l
+  - first:
+      1: 100092
+    second: ring_01_r
+  - first:
+      1: 100094
+    second: ring_02_l
+  - first:
+      1: 100096
+    second: ring_02_r
+  - first:
+      1: 100098
+    second: ring_03_l
+  - first:
+      1: 100100
+    second: ring_03_r
+  - first:
+      1: 100102
+    second: //RootNode
+  - first:
+      1: 100104
+    second: spine_01
+  - first:
+      1: 100106
+    second: spine_02
+  - first:
+      1: 100108
+    second: spine_03
+  - first:
+      1: 100110
+    second: thigh_l
+  - first:
+      1: 100112
+    second: thigh_r
+  - first:
+      1: 100114
+    second: thigh_twist_01_l
+  - first:
+      1: 100116
+    second: thigh_twist_01_r
+  - first:
+      1: 100118
+    second: thumb_01_l
+  - first:
+      1: 100120
+    second: thumb_01_r
+  - first:
+      1: 100122
+    second: thumb_02_l
+  - first:
+      1: 100124
+    second: thumb_02_r
+  - first:
+      1: 100126
+    second: thumb_03_l
+  - first:
+      1: 100128
+    second: thumb_03_r
+  - first:
+      1: 100130
+    second: upperarm_l
+  - first:
+      1: 100132
+    second: upperarm_r
+  - first:
+      1: 100134
+    second: upperarm_twist_01_l
+  - first:
+      1: 100136
+    second: upperarm_twist_01_r
+  - first:
+      1: 100138
+    second: weapon_l
+  - first:
+      1: 100140
+    second: weapon_r
+  - first:
+      1: 100142
+    second: root
+  - first:
+      4: 400000
+    second: ball_l
+  - first:
+      4: 400002
+    second: ball_r
+  - first:
+      4: 400004
+    second: calf_l
+  - first:
+      4: 400006
+    second: calf_r
+  - first:
+      4: 400008
+    second: calf_twist_01_l
+  - first:
+      4: 400010
+    second: calf_twist_01_r
+  - first:
+      4: 400012
+    second: clavicle_l
+  - first:
+      4: 400014
+    second: clavicle_r
+  - first:
+      4: 400016
+    second: foot_l
+  - first:
+      4: 400018
+    second: foot_r
+  - first:
+      4: 400020
+    second: hand_l
+  - first:
+      4: 400022
+    second: hand_r
+  - first:
+      4: 400024
+    second: head
+  - first:
+      4: 400026
+    second: ik_foot_l
+  - first:
+      4: 400028
+    second: ik_foot_r
+  - first:
+      4: 400030
+    second: ik_foot_root
+  - first:
+      4: 400032
+    second: ik_hand_gun
+  - first:
+      4: 400034
+    second: ik_hand_l
+  - first:
+      4: 400036
+    second: ik_hand_r
+  - first:
+      4: 400038
+    second: ik_hand_root
+  - first:
+      4: 400040
+    second: index_01_l
+  - first:
+      4: 400042
+    second: index_01_r
+  - first:
+      4: 400044
+    second: index_02_l
+  - first:
+      4: 400046
+    second: index_02_r
+  - first:
+      4: 400048
+    second: index_03_l
+  - first:
+      4: 400050
+    second: index_03_r
+  - first:
+      4: 400052
+    second: lowerarm_l
+  - first:
+      4: 400054
+    second: lowerarm_r
+  - first:
+      4: 400056
+    second: lowerarm_twist_01_l
+  - first:
+      4: 400058
+    second: lowerarm_twist_01_r
+  - first:
+      4: 400060
+    second: middle_01_l
+  - first:
+      4: 400062
+    second: middle_01_r
+  - first:
+      4: 400064
+    second: middle_02_l
+  - first:
+      4: 400066
+    second: middle_02_r
+  - first:
+      4: 400068
+    second: middle_03_l
+  - first:
+      4: 400070
+    second: middle_03_r
+  - first:
+      4: 400072
+    second: neck_01
+  - first:
+      4: 400074
+    second: neck_02
+  - first:
+      4: 400076
+    second: pelvis
+  - first:
+      4: 400078
+    second: pinky_01_l
+  - first:
+      4: 400080
+    second: pinky_01_r
+  - first:
+      4: 400082
+    second: pinky_02_l
+  - first:
+      4: 400084
+    second: pinky_02_r
+  - first:
+      4: 400086
+    second: pinky_03_l
+  - first:
+      4: 400088
+    second: pinky_03_r
+  - first:
+      4: 400090
+    second: ring_01_l
+  - first:
+      4: 400092
+    second: ring_01_r
+  - first:
+      4: 400094
+    second: ring_02_l
+  - first:
+      4: 400096
+    second: ring_02_r
+  - first:
+      4: 400098
+    second: ring_03_l
+  - first:
+      4: 400100
+    second: ring_03_r
+  - first:
+      4: 400102
+    second: //RootNode
+  - first:
+      4: 400104
+    second: spine_01
+  - first:
+      4: 400106
+    second: spine_02
+  - first:
+      4: 400108
+    second: spine_03
+  - first:
+      4: 400110
+    second: thigh_l
+  - first:
+      4: 400112
+    second: thigh_r
+  - first:
+      4: 400114
+    second: thigh_twist_01_l
+  - first:
+      4: 400116
+    second: thigh_twist_01_r
+  - first:
+      4: 400118
+    second: thumb_01_l
+  - first:
+      4: 400120
+    second: thumb_01_r
+  - first:
+      4: 400122
+    second: thumb_02_l
+  - first:
+      4: 400124
+    second: thumb_02_r
+  - first:
+      4: 400126
+    second: thumb_03_l
+  - first:
+      4: 400128
+    second: thumb_03_r
+  - first:
+      4: 400130
+    second: upperarm_l
+  - first:
+      4: 400132
+    second: upperarm_r
+  - first:
+      4: 400134
+    second: upperarm_twist_01_l
+  - first:
+      4: 400136
+    second: upperarm_twist_01_r
+  - first:
+      4: 400138
+    second: weapon_l
+  - first:
+      4: 400140
+    second: weapon_r
+  - first:
+      4: 400142
+    second: root
+  - first:
+      74: 7400000
+    second: Scene
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      41386430: 2186277476908879412
+    second: ImportLogs
   externalObjects: {}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -161,21 +455,10 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
-    animationImportWarnings: "\nClip 'Scene' has import animation warnings that might
-      lower retargeting quality:\n\t'upperarm_l' has scale animation that will be
-      discarded.\n\t'lowerarm_l' has scale animation that will be discarded.\n\t'hand_l'
-      has scale animation that will be discarded.\n\t'upperarm_r' has scale animation
-      that will be discarded.\n\t'lowerarm_r' has scale animation that will be discarded.\n\t'hand_r'
-      has scale animation that will be discarded.\n\t'neck_02' is inbetween humanoid
-      transforms and has rotation animation that will be discarded.\n\t'thigh_l' has
-      scale animation that will be discarded.\n\t'calf_l' has scale animation that
-      will be discarded.\n\t'foot_l' has scale animation that will be discarded.\n\t'thigh_r'
-      has scale animation that will be discarded.\n\t'calf_r' has scale animation
-      that will be discarded.\n\t'foot_r' has scale animation that will be discarded.\n"
+    animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -195,25 +478,36 @@ ModelImporter:
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 0.01
-    hasPreviousCalculatedGlobalScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -222,10 +516,10 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 1
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human:
     - boneName: pelvis
       humanName: Hips
@@ -687,8 +981,7 @@ ModelImporter:
     - name: ik_hand_r
       parentName: ik_hand_gun
       position: {x: 0.000000110715625, y: -0.000000026971101, z: 0.000000011026859}
-      rotation: {x: 0.000000002597518, y: -0.0000000032087002, z: -0.0000000059480874,
-        w: 1}
+      rotation: {x: 0.000000002597518, y: -0.0000000032087002, z: -0.0000000059480874, w: 1}
       scale: {x: 0.9999992, y: 1.000001, z: 0.9999994}
     - name: pelvis
       parentName: root
@@ -928,8 +1221,7 @@ ModelImporter:
     - name: upperarm_twist_01_r
       parentName: upperarm_r
       position: {x: 0.000000028088689, y: -0.00000017933547, z: 0.000000009834766}
-      rotation: {x: -0.000000087727116, y: 0.000000025776899, z: -0.0000004111971,
-        w: 1}
+      rotation: {x: -0.000000087727116, y: 0.000000025776899, z: -0.0000004111971, w: 1}
       scale: {x: 0.99999994, y: 1.0000002, z: 1.0000001}
     - name: neck_01
       parentName: spine_03
@@ -959,8 +1251,7 @@ ModelImporter:
     - name: calf_twist_01_l
       parentName: calf_l
       position: {x: 0.0000000024959443, y: 0.22552289, z: 0.000000013313256}
-      rotation: {x: -0.000000022356808, y: -0.000000004435605, z: -0.000000020370862,
-        w: 1}
+      rotation: {x: -0.000000022356808, y: -0.000000004435605, z: -0.000000020370862, w: 1}
       scale: {x: 1.0000001, y: 1, z: 1.0000001}
     - name: foot_l
       parentName: calf_l
@@ -975,8 +1266,7 @@ ModelImporter:
     - name: thigh_twist_01_l
       parentName: thigh_l
       position: {x: -0.0000000137276945, y: 0.22052944, z: -0.000000006551854}
-      rotation: {x: -0.000000004657526, y: -0.000000016499882, z: -0.000000004295771,
-        w: 1}
+      rotation: {x: -0.000000004657526, y: -0.000000016499882, z: -0.000000004295771, w: 1}
       scale: {x: 1.0000001, y: 1, z: 1}
     - name: thigh_r
       parentName: pelvis
@@ -991,8 +1281,7 @@ ModelImporter:
     - name: calf_twist_01_r
       parentName: calf_r
       position: {x: 0.0000000051956155, y: 0.22552295, z: 0.0000000069121597}
-      rotation: {x: -0.000000026082077, y: -0.000000005476977, z: -0.000000014436409,
-        w: 1}
+      rotation: {x: -0.000000026082077, y: -0.000000005476977, z: -0.000000014436409, w: 1}
       scale: {x: 1, y: 1, z: 1.0000001}
     - name: foot_r
       parentName: calf_r
@@ -1007,8 +1296,7 @@ ModelImporter:
     - name: thigh_twist_01_r
       parentName: thigh_r
       position: {x: -0.0000000035448464, y: 0.22052962, z: -0.0000000034517142}
-      rotation: {x: 0.000000012070566, y: -0.0000000371615, z: 0.000000002397826,
-        w: 1}
+      rotation: {x: 0.000000012070566, y: -0.0000000371615, z: 0.000000002397826, w: 1}
       scale: {x: 1, y: 0.99999994, z: 1}
     - name: SK_Amplify_Character
       parentName: Sk_Mannequin(Clone)
@@ -1022,14 +1310,19 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 1
     hasExtraRoot: 1
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: db0e58d0841b90c478cc919c554c298c,
-    type: 3}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: db0e58d0841b90c478cc919c554c298c, type: 3}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
+  avatarSetup: 2
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

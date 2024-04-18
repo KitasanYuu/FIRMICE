@@ -12,7 +12,7 @@ namespace BattleShoot
         public bool UsingTrajectoryPredict = true;
 
         public GameObject Target;
-        private GameObject TargetPre;
+        [HideInInspector]public GameObject TargetPre;
         private List<GameObject> TargetHitPoint = new List<GameObject>();
 
         public bool isAiming = false;
@@ -73,8 +73,18 @@ namespace BattleShoot
 
         private void AIM()
         {
+            if(TargetPre != null)
+                isAiming = true;
+
             if (isAiming)
             {
+                if (TargetPre == null)
+                {
+                    isAiming = false;
+                    return;
+                }
+
+
                 Target = aif.GetAvailableShootPoint(raycastOrigin, gameObject, TargetPre, aimColliderLayerMask);
                 //Debug.Log(Target?.name);
                 RaycastDetection();
@@ -167,13 +177,13 @@ namespace BattleShoot
                     float maxDistance = Vector3.Distance(raycastOrigin.transform.position, Target.transform.position);
 
                     RaycastHit hitInfo;
-                    if (Physics.Raycast(ray, out hitInfo, maxDistance))
+                    if (Physics.Raycast(ray, out hitInfo, maxDistance,aimColliderLayerMask))
                     {
                         // 判断击中的目标是否就是预期的Target 或者其父物体
                         Transform currentTransform = hitInfo.transform;
                         while (currentTransform != null)
                         {
-                            if (currentTransform == TargetPre.transform)
+                            if (currentTransform == TargetPre?.transform)
                             {
                                 LocalFire = true;
                                 //Debug.Log("Can Fire");
@@ -182,7 +192,7 @@ namespace BattleShoot
                             currentTransform = currentTransform.parent;
                         }
 
-                        if(currentTransform != TargetPre.transform)
+                        if(currentTransform != TargetPre?.transform)
                         {
                             LocalFire = false;
                             //Debug.Log("Cannot Fire");

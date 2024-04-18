@@ -70,7 +70,7 @@ namespace Detector
         {
             if (tpsShootController != null)
             {
-                if (tpsShootController.isAiming)
+                if (tpsShootController.isAiming || true)
                 {
                     // 每隔detectionInterval帧执行一次射线检测
                     if (frameCount >= detectionInterval)

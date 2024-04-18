@@ -18,6 +18,8 @@ namespace RenderTools
         // 控制_ENABLEDITHER的布尔值
         public bool _ENABLEDITHER = false;
 
+        [HideInInspector] public bool isRefreshing;
+
         // 控制_Dither的范围
         [Range(0.0f, 1.0f)]
         public float _Dither = 0.0f;
@@ -27,6 +29,24 @@ namespace RenderTools
 
         void Start()
         {
+            RendererInit();
+        }
+
+        public void Refresh(bool isrefresh)
+        {
+            if (isrefresh)
+            {
+                isRefreshing = true;
+                renderersList.Clear();
+                uniqueMaterialsList.Clear();
+
+                RendererInit();
+            }
+        }
+
+        private void RendererInit()
+        {
+            isRefreshing = true;
             // 获取当前物体及其子物体上的所有Renderer组件
             Renderer[] allRenderers = GetComponentsInChildren<Renderer>(true);
 
@@ -77,6 +97,8 @@ namespace RenderTools
 
             //更新所有材质中的_ENABLEDITHER和_Dither属性
             UpdateMaterialProperties();
+
+            isRefreshing = false;
         }
 
         // 控制所有Render组件的开关状态

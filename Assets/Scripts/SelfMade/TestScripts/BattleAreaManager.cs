@@ -3,6 +3,8 @@ using CustomInspector;
 using System.Collections.Generic;
 using System;
 using VInspector;
+using System.Collections;
+using YuuTool;
 
 namespace TestField
 {
@@ -94,7 +96,6 @@ namespace TestField
         private void SearchingTarget()
         {
 
-            previousTarget = TargetFound;
             TargetFound = null;
             // 清空 TargetFound
 
@@ -115,10 +116,19 @@ namespace TestField
                 }
             }
 
+
             // 检查是否有新的目标被找到
             if (TargetFound != previousTarget)
             {
                 // 在设置新值时触发事件
+                OnTargetFoundChanged(TargetFound);
+                previousTarget = TargetFound;
+            }
+
+            if(TargetFound.IsMissing() || previousTarget.IsMissing())
+            {
+                TargetFound = null;
+                previousTarget = null;
                 OnTargetFoundChanged(TargetFound);
             }
         }

@@ -31,13 +31,13 @@ Material:
   - _ALPHATEST_ON
   - _CONSERVATIVE_DEPTH_OFFSET
   - _DEPTHOFFSET_ON
-  - _DISABLE_SSR_TRANSPARENT
   - _DOUBLESIDED_ON
   - _EMISSION
   - _NORMALMAPENABLE
   m_InvalidKeywords:
   - _METALLICSPECGLOSSMAP
   - _NORMALMAP
+  - _SIX_WAY_COLOR_ABSORPTION
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
@@ -47,10 +47,10 @@ Material:
     RenderType: TransparentCutout
   disabledShaderPasses:
   - MOTIONVECTORS
-  - TransparentDepthPrepass
-  - TransparentDepthPostpass
   - TransparentBackface
+  - TransparentDepthPostpass
   - RayTracingPrepass
+  - TransparentDepthPrepass
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -92,6 +92,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Main2ndColor:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Main2ndTexture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -169,7 +173,7 @@ Material:
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _ColorStrength: 1
+    - _ColorStrength: 0.858
     - _ConservativeDepthOffsetEnable: 1
     - _Cull: 0
     - _CullMode: 0
@@ -195,7 +199,7 @@ Material:
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
     - _EnvironmentReflections: 1
-    - _ExcludeFromTUAndAA: 0
+    - _ExcludeFromTUAndAA: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
@@ -206,6 +210,7 @@ Material:
     - _MaterialID: 1
     - _MaterialTypeMask: 2
     - _Metallic: 0
+    - _MultiColorRate: 1
     - _NORMALMAPENABLE: 1
     - _NormalStrength: 0.076
     - _OcclusionStrength: 1
@@ -216,7 +221,7 @@ Material:
     - _RayTracing: 0
     - _ReceiveShadows: 1
     - _ReceivesSSR: 1
-    - _ReceivesSSRTransparent: 0
+    - _ReceivesSSRTransparent: 1
     - _RefractionModel: 0
     - _RenderQueueType: 1
     - _RequireSplitLighting: 0
@@ -251,6 +256,7 @@ Material:
     - _TransparentWritingMotionVec: 0
     - _TransparentZWrite: 0
     - _UseAoMap: 0
+    - _UseColorAbsorption: 1
     - _UseColorMap: 1
     - _UseEmissiveMap: 1
     - _UseMetallicMap: 1
@@ -267,7 +273,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DissolveColor: {r: 1, g: 1, b: 1, a: 1}
     - _DoubleSidedConstants: {r: 1, g: 1, b: 1, a: 0}
-    - _EmColor: {r: 253.01431, g: 97.978874, b: 0, a: 1}
+    - _EmColor: {r: 89.454094, g: 34.640774, b: 0, a: 1}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _MainColor: {r: 1, g: 1, b: 1, a: 1}
     - _Maincolor2: {r: 1, g: 1, b: 1, a: 1}

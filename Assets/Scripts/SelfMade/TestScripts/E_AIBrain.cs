@@ -56,7 +56,7 @@ namespace TestField
                 CurrentTarget = aif.CurrentSelectedAttackTarget(gameObject, AttackTarget);
             }
 
-            if (CurrentTarget != PreviousTarget)
+            if ((CurrentTarget != PreviousTarget)||(CurrentTarget != shootcontroller.TargetPre)                       )
             {
                 shootcontroller.SetCurrentAttackTarget(CurrentTarget);
                 OnAttackTargetChanged(CurrentTarget);
@@ -126,7 +126,7 @@ namespace TestField
 
         private void ParameterInit()
         {
-            PreviousCanFireStatus = !CanFire;
+            PreviousCanFireStatus = false;
         }
 
         private void ComponentInit()
