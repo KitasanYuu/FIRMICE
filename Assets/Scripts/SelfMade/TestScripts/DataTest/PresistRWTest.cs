@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.IO;
+using YDataPresisting;
 
 public static class PresistRWTest
 {
@@ -29,11 +30,4 @@ public static class PresistRWTest
     {
         return Application.persistentDataPath + "/" + fileName + ".json";
     }
-}
-
-[System.Serializable]
-public class PlayerData
-{
-    public int currentNumber;
-    // 其他属性...
 }
