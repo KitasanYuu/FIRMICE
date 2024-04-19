@@ -6,6 +6,7 @@ using System;
 using System.Text;
 using DataManager;
 using YuuTool;
+using System.Collections.Generic;
 
 public static class PersistRWTest
 {
@@ -48,12 +49,45 @@ public static class PersistRWTest
         }
     }
 
-    private static string GetSaveFilePath(string fileName)
+    public static List<PersistDataClass> GetAllSave()
+    {
+        string path = GetSaveFilePath();
+        if (Directory.Exists(path))
+        {
+            string[] filePaths = Directory.GetFiles(path, "*.Ysave");
+            List<PersistDataClass> saveDataList = new List<PersistDataClass>();
+
+            foreach (string filePath in filePaths)
+            {
+                string json = File.ReadAllText(filePath);
+                PersistDataClass data = JsonUtility.FromJson<PersistDataClass>(json);
+                saveDataList.Add(data);
+            }
+            return saveDataList;
+        }
+        else
+        {
+            Debug.LogWarning("Player data file not found.");
+            return null;
+        }
+    }
+
+    private static string GetSaveFilePath(string fileName = null)
     {
         string folderPath = YTool.CreateFolder("Saver");
-        string _fileName = fileName + ".YSave";
 
-        return Path.Combine(folderPath,_fileName);
+
+        if(fileName != null)
+        {
+            string _fileName = fileName + ".YSave";
+
+            return Path.Combine(folderPath, _fileName);
+        }
+        else
+        {
+            return folderPath;
+        }
+
     }
 
     // AES encryption method
