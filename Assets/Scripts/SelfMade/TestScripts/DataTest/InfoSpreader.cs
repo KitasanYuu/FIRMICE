@@ -1,4 +1,4 @@
-using YDataPresisting;
+using YDataPersistence;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,10 +13,10 @@ public class InfoSpr : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       PlayerData ReadData = PresistRWTest.LoadPlayerData("Slot1");
+        PersistDataClass ReadData = PersistRWTest.LoadPlayerData("Slot1");
         if(ReadData!= null)
         {
-            Num = ReadData.currentNumber;
+            Num = ReadData.testDataClass.currentNumber;
         }
 
         Number.text = Num.ToString();
@@ -36,9 +36,10 @@ public class InfoSpr : MonoBehaviour
 
     public void SaveData()
     {
-        PlayerData playerData = new PlayerData();
-        playerData.currentNumber = Num;
-        PresistRWTest.SavePlayerData(playerData,"Slot1");
+        PersistDataClass PDC = new PersistDataClass();
+        PDC.testDataClass.currentNumber = Num;
+        PDC.testDataClass.Number = Num;
+        PersistRWTest.SavePlayerData(PDC, "Slot1");
 
     }
 }

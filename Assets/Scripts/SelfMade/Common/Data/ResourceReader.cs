@@ -29,6 +29,19 @@ namespace DataManager
             return relativePath;
         }
 
+        public static PersistenceDataEncryptionSettings GetEncryptionOption()
+        {
+            PersistenceDataEncryptionSettings PDES = Resources.Load<PersistenceDataEncryptionSettings>("GlobalSettings/PersistenceDataEncryptionSettings");
+            if(PDES != null)
+            {
+                return PDES;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public Color GetColor(string colorUsage)
         {
             // 加载GlobalColorSetting ScriptableObject
