@@ -1,19 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using YDataPersistence;
 
 public class SlotSimu : MonoBehaviour
 {
     public string CCC;
+    public TextMeshProUGUI ccc;
     public DataPersistenceManager DPM;
-    public InfoSpr _spr;
-
+    private InfoSpr _spr;
     private PersistDataClass _dataClass;
     // Start is called before the first frame update
     void Start()
     {
-        
+        _spr = GetComponentInParent<InfoSpr>();
     }
 
     // Update is called once per frame
@@ -22,43 +23,24 @@ public class SlotSimu : MonoBehaviour
         
     }
 
-    public void Select()
+    public void ParameterReceive(string verifyCode,DataPersistenceManager _dpm)
     {
-        if (CCC != null)
-        {
-            _dataClass = DPM.LoadSaveSlot(CCC);
-        }
-        else
-        {
-            _dataClass = DPM.CreateSaveSlot();
-            CCC = _dataClass.cryptographicCheckCode;
-        }
-        if (_dataClass == null)
-        {
-            _dataClass = DPM.CreateSaveSlot();
-            CCC = _dataClass.cryptographicCheckCode;
-        }
-        _spr.SetNum(_dataClass.testDataClass.Number, CCC);
+        CCC = verifyCode;
+        DPM = _dpm;
+        ccc.text = verifyCode;
     }
 
-    public void SaveData()
+    public void Deletthis()
     {
-        if(CCC != null)
-        {
-            _dataClass = DPM.LoadSaveSlot(CCC);
-        }
-        else
-        {
-            _dataClass = DPM.CreateSaveSlot();
-            CCC = _dataClass.cryptographicCheckCode;
-        }
-
-        if(_dataClass == null)
-        {
-            _dataClass = DPM.CreateSaveSlot();
-            CCC = _dataClass.cryptographicCheckCode;
-        }
-        _dataClass.testDataClass.Number = _spr.GetNum();
-        PersistRWTest.SavePlayerData(_dataClass, CCC);
+        DPM?.slotList.Remove(this);
+        DPM?.DestorySlot(CCC);
+        Destroy(this.gameObject);
     }
+
+    public void Readthis()
+    {
+        DPM.LoadSaveSlot(CCC);
+        _spr.SetNum(DPM.CurrentSaveClass.testDataClass.Number,CCC);
+    }
+
 }

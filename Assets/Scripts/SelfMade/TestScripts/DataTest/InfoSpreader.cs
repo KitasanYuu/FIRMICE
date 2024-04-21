@@ -10,6 +10,7 @@ public class InfoSpr : MonoBehaviour
     public Button AddButton;
     public TextMeshProUGUI Number;
     [ReadOnly] public string SaveCode;
+    public DataPersistenceManager DPM;
     private int Num = 0;
 
     // Start is called before the first frame update
@@ -50,9 +51,12 @@ public class InfoSpr : MonoBehaviour
 
     public void SaveData()
     {
-        PersistDataClass PDC = new PersistDataClass();
-        PDC.testDataClass.currentNumber = Num;
-        PDC.testDataClass.Number = Num;
-        PersistRWTest.SavePlayerData(PDC, SaveCode);
+        if(DPM.CurrentSaveClass!= null)
+        {
+            DPM.CurrentSaveClass.testDataClass.Number = Num;
+            DPM.CurrentSaveClass.testDataClass.currentNumber = Num;
+        }
+
+        DPM.SaveStatus();
     }
 }

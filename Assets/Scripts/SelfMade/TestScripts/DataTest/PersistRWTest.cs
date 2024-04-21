@@ -49,6 +49,25 @@ public static class PersistRWTest
         }
     }
 
+    public static void DestorySave(string VerifyCode)
+    {
+        string path = GetSaveFilePath();
+        if (Directory.Exists(path))
+        {
+            string[] filePaths = Directory.GetFiles(path, "*.Ysave");
+
+            foreach (string filePath in filePaths)
+            {
+                string json = File.ReadAllText(filePath);
+                PersistDataClass data = JsonUtility.FromJson<PersistDataClass>(json);
+                if(data.cryptographicCheckCode == VerifyCode)
+                {
+                    File.Delete(filePath);
+                }
+            }
+        }
+    }
+
     public static List<PersistDataClass> GetAllSave()
     {
         string path = GetSaveFilePath();
