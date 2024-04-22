@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>此分支为当前活动分支</h1>
+  <!-- <h1>此分支为当前活动分支</h1> -->
   <a href="https://crypko.ai/cn/crypko/ABoLzpQhVPRMR/">
   <img src="Assets/Lozas.png" alt="看板娘" width = "400">
   </a><br>

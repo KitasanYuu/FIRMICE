@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace YDataPersistence
@@ -8,6 +6,7 @@ namespace YDataPersistence
     {
         public string cryptographicCheckCode;
         public TestDataClass testDataClass = new TestDataClass();
+        public PlayerLocationData playerLocationData = new PlayerLocationData();
     }
 
     [System.Serializable]
@@ -15,6 +14,12 @@ namespace YDataPersistence
     {
         public int currentNumber;
         public int Number;
-        // 其他属性...
+    }
+
+    [System.Serializable]
+    public class PlayerLocationData
+    {
+        public string sceneName;
+        public Vector3 position;
     }
 }
