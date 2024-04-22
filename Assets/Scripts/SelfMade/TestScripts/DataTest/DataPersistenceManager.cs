@@ -1,6 +1,6 @@
 using CustomInspector;
+using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using YDataPersistence;
 using YuuTool;
@@ -20,7 +20,7 @@ public class DataPersistenceManager : MonoBehaviour
 
     private void Start()
     {
-        dataList = PersistRWTest.GetAllSave();
+        dataList = PersistDataRW.GetAllSave(true);
         foreach (PersistDataClass dataClass in dataList)
         {
             GenSlot(dataClass.cryptographicCheckCode);
@@ -50,13 +50,13 @@ public class DataPersistenceManager : MonoBehaviour
     {
         if(CurrentSaveClass != null)
         {
-            PersistRWTest.SavePlayerData(CurrentSaveClass, CurrentCCC);
+            PersistDataRW.SavePlayerData(CurrentSaveClass,DateTime.Now.ToString("yyyyMMddHHmmssfff"));
         }
     }
 
     public void LoadSaveSlot(string CCC)
     {
-        dataList = PersistRWTest.GetAllSave();
+        dataList = PersistDataRW.GetAllSave(true);
         foreach (PersistDataClass data in dataList)
         {
             if(data.cryptographicCheckCode == CCC)
@@ -95,7 +95,7 @@ public class DataPersistenceManager : MonoBehaviour
         }
 
 
-        PersistRWTest.DestorySave(CCC);
+        PersistDataRW.DestroySave(CCC);
     }
 
 }

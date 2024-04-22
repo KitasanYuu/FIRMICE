@@ -1,7 +1,8 @@
-using CustomInspector;
+using System;
 using System.IO;
 using System.Text;
 using UnityEngine;
+
 
 namespace YuuTool
 {
@@ -20,10 +21,14 @@ namespace YuuTool
             }
             return null;
         }
-        public static string GenerateRandomString(int length)
+        public static string GenerateRandomString(int length,bool capital = false)
         {
             System.Random random = new System.Random();
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            string chars = null;
+            if(capital)
+                chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            else
+                chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             StringBuilder builder = new StringBuilder(length);
             for (int i = 0; i < length; i++)
             {
@@ -31,6 +36,21 @@ namespace YuuTool
             }
 
             return builder.ToString();
+        }
+
+        public static string SeedGenerateRandomString(string seed, int length)
+        {
+            System.Random random = new System.Random(seed.GetHashCode());
+
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            char[] result = new char[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                result[i] = chars[random.Next(chars.Length)];
+            }
+
+            return new string(result);
         }
 
         // 扩展方法来检测对象是否为“Missing”

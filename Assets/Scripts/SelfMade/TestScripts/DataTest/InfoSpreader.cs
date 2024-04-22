@@ -16,7 +16,7 @@ public class InfoSpr : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PersistDataClass ReadData = PersistRWTest.LoadPlayerData(SaveCode);
+        PersistDataClass ReadData = PersistDataRW.LoadPlayerData(SaveCode);
         if(ReadData!= null)
         {
             Num = ReadData.testDataClass.currentNumber;
