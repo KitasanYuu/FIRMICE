@@ -1,23 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
+using YDataPersistence;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using CustomInspector;
 
 public class InfoSpr : MonoBehaviour
 {
     public Button MinusButton;
     public Button AddButton;
     public TextMeshProUGUI Number;
+    [ReadOnly] public string SaveCode;
+    public DataPersistenceManager DPM;
     private int Num = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-       PlayerData ReadData = PresistRWTest.LoadPlayerData("Slot1");
+        PersistDataClass ReadData = PersistDataRW.LoadPlayerData(SaveCode);
         if(ReadData!= null)
         {
-            Num = ReadData.currentNumber;
+            Num = ReadData.testDataClass.currentNumber;
         }
 
         Number.text = Num.ToString();
@@ -35,11 +37,26 @@ public class InfoSpr : MonoBehaviour
         Number.text = Num.ToString();
     }
 
+    public void SetNum(int _num,string _saveCode)
+    {
+        SaveCode = _saveCode;
+        Num = _num;
+        Number.text = Num.ToString();
+    }
+
+    public int GetNum()
+    {
+        return Num;
+    }
+
     public void SaveData()
     {
-        PlayerData playerData = new PlayerData();
-        playerData.currentNumber = Num;
-        PresistRWTest.SavePlayerData(playerData,"Slot1");
+        if(DPM.CurrentSaveClass!= null)
+        {
+            DPM.CurrentSaveClass.testDataClass.Number = Num;
+            DPM.CurrentSaveClass.testDataClass.currentNumber = Num;
+        }
 
+        DPM.SaveStatus();
     }
 }

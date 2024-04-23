@@ -1,4 +1,8 @@
+using System;
+using System.IO;
+using System.Text;
 using UnityEngine;
+
 
 namespace YuuTool
 {
@@ -17,6 +21,37 @@ namespace YuuTool
             }
             return null;
         }
+        public static string GenerateRandomString(int length,bool capital = false)
+        {
+            System.Random random = new System.Random();
+            string chars = null;
+            if(capital)
+                chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            else
+                chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            StringBuilder builder = new StringBuilder(length);
+            for (int i = 0; i < length; i++)
+            {
+                builder.Append(chars[random.Next(chars.Length)]);
+            }
+
+            return builder.ToString();
+        }
+
+        public static string SeedGenerateRandomString(string seed, int length)
+        {
+            System.Random random = new System.Random(seed.GetHashCode());
+
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            char[] result = new char[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                result[i] = chars[random.Next(chars.Length)];
+            }
+
+            return new string(result);
+        }
 
         // 扩展方法来检测对象是否为“Missing”
         public static bool IsMissing(this UnityEngine.Object obj)
@@ -30,6 +65,40 @@ namespace YuuTool
         {
             // 对象不等于null且不是“Missing”，意味着它存在且未被销毁
             return obj != null;
+        }
+
+        public static string CreateFolder(string folderName ,string tfolderPath = null,bool needClearPath = false)
+        {
+            string _TfolderPath = tfolderPath == null ? Application.persistentDataPath : tfolderPath;
+            string _CfolderPath = Path.Combine(_TfolderPath, folderName);
+
+            // 检查新文件夹是否已存在
+            if (!Directory.Exists(_CfolderPath))
+            {
+                // 创建新文件夹
+                Directory.CreateDirectory(_CfolderPath);
+            }
+            else
+            {
+                if (needClearPath)
+                {
+                    ClearFolder(_CfolderPath);
+                }
+            }
+
+            return _CfolderPath;
+        }
+
+        public static void ClearFolder(string folderPath)
+        {
+            // 获取路径中的所有文件
+            string[] files = Directory.GetFiles(folderPath);
+
+            // 删除所有文件
+            foreach (string file in files)
+            {
+                File.Delete(file);
+            }
         }
 
     }

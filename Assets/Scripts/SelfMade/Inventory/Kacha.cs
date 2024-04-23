@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using YuuTool;
 
 public class Kacha : MonoBehaviour
 {
@@ -19,26 +20,7 @@ public class Kacha : MonoBehaviour
 
     void Start()
     {
-        folderName = "KaChaImage"; // 新文件夹的名称
-        folderPath = Path.Combine(Application.persistentDataPath, folderName); // 新文件夹的完整路径
-
-        // 检查新文件夹是否已存在
-        if (!Directory.Exists(folderPath))
-        {
-            // 创建新文件夹
-            Directory.CreateDirectory(folderPath);
-        }
-        else
-        {
-            // 获取持久化数据路径中的所有文件
-            string[] files = Directory.GetFiles(folderPath);
-
-            // 删除所有文件
-            foreach (string file in files)
-            {
-                File.Delete(file);
-            }
-        }
+        folderPath = YTool.CreateFolder("KaChaImage", null, true);
     }
 
     private void Update()
