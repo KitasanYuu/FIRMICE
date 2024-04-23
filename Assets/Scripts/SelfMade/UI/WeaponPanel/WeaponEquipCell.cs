@@ -87,6 +87,7 @@ public class WeaponEquipCell : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public void OnPointerEnter(PointerEventData eventData)
     {
         _hasExited = false;
+        _hasPressed = false;
         _hoverImage.color = _weaponDefaultColor;
         UnderLine.color = Color.white;
         StartCoroutine(HoverImageChange());
@@ -97,6 +98,7 @@ public class WeaponEquipCell : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public void OnPointerExit(PointerEventData eventData)
     {
         _hasExited = true;
+        _hasPressed = false;
         _hoverImage.color = _weaponDefaultColor;
         UnderLine.color = Color.white;
         StopAllCoroutines();
