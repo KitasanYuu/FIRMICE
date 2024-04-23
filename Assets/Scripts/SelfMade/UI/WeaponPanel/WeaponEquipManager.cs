@@ -60,6 +60,7 @@ public class WeaponEquipManager : MonoBehaviour
         if (!EquipCells.Contains(WEC))
         {
             EquipCells.Add(WEC);
+            EquipCells = EquipCells.OrderBy(cell => cell.PageNum).ToList();
         }
     }
 
