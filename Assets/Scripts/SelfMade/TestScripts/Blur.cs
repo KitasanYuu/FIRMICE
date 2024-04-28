@@ -40,7 +40,7 @@ public class Blur : MonoBehaviour
 
         // Load PNG file and convert to Texture2D
         byte[] fileData = System.IO.File.ReadAllBytes(screenshotPath);
-        capturedTexture = new Texture2D(2, 2, TextureFormat.RGBA32, false,true); // Set linear color space to false
+        capturedTexture = new Texture2D(2, 2, TextureFormat.RGBA32, true); // Set linear color space to false
         capturedTexture.LoadImage(fileData);
 
         // Create Sprite from Texture2D
