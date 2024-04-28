@@ -12,7 +12,7 @@ public class HealthBar : MonoBehaviour
     public Transform HPAnchor; // NPC的Transform组件
     public Camera mainCamera; // 主相机
     public Canvas canvas; // Canvas，其Render Mode应该设置为Camera，并且指定了UI Camera
-    public float baseOffsetY = 2.0f; // 血条在NPC头顶的基础偏移量
+    public float baseOffsetY = 0f; // 血条在NPC头顶的基础偏移量
 
     public float transpeed = 10f;
 
@@ -149,7 +149,7 @@ public class HealthBar : MonoBehaviour
         //    healthBarRectTransform.localPosition = canvasPos;
         //}
 
-        HoverTab.BarPositionAdjust(canvas, mainCamera, HPAnchor, healthBarRectTransform,null, baseOffsetY);
+        HoverTab.BarPositionAdjust(canvas, mainCamera, HPAnchor, healthBarRectTransform);
     }
 
     #endregion
