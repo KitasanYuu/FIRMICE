@@ -13,7 +13,8 @@
 ![Unity](https://img.shields.io/badge/Unity-2023.2.3f1-black?style=flat-square&logo=unity)
 <br><br>
 
-当前工作分支<[UI-BackPack](https://github.com/KitasanYuu/FIRMICE/tree/UI-BackPack)>
+[UI-BackPack]出现严重不可逆损坏，已另开分支恢复工作<br>
+当前工作分支<[BackPack-Recover](https://github.com/KitasanYuu/FIRMICE/tree/BackPack-Recover)>
   
 </div>
 
