@@ -33,7 +33,7 @@ public class Blur : MonoBehaviour
         _blurMat = new Material(blurShader);
         screenshotImage.material = _blurMat;
         screenshotImage.color = Color.white;
-        renderTexture = new RenderTexture(Screen.width, Screen.height, 32);
+        renderTexture = new RenderTexture(Screen.width, Screen.height, 0, RenderTextureFormat.RGB111110Float);
     }
 
     private void Update()
@@ -84,10 +84,14 @@ public class Blur : MonoBehaviour
     private Texture2D TextureFromRenderTexture(RenderTexture rt)
     {
         RenderTexture.active = rt;
-        Texture2D texture = new Texture2D(rt.width, rt.height);
+        Texture2D texture = new Texture2D(rt.width, rt.height,TextureFormat.RGB24,true,true);
+        //texture.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
         texture.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+
         texture.Apply();
+
         RenderTexture.active = null;
+
         return texture;
     }
 
@@ -96,6 +100,10 @@ public class Blur : MonoBehaviour
     {
         // Set target texture for specific camera
         specificCamera.targetTexture = renderTexture;
+
+        // 设置清除标志为 Color，并设置背景颜色为不透明的黑色
+        specificCamera.clearFlags = CameraClearFlags.Color;
+        specificCamera.backgroundColor = new Color(0, 0, 0, 1);
 
         // Render camera
         specificCamera.Render();
@@ -106,8 +114,10 @@ public class Blur : MonoBehaviour
         // Reset target texture
         specificCamera.targetTexture = null;
 
+        capturedTexture = TextureFromRenderTexture(renderTexture);
+
         // Create Sprite from RenderTexture
-        Sprite screenshotSprite = Sprite.Create(TextureFromRenderTexture(renderTexture), new Rect(0, 0, renderTexture.width, renderTexture.height), Vector2.zero);
+        Sprite screenshotSprite = Sprite.Create(capturedTexture, new Rect(0, 0, renderTexture.width, renderTexture.height), Vector2.zero);
 
         // Set Sprite to the Image component
         screenshotImage.sprite = screenshotSprite;
