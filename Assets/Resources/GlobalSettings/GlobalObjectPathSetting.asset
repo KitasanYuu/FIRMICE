@@ -12,17 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09aa21525b1b88748b49c5df9ca19519, type: 3}
   m_Name: GlobalObjectPathSetting
   m_EditorClassIdentifier: 
-  BulletEffect:
-    path: Assets/Resources/Prefab/BulletEffect
-    assetReference: {fileID: 102900000, guid: 3b04e97f45df1c8468caadf7a6b41072, type: 3}
-  DataPath:
+  CsvDataPath:
     path: Assets/Resources/Data/Table
     assetReference: {fileID: 102900000, guid: b4e95462714052444b2b379f3c2078df, type: 3}
-  HealthBar:
-    path: Assets/Resources/Prefab/HealthBar
+  UI_HealthBar:
+    path: Assets/Resources/Prefab/UI/UI-HealthBar
     assetReference: {fileID: 102900000, guid: 6dc5b6a71c381de488cac3089dcfe779, type: 3}
-  Player:
-    path: Assets/Resources/Prefab/Player
+  UI_Player:
+    path: Assets/Resources/Prefab/UI/UI-Player
     assetReference: {fileID: 102900000, guid: a7f7d47f2c76a304fae90f1ca1559af1, type: 3}
   UIAudioClip:
     path: Assets/Resources/Audio/UIAudio
@@ -31,8 +28,11 @@ MonoBehaviour:
     path: Assets/Resources/Audio/Weapon
     assetReference: {fileID: 102900000, guid: 91f13339df733bd4b822b22e0b3fff1b, type: 3}
   WeaponSnapShot:
-    path: Assets/Resources/Prefab/UIShot/WeaponShot
+    path: Assets/Resources/Prefab/Render/WeaponShot
     assetReference: {fileID: 102900000, guid: 1ecb4ff96a0b7984d8ac6883cd4c7990, type: 3}
   RenderBox:
-    path: Assets/Resources/Prefab/UIShot/RenderBox
+    path: Assets/Resources/Prefab/Render/RenderBox
     assetReference: {fileID: 102900000, guid: 8c563401162a6224b97fdb626a3b8968, type: 3}
+  BulletEffect:
+    path: Assets/Resources/Prefab/BulletEffect
+    assetReference: {fileID: 102900000, guid: 3b04e97f45df1c8468caadf7a6b41072, type: 3}

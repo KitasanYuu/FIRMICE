@@ -107,8 +107,8 @@ public class HPVisionManager : MonoBehaviour
     private void ResourceInit()
     {
          HVM = GetComponent<HPVisionManager>();
-        EHealthBarPrefab = RR.GetGameObject("HealthBar", "EliteHealthBarPrefab");
-        HealthBarPrefab = RR.GetGameObject("HealthBar", "HealthBarPrefab");
+        EHealthBarPrefab = RR.GetGameObject("UI_HealthBar", "EliteHealthBarPrefab");
+        HealthBarPrefab = RR.GetGameObject("UI_HealthBar", "HealthBarPrefab");
     }
 
     private void ComponentInit()

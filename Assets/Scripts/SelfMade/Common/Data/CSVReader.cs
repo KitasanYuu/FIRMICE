@@ -17,7 +17,7 @@ namespace DataManager
         public void LoadCSV(string csvFileName)
         {
             ResourceReader RR = new ResourceReader();
-            string CsvResourcePath = RR.GainPath("DataPath", csvFileName);
+            string CsvResourcePath = RR.GainPath("CsvDataPath", csvFileName);
             TextAsset csvFile = RR.GetCSVFile(csvFileName);
 
             if (csvFile == null)

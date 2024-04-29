@@ -356,7 +356,7 @@ public class PlayerStatusManager : MonoBehaviour
             return;
         }
 
-        GameObject StatusPrefab = RR.GetGameObject("Player", "PlayerStatusUI");
+        GameObject StatusPrefab = RR.GetGameObject("UI_Player", "PlayerStatusUI");
 
         PlayerStatus = Instantiate(StatusPrefab,gameObject.transform) as GameObject;
 

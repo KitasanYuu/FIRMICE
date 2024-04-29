@@ -21,6 +21,7 @@ namespace YuuTool
             }
             return null;
         }
+
         public static string GenerateRandomString(int length,bool capital = false)
         {
             System.Random random = new System.Random();

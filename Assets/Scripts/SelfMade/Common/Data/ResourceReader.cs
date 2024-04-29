@@ -124,7 +124,7 @@ namespace DataManager
         public TextAsset GetCSVFile(string CSVName)
         {
             TextAsset csv = null;
-            string CsvResourcePath = GainPath("DataPath", CSVName);
+            string CsvResourcePath = GainPath("CsvDataPath", CSVName);
             csv = Resources.Load<TextAsset>(CsvResourcePath);
             return csv;
         }
