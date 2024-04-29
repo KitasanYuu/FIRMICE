@@ -159,6 +159,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2879077466351045189}
+  - component: {fileID: 4883224693908479897}
   m_Layer: 5
   m_Name: Selected
   m_TagString: Untagged
@@ -186,6 +187,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &4883224693908479897
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2297111079221732047}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &3077778909708301849
 GameObject:
   m_ObjectHideFlags: 0
@@ -483,6 +496,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7148657697914755682}
   - component: {fileID: 866570665561263597}
+  - component: {fileID: 2316237719207687790}
   m_Layer: 5
   m_Name: BackPackUnit
   m_TagString: Untagged
@@ -521,3 +535,16 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8407433879262718835}
   m_CullTransparentMesh: 1
+--- !u!114 &2316237719207687790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8407433879262718835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85eb65099a83c374290049ec07f26326, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _selectStatus: {fileID: 2297111079221732047}
