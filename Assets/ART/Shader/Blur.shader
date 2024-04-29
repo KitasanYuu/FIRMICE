@@ -5,7 +5,7 @@ Shader"Custom/Blur"
         _MainTex ("Texture", 2D) = "white" {}
         _BlurSizeX ("Blur Size X", Float) = 0.002
         _BlurSizeY ("Blur Size Y", Float) = 0.002
-        _Transparency ("Transparency", Range(0,1)) = 1.0
+        _Transparency ("Transparency", Range(0,1)) = 0
         _Brightness ("Brightness", Range(0,10)) = 2.0
     }
     SubShader
