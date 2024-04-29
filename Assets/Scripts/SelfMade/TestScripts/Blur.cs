@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Windows;
 
 public class Blur : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class Blur : MonoBehaviour
     private void Update()
     {
         // 按下特定键（例如空格键）时进行屏幕截图并应用模糊效果
-        if (Input.GetKeyDown(KeyCode.O)||CaptureBlur)
+        if (UnityEngine.Input.GetKeyDown(KeyCode.O)||CaptureBlur)
         {
             CaptureScreenshotAndSetSprite();
             CaptureBlur = false;
@@ -45,6 +46,8 @@ public class Blur : MonoBehaviour
 
         // Create Sprite from Texture2D
         Sprite screenshotSprite = Sprite.Create(capturedTexture, new Rect(0, 0, capturedTexture.width, capturedTexture.height), Vector2.zero);
+
+        File.Delete(screenshotPath);
 
         // Set Sprite to the Image component
         screenshotImage.sprite = screenshotSprite;
