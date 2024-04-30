@@ -1,3 +1,4 @@
+using CustomInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,8 @@ using UnityEngine.EventSystems;
 
 public class ItemCell : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,IPointerClickHandler
 {
+    [ReadOnly] public string currentItemID;
+
     public GameObject _selectStatus;
 
     void Start()
@@ -36,7 +39,7 @@ public class ItemCell : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,I
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 
     public void OnPointerEnter(PointerEventData eventData)

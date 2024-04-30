@@ -15,27 +15,33 @@ MonoBehaviour:
   UIID:
   - PanelID: WeaponSelectPanel
     SubIdentity:
-    - PanelSubTitle: "\u9009\u62E9\u4E3B\u6B66\u5668"
-      PanelTitle: "\u6B66\u5668\u9009\u62E9"
+    - PanelTitle: "\u4E3B\u6B66\u5668"
+      UsingSpecificSub: 1
+      PanelSubTitle: 
       Page: 0
-    - PanelSubTitle: "\u9009\u62E9\u526F\u6B66\u5668"
-      PanelTitle: "\u6B66\u5668\u9009\u62E9"
+    - PanelTitle: "\u526F\u6B66\u5668"
+      UsingSpecificSub: 1
+      PanelSubTitle: 
       Page: 1
-    - PanelSubTitle: "\u9009\u62E9\u6218\u672F\u9053\u5177"
-      PanelTitle: "\u9053\u5177\u9009\u62E9"
+    - PanelTitle: "\u9053\u5177\u9009\u62E9"
+      UsingSpecificSub: 0
+      PanelSubTitle: "\u9009\u62E9\u6218\u672F\u9053\u5177"
       Page: 2
   - PanelID: WeaponEquipPanel
     SubIdentity:
-    - PanelSubTitle: "\u706B\u529B\u914D\u7F6E"
-      PanelTitle: "\u88C5\u5907\u6982\u89C8"
+    - PanelTitle: "\u88C5\u5907\u6982\u89C8"
+      UsingSpecificSub: 0
+      PanelSubTitle: "\u706B\u529B\u914D\u7F6E"
       Page: 0
   - PanelID: BackPackPanel
     SubIdentity:
-    - PanelSubTitle: "\u8FDC\u7AEF\u4F20\u8F93\u652F\u63F4\u5DF2\u6FC0\u6D3B"
-      PanelTitle: "\u5E93\u5B58"
+    - PanelTitle: "\u5E93\u5B58"
+      UsingSpecificSub: 0
+      PanelSubTitle: "\u8FDC\u7AEF\u4F20\u8F93\u652F\u63F4\u5DF2\u6FC0\u6D3B"
       Page: 0
   - PanelID: TestPanel
     SubIdentity:
-    - PanelSubTitle: "\u53EA\u662F\u6D4B\u8BD5\u7528\u7684\u9762\u677F"
-      PanelTitle: Test
+    - PanelTitle: Test
+      UsingSpecificSub: 0
+      PanelSubTitle: "\u53EA\u662F\u6D4B\u8BD5\u7528\u7684\u9762\u677F"
       Page: 0

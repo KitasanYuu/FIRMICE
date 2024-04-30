@@ -134,8 +134,8 @@ public class InventoryPanelManager : MonoBehaviour
         {
             PanelIdentity _panelIdentity = NextPanel.gameObject.GetComponent<PanelIdentity>();
             SubSelectIdentity subs = RR.GetPanelIDData(_panelIdentity.PID, _panelIdentity.PageNum);
-            string _targetPanelTitle = subs.PanelTitle;
-            string _targetPanelSubTitle = subs.PanelSubTitle;
+            string _targetPanelTitle = subs?.PanelTitle;
+            string _targetPanelSubTitle = subs.UsingSpecificSub ? null : subs?.PanelSubTitle;
 
             float currentTime = 0f;
             float changeSingleDuration = 0.1f;
@@ -147,15 +147,9 @@ public class InventoryPanelManager : MonoBehaviour
                 yield return null;
             }
 
-            if (_targetPanelSubTitle != null)
-            {
-                SubTitle.text = _targetPanelSubTitle;
-            }
+            SubTitle.text = _targetPanelSubTitle;
 
-            if (_targetPanelTitle != null)
-            {
-                Title.text = _targetPanelTitle;
-            }
+            Title.text = _targetPanelTitle;
 
             _panelSubTitleChangeBar.fillAmount = 1f;
 

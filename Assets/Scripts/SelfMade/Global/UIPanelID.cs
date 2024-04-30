@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CustomInspector;
 
 [CreateAssetMenu(fileName = "UIPanelID", menuName = "Global/UIPanelID", order = 1)]
 public class UIPanelID : ScriptableObject
@@ -32,7 +33,12 @@ public class UIIdentity : IEnumerable<SubSelectIdentity>
 [System.Serializable]
 public class SubSelectIdentity
 {
+    public string PanelTitle;
+    public bool UsingSpecificSub = false;
+    [ShowIf(nameof(_bool))]
     public string PanelSubTitle;
-    public  string PanelTitle;
     public int Page;
+
+    public bool _bool()
+=> UsingSpecificSub == false;
 }
