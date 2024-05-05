@@ -97,14 +97,16 @@ namespace DataManager
                 else
                 {
                     Debug.LogError("DataMaster:GetActorName" + Actor.name + "Has no CID Found");
-                    Title = "外域来客";
+                    var EActorInfo = csvreader.GetDataByID("role", "Err_NoCID");
+                    Title = (string)EActorInfo["EliteTitle"];
                     return Title;
                 }
             }
             else
             {
                 Debug.LogWarning(Actor.name + "IS Not Elite!! CID:" + ActorCID);
-                Title = "错误适格者";
+                var EActorInfo = csvreader.GetDataByID("role", "Err_NotElite");
+                Title = (string)EActorInfo["EliteTitle"];
                 return Title;
             }
         }

@@ -6,6 +6,7 @@ using YuuTool;
 
 public class ItemInventoryManager : MonoBehaviour
 {
+    public bool TestButton;
     public InventoryTestSO testSOData;
     public GameObject itemGrip;
     public List<ItemCell> items;
@@ -19,9 +20,41 @@ public class ItemInventoryManager : MonoBehaviour
         contentAnchor = transform.FindDeepChild("ItemLayoutContent").gameObject;
 
         iData = testSOData.ItemList;
+
+        RefeshList();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (TestButton)
+        {
+            RefeshList();
+            TestButton = false;
+        }
+    }
+
+    private void RefeshList()
+    {
+        // 创建临时列表保存要删除的元素
+        List<ItemCell> cellsToRemove = new List<ItemCell>();
+
+        // 遍历要删除的元素并加入到临时列表中
+        foreach (ItemCell ic in items)
+        {
+            cellsToRemove.Add(ic);
+        }
+
+        // 删除临时列表中的元素
+        foreach (ItemCell ic in cellsToRemove)
+        {
+            items.Remove(ic);
+            Destroy(ic.gameObject);
+        }
+
         foreach (ItemHold item in iData)
         {
-            if(item.itemID!= null)
+            if (item.itemID != null)
             {
                 GameObject grip = Instantiate(itemGrip, contentAnchor.transform);
                 ItemCell cell = grip.GetComponent<ItemCell>();
@@ -32,9 +65,4 @@ public class ItemInventoryManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

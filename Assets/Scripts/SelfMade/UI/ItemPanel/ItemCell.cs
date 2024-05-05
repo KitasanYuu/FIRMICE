@@ -1,6 +1,6 @@
 using CustomInspector;
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -9,16 +9,24 @@ public class ItemCell : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,I
     [ReadOnly] public string currentItemID;
 
     public GameObject _selectStatus;
+    public GameObject _hoverDetail;
+
+
+    private TextMeshProUGUI hoverDetailText;
 
     void Start()
     {
-        Transform _sTransform = _selectStatus.transform;
-        
+        ComponentInit();
     }
 
     void Update()
     {
         
+    }
+
+    private void ComponentInit()
+    {
+        hoverDetailText = _hoverDetail?.GetComponent<TextMeshProUGUI>();
     }
 
     private IEnumerator SelectStatus()
