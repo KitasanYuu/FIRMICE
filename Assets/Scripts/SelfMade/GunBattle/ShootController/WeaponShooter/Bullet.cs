@@ -7,6 +7,7 @@ public class Bullet : MonoBehaviour
     private Rigidbody bulletRigidbody;
     [ReadOnly] public GameObject Shooter;
     [SerializeField, ReadOnly] private float speed;
+    [SerializeField, ReadOnly] private bool needDoDamage;
     [SerializeField, ReadOnly] private LayerMask destroyOnCollisionWith; // 选择要销毁的层级
     private bool hasHit = false; // 是否已经命中
     [SerializeField,ReadOnly] private float damage = 10f; // 子弹伤害值
@@ -117,14 +118,14 @@ public class Bullet : MonoBehaviour
 
     private void DodingDamage()
     {
-        if (virtualhp != null)
+        if (virtualhp != null && needDoDamage)
         {
             virtualhp.AddDamage(damage,armorbreak ,Shooter); // 将伤害值传递给目标脚本的方法
         }
     }
 
 
-    public void SetParameter(GameObject newShooter,float newRayLength,LayerMask HitLayer,GameObject VFXHitEffect,float BulletSpeed,float newDamage,float newarmorbreak)
+    public void SetParameter(GameObject newShooter,float newRayLength,LayerMask HitLayer,GameObject VFXHitEffect,float BulletSpeed,float newDamage,float newarmorbreak,bool doDamage)
     {
         Shooter = newShooter;
         rayLength = newRayLength;
@@ -133,6 +134,7 @@ public class Bullet : MonoBehaviour
         destroyOnCollisionWith = HitLayer;
         damage = newDamage;
         armorbreak = newarmorbreak;
+        needDoDamage = doDamage;
     }
 
 #if UNITY_EDITOR

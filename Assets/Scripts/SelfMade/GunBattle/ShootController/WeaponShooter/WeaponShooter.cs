@@ -12,6 +12,7 @@ using VInspector;
 using Kinemation.Recoilly;
 using Kinemation.Recoilly.Runtime;
 using UnityEngine.Audio;
+using Pathfinding;
 
 namespace Battle
 {
@@ -217,21 +218,38 @@ namespace Battle
                                     CurrentBulletCount = 0;
                                 }
 
+                                RaycastHit _distanceRay;
+                                float distanceToHit = Physics.Raycast(transform.position, aimDir, out _distanceRay, 100f) ? _distanceRay.distance : 100f;
+
                                 // 生成子弹实例
                                 GameObject bulletInstance = Instantiate(bulletPrefab, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up), BulletContainer.transform);
                                 // 获取子弹脚本并设置速度
                                 Bullet bullet = bulletInstance.GetComponent<Bullet>();
                                 if (bullet != null)
                                 {
-                                    bullet?.SetParameter(Shooter, DetectRayLength, DestoryLayer, VFXHitEffect, bulletspeed, BulletDamage, ArmorBreak);
+                                    if (distanceToHit >= 0 && distanceToHit <= 5f)
+                                    {
+                                        // 在这里执行射线投射
+                                        Ray shootRay = new Ray(spawnBulletPosition.position, aimDir);
+                                        if (Physics.Raycast(shootRay, out RaycastHit shootRaycastHit))
+                                        {
+                                            GameObject HitObject = shootRaycastHit.collider.gameObject;
+                                            RayDamageIn(HitObject);
+                                        }
+                                        bullet?.SetParameter(Shooter, DetectRayLength, DestoryLayer, VFXHitEffect, bulletspeed, BulletDamage, ArmorBreak, false);
+                                    }
+                                    else if(distanceToHit >5f)
+                                    {
+                                        bullet?.SetParameter(Shooter, DetectRayLength, DestoryLayer, VFXHitEffect, bulletspeed, BulletDamage, ArmorBreak, true);
+                                    }
+
                                     AudioSource.PlayClipAtPoint(audioFire, transform.position, 1);
-                                    //Debug.Log(bulletspeed * SRR);
-                                    //Debug.LogError("BulletSpwaned");
                                 }
                                 else
                                 {
                                     Debug.LogError("BulletTest component not found on instantiated object.");
                                 }
+
                             }
                             else if (RayMethod)
                             {
