@@ -11,6 +11,8 @@ public class ItemCell : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,I
     public GameObject _selectStatus;
     public GameObject _hoverDetail;
 
+    [HideInInspector]
+    public int currentItemCount;
 
     private TextMeshProUGUI hoverDetailText;
 
@@ -21,12 +23,12 @@ public class ItemCell : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,I
 
     void Update()
     {
-        
+        hoverDetailText.text = currentItemCount.ToString();
     }
 
     private void ComponentInit()
     {
-        hoverDetailText = _hoverDetail?.GetComponent<TextMeshProUGUI>();
+        hoverDetailText = _hoverDetail?.GetComponentInChildren<TextMeshProUGUI>();
     }
 
     private IEnumerator SelectStatus()

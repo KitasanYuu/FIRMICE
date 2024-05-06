@@ -20,4 +20,5 @@ public class WeaponHold
 public class ItemHold
 {
     public string itemID;
+    public int itemCount;
 }
