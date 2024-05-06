@@ -9,6 +9,8 @@ namespace DataManager
     {
         private CSVReader csvreader = new CSVReader();
 
+
+        #region Actor角色相关
         //获取Actor所属阵营
         public int GetActorCamp(GameObject gameObject)
         {
@@ -43,6 +45,7 @@ namespace DataManager
             }
         }
 
+        //获取AI索敌时不同阵营优先级
         public float GetCharaterPriority(GameObject Actor)
         {
             Identity ID = Actor.GetComponent<Identity>();
@@ -111,6 +114,7 @@ namespace DataManager
             }
         }
 
+        //获取角色名字
         public string GetActorName(GameObject Actor)
         {
             Identity ID = Actor.GetComponent<Identity>();
@@ -129,6 +133,7 @@ namespace DataManager
             }
         }
 
+        //获取角色ID
         public string GetActorID(GameObject Actor)
         {
             Identity ID = Actor.GetComponent<Identity>();
@@ -147,6 +152,10 @@ namespace DataManager
             }
         }
 
+        #endregion
+
+        #region Weapon武器相关
+        //直接拿武器组数据
         public Dictionary<string, object> GetWeaponVar(string WeaponID)
         {
             var weapon = csvreader.GetDataByID("weapons", WeaponID);
@@ -160,6 +169,26 @@ namespace DataManager
                 return null;
             }
         }
+
+        #endregion
+
+        #region Item道具相关
+        //获取单个物品的堆叠状况
+        public int GetItemStackAbility(string ItemID)
+        {
+            var itemInfo = csvreader.GetDataByID("item", ItemID);
+            if (itemInfo != null)
+            {
+                int stackAbility = (int)itemInfo["stackMaxCount"];
+                return stackAbility;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        #endregion
     }
 
     public class LocalDataSaver
@@ -173,8 +202,9 @@ namespace DataManager
         private Dictionary<GameObject,float>actorPriority = new Dictionary<GameObject,float>();
         private Dictionary<string, Dictionary<string, object>> weaponInfo = new Dictionary<string, Dictionary<string, object>>();
         private Dictionary<string,string> weaponPrefabInfo = new Dictionary<string, string>();
+        private Dictionary<string,int> itemStackability = new Dictionary<string, int>();
 
-
+        #region Actor角色相关
         public string GetActorID(GameObject actor)
         {
             if (actorID.TryGetValue(actor, out string ID))
@@ -270,6 +300,9 @@ namespace DataManager
             }
         }
 
+        #endregion
+
+        #region Weapon武器相关
         public Dictionary<string, object> GetWeapon(string WeaponID)
         {
             if(weaponInfo.TryGetValue(WeaponID, out var weaponinfo))
@@ -332,6 +365,26 @@ namespace DataManager
             }
 
         }
+
+        #endregion
+
+        #region Item道具相关
+
+        public int GetItemStackAbility(string ItemID)
+        {
+            if(itemStackability.TryGetValue(ItemID,out int stackAbility))
+            {
+                return stackAbility;
+            }
+            else
+            {
+                int newStackAbility = DM.GetItemStackAbility(ItemID);
+                itemStackability[ItemID] = newStackAbility;
+                return newStackAbility;
+            }
+        }
+
+        #endregion
     }
 }
 
