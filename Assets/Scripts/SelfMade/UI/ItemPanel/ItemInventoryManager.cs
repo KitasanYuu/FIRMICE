@@ -17,6 +17,9 @@ public class ItemInventoryManager : MonoBehaviour
     [ReadOnly] public GameObject contentAnchor;
 
     private LocalDataSaver LDS = new LocalDataSaver();
+    private int itemsPerFrame = 100; // 每帧生成的物体个数
+    private IEnumerator currentCoroutine;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,7 +27,7 @@ public class ItemInventoryManager : MonoBehaviour
 
         iData = testSOData.ItemList;
 
-        RefeshList();
+        RefreshList();
     }
 
     // Update is called once per frame
@@ -32,13 +35,19 @@ public class ItemInventoryManager : MonoBehaviour
     {
         if (TestButton)
         {
-            RefeshList();
             TestButton = false;
+            RefreshList();
         }
     }
 
-    private void RefeshList()
+    private void RefreshList()
     {
+        if (currentCoroutine != null)
+        {
+            StopCoroutine(currentCoroutine);
+            currentCoroutine = null;
+        }
+
         // 清空现有物品列表
         foreach (ItemCell ic in items)
         {
@@ -47,12 +56,32 @@ public class ItemInventoryManager : MonoBehaviour
         items.Clear();
 
         // 创建新的物品列表
+        currentCoroutine = GenerateItemsCoroutine();
+        StartCoroutine(currentCoroutine);
+    }
+
+    private IEnumerator GenerateItemsCoroutine()
+    {
+        List<ItemHold> tempData = new List<ItemHold>();
+
         foreach (ItemHold item in iData)
+        {
+            ItemHold newItem = new ItemHold();
+            newItem.itemID = item.itemID;
+            newItem.itemCount = item.itemCount;
+            // 如果 ItemHold 类中还有其他属性，也需要进行类似的复制操作
+
+            tempData.Add(newItem);
+        }
+
+        int itemCount = 0;
+
+        // 创建新的物品列表
+        foreach (ItemHold item in tempData)
         {
             if (item.itemID != null)
             {
                 int stackLimit = LDS.GetItemStackAbility(item.itemID); // 获取物品堆叠上限
-                int itemCount = item.itemCount;
 
                 // 遍历现有的物品单元格
                 foreach (ItemCell ic in items)
@@ -61,9 +90,9 @@ public class ItemInventoryManager : MonoBehaviour
                     {
                         // 如果找到相同类型的物品，则将其堆叠数量增加
                         int spaceLeft = stackLimit - ic.currentItemCount;
-                        int addedQuantity = Mathf.Min(spaceLeft, itemCount);
+                        int addedQuantity = Mathf.Min(spaceLeft, item.itemCount);
                         ic.currentItemCount += addedQuantity;
-                        itemCount -= addedQuantity;
+                        item.itemCount -= addedQuantity;
 
                         // 如果堆叠数量已满，则退出循环
                         if (ic.currentItemCount >= stackLimit)
@@ -72,7 +101,7 @@ public class ItemInventoryManager : MonoBehaviour
                 }
 
                 // 如果未找到相同类型的物品或堆叠数量已满，则创建新的物品单元格
-                while (itemCount > 0)
+                while (item.itemCount > 0)
                 {
                     // 创建新的物品单元格
                     GameObject grip = Instantiate(itemGrip, contentAnchor.transform);
@@ -80,17 +109,24 @@ public class ItemInventoryManager : MonoBehaviour
 
                     // 设置物品单元格的数据
                     cell.currentItemID = item.itemID;
-                    cell.currentItemCount = Mathf.Min(itemCount, stackLimit); // 设置堆叠数量
+                    cell.currentItemCount = Mathf.Min(item.itemCount, stackLimit); // 设置堆叠数量
                     grip.name = item.itemID;
                     items.Add(cell);
 
                     // 更新剩余物品数量
-                    itemCount -= stackLimit;
+                    item.itemCount -= stackLimit;
+                    itemCount++;
+
+                    // 达到每帧生成物品的上限，等待下一帧再生成
+                    if (itemCount >= itemsPerFrame)
+                    {
+                        yield return null;
+                        itemCount = 0;
+                    }
                 }
             }
         }
     }
-
 
 
 }
