@@ -66,9 +66,9 @@ public class ItemInventoryManager : MonoBehaviour
 
         foreach (ItemHold item in iData)
         {
-            ItemHold newItem = new ItemHold();
-            newItem.itemID = item.itemID;
-            newItem.itemCount = item.itemCount;
+            ItemHold newItem = item.Clone();
+            //newItem.itemID = item.itemID;
+            //newItem.itemCount = item.itemCount;
             // 如果 ItemHold 类中还有其他属性，也需要进行类似的复制操作
 
             tempData.Add(newItem);
