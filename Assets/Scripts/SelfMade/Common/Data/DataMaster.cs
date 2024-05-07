@@ -173,18 +173,17 @@ namespace DataManager
         #endregion
 
         #region Item道具相关
-        //获取单个物品的堆叠状况
-        public int GetItemStackAbility(string ItemID)
+        public Dictionary<string,object>GetItemVar(string ItemID)
         {
-            var itemInfo = csvreader.GetDataByID("item", ItemID);
-            if (itemInfo != null)
+            var item = csvreader.GetDataByID("item", ItemID);
+            if(item != null)
             {
-                int stackAbility = (int)itemInfo["stackMaxCount"];
-                return stackAbility;
+                return item;
             }
             else
             {
-                return 0;
+                Debug.LogError("DataMaster:GetItemVar" + ItemID + "Not Found!");
+                return null;
             }
         }
 
@@ -201,6 +200,7 @@ namespace DataManager
         private Dictionary<GameObject,string> actorName = new Dictionary<GameObject,string>();
         private Dictionary<GameObject,float>actorPriority = new Dictionary<GameObject,float>();
         private Dictionary<string, Dictionary<string, object>> weaponInfo = new Dictionary<string, Dictionary<string, object>>();
+        private Dictionary<string,Dictionary<string,object>> itemInfo = new Dictionary<string, Dictionary<string, object>>();
         private Dictionary<string,string> weaponPrefabInfo = new Dictionary<string, string>();
         private Dictionary<string,int> itemStackability = new Dictionary<string, int>();
 
@@ -305,9 +305,9 @@ namespace DataManager
         #region Weapon武器相关
         public Dictionary<string, object> GetWeapon(string WeaponID)
         {
-            if(weaponInfo.TryGetValue(WeaponID, out var weaponinfo))
+            if(weaponInfo.TryGetValue(WeaponID, out var _weaponinfo))
             {
-                return weaponinfo;
+                return _weaponinfo;
             }
             else
             {
@@ -369,7 +369,21 @@ namespace DataManager
         #endregion
 
         #region Item道具相关
+        public Dictionary<string,object> GetItem(string itemID)
+        {
+            if (itemInfo.TryGetValue(itemID, out var _itemInfo))
+            {
+                return _itemInfo;
+            }
+            else
+            {
+                Dictionary<string, object> newitemInfo = DM.GetItemVar(itemID);
+                itemInfo[itemID] = newitemInfo;
+                return newitemInfo;
+            }
+        }
 
+        //获取单个物品的堆叠状况
         public int GetItemStackAbility(string ItemID)
         {
             if(itemStackability.TryGetValue(ItemID,out int stackAbility))
@@ -378,7 +392,8 @@ namespace DataManager
             }
             else
             {
-                int newStackAbility = DM.GetItemStackAbility(ItemID);
+                var item = GetItem(ItemID);
+                int newStackAbility = (int)item["stackMaxCount"];
                 itemStackability[ItemID] = newStackAbility;
                 return newStackAbility;
             }
