@@ -7,9 +7,12 @@ using YuuTool;
 
 public class ItemInventoryManager : MonoBehaviour
 {
+    [ReadOnly] public ItemCell currentSelectItem;
+    [Space2(10)]
     public bool TestButton;
     public InventoryTestSO testSOData;
     public GameObject itemGrip;
+    public ItemDetailUnit IDU;
     public Dictionary<string, int> iItems = new Dictionary<string, int>();
     public List<ItemCell> items;
     private List<ItemHold> iData = new List<ItemHold>();
@@ -38,6 +41,12 @@ public class ItemInventoryManager : MonoBehaviour
             TestButton = false;
             RefreshList();
         }
+    }
+
+    public void SelectCell(ItemCell ic)
+    {
+        currentSelectItem = ic;
+        IDU.SelectItem(currentSelectItem);
     }
 
     private void RefreshList()
@@ -112,6 +121,11 @@ public class ItemInventoryManager : MonoBehaviour
                     cell.currentItemCount = Mathf.Min(item.itemCount, stackLimit); // 设置堆叠数量
                     grip.name = item.itemID;
                     items.Add(cell);
+
+                    if (cell.IIM == null)
+                    {
+                        cell.SetParameter(this);
+                    }
 
                     // 更新剩余物品数量
                     item.itemCount -= stackLimit;

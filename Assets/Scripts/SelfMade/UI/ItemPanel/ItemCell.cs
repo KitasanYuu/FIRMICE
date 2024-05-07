@@ -10,11 +10,14 @@ public class ItemCell : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,I
 
     public GameObject _selectStatus;
     public GameObject _hoverDetail;
+    public TextMeshProUGUI hoverDetailText;
 
     [HideInInspector]
     public int currentItemCount;
 
-    private TextMeshProUGUI hoverDetailText;
+    [HideInInspector]
+    public ItemInventoryManager IIM;
+
 
     void Start()
     {
@@ -23,12 +26,18 @@ public class ItemCell : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,I
 
     void Update()
     {
+        //hoverDetailText.text = currentItemCount.ToString();
+    }
+
+    public void SetParameter(ItemInventoryManager iIm)
+    {
+        IIM = iIm;
         hoverDetailText.text = currentItemCount.ToString();
     }
 
     private void ComponentInit()
     {
-        hoverDetailText = _hoverDetail?.GetComponentInChildren<TextMeshProUGUI>();
+        
     }
 
     private IEnumerator SelectStatus()
@@ -49,7 +58,7 @@ public class ItemCell : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,I
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        //throw new System.NotImplementedException();
+        IIM.SelectCell(this);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
