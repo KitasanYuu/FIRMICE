@@ -67,6 +67,11 @@ public class ItemInventoryManager : MonoBehaviour
         // 创建新的物品列表
         currentCoroutine = GenerateItemsCoroutine();
         StartCoroutine(currentCoroutine);
+
+        if(currentSelectItem == null)
+        {
+            SelectCell(items[0]);
+        }
     }
 
     private IEnumerator GenerateItemsCoroutine()

@@ -9,6 +9,8 @@ public class ItemDetailUnit : MonoBehaviour
 {
     [ReadOnly] public ItemCell currentCell;
 
+    public VerticalLayoutGroup nameLayoutGroup;
+
     public TextMeshProUGUI itemName;
     public TextMeshProUGUI itemDescription;
 
@@ -20,5 +22,6 @@ public class ItemDetailUnit : MonoBehaviour
     {
         currentCell = ic;
         itemName.text = ic.currentItemID;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(nameLayoutGroup?.GetComponent<RectTransform>());
     }
 }
