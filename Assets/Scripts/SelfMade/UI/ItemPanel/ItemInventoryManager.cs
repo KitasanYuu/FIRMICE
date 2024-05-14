@@ -8,6 +8,7 @@ using YuuTool;
 public class ItemInventoryManager : MonoBehaviour
 {
     [ReadOnly] public ItemCell currentSelectItem;
+    [HideInInspector] private ItemCell previousSelectItem;
     [Space2(10)]
     public bool TestButton;
     public InventoryTestSO testSOData;
@@ -22,6 +23,11 @@ public class ItemInventoryManager : MonoBehaviour
     private LocalDataSaver LDS = new LocalDataSaver();
     private int itemsPerFrame = 100; // 每帧生成的物体个数
     private IEnumerator currentCoroutine;
+
+    private void OnEnable()
+    {
+        RefreshList();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -45,7 +51,14 @@ public class ItemInventoryManager : MonoBehaviour
 
     public void SelectCell(ItemCell ic)
     {
+        if(currentSelectItem != null)
+        {
+            previousSelectItem = currentSelectItem;
+            previousSelectItem.SetSelectStatus(false);
+        }
+
         currentSelectItem = ic;
+        ic.SetSelectStatus(true);
         IDU.SelectItem(currentSelectItem);
     }
 
@@ -68,7 +81,7 @@ public class ItemInventoryManager : MonoBehaviour
         currentCoroutine = GenerateItemsCoroutine();
         StartCoroutine(currentCoroutine);
 
-        if(currentSelectItem == null)
+        if(currentSelectItem == null && items.Count >0)
         {
             SelectCell(items[0]);
         }

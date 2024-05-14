@@ -161,7 +161,7 @@ GameObject:
   - component: {fileID: 2879077466351045189}
   - component: {fileID: 4883224693908479897}
   m_Layer: 5
-  m_Name: Selected
+  m_Name: sStatus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -548,7 +548,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentItemID: 
-  _selectStatus: {fileID: 2297111079221732047}
+  _hoverStatus: {fileID: 2297111079221732047}
   _hoverDetail: {fileID: 5453938175260570948}
   hoverDetailText: {fileID: 7116940796204600451}
   currentItemCount: 0
+  IIM: {fileID: 0}

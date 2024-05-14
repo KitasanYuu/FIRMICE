@@ -18,12 +18,15 @@ public class PanelSwitchElf : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        RefreshCanvasGroup();
+        //RefreshCanvasGroup();
 
         if (_switch)
         {
             IPM.OnPanelChanged(_currentPanel, _targetPanel);
             _switch = false;
+            CanvasGroup cg = _currentPanel;
+            _currentPanel = _targetPanel;
+            _targetPanel = cg;
         }
     }
 
@@ -38,8 +41,8 @@ public class PanelSwitchElf : MonoBehaviour
             // 检查CanvasGroup是否处于激活状态
             if (canvasGroup.gameObject.activeInHierarchy)
             {
-                // 执行你需要的操作，比如打印CanvasGroup的名称
-                Debug.Log("Active CanvasGroup: " + canvasGroup.gameObject.name);
+                _currentPanel = canvasGroup;
+                //Debug.Log("Active CanvasGroup: " + canvasGroup.gameObject.name);
             }
         }
     }
