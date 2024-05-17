@@ -383,6 +383,21 @@ namespace DataManager
             }
         }
 
+        public int GetItemType(string itemID)
+        {
+            var item = GetItem(itemID);
+            if (item != null)
+            {
+                int itemType = (int)item["itemType"];
+                return itemType;
+            }
+            else
+            {
+                Debug.LogError("DM:GetItemType:No item Found:" + itemID);
+                return 0;
+            }
+        }
+
         public string GetItemName(string itemID)
         {
             var item = GetItem(itemID);
