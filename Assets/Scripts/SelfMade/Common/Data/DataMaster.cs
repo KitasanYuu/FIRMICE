@@ -383,6 +383,36 @@ namespace DataManager
             }
         }
 
+        public string GetItemName(string itemID)
+        {
+            var item = GetItem(itemID);
+            if (item != null)
+            {
+                string itemName = (string)item["itemName"];
+                return itemName;
+            }
+            else
+            {
+                Debug.LogError("DM:GetItemDescribe:No item Found:" + itemID);
+                return null;
+            }
+        }
+
+        public string GetItemDescribe(string itemID)
+        {
+            var item = GetItem(itemID);
+            if (item != null)
+            {
+                string itemDescribe = (string)item["itemDescribe"];
+                return itemDescribe;
+            }
+            else
+            {
+                Debug.LogError("DM:GetItemDescribe:No item Found:" + itemID);
+                return null;
+            }
+        }
+
         //获取单个物品的堆叠状况
         public int GetItemStackAbility(string ItemID)
         {

@@ -109,8 +109,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 26.5}
+  m_SizeDelta: {x: 0, y: -55.789}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3376479346226031359
 CanvasRenderer:
@@ -140,11 +140,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
+  m_Sprite: {fileID: 837726166, guid: ad6bf915a5ae9794a8478c350e6d8b2c, type: 3}
+  m_Type: 3
+  m_PreserveAspect: 1
   m_FillCenter: 1
-  m_FillMethod: 4
+  m_FillMethod: 0
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
@@ -264,7 +264,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 2056967695, guid: 754412aae61b8604fa6331206083fffd, type: 3}
+  m_Sprite: {fileID: 1689834438, guid: 89eb65bce21937c4bb1cdc239acf0f14, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -552,4 +552,5 @@ MonoBehaviour:
   _hoverDetail: {fileID: 5453938175260570948}
   hoverDetailText: {fileID: 7116940796204600451}
   currentItemCount: 0
+  isSelected: 0
   IIM: {fileID: 0}

@@ -1,6 +1,5 @@
 using CustomInspector;
-using System.Collections;
-using System.Collections.Generic;
+using DataManager;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,10 +17,12 @@ public class ItemDetailUnit : MonoBehaviour
     public Image backGroundImage;
     public Image itemImage;
 
+    private LocalDataSaver LDS = new LocalDataSaver();
     public void SelectItem(ItemCell ic)
     {
         currentCell = ic;
-        itemName.text = ic.currentItemID;
+        itemName.text = LDS.GetItemName(ic.currentItemID);
+        itemDescription.text = LDS.GetItemDescribe(ic.currentItemID);
         LayoutRebuilder.ForceRebuildLayoutImmediate(nameLayoutGroup?.GetComponent<RectTransform>());
     }
 }
