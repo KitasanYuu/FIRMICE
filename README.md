@@ -1,5 +1,8 @@
 <div align="center">
   <!-- <h1>此分支为当前活动分支</h1> -->
+    <h2>因个人原因该项目暂时停止更新，估计再过两个月继续施工 </h2>
+    <del>当前手上有更高优先级的项目</del><br>
+    
   <a href="https://crypko.ai/cn/crypko/ABoLzpQhVPRMR/">
   <img src="Assets/Lozas.png" alt="看板娘" width = "400">
   </a><br>
